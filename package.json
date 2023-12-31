@@ -1,5 +1,8 @@
 {
   "name": "predict-the-standings",
+  "description": "Compete to predict the final tables for various sports",
+  "license": "GNU General Public License V3",
+  "author": "David Price <davidwillprice@gmail.com> (https://www.davidwillprice.com)",
   "version": "0.1.0",
   "private": true,
   "scripts": {
