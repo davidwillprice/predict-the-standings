@@ -1,0 +1,27 @@
+@import "sass-variables.scss";
+
+.content_container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  margin-left: $header-width-desktop;
+  min-height: 100vh;
+  width: calc(100% - $header-width-desktop);
+  text-align: center;
+}
+
+@media (max-width: $tablet-menu-breakpoint) {
+  .content_container {
+    width: calc(100% - $header-width-tablet);
+    margin-left: $header-width-tablet;
+  }
+}
+@media (max-width: 600px) {
+  .content_container {
+    flex-direction: column;
+    width: 100%;
+    margin-top: $header-height-mobile;
+    margin-left: 0px;
+  }
+}

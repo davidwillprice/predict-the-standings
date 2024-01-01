@@ -1,0 +1,7 @@
+@import "sass-variables.scss";
+
+@media (max-width: $mobile-menu-breakpoint) {
+  html .mobile_hide {
+    display: none;
+  }
+}
