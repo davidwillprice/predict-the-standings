@@ -16,9 +16,9 @@
   i {
     border-width: 0 2px 2px 0;
     padding: 5px;
-    border-color: black;
+    border-color: $secondary-color;
     transform: rotate(45deg) translate(-1px, -1px);
-    color: black;
+    color: $secondary-color;
     border-style: solid;
   }
   &.active i {
@@ -31,7 +31,7 @@
   flex-direction: column;
   padding: 20px 15px;
   min-width: $header-width-desktop;
-  background-color: white;
+  background-color: $primary-color;
   position: fixed;
   height: 100%;
 }
@@ -45,7 +45,7 @@
     gap: 10px;
   }
   .menu_button {
-    background-color: #edf1f4;
+    background-color: $tertiary-color;
     width: 40px;
     height: 40px;
     cursor: pointer;
@@ -53,7 +53,7 @@
     border-radius: 3px;
     border-width: 0;
     &__line {
-      background-color: black;
+      background-color: $secondary-color;
       height: 3px;
       width: 75%;
       position: absolute;
@@ -148,7 +148,7 @@
     margin-top: 10px;
     .link,
     .dropdown {
-      border-bottom: 2px solid #edf1f4;
+      border-bottom: 2px solid $tertiary-color;
     }
     .link:last-child,
     .dropdown:last-child {
