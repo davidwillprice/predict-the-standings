@@ -100,6 +100,18 @@
     flex-direction: column;
     gap: 20px;
   }
+  .link {
+    position: relative;
+  }
+  .link_active::before {
+    width: 5px;
+    height: 100%;
+    background-color: $secondary-color;
+    position: absolute;
+    content: "";
+    border-radius: 5px;
+    left: -7px;
+  }
 }
 .secondary_menu {
   display: flex;

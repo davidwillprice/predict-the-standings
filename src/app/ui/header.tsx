@@ -4,10 +4,11 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 
+import Icon from "./svgs/icons/sq-icon";
+import HeaderLink from "./header-link";
+
 import commonStyles from "./styles/common.module.scss";
 import styles from "./styles/header.module.scss";
-
-import Icon from "./svgs/icons/sq-icon";
 
 const Header = () => {
   const [mobMenuOpen, toggleMobMenu] = useState(false);
@@ -54,27 +55,18 @@ const Header = () => {
         }`}>
         <hr />
         <div>
-          <Link href="/profile" className={styles.link}>
-            <div className={styles.icon}>
-              <Icon type="profile" strokeWidth={2} />
-            </div>
+          <HeaderLink href="/profile" icon="profile">
             Profile
-          </Link>
+          </HeaderLink>
         </div>
         <hr />
         <div>
-          <Link href="/formula-1" className={styles.link}>
-            <div className={styles.icon}>
-              <Icon type="f1" strokeWidth={2} />
-            </div>
+          <HeaderLink href="/formula-1" icon="f1">
             Formula 1 Predictions
-          </Link>
-          <Link href="/premier-league" className={styles.link}>
-            <div className={styles.icon}>
-              <Icon type="premierLeague" strokeWidth={2} />
-            </div>
+          </HeaderLink>
+          <HeaderLink href="/premier-league" icon="premierLeague">
             Premier League Predictions
-          </Link>
+          </HeaderLink>
         </div>
         <hr />
         <div>
