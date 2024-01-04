@@ -10,7 +10,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "seed": "node -r dotenv/config ./lib/seed.js"
+    "seed": "node -r dotenv/config ./scripts/seed.js"
   },
   "dependencies": {
     "@vercel/postgres": "^0.5.1",
