@@ -1,10 +1,9 @@
-import Image from "next/image";
-import panelStyles from "./ui/styles/panel.module.scss";
+import { Panel } from "./ui/panel";
 
 export default function Home() {
   return (
     <>
-      <div className={panelStyles.panel}>
+      <Panel>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras volutpat
         dignissim imperdiet. Suspendisse lobortis sollicitudin libero id
         eleifend. Quisque id justo tincidunt, efficitur tortor id, malesuada
@@ -14,8 +13,8 @@ export default function Home() {
         mattis bibendum quis non neque. Morbi in finibus purus, ornare dignissim
         nunc. Aenean id ligula velit. Suspendisse vitae rutrum sapien. Mauris
         laoreet dictum nulla, et dignissim nisi molestie ac.
-      </div>
-      <div className={panelStyles.panel}>
+      </Panel>
+      <Panel>
         Suspendisse vitae rutrum sapien. Mauris laoreet dictum nulla, et
         dignissim nisi molestie ac. Proin malesuada tristique justo, in
         pellentesque erat vestibulum quis. Phasellus eleifend varius malesuada.
@@ -28,8 +27,8 @@ export default function Home() {
         orci. Pellentesque sed sem in velit ultricies rutrum. Nam a lacus ac
         quam facilisis accumsan. Phasellus semper varius tortor, eget dignissim
         ante posuere vitae.
-      </div>
-      <div className={panelStyles.panel}>
+      </Panel>
+      <Panel>
         Suspendisse ligula mi, vehicula venenatis est id, maximus luctus ligula.
         Morbi quis eros non risus lacinia scelerisque. Vestibulum volutpat
         tempus consectetur. Integer elementum ultrices tincidunt. Quisque
@@ -56,7 +55,7 @@ export default function Home() {
         amet, venenatis quis mi. Lorem ipsum dolor sit amet, consectetur
         adipiscing elit. Quisque tristique diam sit amet diam pretium tincidunt.
         Nam in eros ex. Nulla facilisi.
-      </div>
+      </Panel>
     </>
   );
 }
