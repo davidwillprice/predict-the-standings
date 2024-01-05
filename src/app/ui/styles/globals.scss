@@ -27,3 +27,8 @@ a {
   color: inherit;
   text-decoration: none;
 }
+
+hr {
+  border-top: 0px solid $tertiary-color;
+  color: $tertiary-color;
+}
