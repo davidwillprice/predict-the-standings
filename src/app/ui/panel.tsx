@@ -1,9 +1,9 @@
-import panelStyles from "./ui/styles/panel.module.scss";
-
+import { ReactNode } from "react";
+import styles from "../ui/styles/panel.module.scss";
 interface Props {
-  children: string;
+  children: string | ReactNode;
 }
 
 export const Panel = ({ children }: Props) => {
-  return <div className={panelStyles.panel}>{children}</div>;
+  return <div className={styles.panel}>{children}</div>;
 };

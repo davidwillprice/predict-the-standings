@@ -4,5 +4,8 @@
   background-color: $primary-color;
   border-radius: 5px;
   padding: 15px;
-  margin-bottom: 15px;
+  width: 100%;
+  box-shadow: $box-shadow;
+  max-width: 800px;
+  margin: 0 auto 15px;
 }

@@ -1,0 +1,18 @@
+@import "sass-variables.scss";
+
+.panel_heading {
+  max-width: 500px;
+  text-align: left;
+  margin: 0 auto 20px;
+  h1,
+  h2,
+  h3 {
+    font-size: 20px;
+    font-weight: 500;
+  }
+}
+@media (max-width: $mobile-menu-breakpoint) {
+  .panel_heading {
+    max-width: 300px;
+  }
+}

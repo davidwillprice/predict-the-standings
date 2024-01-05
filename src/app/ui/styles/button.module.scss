@@ -1,0 +1,16 @@
+@import "sass-variables.scss";
+
+.button {
+  border: 1px #d4d4d4 solid;
+  background-color: transparent;
+  padding: 5px;
+  border-radius: 3px;
+  text-transform: uppercase;
+  min-width: 200px;
+}
+@media (max-width: $mobile-menu-breakpoint) {
+  .button {
+    width: 100%;
+    min-width: auto;
+  }
+}
