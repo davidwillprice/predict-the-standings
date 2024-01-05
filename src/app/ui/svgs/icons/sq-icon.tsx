@@ -5,6 +5,7 @@ export interface Props {
     | "f1"
     | "group"
     | "help"
+    | "login"
     | "profile"
     | "premierLeague"
     | "stats"
@@ -73,6 +74,16 @@ const iconPaths = {
       />
     </>
   ),
+  login: (
+    <>
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        vectorEffect="non-scaling-stroke"
+        d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15M12 9l3 3m0 0-3 3m3-3H2.25"
+      />
+    </>
+  ),
   premierLeague: (
     <>
       <g transform="matrix(1.05539,0,0,1.05539,-0.136956,-0.136956)">
@@ -129,6 +140,8 @@ export default function Icon({ strokeWidth, type }: Props) {
       ? iconPaths.group
       : type === "help"
       ? iconPaths.help
+      : type === "login"
+      ? iconPaths.login
       : type === "profile"
       ? iconPaths.profile
       : type === "premierLeague"

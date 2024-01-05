@@ -55,6 +55,9 @@ const Header = () => {
         }`}>
         <hr />
         <div>
+          <HeaderLink href="/login" icon="login">
+            Login
+          </HeaderLink>
           <HeaderLink href="/profile" icon="profile">
             Profile
           </HeaderLink>
