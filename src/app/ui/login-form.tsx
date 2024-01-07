@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "./button";
-import { useSession, signIn, signOut } from "next-auth/react";
+import { useSession, signIn } from "next-auth/react";
 
 export const LoginForm = () => {
   const { data: session } = useSession();
@@ -22,11 +22,6 @@ export const LoginForm = () => {
       </form>
     </>
   ) : (
-    <form
-      action={async () => {
-        await signOut();
-      }}>
-      <Button>Sign Out</Button>
-    </form>
+    ""
   );
 };

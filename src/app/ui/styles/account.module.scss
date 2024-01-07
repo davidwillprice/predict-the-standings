@@ -1,6 +1,6 @@
 @import "sass-variables.scss";
 
-.form {
+.account {
   width: 100%;
   max-width: 500px;
   margin: 0 auto;
@@ -21,7 +21,7 @@
 }
 
 @media (max-width: $mobile-menu-breakpoint) {
-  .form {
+  .account {
     max-width: 300px;
     input {
       width: 100%;

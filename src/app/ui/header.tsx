@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 import Icon from "./svgs/icons/sq-icon";
 import HeaderLink from "./header-link";
@@ -18,6 +19,8 @@ const Header = () => {
   const handleMobMenuCick = () => {
     toggleMobMenu(!mobMenuOpen);
   };
+
+  const { data: session } = useSession();
 
   useEffect(() => {
     /**
@@ -55,12 +58,15 @@ const Header = () => {
         }`}>
         <hr />
         <div>
-          <HeaderLink href="/login" icon="login">
-            Login
-          </HeaderLink>
-          <HeaderLink href="/profile" icon="profile">
-            Profile
-          </HeaderLink>
+          {!session?.user ? (
+            <HeaderLink href="/login" icon="login">
+              Login
+            </HeaderLink>
+          ) : (
+            <HeaderLink href="/profile" icon="profile">
+              Profile
+            </HeaderLink>
+          )}
         </div>
         <hr />
         <div>
