@@ -2,10 +2,12 @@ import { ReactNode } from "react";
 
 import styles from "./styles/button.module.scss";
 
-interface Props {
+interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode;
 }
 
-export const Button = ({ children }: Props) => (
-  <button className={styles.button}>{children}</button>
+export const Button = ({ children, ...rest }: Props) => (
+  <button {...rest} className={styles.button}>
+    {children}
+  </button>
 );
