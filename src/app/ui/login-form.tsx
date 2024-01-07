@@ -1,35 +1,32 @@
-import { Button } from "./button";
+"use client";
 
-import styles from "../ui/styles/login-form.module.scss";
+import { Button } from "./button";
+import { useSession, signIn, signOut } from "next-auth/react";
 
 export const LoginForm = () => {
-  return (
-    <form className={styles.form}>
-      <div className={styles.input_container}>
-        <label htmlFor="email">Email</label>
-        <input
-          id="email"
-          type="email"
-          name="email"
-          placeholder="Enter your email address"
-          required
-        />
-      </div>
-      <hr />
-      <div className={styles.input_container}>
-        <label htmlFor="password">Password</label>
-        <input
-          id="password"
-          type="password"
-          name="password"
-          placeholder="Enter password"
-          required
-          minLength={6}
-        />
-      </div>
-      <div>
-        <Button>Login</Button>
-      </div>
+  const { data: session } = useSession();
+  console.log(session);
+  return !session?.user ? (
+    <>
+      <form
+        action={async () => {
+          await signIn("google");
+        }}>
+        <Button>Sign in via Google</Button>
+      </form>
+      <form
+        action={async () => {
+          await signIn("reddit");
+        }}>
+        <Button>Sign in via Reddit</Button>
+      </form>
+    </>
+  ) : (
+    <form
+      action={async () => {
+        await signOut();
+      }}>
+      <Button>Sign Out</Button>
     </form>
   );
 };

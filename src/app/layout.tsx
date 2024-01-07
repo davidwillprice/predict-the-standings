@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Header from "./ui/header";
+import { SessionProvider } from "@/app/components/next-auth-provider";
 
 import { Inter } from "next/font/google";
 import "./ui/styles/globals.scss";
@@ -23,10 +24,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Header />
-        <div className={styles.content_container}>
-          <main className={styles.main}>{children}</main>
-        </div>
+        <SessionProvider>
+          <Header />
+          <div className={styles.content_container}>
+            <main className={styles.main}>{children}</main>
+          </div>
+        </SessionProvider>
       </body>
     </html>
   );
