@@ -10,6 +10,8 @@ import styles from "../ui/styles/account.module.scss";
 
 export default function ProfilePage() {
   const { data: session } = useSession();
+  const name = session?.user?.name as string;
+  const email = session?.user?.email;
   return (
     <>
       <PanelHeading>
@@ -18,32 +20,32 @@ export default function ProfilePage() {
       <Panel>
         <div className={styles.account}>
           <div className={styles.input_container}>
-            <label htmlFor="name">Name</label>
-            <input
-              id="name"
-              type="name"
-              name="name"
-              value={session?.user?.name as string}
-              disabled
-            />
+            <label htmlFor="name">Display Name</label>
+            <input id="name" type="name" name="name" value={name} />
           </div>
-          <div className={styles.input_container}>
-            <label htmlFor="email">Email</label>
-            <input
-              id="email"
-              type="email"
-              name="email"
-              value={session?.user?.email as string}
-              disabled
-            />
-          </div>
+          {email ? (
+            <div className={styles.input_container}>
+              <label htmlFor="email">Email</label>
+              <input
+                id="email"
+                type="email"
+                name="email"
+                value={session?.user?.email as string}
+                disabled
+              />
+            </div>
+          ) : (
+            ""
+          )}
           <hr />
-          <form
-            action={async () => {
-              await signOut();
-            }}>
-            <Button>Sign Out</Button>
-          </form>
+          <div>
+            <Button
+              onClick={async () => {
+                await signOut({ callbackUrl: "/" });
+              }}>
+              Sign Out
+            </Button>
+          </div>
         </div>
       </Panel>
     </>

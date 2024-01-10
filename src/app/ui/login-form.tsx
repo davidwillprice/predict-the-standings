@@ -3,23 +3,26 @@
 import { Button } from "./button";
 import { useSession, signIn } from "next-auth/react";
 
+import styles from "../ui/styles/login.module.scss";
+
 export const LoginForm = () => {
   const { data: session } = useSession();
-  console.log(session);
   return !session?.user ? (
     <>
-      <form
-        action={async () => {
-          await signIn("google");
-        }}>
-        <Button>Sign in via Google</Button>
-      </form>
-      <form
-        action={async () => {
-          await signIn("reddit");
-        }}>
-        <Button>Sign in via Reddit</Button>
-      </form>
+      <div className={styles.login}>
+        <Button
+          onClick={async () => {
+            await signIn("google", { callbackUrl: "/profile" });
+          }}>
+          Sign in via Google
+        </Button>
+        <Button
+          onClick={async () => {
+            await signIn("reddit", { callbackUrl: "/profile" });
+          }}>
+          Sign in via Reddit
+        </Button>
+      </div>
     </>
   ) : (
     ""
