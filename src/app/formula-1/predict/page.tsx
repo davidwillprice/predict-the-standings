@@ -1,25 +1,21 @@
 "use client";
 
 import React, { useState } from "react";
+import { useListData } from "react-stately";
 import {
-  DndContext,
-  closestCenter,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  DragEndEvent,
-  useSensors,
-} from "@dnd-kit/core";
-import {
-  arrayMove,
-  SortableContext,
-  sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
-
-import { SortableItem } from "./sortable-item";
+  Cell,
+  Column,
+  Row,
+  Table,
+  TableBody,
+  TableHeader,
+  useDragAndDrop,
+  Button,
+} from "react-aria-components";
 
 import { entrants } from "../../data/formula-1/2023";
+
+import styles from "../../ui/styles/prediction-table.module.scss";
 
 const {
   ham,
@@ -45,7 +41,7 @@ const {
 } = entrants.drivers;
 
 export default function Page() {
-  const [entrants, setEntrants] = useState([
+  const entrants = [
     ham,
     bot,
     lec,
@@ -66,51 +62,58 @@ export default function Page() {
     gas,
     sar,
     rus,
-  ]);
-  const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    })
-  );
-  console.log(entrants);
+  ];
+
+  let list = useListData({ initialItems: entrants });
+
+  let { dragAndDropHooks } = useDragAndDrop({
+    getItems: (keys) =>
+      [...keys].map((key) => ({
+        "text/plain": list.getItem(key).name,
+      })),
+    onReorder(e) {
+      if (e.target.dropPosition === "before") {
+        list.moveBefore(e.target.key, e.keys);
+      } else if (e.target.dropPosition === "after") {
+        list.moveAfter(e.target.key, e.keys);
+      }
+      setKey(key + 1);
+    },
+    renderDragPreview(items) {
+      return (
+        <div className={styles.drag_preview}>{items[0]["text/plain"]}</div>
+      );
+    },
+  });
+
+  //Forces rerender of all rows when the entrant order is changed to ensure the new ranking order shows
+  const [key, setKey] = useState(0);
 
   return (
-    <DndContext
-      sensors={sensors}
-      collisionDetection={closestCenter}
-      onDragEnd={handleDragEnd}>
-      <table>
-        <SortableContext
-          items={entrants.map((entrant) => entrant.number)}
-          strategy={verticalListSortingStrategy}>
-          {entrants.map((entrant, index) => (
-            <SortableItem
-              id={entrant.number}
-              standing={index + 1}
-              key={entrant.number}
-              entrant={entrant}
-            />
-          ))}
-        </SortableContext>
-      </table>
-    </DndContext>
+    <div className={styles.prediction_table}>
+      <Table
+        aria-label="Files"
+        selectionMode="multiple"
+        dragAndDropHooks={dragAndDropHooks}>
+        <TableHeader>
+          <Column></Column>
+          <Column isRowHeader>Order</Column>
+          <Column>Entrant</Column>
+        </TableHeader>
+        <TableBody items={list.items} key={key}>
+          {(item) => {
+            return (
+              <Row key={item.id} className={styles.prediction_table_row}>
+                <Cell>
+                  <Button slot="drag">≡</Button>
+                </Cell>
+                <Cell>{list.items.indexOf(item) + 1}</Cell>
+                <Cell>{item.name}</Cell>
+              </Row>
+            );
+          }}
+        </TableBody>
+      </Table>
+    </div>
   );
-
-  function handleDragEnd(e: DragEndEvent) {
-    const { active, over } = e;
-    if (!over) return;
-    if (active.id !== over.id) {
-      setEntrants((entrants) => {
-        const oldIndex = entrants.findIndex(
-          (entrant) => entrant.number === active.id
-        );
-        const newIndex = entrants.findIndex(
-          (entrant) => entrant.number === over.id
-        );
-
-        return arrayMove(entrants, oldIndex, newIndex);
-      });
-    }
-  }
 }

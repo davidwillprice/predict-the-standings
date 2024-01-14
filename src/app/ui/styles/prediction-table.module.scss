@@ -1,0 +1,49 @@
+@import "sass-variables.scss";
+
+.prediction_table {
+  table {
+    border-collapse: separate;
+    border-spacing: 0 10px;
+  }
+  [data-drop-target] {
+    height: 30px;
+  }
+  [data-dragging] {
+    display: none;
+  }
+  button {
+    background-color: transparent;
+    border: none;
+    font-size: 20px;
+  }
+}
+
+.prediction_table_row {
+  background-color: #edf1f4;
+  td {
+    padding: 5px 10px;
+    border: none;
+    background-color: white;
+  }
+  td:first-child {
+    border-radius: 5px 0 0 5px;
+    padding-left: 15px;
+  }
+  td:last-child {
+    border-radius: 0 5px 5px 0;
+    text-align: left;
+    padding-right: 15px;
+  }
+}
+
+.drag_preview {
+  background: red;
+  width: 150px;
+  padding: 4px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  color: white;
+  border-radius: 4px;
+}

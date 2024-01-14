@@ -1,13 +1,13 @@
 export class Entrant {
-  fName: string;
+  name: string;
   sName: string;
   team?: string;
   avgPrePos?: number;
-  number: number;
-  constructor(fName: string, sName: string, number: number, team?: string) {
-    this.fName = fName;
+  id: number;
+  constructor(name: string, sName: string, id: number, team?: string) {
+    this.name = name;
     this.sName = sName;
-    this.number = number;
+    this.id = id;
     this.team = team;
   }
 }
