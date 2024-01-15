@@ -2,11 +2,11 @@
 
 import { useSession, signOut } from "next-auth/react";
 
-import { Button } from "../ui/button";
-import { Panel } from "../ui/panel";
-import { PanelHeading } from "../ui/panel-heading";
+import { Button } from "@ui/button";
+import { Panel } from "@ui/panel";
+import { PanelHeading } from "@ui/panel-heading";
 
-import styles from "../ui/styles/account.module.scss";
+import styles from "@ui/styles/account.module.scss";
 
 export default function ProfilePage() {
   const { data: session } = useSession();

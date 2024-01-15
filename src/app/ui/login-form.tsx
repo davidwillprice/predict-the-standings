@@ -3,7 +3,7 @@
 import { Button } from "./button";
 import { useSession, signIn } from "next-auth/react";
 
-import styles from "../ui/styles/login.module.scss";
+import styles from "@styles/login.module.scss";
 
 export const LoginForm = () => {
   const { data: session } = useSession();

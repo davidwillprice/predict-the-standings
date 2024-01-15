@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import Icon from "./svgs/icons/sq-icon";
+import Icon from "@svgs/icons/sq-icon";
 
-import styles from "./styles/header.module.scss";
+import styles from "@styles/header.module.scss";
 
-import type { Props as IconProps } from "./svgs/icons/sq-icon";
+import type { Props as IconProps } from "@svgs/icons/sq-icon";
 
 interface Props {
   children: string;

@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import styles from "../ui/styles/panel.module.scss";
+import styles from "@styles/panel.module.scss";
 interface Props {
   children: string | ReactNode;
 }

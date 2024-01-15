@@ -13,11 +13,11 @@ import {
   Button,
 } from "react-aria-components";
 
-import { entrants } from "../../data/formula-1/2023";
-import { sortF1DriverEntrantsAlphabetically } from "../../lib/misc";
+import { entrants } from "@data/formula-1/2023";
+import { sortF1DriverEntrantsAlphabetically } from "@lib/misc";
 
-import styles from "../../ui/styles/prediction-table.module.scss";
-import teamStyles from "../../ui/styles/formula-1/2023.module.scss";
+import styles from "@styles/prediction-table.module.scss";
+import teamStyles from "@styles/formula-1/2023.module.scss";
 
 const {
   ham,

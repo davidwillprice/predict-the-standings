@@ -1,6 +1,6 @@
-import { Panel } from "../ui/panel";
-import { LoginForm } from "../ui/login-form";
-import { PanelHeading } from "../ui/panel-heading";
+import { Panel } from "@ui/panel";
+import { LoginForm } from "@ui/login-form";
+import { PanelHeading } from "@ui/panel-heading";
 
 const Page = () => {
   return (

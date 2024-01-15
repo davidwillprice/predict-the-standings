@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Header from "./ui/header";
-import { SessionProvider } from "@/app/components/next-auth-provider";
+import { SessionProvider } from "@app/components/next-auth-provider";
 
 import { Inter } from "next/font/google";
 import "./ui/styles/globals.scss";
