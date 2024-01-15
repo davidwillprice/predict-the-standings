@@ -1,6 +1,8 @@
 @import "sass-variables.scss";
 
 .prediction_table {
+  display: flex;
+  justify-content: center;
   table {
     border-collapse: separate;
     border-spacing: 0 10px;
@@ -9,21 +11,21 @@
     height: 30px;
   }
   [data-dragging] {
-    display: none;
+    opacity: 0.3;
   }
   button {
     background-color: transparent;
     border: none;
-    font-size: 20px;
   }
 }
 
 .prediction_table_row {
   background-color: #edf1f4;
   td {
-    padding: 5px 10px;
+    padding: 5px 5px;
     border: none;
     background-color: white;
+    height: 35px;
   }
   td:first-child {
     border-radius: 5px 0 0 5px;
@@ -46,4 +48,12 @@
   gap: 4px;
   color: white;
   border-radius: 4px;
+}
+
+.tab {
+  height: 100%;
+  width: 5px;
+  border-radius: 10px;
+  background-color: black;
+  display: block;
 }

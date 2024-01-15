@@ -14,8 +14,10 @@ import {
 } from "react-aria-components";
 
 import { entrants } from "../../data/formula-1/2023";
+import { sortF1DriverEntrantsAlphabetically } from "../../lib/misc";
 
 import styles from "../../ui/styles/prediction-table.module.scss";
+import teamStyles from "../../ui/styles/formula-1/2023.module.scss";
 
 const {
   ham,
@@ -64,7 +66,9 @@ export default function Page() {
     rus,
   ];
 
-  let list = useListData({ initialItems: entrants });
+  let list = useListData({
+    initialItems: sortF1DriverEntrantsAlphabetically(entrants),
+  });
 
   let { dragAndDropHooks } = useDragAndDrop({
     getItems: (keys) =>
@@ -98,7 +102,8 @@ export default function Page() {
         <TableHeader>
           <Column></Column>
           <Column isRowHeader>Order</Column>
-          <Column>Entrant</Column>
+          <Column></Column>
+          <Column isRowHeader>Entrant</Column>
         </TableHeader>
         <TableBody items={list.items} key={key}>
           {(item) => {
@@ -108,6 +113,10 @@ export default function Page() {
                   <Button slot="drag">≡</Button>
                 </Cell>
                 <Cell>{list.items.indexOf(item) + 1}</Cell>
+                <Cell>
+                  <span
+                    className={`${styles.tab} ${teamStyles[item.team]}`}></span>
+                </Cell>
                 <Cell>{item.name}</Cell>
               </Row>
             );
