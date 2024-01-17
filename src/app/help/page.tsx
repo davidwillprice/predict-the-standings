@@ -5,12 +5,13 @@ const Page = () => {
   return (
     <>
       <PanelHeading>
-        <h1>Formula 1 - Homepage</h1>
+        <h1>Help</h1>
       </PanelHeading>
       <Panel>
         <p>
-          This page could work as an 'About' page but also lists each of the
-          previous/current seasons.
+          Help and rules page for both sports. With an example table where each
+          row is listed 'Entrant 1', 'Entrant 2' etc to keep it general between
+          multiple sports.
         </p>
       </Panel>
     </>
