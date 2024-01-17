@@ -1,19 +1,14 @@
 "use client";
 
 import React, { useState } from "react";
-import { useListData } from "react-stately";
 import {
-  Cell,
-  Column,
-  Row,
-  Table,
-  TableBody,
-  TableHeader,
-  useDragAndDrop,
-  Button,
-} from "react-aria-components";
+  DragDropContext,
+  Droppable,
+  Draggable,
+  DropResult,
+} from "@hello-pangea/dnd";
 
-import { entrants } from "@data/formula-1/2023";
+import { F1DriverEntrant, entrants } from "@data/formula-1/2023";
 import { sortF1DriverEntrantsAlphabetically } from "@lib/misc";
 
 import styles from "@styles/prediction-table.module.scss";
@@ -66,63 +61,65 @@ export default function Page() {
     rus,
   ];
 
-  let list = useListData({
-    initialItems: sortF1DriverEntrantsAlphabetically(entrants),
-  });
+  const initialEntrants = sortF1DriverEntrantsAlphabetically(entrants);
 
-  let { dragAndDropHooks } = useDragAndDrop({
-    getItems: (keys) =>
-      [...keys].map((key) => ({
-        "text/plain": list.getItem(key).name,
-      })),
-    onReorder(e) {
-      if (e.target.dropPosition === "before") {
-        list.moveBefore(e.target.key, e.keys);
-      } else if (e.target.dropPosition === "after") {
-        list.moveAfter(e.target.key, e.keys);
-      }
-      setKey(key + 1);
-    },
-    renderDragPreview(items) {
-      return (
-        <div className={styles.drag_preview}>{items[0]["text/plain"]}</div>
-      );
-    },
-  });
+  const [items, updateInputField] = useState(initialEntrants);
 
-  //Forces rerender of all rows when the entrant order is changed to ensure the new ranking order shows
-  const [key, setKey] = useState(0);
+  const handleDragEnd = (result: DropResult) => {
+    const { destination, source } = result;
+    if (!destination) return;
+    const newItems = Array.from(items);
+    const [reOrdered] = newItems.splice(source.index, 1);
+    newItems.splice(destination.index, 0, reOrdered);
+    updateInputField([...newItems]);
+  };
 
   return (
     <div className={styles.prediction_table}>
-      <Table
-        aria-label="Files"
-        selectionMode="multiple"
-        dragAndDropHooks={dragAndDropHooks}>
-        <TableHeader>
-          <Column></Column>
-          <Column isRowHeader>Order</Column>
-          <Column></Column>
-          <Column isRowHeader>Entrant</Column>
-        </TableHeader>
-        <TableBody items={list.items} key={key}>
-          {(item) => {
-            return (
-              <Row key={item.id} className={styles.prediction_table_row}>
-                <Cell>
-                  <Button slot="drag">≡</Button>
-                </Cell>
-                <Cell>{list.items.indexOf(item) + 1}</Cell>
-                <Cell>
-                  <span
-                    className={`${styles.tab} ${teamStyles[item.team]}`}></span>
-                </Cell>
-                <Cell>{item.name}</Cell>
-              </Row>
-            );
-          }}
-        </TableBody>
-      </Table>
+      <table>
+        <thead>
+          <tr>
+            <th></th>
+            <th>Order</th>
+            <th></th>
+            <th>Entrant</th>
+          </tr>
+        </thead>
+        <DragDropContext onDragEnd={handleDragEnd}>
+          <Droppable droppableId="droppable">
+            {(provided) => (
+              <tbody {...provided.droppableProps} ref={provided.innerRef}>
+                {items.map((item, index) => (
+                  <Draggable
+                    key={item.id}
+                    draggableId={`${item.id}`}
+                    index={index}>
+                    {(provided) => (
+                      <tr
+                        key={item.id}
+                        className={styles.prediction_table_row}
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}>
+                        <td>≡</td>
+                        <td>{items.indexOf(item) + 1}</td>
+                        <td>
+                          <span
+                            className={`${styles.tab} ${
+                              teamStyles[item.team]
+                            }`}></span>
+                        </td>
+                        <td>{item.name}</td>
+                      </tr>
+                    )}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
+              </tbody>
+            )}
+          </Droppable>
+        </DragDropContext>
+      </table>
     </div>
   );
 }
