@@ -9,8 +9,8 @@ const Page = () => {
       </PanelHeading>
       <Panel>
         <p>
-          This page could work as an 'About' page but also lists each of the
-          previous/current seasons.
+          This page could work as an &apos;About&apos; page but also lists each
+          of the previous/current seasons.
         </p>
       </Panel>
     </>

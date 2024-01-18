@@ -9,8 +9,8 @@ const Page = () => {
       </PanelHeading>
       <Panel>
         <p>
-          This page could work as an 'About' but also be a dashboard for the
-          2024 season.
+          This page could work as an &apos;About&apos; but also be a dashboard
+          for the 2024 season.
         </p>
       </Panel>
     </>

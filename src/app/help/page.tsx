@@ -10,8 +10,8 @@ const Page = () => {
       <Panel>
         <p>
           Help and rules page for both sports. With an example table where each
-          row is listed 'Entrant 1', 'Entrant 2' etc to keep it general between
-          multiple sports.
+          row is listed &apos;Entrant 1&apos;, &apos;Entrant 2&apos; etc to keep
+          it general between multiple sports.
         </p>
       </Panel>
     </>
