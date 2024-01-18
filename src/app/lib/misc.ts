@@ -1,4 +1,4 @@
-import type { Entrant, F1DriverEntrant } from "@data/formula-1/2023";
+import type { Entrant, F1DriverEntrant } from "@custom-types/entrants";
 
 export const sortEntrantsAlphabetically = (entrantArr: Entrant[]) => {
   return entrantArr.sort((a, b) =>

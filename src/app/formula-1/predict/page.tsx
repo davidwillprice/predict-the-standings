@@ -1,125 +1,35 @@
 "use client";
 
-import React, { useState } from "react";
-import {
-  DragDropContext,
-  Droppable,
-  Draggable,
-  DropResult,
-} from "@hello-pangea/dnd";
-
-import { F1DriverEntrant, entrants } from "@data/formula-1/2023";
+import { entrants } from "@data/formula-1/2023";
 import { sortF1DriverEntrantsAlphabetically } from "@lib/misc";
 
-import styles from "@styles/prediction-table.module.scss";
-import teamStyles from "@styles/formula-1/2023.module.scss";
-
-const {
-  ham,
-  bot,
-  lec,
-  sai,
-  ver,
-  per,
-  alo,
-  oco,
-  hul,
-  mag,
-  nor,
-  pia,
-  ric,
-  str,
-  zho,
-  alb,
-  tsu,
-  gas,
-  sar,
-  rus,
-} = entrants.drivers;
+import SubmitPredictions from "@app/ui/submit-predictions";
 
 export default function Page() {
-  const entrants = [
-    ham,
-    bot,
-    lec,
-    sai,
-    ver,
-    per,
-    alo,
-    oco,
-    hul,
-    mag,
-    nor,
-    pia,
-    ric,
-    str,
-    zho,
-    alb,
-    tsu,
-    gas,
-    sar,
-    rus,
+  const entrantsArr = [
+    entrants.drivers.ham,
+    entrants.drivers.bot,
+    entrants.drivers.lec,
+    entrants.drivers.sai,
+    entrants.drivers.ver,
+    entrants.drivers.per,
+    entrants.drivers.alo,
+    entrants.drivers.oco,
+    entrants.drivers.hul,
+    entrants.drivers.mag,
+    entrants.drivers.nor,
+    entrants.drivers.pia,
+    entrants.drivers.ric,
+    entrants.drivers.str,
+    entrants.drivers.zho,
+    entrants.drivers.alb,
+    entrants.drivers.tsu,
+    entrants.drivers.gas,
+    entrants.drivers.sar,
+    entrants.drivers.rus,
   ];
 
-  const initialEntrants = sortF1DriverEntrantsAlphabetically(entrants);
+  const initialEntrants = sortF1DriverEntrantsAlphabetically(entrantsArr);
 
-  const [items, updateInputField] = useState(initialEntrants);
-
-  const handleDragEnd = (result: DropResult) => {
-    const { destination, source } = result;
-    if (!destination) return;
-    const newItems = Array.from(items);
-    const [reOrdered] = newItems.splice(source.index, 1);
-    newItems.splice(destination.index, 0, reOrdered);
-    updateInputField([...newItems]);
-  };
-
-  return (
-    <div className={styles.prediction_table}>
-      <table>
-        <thead>
-          <tr>
-            <th></th>
-            <th>Order</th>
-            <th></th>
-            <th>Entrant</th>
-          </tr>
-        </thead>
-        <DragDropContext onDragEnd={handleDragEnd}>
-          <Droppable droppableId="droppable">
-            {(provided) => (
-              <tbody {...provided.droppableProps} ref={provided.innerRef}>
-                {items.map((item, index) => (
-                  <Draggable
-                    key={item.id}
-                    draggableId={`${item.id}`}
-                    index={index}>
-                    {(provided) => (
-                      <tr
-                        key={item.id}
-                        className={styles.prediction_table_row}
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}>
-                        <td>≡</td>
-                        <td>{items.indexOf(item) + 1}</td>
-                        <td>
-                          <span
-                            className={`${styles.tab} ${
-                              teamStyles[item.team]
-                            }`}></span>
-                        </td>
-                        <td>{item.name}</td>
-                      </tr>
-                    )}
-                  </Draggable>
-                ))}
-                {provided.placeholder}
-              </tbody>
-            )}
-          </Droppable>
-        </DragDropContext>
-      </table>
-    </div>
-  );
+  return <SubmitPredictions initialEntrants={initialEntrants} />;
 }

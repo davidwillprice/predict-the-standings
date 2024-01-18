@@ -22,6 +22,7 @@
       "@app/*": ["./src/app/*"],
       "@data/*": ["./src/app/data/*"],
       "@lib/*": ["./src/app/lib/*"],
+      "@custom-types/*": ["./src/app/custom-types/*"],
       "@ui/*": ["./src/app/ui/*"],
       "@styles/*": ["./src/app/ui/styles/*"],
       "@svgs/*": ["./src/app/ui/svgs/*"]
