@@ -1,6 +1,15 @@
 import { Entrant, F1DriverEntrant } from "@app/custom-types/entrants";
 
-export const entrants = {
+interface Entrants {
+  drivers: {
+    [key: string]: F1DriverEntrant;
+  };
+  teams: {
+    [key: string]: Entrant;
+  };
+}
+
+export const entrants: Entrants = {
   drivers: {
     ham: new F1DriverEntrant("Hamilton", "ham", 44, "mer", "#00d2be"),
     rus: new F1DriverEntrant("Russell", "rus", 63, "mer", "#00d2be"),

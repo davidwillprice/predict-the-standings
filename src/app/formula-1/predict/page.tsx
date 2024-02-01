@@ -1,17 +1,19 @@
-"use client";
+import { query } from "@app/lib/db";
+import { entrants } from "@data/formula-1/2023";
+
+import { sortF1DriverEntrantsAlphabetically } from "@lib/misc";
 
 import { ContentContainer } from "@ui/content-container";
 import { Panel } from "@ui/panel";
 import { PanelHeading } from "@ui/panel-heading";
 import { Button } from "@ui/button";
 
-import { entrants } from "@data/formula-1/2023";
-import { sortF1DriverEntrantsAlphabetically } from "@lib/misc";
-
 import SubmitPredictions from "@app/ui/submit-predictions";
 
-export default function Page() {
-  const entrantsArr = [
+import { F1DriverEntrant } from "@app/custom-types/entrants";
+
+export default async function Page() {
+  const defaultEntrantsArr = [
     entrants.drivers.ham,
     entrants.drivers.bot,
     entrants.drivers.lec,
@@ -33,8 +35,15 @@ export default function Page() {
     entrants.drivers.sar,
     entrants.drivers.rus,
   ];
+  const res = await query(`SELECT f1_2024
+  FROM users
+  WHERE id = 1`);
 
-  const initialEntrants = sortF1DriverEntrantsAlphabetically(entrantsArr);
+  const entrantArr: F1DriverEntrant[] = res.rows[0]["f1_2024"].map(
+    (entrantStr: string) => entrants.drivers[entrantStr]
+  );
+
+  const initialEntrants = sortF1DriverEntrantsAlphabetically(entrantArr);
 
   return (
     <>
@@ -43,7 +52,9 @@ export default function Page() {
       </PanelHeading>
       <ContentContainer>
         <div>
-          <SubmitPredictions initialEntrants={initialEntrants} />
+          <SubmitPredictions
+            initialEntrants={JSON.parse(JSON.stringify(initialEntrants))}
+          />
         </div>
         <div>
           <Panel>
@@ -64,7 +75,7 @@ export default function Page() {
             </p>
             <p>11:30am GMT 29th February 2024</p>
           </Panel>
-          <Button>Submit</Button>
+          <Button>Submit Predictions</Button>
         </div>
       </ContentContainer>
     </>
