@@ -1,0 +1,18 @@
+@import "sass-variables.scss";
+
+.container {
+  display: flex;
+  padding: 15px;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto 15px;
+  justify-content: space-between;
+  gap: 5%;
+}
+
+@media (max-width: $tablet-menu-breakpoint) {
+  .container {
+    flex-direction: column;
+    gap: 15px;
+  }
+}
