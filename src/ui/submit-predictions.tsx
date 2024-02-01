@@ -8,6 +8,10 @@ import {
   DropResult,
 } from "@hello-pangea/dnd";
 
+import { submitPredictions } from "@lib/submit-predictions";
+
+import { Button } from "@ui/button";
+
 import { Entrant } from "@custom-types/entrants";
 
 import styles from "@styles/prediction-table.module.scss";
@@ -18,7 +22,6 @@ type Props = {
 
 export default function SubmitPredictions({ initialEntrants }: Props) {
   const [items, updateInputField] = useState(initialEntrants);
-
   const handleDragEnd = (result: DropResult) => {
     const { destination, source } = result;
     if (!destination) return;
@@ -28,50 +31,58 @@ export default function SubmitPredictions({ initialEntrants }: Props) {
     updateInputField([...newItems]);
   };
   return (
-    <div className={styles.prediction_table}>
-      <table>
-        <thead>
-          <tr>
-            <th></th>
-            <th>Order</th>
-            <th></th>
-            <th>Entrant</th>
-          </tr>
-        </thead>
-        <DragDropContext onDragEnd={handleDragEnd}>
-          <Droppable droppableId="droppable">
-            {(provided) => (
-              <tbody {...provided.droppableProps} ref={provided.innerRef}>
-                {items.map((item, index) => (
-                  <Draggable
-                    key={item.id}
-                    draggableId={`${item.id}`}
-                    index={index}>
-                    {(provided) => (
-                      <tr
-                        key={item.id}
-                        className={styles.prediction_table_row}
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}>
-                        <td>≡</td>
-                        <td>{items.indexOf(item) + 1}</td>
-                        <td>
-                          <span
-                            className={`${styles.tab}`}
-                            style={{ backgroundColor: item.color }}></span>
-                        </td>
-                        <td>{item.name}</td>
-                      </tr>
-                    )}
-                  </Draggable>
-                ))}
-                {provided.placeholder}
-              </tbody>
-            )}
-          </Droppable>
-        </DragDropContext>
-      </table>
-    </div>
+    <>
+      <div className={styles.prediction_table}>
+        <table>
+          <thead>
+            <tr>
+              <th></th>
+              <th>Order</th>
+              <th></th>
+              <th>Entrant</th>
+            </tr>
+          </thead>
+          <DragDropContext onDragEnd={handleDragEnd}>
+            <Droppable droppableId="droppable">
+              {(provided) => (
+                <tbody {...provided.droppableProps} ref={provided.innerRef}>
+                  {items.map((item, index) => (
+                    <Draggable
+                      key={item.id}
+                      draggableId={`${item.id}`}
+                      index={index}>
+                      {(provided) => (
+                        <tr
+                          key={item.id}
+                          className={styles.prediction_table_row}
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}>
+                          <td>≡</td>
+                          <td>{items.indexOf(item) + 1}</td>
+                          <td>
+                            <span
+                              className={`${styles.tab}`}
+                              style={{ backgroundColor: item.color }}></span>
+                          </td>
+                          <td>{item.name}</td>
+                        </tr>
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
+                </tbody>
+              )}
+            </Droppable>
+          </DragDropContext>
+        </table>
+      </div>
+      <Button
+        onClick={async () => {
+          await submitPredictions(items);
+        }}>
+        Submit Predictions
+      </Button>
+    </>
   );
 }

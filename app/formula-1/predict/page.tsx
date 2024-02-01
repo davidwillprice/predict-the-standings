@@ -3,17 +3,17 @@ import { entrants } from "@data/formula-1/2023";
 
 import { sortF1DriverEntrantsAlphabetically } from "@lib/misc";
 
-import { ContentContainer } from "../../../src/ui/content-container";
-import { Panel } from "../../../src/ui/panel";
-import { PanelHeading } from "../../../src/ui/panel-heading";
-import { Button } from "../../../src/ui/button";
+import { ContentContainer } from "@ui/content-container";
+import { Panel } from "@ui/panel";
+import { PanelHeading } from "@ui/panel-heading";
+import { Button } from "@ui/button";
 
-import SubmitPredictions from "../../../src/ui/submit-predictions";
+import SubmitPredictions from "@ui/submit-predictions";
 
 import { F1DriverEntrant } from "@custom-types/entrants";
 
 export default async function Page() {
-  const defaultEntrantsArr = [
+  const defaultEntrantsArr = sortF1DriverEntrantsAlphabetically([
     entrants.drivers.ham,
     entrants.drivers.bot,
     entrants.drivers.lec,
@@ -34,16 +34,23 @@ export default async function Page() {
     entrants.drivers.gas,
     entrants.drivers.sar,
     entrants.drivers.rus,
-  ];
-  const res = await query(`SELECT f1_2024
+  ]);
+  let entrantArr: F1DriverEntrant[];
+  try {
+    const res = await query(`SELECT f1_2024
   FROM users
   WHERE id = 1`);
-
-  const entrantArr: F1DriverEntrant[] = res.rows[0]["f1_2024"].map(
-    (entrantStr: string) => entrants.drivers[entrantStr]
-  );
-
-  const initialEntrants = sortF1DriverEntrantsAlphabetically(entrantArr);
+    if (res.rows[0]["f1_2024"] === null) {
+      entrantArr = defaultEntrantsArr;
+    } else {
+      entrantArr = res.rows[0]["f1_2024"].map(
+        (entrantStr: string) => entrants.drivers[entrantStr]
+      );
+    }
+  } catch (error) {
+    throw error;
+    entrantArr = defaultEntrantsArr;
+  }
 
   return (
     <>
@@ -53,7 +60,7 @@ export default async function Page() {
       <ContentContainer>
         <div>
           <SubmitPredictions
-            initialEntrants={JSON.parse(JSON.stringify(initialEntrants))}
+            initialEntrants={JSON.parse(JSON.stringify(entrantArr))}
           />
         </div>
         <div>
@@ -66,7 +73,6 @@ export default async function Page() {
               Any new drivers entering the season midway through won&apos;t be
               included in the final standings.
             </p>
-            <p></p>
           </Panel>
           <Panel>
             <p>
@@ -75,7 +81,7 @@ export default async function Page() {
             </p>
             <p>11:30am GMT 29th February 2024</p>
           </Panel>
-          <Button>Submit Predictions</Button>
+          <Button> NOT WORKING Submit Predictions</Button>
         </div>
       </ContentContainer>
     </>
