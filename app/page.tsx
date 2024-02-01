@@ -1,4 +1,4 @@
-import { Panel } from "./ui/panel";
+import { Panel } from "../src/ui/panel";
 
 export default function Home() {
   return (

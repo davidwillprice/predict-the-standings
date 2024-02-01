@@ -8,7 +8,7 @@ import {
   DropResult,
 } from "@hello-pangea/dnd";
 
-import { Entrant } from "@app/custom-types/entrants";
+import { Entrant } from "@custom-types/entrants";
 
 import styles from "@styles/prediction-table.module.scss";
 

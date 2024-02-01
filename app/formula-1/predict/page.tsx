@@ -1,16 +1,16 @@
-import { query } from "@app/lib/db";
+import { query } from "@lib/db";
 import { entrants } from "@data/formula-1/2023";
 
 import { sortF1DriverEntrantsAlphabetically } from "@lib/misc";
 
-import { ContentContainer } from "@ui/content-container";
-import { Panel } from "@ui/panel";
-import { PanelHeading } from "@ui/panel-heading";
-import { Button } from "@ui/button";
+import { ContentContainer } from "../../../src/ui/content-container";
+import { Panel } from "../../../src/ui/panel";
+import { PanelHeading } from "../../../src/ui/panel-heading";
+import { Button } from "../../../src/ui/button";
 
-import SubmitPredictions from "@app/ui/submit-predictions";
+import SubmitPredictions from "../../../src/ui/submit-predictions";
 
-import { F1DriverEntrant } from "@app/custom-types/entrants";
+import { F1DriverEntrant } from "@custom-types/entrants";
 
 export default async function Page() {
   const defaultEntrantsArr = [

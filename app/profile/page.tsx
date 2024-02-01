@@ -2,9 +2,9 @@
 
 import { useSession, signOut } from "next-auth/react";
 
-import { Button } from "@ui/button";
-import { Panel } from "@ui/panel";
-import { PanelHeading } from "@ui/panel-heading";
+import { Button } from "../../src/ui/button";
+import { Panel } from "../../src/ui/panel";
+import { PanelHeading } from "../../src/ui/panel-heading";
 
 import styles from "@ui/styles/account.module.scss";
 
