@@ -6,9 +6,8 @@ import { sortF1DriverEntrantsAlphabetically } from "@lib/misc";
 import { ContentContainer } from "@ui/content-container";
 import { Panel } from "@ui/panel";
 import { PanelHeading } from "@ui/panel-heading";
-import { Button } from "@ui/button";
-
-import SubmitPredictions from "@ui/submit-predictions";
+import { SubmitPredictions } from "@ui/submit-predictions/submit-predictions";
+import { EditablePredictionTable } from "@ui/submit-predictions/editable-prediction-table";
 
 import { F1DriverEntrant } from "@custom-types/entrants";
 
@@ -49,9 +48,7 @@ export default async function Page() {
     }
   } catch (error) {
     throw error;
-    entrantArr = defaultEntrantsArr;
   }
-
   return (
     <>
       <PanelHeading>
@@ -59,7 +56,7 @@ export default async function Page() {
       </PanelHeading>
       <ContentContainer>
         <div>
-          <SubmitPredictions
+          <EditablePredictionTable
             initialEntrants={JSON.parse(JSON.stringify(entrantArr))}
           />
         </div>
@@ -79,9 +76,10 @@ export default async function Page() {
               Predictions will lock at the start of opening weekend&apos;s Free
               Practice 1. You can edit your predictions up until the time below:
             </p>
+            {/**@todo Load date/time from a single variable at the top of the page */}
             <p>11:30am GMT 29th February 2024</p>
           </Panel>
-          <Button> NOT WORKING Submit Predictions</Button>
+          <SubmitPredictions />
         </div>
       </ContentContainer>
     </>
