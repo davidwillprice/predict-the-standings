@@ -4,3 +4,16 @@
   justify-content: center;
   align-items: center;
 }
+.error {
+  display: flex;
+  align-items: center;
+  p {
+    margin-bottom: 0;
+  }
+}
+.errorIcon {
+  width: 30px;
+  height: 30px;
+  color: red;
+  margin-right: 15px;
+}
