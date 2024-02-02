@@ -15,3 +15,10 @@ export const submitPredictions = async (
   )}]
     WHERE id = 1`);
 };
+
+export const getPredictionTable = async (season: string, sport: Sport) => {
+  const res = await query(`SELECT ${sport}_${season}
+  FROM users
+  WHERE id = 1`);
+  return res.rows[0][`${sport}_${season}`];
+};

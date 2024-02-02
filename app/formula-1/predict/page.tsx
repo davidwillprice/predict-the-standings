@@ -1,7 +1,7 @@
-import { query } from "@lib/db";
 import { entrants } from "@data/formula-1/2023";
 
 import { sortF1DriverEntrantsAlphabetically } from "@lib/misc";
+import { getPredictionTable } from "@lib/db-functions";
 
 import { ContentContainer } from "@ui/content-container";
 import { Panel } from "@ui/panel";
@@ -40,13 +40,12 @@ export default async function Page() {
   ]);
   let entrantArr: F1DriverEntrant[];
   try {
-    const res = await query(`SELECT ${sport}_${season}
-  FROM users
-  WHERE id = 1`);
-    if (res.rows[0][`${sport}_${season}`] === null) {
+    const dbPredictionTable = await getPredictionTable(season, sport);
+
+    if (dbPredictionTable === null) {
       entrantArr = defaultEntrantsArr;
     } else {
-      entrantArr = res.rows[0][`${sport}_${season}`].map(
+      entrantArr = dbPredictionTable.map(
         (entrantStr: string) => entrants.drivers[entrantStr]
       );
     }
