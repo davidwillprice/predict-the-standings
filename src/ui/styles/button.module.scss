@@ -1,14 +1,15 @@
 @import "sass-variables.scss";
 
 .button {
-  border: 1px #d4d4d4 solid;
-  background-color: transparent;
+  border: 1px $quaternary-color solid;
+  background-color: $primary-color;
   padding: 5px;
   border-radius: 3px;
   text-transform: uppercase;
   min-width: 200px;
   cursor: pointer;
   margin-bottom: 15px;
+  color: $secondary-color;
 }
 @media (max-width: $mobile-menu-breakpoint) {
   .button {
