@@ -6,17 +6,22 @@ import { EditablePredictionTable } from "@ui/submit-predictions/editable-predict
 import { SubmitPredictions } from "@ui/submit-predictions/submit-predictions";
 
 import { F1DriverEntrant } from "@custom-types/entrants";
+import { Sport } from "@custom-types/misc";
 
 interface Props {
   predictionFreezeDate: Date;
   children: string | ReactNode;
   initialEntrants: F1DriverEntrant[];
+  sport: Sport;
+  season: string;
 }
 
 export const EditPredictions = ({
   predictionFreezeDate,
   initialEntrants,
   children,
+  season,
+  sport,
 }: Props) => {
   const [entrantArr, setEntrantArr] = useState(initialEntrants);
   //const [predictionsLocked, lockPredictions] = useState(false);
@@ -34,7 +39,11 @@ export const EditPredictions = ({
       </div>
       <div>
         {children}
-        <SubmitPredictions entrantArr={entrantArr} />
+        <SubmitPredictions
+          entrantArr={entrantArr}
+          sport={sport}
+          season={season}
+        />
       </div>
     </>
   );

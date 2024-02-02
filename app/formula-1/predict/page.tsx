@@ -9,8 +9,11 @@ import { PanelHeading } from "@ui/panel-heading";
 import { EditPredictions } from "@ui/submit-predictions/edit-predictions";
 
 import { F1DriverEntrant } from "@custom-types/entrants";
+import { Sport } from "@custom-types/misc";
 
 export default async function Page() {
+  const sport: Sport = "f1";
+  const season = "2024";
   const predictionFreezeDate = new Date("2024-02-29T11:30:00");
 
   const defaultEntrantsArr = sortF1DriverEntrantsAlphabetically([
@@ -37,13 +40,13 @@ export default async function Page() {
   ]);
   let entrantArr: F1DriverEntrant[];
   try {
-    const res = await query(`SELECT f1_2024
+    const res = await query(`SELECT ${sport}_${season}
   FROM users
   WHERE id = 1`);
-    if (res.rows[0]["f1_2024"] === null) {
+    if (res.rows[0][`${sport}_${season}`] === null) {
       entrantArr = defaultEntrantsArr;
     } else {
-      entrantArr = res.rows[0]["f1_2024"].map(
+      entrantArr = res.rows[0][`${sport}_${season}`].map(
         (entrantStr: string) => entrants.drivers[entrantStr]
       );
     }
@@ -57,8 +60,10 @@ export default async function Page() {
       </PanelHeading>
       <ContentContainer>
         <EditPredictions
+          initialEntrants={JSON.parse(JSON.stringify(entrantArr))}
           predictionFreezeDate={predictionFreezeDate}
-          initialEntrants={JSON.parse(JSON.stringify(entrantArr))}>
+          season={season}
+          sport={sport}>
           <Panel>
             <p>
               Drag the drivers into the order which you think they will be in at
