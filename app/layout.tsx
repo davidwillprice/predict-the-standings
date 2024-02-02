@@ -2,11 +2,15 @@ import type { Metadata } from "next";
 import Header from "@ui/header";
 import { SessionProvider } from "@lib/next-auth-provider";
 
-import { Inter } from "next/font/google";
+import { Roboto } from "next/font/google";
 import "@styles/globals.scss";
 import styles from "@styles/layout.module.scss";
 
-const inter = Inter({ subsets: ["latin"] });
+const roboto = Roboto({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  variable: "--font-roboto",
+});
 
 export const metadata: Metadata = {
   title: "Predict The Standings",
@@ -22,8 +26,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
+    <html lang="en" className={roboto.variable}>
+      <body>
         <SessionProvider>
           <Header />
           <div className={styles.content_container}>
