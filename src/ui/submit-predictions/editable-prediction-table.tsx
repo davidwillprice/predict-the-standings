@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import {
   DragDropContext,
   Droppable,
@@ -8,29 +7,30 @@ import {
   DropResult,
 } from "@hello-pangea/dnd";
 
-import { Entrant } from "@custom-types/entrants";
+import { F1DriverEntrant } from "@custom-types/entrants";
 
 import styles from "@styles/prediction-table.module.scss";
 
 type Props = {
-  initialEntrants: Entrant[];
+  entrantArr: F1DriverEntrant[];
+  handleEntrantState: (entrantArr: F1DriverEntrant[]) => void;
 };
 
-export function EditablePredictionTable({ initialEntrants }: Props) {
-  const [items, updateInputField] = useState(initialEntrants);
+export function EditablePredictionTable({
+  entrantArr,
+  handleEntrantState,
+}: Props) {
   const handleDragEnd = (result: DropResult) => {
     const { destination, source } = result;
     if (!destination) return;
-    const newItems = Array.from(items);
-    const [reOrdered] = newItems.splice(source.index, 1);
-    newItems.splice(destination.index, 0, reOrdered);
-    updateInputField([...newItems]);
+    const newEntrantArr = Array.from(entrantArr);
+    const [reOrdered] = newEntrantArr.splice(source.index, 1);
+    newEntrantArr.splice(destination.index, 0, reOrdered);
+    handleEntrantState([...newEntrantArr]);
   };
+
   return (
-    <div
-      id="prediction-table"
-      className={styles.prediction_table}
-      data-entrant-order={items.map((entrant) => `'${entrant.sName}'`)}>
+    <div id="prediction-table" className={styles.prediction_table}>
       <table>
         <thead>
           <tr>
@@ -44,26 +44,26 @@ export function EditablePredictionTable({ initialEntrants }: Props) {
           <Droppable droppableId="droppable">
             {(provided) => (
               <tbody {...provided.droppableProps} ref={provided.innerRef}>
-                {items.map((item, index) => (
+                {entrantArr.map((entrant, index) => (
                   <Draggable
-                    key={item.id}
-                    draggableId={`${item.id}`}
+                    key={entrant.id}
+                    draggableId={`${entrant.id}`}
                     index={index}>
                     {(provided) => (
                       <tr
-                        key={item.id}
+                        key={entrant.id}
                         className={styles.prediction_table_row}
                         ref={provided.innerRef}
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}>
                         <td>≡</td>
-                        <td>{items.indexOf(item) + 1}</td>
+                        <td>{entrantArr.indexOf(entrant) + 1}</td>
                         <td>
                           <span
                             className={`${styles.tab}`}
-                            style={{ backgroundColor: item.color }}></span>
+                            style={{ backgroundColor: entrant.color }}></span>
                         </td>
-                        <td>{item.name}</td>
+                        <td>{entrant.name}</td>
                       </tr>
                     )}
                   </Draggable>

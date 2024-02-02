@@ -6,12 +6,13 @@ import { sortF1DriverEntrantsAlphabetically } from "@lib/misc";
 import { ContentContainer } from "@ui/content-container";
 import { Panel } from "@ui/panel";
 import { PanelHeading } from "@ui/panel-heading";
-import { SubmitPredictions } from "@ui/submit-predictions/submit-predictions";
-import { EditablePredictionTable } from "@ui/submit-predictions/editable-prediction-table";
+import { EditPredictions } from "@ui/submit-predictions/edit-predictions";
 
 import { F1DriverEntrant } from "@custom-types/entrants";
 
 export default async function Page() {
+  const predictionFreezeDate = new Date("2024-02-29T11:30:00");
+
   const defaultEntrantsArr = sortF1DriverEntrantsAlphabetically([
     entrants.drivers.ham,
     entrants.drivers.bot,
@@ -55,12 +56,9 @@ export default async function Page() {
         <h1>Predict the Final Standings</h1>
       </PanelHeading>
       <ContentContainer>
-        <div>
-          <EditablePredictionTable
-            initialEntrants={JSON.parse(JSON.stringify(entrantArr))}
-          />
-        </div>
-        <div>
+        <EditPredictions
+          predictionFreezeDate={predictionFreezeDate}
+          initialEntrants={JSON.parse(JSON.stringify(entrantArr))}>
           <Panel>
             <p>
               Drag the drivers into the order which you think they will be in at
@@ -76,11 +74,9 @@ export default async function Page() {
               Predictions will lock at the start of opening weekend&apos;s Free
               Practice 1. You can edit your predictions up until the time below:
             </p>
-            {/**@todo Load date/time from a single variable at the top of the page */}
-            <p>11:30am GMT 29th February 2024</p>
+            <p>{predictionFreezeDate.toString()}</p>
           </Panel>
-          <SubmitPredictions />
-        </div>
+        </EditPredictions>
       </ContentContainer>
     </>
   );
