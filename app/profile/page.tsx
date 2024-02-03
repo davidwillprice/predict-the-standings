@@ -1,17 +1,22 @@
-"use client";
+import { getServerSession } from "next-auth/next";
+import { redirect } from "next/navigation";
 
-import { useSession, signOut } from "next-auth/react";
+import { authOptions } from "@lib/auth";
 
-import { Button } from "@components/button/button";
 import { Panel } from "@components/panels/panel";
 import { PanelHeading } from "@components/panels/panel-heading";
+import { SignOutBtn } from "@components/profile/sign-out";
 
 import styles from "@styles/account.module.scss";
 
 /**@todo Add ability to change display name, but limit changes to once a day or something to save DB calls */
 
-export default function ProfilePage() {
-  const { data: session } = useSession();
+export default async function ProfilePage() {
+  const session = await getServerSession(authOptions);
+  if (session == null) {
+    return redirect("/login");
+  }
+
   const name = session?.user?.name as string;
   const email = session?.user?.email;
   return (
@@ -41,12 +46,7 @@ export default function ProfilePage() {
           )}
           <hr />
           <div>
-            <Button
-              onClick={async () => {
-                await signOut({ callbackUrl: "/" });
-              }}>
-              Sign Out
-            </Button>
+            <SignOutBtn />
           </div>
         </div>
       </Panel>
