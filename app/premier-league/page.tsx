@@ -1,3 +1,9 @@
-export default function Page() {
-  return <p>Premier League page</p>;
-}
+const Page = () => {
+  return (
+    <>
+      <p>Coming soon</p>
+    </>
+  );
+};
+
+export default Page;
