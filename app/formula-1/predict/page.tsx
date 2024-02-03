@@ -51,7 +51,7 @@ export default async function Page() {
   try {
     const dbPredictionTable = await getPredictionTable(season, sport, userId);
 
-    if (dbPredictionTable === null) {
+    if (!dbPredictionTable) {
       entrantArr = defaultEntrantsArr;
     } else {
       entrantArr = dbPredictionTable.map(

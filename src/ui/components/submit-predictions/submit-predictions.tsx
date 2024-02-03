@@ -52,7 +52,6 @@ export const SubmitPredictions = ({
   if (savedEntrantArr !== entrantArr) {
     submissionSuccessful.current = false;
   }
-  console.log(submissionSuccessful);
 
   /**If no changes have been made on first load, the submit button doesn't show until changes have been made
    * On a submission attempt with an error, the submit button stays with new error feedback

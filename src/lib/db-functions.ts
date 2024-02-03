@@ -10,11 +10,15 @@ export const submitPredictions = async (
   sport: Sport,
   userId: number
 ) => {
-  await query(`UPDATE users
-    SET ${sport}_${season} = ARRAY[${entrantArr.map(
+  await query(`INSERT INTO ${sport}_${season} (prediction_id, user_id, prediction)
+  VALUES (${userId}, ${userId}, ARRAY[${entrantArr.map(
     (entrant) => `'${entrant.sName}'`
-  )}]
-    WHERE id = ${userId}`);
+  )}])
+  ON CONFLICT (prediction_id)
+  DO UPDATE
+  SET user_id = ${userId}, prediction = ARRAY[${entrantArr.map(
+    (entrant) => `'${entrant.sName}'`
+  )}]`);
 };
 
 export const getPredictionTable = async (
@@ -22,8 +26,8 @@ export const getPredictionTable = async (
   sport: Sport,
   userId: number
 ) => {
-  const res = await query(`SELECT ${sport}_${season}
-  FROM users
-  WHERE id = ${userId}`);
-  return res.rows[0][`${sport}_${season}`];
+  const res = await query(`SELECT prediction
+  FROM ${sport}_${season}
+  WHERE prediction_id = ${userId}`);
+  return res.rows[0]["prediction"];
 };
