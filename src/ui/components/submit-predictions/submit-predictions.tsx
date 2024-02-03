@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 import { Button } from "@components/button/button";
 import { LoadingSpinner } from "@components/loading-spinner/loading-spinner";
@@ -23,7 +23,9 @@ interface Props {
 }
 
 export const SubmitPredictions = ({ entrantArr, season, sport }: Props) => {
+  const submissionSuccessful = useRef(false);
   const [submitting, isSubmitting] = useState(false);
+  const [savedEntrantArr, setSavedEntrantArr] = useState(entrantArr);
   const [error, isError] = useState<string | null>(null);
 
   const submissionHandler = async () => {
@@ -31,6 +33,8 @@ export const SubmitPredictions = ({ entrantArr, season, sport }: Props) => {
     isSubmitting(true);
     try {
       await submitPredictions(entrantArr, season, sport);
+      setSavedEntrantArr(entrantArr);
+      submissionSuccessful.current = true;
     } catch (error: unknown) {
       if (error instanceof Error) {
         isError(error.message);
@@ -39,24 +43,40 @@ export const SubmitPredictions = ({ entrantArr, season, sport }: Props) => {
     isSubmitting(false);
   };
 
-  /**@todo If no changes have been made on first load, the submit button shouldn't show until changes have been made
-   * On error submission, the button should stay but feedback should show
-   * On successful submission, the button should disappear and a confirmation should show, until changes are made when the button and confirmation toggle again
+  if (savedEntrantArr !== entrantArr) {
+    submissionSuccessful.current = false;
+  }
+  console.log(submissionSuccessful);
+
+  /**If no changes have been made on first load, the submit button doesn't show until changes have been made
+   * On a submission attempt with an error, the submit button stays with new error feedback
+   * On successful submission, submit button disappears and a confirmation shows, until changes are made again when the button and confirmation swap
    */
   return (
     <div className={styles.submitPredictionsCon}>
-      {submitting ? (
-        <LoadingSpinner />
+      {savedEntrantArr !== entrantArr ? (
+        submitting ? (
+          <LoadingSpinner />
+        ) : (
+          <Button onClick={submissionHandler}>Submit Predictions</Button>
+        )
+      ) : submissionSuccessful.current ? (
+        <div className={`${styles.success} ${styles.feedback}`}>
+          <div className={styles.icon}>
+            <Icon type={"success"} strokeWidth={2} />
+          </div>
+          Submission Successful
+        </div>
       ) : (
-        <Button onClick={submissionHandler}>Submit Predictions</Button>
+        ""
       )}
       {error ? (
         <>
-          <div className={styles.error}>
-            <div className={styles.errorIcon}>
+          <div className={`${styles.error} ${styles.feedback}`}>
+            <div className={styles.icon}>
               <Icon type={"error"} strokeWidth={2} />
             </div>
-            <p>Error: {error}</p>
+            Error: {error.charAt(0).toUpperCase() + error.slice(1)}
           </div>
         </>
       ) : (
