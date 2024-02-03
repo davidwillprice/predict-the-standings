@@ -1,5 +1,5 @@
-import { Panel } from "../../src/ui/panel";
-import { PanelHeading } from "../../src/ui/panel-heading";
+import { Panel } from "@components/panels/panel";
+import { PanelHeading } from "@components/panels/panel-heading";
 
 const Page = () => {
   return (

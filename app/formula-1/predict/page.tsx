@@ -4,8 +4,8 @@ import { sortF1DriverEntrantsAlphabetically } from "@lib/misc";
 import { getPredictionTable } from "@lib/db-functions";
 
 import { ContentContainer } from "@ui/content-container";
-import { Panel } from "@ui/panel";
-import { PanelHeading } from "@ui/panel-heading";
+import { Panel } from "@components/panels/panel";
+import { PanelHeading } from "@components/panels/panel-heading";
 import { EditPredictions } from "@ui/submit-predictions/edit-predictions";
 
 import { F1DriverEntrant } from "@custom-types/entrants";
@@ -54,7 +54,7 @@ export default async function Page() {
   }
   return (
     <>
-      <PanelHeading>
+      <PanelHeading align="center">
         <h1>Predict the Final Standings</h1>
       </PanelHeading>
       <ContentContainer>

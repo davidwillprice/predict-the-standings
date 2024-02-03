@@ -39,8 +39,12 @@ export const SubmitPredictions = ({ entrantArr, season, sport }: Props) => {
     isSubmitting(false);
   };
 
+  /**@todo If no changes have been made on first load, the submit button shouldn't show until changes have been made
+   * On error submission, the button should stay but feedback should show
+   * On successful submission, the button should disappear and a confirmation should show, until changes are made when the button and confirmation toggle again
+   */
   return (
-    <div className={styles.con}>
+    <div className={styles.submitPredictionsCon}>
       {submitting ? (
         <LoadingSpinner />
       ) : (

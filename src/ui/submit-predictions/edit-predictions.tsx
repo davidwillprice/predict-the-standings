@@ -8,6 +8,8 @@ import { SubmitPredictions } from "@ui/submit-predictions/submit-predictions";
 import { F1DriverEntrant } from "@custom-types/entrants";
 import { Sport } from "@custom-types/misc";
 
+import styles from "@styles/prediction-submission.module.scss";
+
 interface Props {
   predictionFreezeDate: Date;
   children: string | ReactNode;
@@ -31,13 +33,13 @@ export const EditPredictions = ({
   };
   return (
     <>
-      <div>
+      <div className={styles.predictionTableCon}>
         <EditablePredictionTable
           entrantArr={entrantArr}
           handleEntrantState={handleEntrantState}
         />
       </div>
-      <div>
+      <div className={styles.infoCon}>
         {children}
         <SubmitPredictions
           entrantArr={entrantArr}

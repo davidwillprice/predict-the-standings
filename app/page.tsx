@@ -1,4 +1,4 @@
-import { Panel } from "../src/ui/panel";
+import { Panel } from "@components/panels/panel";
 
 export default function Home() {
   return (

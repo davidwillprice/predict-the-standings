@@ -1,5 +1,8 @@
-import { Panel } from "../../src/ui/panel";
-import { PanelHeading } from "../../src/ui/panel-heading";
+import Link from "next/link";
+
+import { Panel } from "@components/panels/panel";
+import { PanelHeading } from "@components/panels/panel-heading";
+import { Button } from "@ui/button";
 
 const Page = () => {
   return (
@@ -12,6 +15,9 @@ const Page = () => {
           This page could work as an &apos;About&apos; page but also lists each
           of the previous/current seasons.
         </p>
+        <Link href="/formula-1/predict">
+          <Button>Predict</Button>
+        </Link>
       </Panel>
     </>
   );

@@ -1,4 +1,4 @@
-@import "sass-variables.scss";
+@import "@styles/sass-variables.scss";
 
 .panel_heading {
   max-width: 500px;
@@ -10,6 +10,9 @@
     font-size: 20px;
     font-weight: 500;
   }
+}
+.center {
+  text-align: center;
 }
 @media (max-width: $mobile-menu-breakpoint) {
   .panel_heading {

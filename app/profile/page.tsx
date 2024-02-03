@@ -2,11 +2,13 @@
 
 import { useSession, signOut } from "next-auth/react";
 
-import { Button } from "../../src/ui/button";
-import { Panel } from "../../src/ui/panel";
-import { PanelHeading } from "../../src/ui/panel-heading";
+import { Button } from "@ui/button";
+import { Panel } from "@components/panels/panel";
+import { PanelHeading } from "@components/panels/panel-heading";
 
-import styles from "@ui/styles/account.module.scss";
+import styles from "@styles/account.module.scss";
+
+/**@todo Add ability to change display name, but limit changes to once a day or something to save DB calls */
 
 export default function ProfilePage() {
   const { data: session } = useSession();
