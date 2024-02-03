@@ -20,9 +20,15 @@ interface Props {
   entrantArr: F1DriverEntrant[];
   season: string;
   sport: Sport;
+  userId: number;
 }
 
-export const SubmitPredictions = ({ entrantArr, season, sport }: Props) => {
+export const SubmitPredictions = ({
+  entrantArr,
+  season,
+  sport,
+  userId,
+}: Props) => {
   const submissionSuccessful = useRef(false);
   const [submitting, isSubmitting] = useState(false);
   const [savedEntrantArr, setSavedEntrantArr] = useState(entrantArr);
@@ -32,7 +38,7 @@ export const SubmitPredictions = ({ entrantArr, season, sport }: Props) => {
     isError(null);
     isSubmitting(true);
     try {
-      await submitPredictions(entrantArr, season, sport);
+      await submitPredictions(entrantArr, season, sport, userId);
       setSavedEntrantArr(entrantArr);
       submissionSuccessful.current = true;
     } catch (error: unknown) {

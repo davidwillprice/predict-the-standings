@@ -16,6 +16,7 @@ interface Props {
   initialEntrants: F1DriverEntrant[];
   sport: Sport;
   season: string;
+  userId: number;
 }
 
 export const EditPredictions = ({
@@ -24,6 +25,7 @@ export const EditPredictions = ({
   children,
   season,
   sport,
+  userId,
 }: Props) => {
   const [entrantArr, setEntrantArr] = useState(initialEntrants);
   //const [predictionsLocked, lockPredictions] = useState(false);
@@ -45,6 +47,7 @@ export const EditPredictions = ({
           entrantArr={entrantArr}
           sport={sport}
           season={season}
+          userId={userId}
         />
       </div>
     </>

@@ -1,7 +1,11 @@
 import { entrants } from "@data/formula-1/2023";
 
+import { getServerSession } from "next-auth/next";
+import { redirect } from "next/navigation";
+
 import { sortF1DriverEntrantsAlphabetically } from "@lib/misc";
 import { getPredictionTable } from "@lib/db-functions";
+import { authOptions } from "@lib/auth";
 
 import { ContentContainer } from "@components/content-container/content-container";
 import { Panel } from "@components/panels/panel";
@@ -12,6 +16,11 @@ import { F1DriverEntrant } from "@custom-types/entrants";
 import { Sport } from "@custom-types/misc";
 
 export default async function Page() {
+  const session = await getServerSession(authOptions);
+  if (session == null) {
+    return redirect("/login");
+  }
+  const userId = session.user.id;
   const sport: Sport = "f1";
   const season = "2024";
   const predictionFreezeDate = new Date("2024-02-29T11:30:00");
@@ -40,7 +49,7 @@ export default async function Page() {
   ]);
   let entrantArr: F1DriverEntrant[];
   try {
-    const dbPredictionTable = await getPredictionTable(season, sport);
+    const dbPredictionTable = await getPredictionTable(season, sport, userId);
 
     if (dbPredictionTable === null) {
       entrantArr = defaultEntrantsArr;
@@ -62,7 +71,8 @@ export default async function Page() {
           initialEntrants={JSON.parse(JSON.stringify(entrantArr))}
           predictionFreezeDate={predictionFreezeDate}
           season={season}
-          sport={sport}>
+          sport={sport}
+          userId={userId}>
           <Panel>
             <p>
               Drag the drivers into the order which you think they will be in at
