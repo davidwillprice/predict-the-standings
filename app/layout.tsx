@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Header from "@ui/header";
+import Header from "@components/header/header";
 import { SessionProvider } from "@lib/next-auth-provider";
 
 import { Roboto } from "next/font/google";

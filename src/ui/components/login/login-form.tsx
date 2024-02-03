@@ -1,9 +1,9 @@
 "use client";
 
-import { Button } from "./button";
+import { Button } from "@components/button/button";
 import { useSession, signIn } from "next-auth/react";
 
-import styles from "@styles/login.module.scss";
+import styles from "@components/login/login.module.scss";
 
 export const LoginForm = () => {
   const { data: session } = useSession();

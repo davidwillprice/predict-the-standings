@@ -3,10 +3,10 @@ import { entrants } from "@data/formula-1/2023";
 import { sortF1DriverEntrantsAlphabetically } from "@lib/misc";
 import { getPredictionTable } from "@lib/db-functions";
 
-import { ContentContainer } from "@ui/content-container";
+import { ContentContainer } from "@components/content-container/content-container";
 import { Panel } from "@components/panels/panel";
 import { PanelHeading } from "@components/panels/panel-heading";
-import { EditPredictions } from "@ui/submit-predictions/edit-predictions";
+import { EditPredictions } from "@components/submit-predictions/edit-predictions";
 
 import { F1DriverEntrant } from "@custom-types/entrants";
 import { Sport } from "@custom-types/misc";

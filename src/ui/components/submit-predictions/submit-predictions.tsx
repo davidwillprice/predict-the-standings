@@ -1,8 +1,8 @@
 "use client";
 import { useState } from "react";
 
-import { Button } from "@ui/button";
-import { LoadingSpinner } from "@ui/loading-spinner";
+import { Button } from "@components/button/button";
+import { LoadingSpinner } from "@components/loading-spinner/loading-spinner";
 import Icon from "@svgs/icons/sq-icon";
 
 import { F1DriverEntrant } from "@custom-types/entrants";
@@ -10,7 +10,7 @@ import { submitPredictions } from "@lib/db-functions";
 
 import { Sport } from "@custom-types/misc";
 
-import styles from "@styles/prediction-submission.module.scss";
+import styles from "@components/submit-predictions/submit-predictions.module.scss";
 
 /**@todo Need to add error catching with warnings/confirmation that a submission is saved */
 /**@todo Need to limit database calls - Add lock for 10 seconds? - Add state to check if the table is the same as it was last submitted */

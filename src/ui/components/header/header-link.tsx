@@ -3,7 +3,7 @@ import { usePathname } from "next/navigation";
 
 import Icon from "@svgs/icons/sq-icon";
 
-import styles from "@styles/header.module.scss";
+import styles from "@components/header/header.module.scss";
 
 import type { Props as IconProps } from "@svgs/icons/sq-icon";
 

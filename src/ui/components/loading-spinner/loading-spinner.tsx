@@ -1,6 +1,6 @@
 import Icon from "@svgs/icons/sq-icon";
 
-import styles from "@styles/loading-spinner.module.scss";
+import styles from "@components/loading-spinner/loading-spinner.module.scss";
 
 export const LoadingSpinner = () => (
   <div className={styles.con}>

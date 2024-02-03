@@ -6,10 +6,10 @@ import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 
 import Icon from "@svgs/icons/sq-icon";
-import HeaderLink from "./header-link";
+import HeaderLink from "@components/header/header-link";
 
 import commonStyles from "@styles/common.module.scss";
-import styles from "@styles/header.module.scss";
+import styles from "@components/header/header.module.scss";
 
 const Header = () => {
   const [mobMenuOpen, toggleMobMenu] = useState(false);

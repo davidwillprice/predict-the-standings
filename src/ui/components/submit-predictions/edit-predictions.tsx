@@ -2,13 +2,13 @@
 
 import { ReactNode, useState } from "react";
 
-import { EditablePredictionTable } from "@ui/submit-predictions/editable-prediction-table";
-import { SubmitPredictions } from "@ui/submit-predictions/submit-predictions";
+import { EditablePredictionTable } from "@components/submit-predictions/editable-prediction-table";
+import { SubmitPredictions } from "@components/submit-predictions/submit-predictions";
 
 import { F1DriverEntrant } from "@custom-types/entrants";
 import { Sport } from "@custom-types/misc";
 
-import styles from "@styles/prediction-submission.module.scss";
+import styles from "@components/submit-predictions/submit-predictions.module.scss";
 
 interface Props {
   predictionFreezeDate: Date;

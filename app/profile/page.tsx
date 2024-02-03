@@ -2,7 +2,7 @@
 
 import { useSession, signOut } from "next-auth/react";
 
-import { Button } from "@ui/button";
+import { Button } from "@components/button/button";
 import { Panel } from "@components/panels/panel";
 import { PanelHeading } from "@components/panels/panel-heading";
 

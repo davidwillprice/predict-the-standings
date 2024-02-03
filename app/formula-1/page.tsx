@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import { Panel } from "@components/panels/panel";
 import { PanelHeading } from "@components/panels/panel-heading";
-import { Button } from "@ui/button";
+import { Button } from "@components/button/button";
 
 const Page = () => {
   return (

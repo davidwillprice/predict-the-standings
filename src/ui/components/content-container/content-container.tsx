@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 
-import styles from "@styles/content-container.module.scss";
+import styles from "@components/content-container/content-container.module.scss";
 
 interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode;

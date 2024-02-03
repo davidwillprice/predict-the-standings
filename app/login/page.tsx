@@ -1,5 +1,5 @@
 import { Panel } from "@components/panels/panel";
-import { LoginForm } from "@ui/login-form";
+import { LoginForm } from "@components/login/login-form";
 import { PanelHeading } from "@components/panels/panel-heading";
 
 const Page = () => {
