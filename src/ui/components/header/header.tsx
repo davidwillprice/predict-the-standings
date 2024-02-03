@@ -25,7 +25,9 @@ const Header = async () => {
       <MainNav>{profileLink}</MainNav>
       <nav className={styles.secondary_menu}>
         <hr />
-        <div>Privacy Policy</div>
+        <div>
+          <Link href="/privacy-policy">Privacy Policy</Link>
+        </div>
       </nav>
     </header>
   );
