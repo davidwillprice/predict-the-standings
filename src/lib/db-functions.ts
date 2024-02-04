@@ -31,3 +31,5 @@ export const getPredictionTable = async (
   WHERE prediction_id = ${userId}`);
   return res.rows[0]["prediction"];
 };
+
+export const submitDisplayName = async (submittedDisplayName: string) => {};
