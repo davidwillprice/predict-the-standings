@@ -1,5 +1,6 @@
 import { getServerSession } from "next-auth/next";
 import { redirect } from "next/navigation";
+import { Metadata } from "next";
 
 import { authOptions } from "@lib/auth";
 
@@ -8,6 +9,10 @@ import { PanelHeading } from "@components/panels/panel-heading";
 import { SignOutBtn } from "@components/profile/sign-out";
 
 import styles from "@components/form/form.module.scss";
+
+export const metadata: Metadata = {
+  title: "Profile | Predict The Standings",
+};
 
 /**@todo Add ability to change display name, but limit changes to once a day or something to save DB calls */
 

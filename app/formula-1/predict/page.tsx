@@ -1,8 +1,8 @@
-import { entrants } from "@data/formula-1/2023";
-
+import { Metadata } from "next";
 import { getServerSession } from "next-auth/next";
 import { redirect } from "next/navigation";
 
+import { entrants } from "@data/formula-1/2023";
 import { sortF1DriverEntrantsAlphabetically } from "@lib/misc";
 import { getPredictionTable } from "@lib/db-functions";
 import { authOptions } from "@lib/auth";
@@ -14,6 +14,10 @@ import { EditPredictions } from "@components/submit-predictions/edit-predictions
 
 import { F1DriverEntrant } from "@custom-types/entrants";
 import { Sport } from "@custom-types/misc";
+
+export const metadata: Metadata = {
+  title: "Make Your Predictions | Predict The Standings",
+};
 
 export default async function Page() {
   const session = await getServerSession(authOptions);

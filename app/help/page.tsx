@@ -1,6 +1,11 @@
+import { Metadata } from "next";
+
 import { Panel } from "@components/panels/panel";
 import { PanelHeading } from "@components/panels/panel-heading";
 
+export const metadata: Metadata = {
+  title: "Help | Predict The Standings",
+};
 const Page = () => {
   return (
     <>

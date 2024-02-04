@@ -1,11 +1,17 @@
 import { getServerSession } from "next-auth/next";
 import { redirect } from "next/navigation";
+import { Metadata } from "next";
 
 import { authOptions } from "@lib/auth";
 
 import { Panel } from "@components/panels/panel";
 import { PanelHeading } from "@components/panels/panel-heading";
 import { GetStartedForm } from "@components/form/get-started";
+
+export const metadata: Metadata = {
+  title: "Get Started | Predict The Standings",
+  description: "Choose your display name to get started",
+};
 
 export default async function ProfilePage() {
   const session = await getServerSession(authOptions);
