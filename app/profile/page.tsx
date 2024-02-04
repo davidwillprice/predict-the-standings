@@ -7,7 +7,7 @@ import { Panel } from "@components/panels/panel";
 import { PanelHeading } from "@components/panels/panel-heading";
 import { SignOutBtn } from "@components/profile/sign-out";
 
-import styles from "@styles/account.module.scss";
+import styles from "@components/form/form.module.scss";
 
 /**@todo Add ability to change display name, but limit changes to once a day or something to save DB calls */
 
@@ -25,7 +25,7 @@ export default async function ProfilePage() {
         <h2>Account</h2>
       </PanelHeading>
       <Panel>
-        <div className={styles.account}>
+        <form className={styles.form}>
           <div className={styles.input_container}>
             <label htmlFor="name">Display Name</label>
             <input id="name" type="name" name="name" value={name} />
@@ -44,10 +44,10 @@ export default async function ProfilePage() {
           ) : (
             ""
           )}
-          <hr />
-          <div>
-            <SignOutBtn />
-          </div>
+        </form>
+        <hr />
+        <div className={styles.formBtns}>
+          <SignOutBtn />
         </div>
       </Panel>
     </>

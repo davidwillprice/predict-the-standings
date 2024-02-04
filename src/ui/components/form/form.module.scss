@@ -1,9 +1,9 @@
 @import "@styles/sass-variables.scss";
 
-.account {
+.form {
   width: 100%;
   max-width: 500px;
-  margin: 0 auto;
+  margin: 0 auto 15px;
   input {
     width: calc(100% - 100px);
     border: 1px #d4d4d4 solid;
@@ -18,10 +18,17 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-bottom: 10px;
+}
+.rules {
+  text-align: left;
+}
+.formBtns {
+  margin-top: 15px;
 }
 
 @media (max-width: $mobile-menu-breakpoint) {
-  .account {
+  .form {
     max-width: 300px;
     input {
       width: 100%;
