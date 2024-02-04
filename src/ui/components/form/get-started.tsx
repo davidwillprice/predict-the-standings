@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, FormEvent } from "react";
 
 import { submitDisplayName } from "@lib/form-server-actions";
 import { validateDisplayName } from "@lib/form-functions";
+
+import { LoadingSpinner } from "@components/loading-spinner/loading-spinner";
 
 import styles from "@components/form/form.module.scss";
 import btnStyles from "@components/button/button.module.scss";
@@ -22,6 +24,8 @@ export const GetStartedForm = ({ initialDisplayName }: Props) => {
   const [displayNameErrorArr, setDisplayNameErrorArr] = useState(
     validateDisplayName(initialDisplayName)
   );
+  const [submitting, isSubmitting] = useState(false);
+
   const isDisplayNameValid = displayNameErrorArr.length === 0;
 
   const handleDisplayNameChange = (
@@ -31,16 +35,37 @@ export const GetStartedForm = ({ initialDisplayName }: Props) => {
     setDisplayNameErrorArr(validateDisplayName(newDisplayName));
   };
 
+  const handleDisplayNameSubmission = async (
+    event: FormEvent<HTMLFormElement>
+  ) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    isSubmitting(true);
+    try {
+      const errorMessage = await submitDisplayName(formData);
+      if (errorMessage) {
+        throw new Error(errorMessage);
+      } else {
+        console.log("Successfully submitted display name");
+      }
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setDisplayNameErrorArr([error.message]);
+      }
+    } finally {
+      isSubmitting(false);
+    }
+  };
+
   return (
     <>
-      <form className={styles.form} action={submitDisplayName}>
+      <form className={styles.form} onSubmit={handleDisplayNameSubmission}>
         <div className={styles.input_container}>
           <label htmlFor="displayName">Display Name:</label>
           <input
             required
             pattern="^[a-zA-Z0-9_]*$"
             id="displayName"
-            type="displayName"
             name="displayName"
             onChange={handleDisplayNameChange}
             defaultValue={initialDisplayName}
@@ -57,14 +82,18 @@ export const GetStartedForm = ({ initialDisplayName }: Props) => {
           ""
         )}
         <div>
-          <button
-            className={`${btnStyles.button} ${
-              isDisplayNameValid ? "" : btnStyles.disabled
-            }`}
-            type="submit"
-            disabled={!isDisplayNameValid}>
-            Submit Display Name
-          </button>
+          {submitting ? (
+            <LoadingSpinner />
+          ) : (
+            <button
+              className={`${btnStyles.button} ${
+                isDisplayNameValid ? "" : btnStyles.disabled
+              }`}
+              type="submit"
+              disabled={!isDisplayNameValid}>
+              Submit Display Name
+            </button>
+          )}
         </div>
       </form>
     </>

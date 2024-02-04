@@ -32,4 +32,19 @@ export const getPredictionTable = async (
   return res.rows[0]["prediction"];
 };
 
-export const submitDisplayName = async (submittedDisplayName: string) => {};
+export const submitDisplayNameQuery = async (
+  submittedDisplayName: string,
+  userId: number
+) => {
+  const res = await query(`UPDATE users
+  SET display_name = '${submittedDisplayName}'
+  WHERE id = ${userId}
+    AND NOT EXISTS (
+      SELECT ${userId}
+      FROM users
+      WHERE display_name = '${submittedDisplayName}'
+        AND id <> ${userId}
+    ) RETURNING *;
+    ;`);
+  return res.rows;
+};
