@@ -12,44 +12,6 @@
   flex-direction: column;
   justify-content: center;
 }
-.feedback {
-  display: flex;
-  padding: 10px 15px 10px 20px;
-  background-color: $primary-color;
-  border-radius: 5px;
-  box-shadow: $box-shadow;
-  align-items: center;
-  position: relative;
-  overflow: hidden;
-  &:after {
-    position: absolute;
-    width: 10px;
-    left: 0;
-    height: 100%;
-    content: "";
-  }
-  &.error:after {
-    background-color: $error-color;
-  }
-  &.success:after {
-    background-color: $success-color;
-  }
-}
-
-.error .icon {
-  color: $error-color;
-}
-.success .icon {
-  color: $success-color;
-}
-
-.icon {
-  width: 30px;
-  height: 30px;
-  margin-right: 15px;
-  display: flex;
-  align-items: center;
-}
 
 @media (max-width: $tablet-menu-breakpoint) {
   .predictionTableCon {

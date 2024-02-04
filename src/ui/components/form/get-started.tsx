@@ -6,6 +6,7 @@ import { submitDisplayName } from "@lib/form-server-actions";
 import { validateDisplayName } from "@lib/form-functions";
 
 import { LoadingSpinner } from "@components/loading-spinner/loading-spinner";
+import { FeedbackContainer } from "@components/feedback-container/feedback-container";
 
 import styles from "@components/form/form.module.scss";
 import btnStyles from "@components/button/button.module.scss";
@@ -72,11 +73,13 @@ export const GetStartedForm = ({ initialDisplayName }: Props) => {
           />
         </div>
         {displayNameErrorArr.length > 0 ? (
-          <ul className={styles.rules}>
-            {displayNameErrorArr.map((error) => (
-              <li key={error}>{error}</li>
-            ))}
-          </ul>
+          <FeedbackContainer iconType="error">
+            <ul className={styles.rules}>
+              {displayNameErrorArr.map((error) => (
+                <li key={error}>{error}</li>
+              ))}
+            </ul>
+          </FeedbackContainer>
         ) : (
           ""
         )}

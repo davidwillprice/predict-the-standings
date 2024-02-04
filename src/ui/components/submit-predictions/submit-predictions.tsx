@@ -3,7 +3,7 @@ import { useState, useRef } from "react";
 
 import { Button } from "@components/button/button";
 import { LoadingSpinner } from "@components/loading-spinner/loading-spinner";
-import Icon from "@svgs/icons/sq-icon";
+import { FeedbackContainer } from "@components/feedback-container/feedback-container";
 
 import { F1DriverEntrant } from "@custom-types/entrants";
 import { submitPredictions } from "@lib/db-functions";
@@ -66,24 +66,16 @@ export const SubmitPredictions = ({
           <Button onClick={submissionHandler}>Submit Predictions</Button>
         )
       ) : submissionSuccessful.current ? (
-        <div className={`${styles.success} ${styles.feedback}`}>
-          <div className={styles.icon}>
-            <Icon type={"success"} strokeWidth={2} />
-          </div>
+        <FeedbackContainer iconType="success">
           Submission Successful
-        </div>
+        </FeedbackContainer>
       ) : (
         ""
       )}
       {error ? (
-        <>
-          <div className={`${styles.error} ${styles.feedback}`}>
-            <div className={styles.icon}>
-              <Icon type={"error"} strokeWidth={2} />
-            </div>
-            Error: {error.charAt(0).toUpperCase() + error.slice(1)}
-          </div>
-        </>
+        <FeedbackContainer iconType="error">
+          Error: {error.charAt(0).toUpperCase() + error.slice(1)}
+        </FeedbackContainer>
       ) : (
         ""
       )}
