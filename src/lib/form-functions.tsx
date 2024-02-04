@@ -4,9 +4,8 @@ export const validateDisplayName = (
 ): validationErrorArr => {
   const validationErrors: validationErrorArr = [];
 
-  if (!displayName || typeof displayName !== "string") {
-    validationErrors.push("Enter a display name");
-    return validationErrors;
+  if (typeof displayName !== "string") {
+    validationErrors.push("Unknown error");
   }
 
   if (displayName.length < 3)

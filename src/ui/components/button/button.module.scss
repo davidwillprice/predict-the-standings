@@ -10,6 +10,10 @@
   cursor: pointer;
   margin-bottom: 15px;
   color: $secondary-color;
+  &.disabled {
+    color: rgba($secondary-color, 0.5);
+    cursor: auto;
+  }
 }
 @media (max-width: $mobile-menu-breakpoint) {
   .button {

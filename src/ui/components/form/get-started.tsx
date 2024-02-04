@@ -22,6 +22,7 @@ export const GetStartedForm = ({ initialDisplayName }: Props) => {
   const [displayNameErrorArr, setDisplayNameErrorArr] = useState(
     validateDisplayName(initialDisplayName)
   );
+  const isDisplayNameValid = displayNameErrorArr.length === 0;
 
   const handleDisplayNameChange = (
     event: React.FormEvent<HTMLInputElement>
@@ -43,6 +44,7 @@ export const GetStartedForm = ({ initialDisplayName }: Props) => {
             name="displayName"
             onChange={handleDisplayNameChange}
             defaultValue={initialDisplayName}
+            autoComplete="off"
           />
         </div>
         {displayNameErrorArr.length > 0 ? (
@@ -56,9 +58,11 @@ export const GetStartedForm = ({ initialDisplayName }: Props) => {
         )}
         <div>
           <button
-            className={btnStyles.button}
+            className={`${btnStyles.button} ${
+              isDisplayNameValid ? "" : btnStyles.disabled
+            }`}
             type="submit"
-            disabled={displayNameErrorArr.length > 0 ? true : false}>
+            disabled={!isDisplayNameValid}>
             Submit Display Name
           </button>
         </div>
