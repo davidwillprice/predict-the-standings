@@ -15,11 +15,10 @@ interface Props {
 }
 
 export const GetStartedForm = ({ initialDisplayName }: Props) => {
-  /**@todo Add front end and back end validation on the new display name*/
-  /**@todo Must not already exist*/
   /**@todo Don't pick something disruptive or offensive*/
-  /**@todo Sanitise data on front and back end*/
   /**@todo If they haven't submitted a valid display name, redirect them from the prediction pages until they have*/
+  /**@todo If possible, don't let them submit their display name if they already have it*/
+  /**@todo Improve the display of errors*/
 
   const [displayNameErrorArr, setDisplayNameErrorArr] = useState(
     validateDisplayName(initialDisplayName)
