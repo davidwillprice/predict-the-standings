@@ -1,5 +1,12 @@
 @import "@styles/sass-variables.scss";
 
+.flexColCenter {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 @media (max-width: $mobile-menu-breakpoint) {
   html .mobile_hide {
     display: none;

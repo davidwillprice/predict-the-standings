@@ -10,6 +10,7 @@ import { FeedbackContainer } from "@components/feedback-container/feedback-conta
 
 import styles from "@components/form/form.module.scss";
 import btnStyles from "@components/button/button.module.scss";
+import commonStyles from "@styles/common.module.scss";
 
 interface Props {
   initialDisplayName: string;
@@ -70,20 +71,26 @@ export const GetStartedForm = ({ initialDisplayName }: Props) => {
             onChange={handleDisplayNameChange}
             defaultValue={initialDisplayName}
             autoComplete="off"
+            aria-invalid={!isDisplayNameValid}
+            aria-describedby={isDisplayNameValid ? "false" : "displayNameError"}
           />
         </div>
-        {displayNameErrorArr.length > 0 ? (
+        {!isDisplayNameValid ? (
           <FeedbackContainer iconType="error">
-            <ul className={styles.rules}>
-              {displayNameErrorArr.map((error) => (
-                <li key={error}>{error}</li>
-              ))}
-            </ul>
+            {displayNameErrorArr.length === 1 ? (
+              <p id="displayNameError">displayNameErrorArr[0]</p>
+            ) : (
+              <ul id="displayNameError" className={styles.rules}>
+                {displayNameErrorArr.map((error) => (
+                  <li key={error}>{error}</li>
+                ))}
+              </ul>
+            )}
           </FeedbackContainer>
         ) : (
           ""
         )}
-        <div>
+        <div className={commonStyles.flexColCenter}>
           {submitting ? (
             <LoadingSpinner />
           ) : (
