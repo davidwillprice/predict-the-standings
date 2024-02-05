@@ -78,7 +78,7 @@ export const GetStartedForm = ({ initialDisplayName }: Props) => {
         {!isDisplayNameValid ? (
           <FeedbackContainer iconType="error">
             {displayNameErrorArr.length === 1 ? (
-              <p id="displayNameError">displayNameErrorArr[0]</p>
+              <p id="displayNameError">{displayNameErrorArr[0]}</p>
             ) : (
               <ul id="displayNameError" className={styles.rules}>
                 {displayNameErrorArr.map((error) => (
