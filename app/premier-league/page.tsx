@@ -1,7 +1,7 @@
 const Page = () => {
   return (
     <>
-      <p>Coming soon</p>
+      <p style={{ textAlign: "center" }}>Coming soon</p>
     </>
   );
 };
