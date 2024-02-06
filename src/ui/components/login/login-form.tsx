@@ -10,11 +10,18 @@ export const LoginForm = () => {
   return !session?.user ? (
     <>
       <div className={styles.login}>
+        {/**@todo Add icons for each login */}
         <Button
           onClick={async () => {
             await signIn("google", { callbackUrl: "/profile" });
           }}>
           Sign in via Google
+        </Button>
+        <Button
+          onClick={async () => {
+            await signIn("twitter", { callbackUrl: "/profile" });
+          }}>
+          Sign in via Twitter
         </Button>
         <Button
           onClick={async () => {

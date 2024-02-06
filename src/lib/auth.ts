@@ -1,5 +1,6 @@
 import GoogleProvider from "next-auth/providers/google";
 import RedditProvider from "next-auth/providers/reddit";
+import TwitterProvider from "next-auth/providers/twitter";
 import { JWT } from "next-auth/jwt";
 import { Session, User } from "next-auth";
 import PostgresAdapter from "@auth/pg-adapter";
@@ -30,6 +31,11 @@ export const authOptions = {
     RedditProvider({
       clientId: process.env.REDDIT_CLIENT_ID as string,
       clientSecret: process.env.REDDIT_CLIENT_SECRET as string,
+    }),
+    TwitterProvider({
+      clientId: process.env.TWITTER_CLIENT_ID as string,
+      clientSecret: process.env.TWITTER_CLIENT_SECRET as string,
+      version: "2.0",
     }),
   ],
 };

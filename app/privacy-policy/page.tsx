@@ -56,6 +56,17 @@ export default function Page() {
             </li>
           </ul>
           <p>
+            If you log in using Twitter&apos;s OAuth, we may collect the
+            following information:
+          </p>
+          <ul>
+            <li>
+              All the posts you can view, including posts from protected
+              accounts.
+            </li>
+            <li>Account information including name and email address.</li>
+          </ul>
+          <p>
             If you log in using Reddit&apos;s OAuth, we may collect the
             following information:
           </p>

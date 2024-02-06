@@ -23,6 +23,7 @@ export default async function ProfilePage() {
   const email = session?.user?.email;
 
   /**If the Next Auth gave an email address, use the first part of that as a suggested display name. Else use the user's name as Reddit provides their Reddit username there */
+  /**@todo Should also remove all whitespace from fallback name as Twitter gives firstname and surname */
   const initialDisplayName = email ? email.slice(0, email.indexOf("@")) : name;
 
   return (
