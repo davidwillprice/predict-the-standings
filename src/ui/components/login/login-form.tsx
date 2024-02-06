@@ -11,6 +11,14 @@ export const LoginForm = () => {
     <>
       <div className={styles.login}>
         {/**@todo Add icons for each login */}
+        {/**@todo Add Instagram and Apple logins */}
+        {/**@todo Add Patreon, Linkedin, and Spotify logins */}
+        <Button
+          onClick={async () => {
+            await signIn("github", { callbackUrl: "/profile" });
+          }}>
+          Sign in via Github
+        </Button>
         <Button
           onClick={async () => {
             await signIn("google", { callbackUrl: "/profile" });
@@ -19,15 +27,15 @@ export const LoginForm = () => {
         </Button>
         <Button
           onClick={async () => {
-            await signIn("twitter", { callbackUrl: "/profile" });
-          }}>
-          Sign in via Twitter
-        </Button>
-        <Button
-          onClick={async () => {
             await signIn("reddit", { callbackUrl: "/profile" });
           }}>
           Sign in via Reddit
+        </Button>
+        <Button
+          onClick={async () => {
+            await signIn("twitter", { callbackUrl: "/profile" });
+          }}>
+          Sign in via Twitter
         </Button>
       </div>
     </>
