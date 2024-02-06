@@ -8,7 +8,6 @@
   margin-left: $header-width-desktop;
   min-height: 100vh;
   width: calc(100% - $header-width-desktop);
-  text-align: center;
 }
 .main {
   width: 100%;
@@ -20,7 +19,7 @@
     margin-left: $header-width-tablet;
   }
 }
-@media (max-width: 600px) {
+@media (max-width: $mobile-menu-breakpoint) {
   .content_container {
     flex-direction: column;
     width: 100%;

@@ -15,10 +15,22 @@ html,
 body {
   max-width: 100vw;
   overflow-x: hidden;
-  font-size: 14px;
+  font-size: 15px;
   background-color: $tertiary-color;
   color: $secondary-color;
   font-family: var(--font-roboto);
+}
+
+h1,
+h2,
+h3,
+strong,
+th {
+  font-weight: 500;
+}
+
+h3 {
+  font-size: 18px;
 }
 
 a {
@@ -26,20 +38,31 @@ a {
   text-decoration: none;
 }
 
+p a {
+  text-decoration: underline;
+}
+
 button {
   font-family: var(--font-roboto);
 }
 
-th {
-  font-weight: 500;
-}
-
 hr {
-  border-top: 0px solid $tertiary-color;
+  border: 0px solid $tertiary-color;
   color: $tertiary-color;
+  background-color: $tertiary-color;
+  height: 2px;
 }
 
 p,
-ul {
+ul,
+ol,
+hr,
+h3,
+li {
   margin-bottom: 15px;
+}
+
+ul,
+ol {
+  list-style-position: inside;
 }

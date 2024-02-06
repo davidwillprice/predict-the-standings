@@ -1,0 +1,28 @@
+@import "@styles/sass-variables.scss";
+
+.con {
+  overflow-x: auto;
+  margin-bottom: 15px;
+}
+.table {
+  min-width: 400px;
+  width: calc(100% - 2px);
+  text-align: left;
+  border-collapse: collapse;
+  th {
+    background-color: $tertiary-color;
+    padding: 15px;
+  }
+  td {
+    border: 2px solid $tertiary-color;
+    padding: 15px;
+  }
+}
+
+@media (max-width: $tablet-menu-breakpoint) {
+  .table {
+    td {
+      padding: 5px;
+    }
+  }
+}

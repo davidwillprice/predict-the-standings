@@ -5,5 +5,9 @@ interface Props {
 }
 
 export const Panel = ({ children }: Props) => {
-  return <div className={styles.panel}>{children}</div>;
+  return (
+    <div className={styles.panel}>
+      <div className={styles.panelBody}>{children}</div>
+    </div>
+  );
 };
