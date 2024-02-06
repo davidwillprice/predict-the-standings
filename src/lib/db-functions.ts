@@ -29,7 +29,11 @@ export const getPredictionTable = async (
   const res = await query(`SELECT prediction
   FROM ${sport}_${season}
   WHERE prediction_id = ${userId}`);
-  return res.rows[0]["prediction"];
+  try {
+    return res.rows[0]["prediction"];
+  } catch (_) {
+    return;
+  }
 };
 
 export const submitDisplayNameQuery = async (

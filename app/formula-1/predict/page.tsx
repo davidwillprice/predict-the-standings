@@ -54,17 +54,13 @@ export default async function Page() {
   let entrantArr: F1DriverEntrant[];
   try {
     const dbPredictionTable = await getPredictionTable(season, sport, userId);
-
-    if (!dbPredictionTable) {
-      entrantArr = defaultEntrantsArr;
-    } else {
-      entrantArr = dbPredictionTable.map(
-        (entrantStr: string) => entrants.drivers[entrantStr]
-      );
-    }
-  } catch (error) {
-    throw error;
+    entrantArr = dbPredictionTable.map(
+      (entrantStr: string) => entrants.drivers[entrantStr]
+    );
+  } catch (_) {
+    entrantArr = defaultEntrantsArr;
   }
+
   return (
     <>
       <PanelHeading align="center">
