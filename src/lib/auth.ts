@@ -29,23 +29,28 @@ export const authOptions = {
     GithubProvider({
       clientId: process.env.GITHUB_ID as string,
       clientSecret: process.env.GITHUB_SECRET as string,
+      allowDangerousEmailAccountLinking: true,
     }),
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+      allowDangerousEmailAccountLinking: true,
     }),
     InstagramProvider({
       clientId: process.env.INSTAGRAM_CLIENT_ID as string,
       clientSecret: process.env.INSTAGRAM_CLIENT_SECRET as string,
+      allowDangerousEmailAccountLinking: true,
     }),
     RedditProvider({
       clientId: process.env.REDDIT_CLIENT_ID as string,
       clientSecret: process.env.REDDIT_CLIENT_SECRET as string,
+      allowDangerousEmailAccountLinking: true,
     }),
     TwitterProvider({
       clientId: process.env.TWITTER_CLIENT_ID as string,
       clientSecret: process.env.TWITTER_CLIENT_SECRET as string,
       version: "2.0",
+      allowDangerousEmailAccountLinking: true,
     }),
   ],
 };
