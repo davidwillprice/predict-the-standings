@@ -28,6 +28,12 @@ export const LoginForm = () => {
         </Button>
         <Button
           onClick={async () => {
+            await signIn("patreon", { callbackUrl: "/profile" });
+          }}>
+          Sign in via Patreon
+        </Button>
+        <Button
+          onClick={async () => {
             await signIn("reddit", { callbackUrl: "/profile" });
           }}>
           Sign in via Reddit

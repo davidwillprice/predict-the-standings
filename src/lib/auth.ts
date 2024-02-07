@@ -1,6 +1,7 @@
 import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 import InstagramProvider from "next-auth/providers/instagram";
+import PatreonProvider from "next-auth/providers/patreon";
 import RedditProvider from "next-auth/providers/reddit";
 import SpotifyProvider from "next-auth/providers/spotify";
 import TwitterProvider from "next-auth/providers/twitter";
@@ -41,6 +42,10 @@ export const authOptions = {
       clientId: process.env.INSTAGRAM_CLIENT_ID as string,
       clientSecret: process.env.INSTAGRAM_CLIENT_SECRET as string,
       allowDangerousEmailAccountLinking: true,
+    }),
+    PatreonProvider({
+      clientId: process.env.PATREON_IDT as string,
+      clientSecret: process.env.PATREON_SECRETT as string,
     }),
     RedditProvider({
       clientId: process.env.REDDIT_CLIENT_ID as string,
