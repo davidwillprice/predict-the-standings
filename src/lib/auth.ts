@@ -2,6 +2,7 @@ import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 import InstagramProvider from "next-auth/providers/instagram";
 import RedditProvider from "next-auth/providers/reddit";
+import SpotifyProvider from "next-auth/providers/spotify";
 import TwitterProvider from "next-auth/providers/twitter";
 import { JWT } from "next-auth/jwt";
 import { Session, User } from "next-auth";
@@ -45,6 +46,10 @@ export const authOptions = {
       clientId: process.env.REDDIT_CLIENT_ID as string,
       clientSecret: process.env.REDDIT_CLIENT_SECRET as string,
       allowDangerousEmailAccountLinking: true,
+    }),
+    SpotifyProvider({
+      clientId: process.env.SPOTIFY_CLIENT_ID as string,
+      clientSecret: process.env.SPOTIFY_CLIENT_SECRET as string,
     }),
     TwitterProvider({
       clientId: process.env.TWITTER_CLIENT_ID as string,

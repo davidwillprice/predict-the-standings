@@ -11,7 +11,8 @@ export const LoginForm = () => {
     <>
       <div className={styles.login}>
         {/**@todo Add icons for each login */}
-        {/**@todo Add Apple login */}
+        {/**Instagram provider seems to require a verified FB business account
+         * Apple developer program costs $99py so can't add Apple provider*/}
         {/**@todo Add Patreon, Linkedin, and Spotify logins */}
         <Button
           onClick={async () => {
@@ -27,15 +28,15 @@ export const LoginForm = () => {
         </Button>
         <Button
           onClick={async () => {
-            await signIn("instagram", { callbackUrl: "/profile" });
-          }}>
-          Sign in via Instagram
-        </Button>
-        <Button
-          onClick={async () => {
             await signIn("reddit", { callbackUrl: "/profile" });
           }}>
           Sign in via Reddit
+        </Button>
+        <Button
+          onClick={async () => {
+            await signIn("spotify", { callbackUrl: "/profile" });
+          }}>
+          Sign in via Spotify
         </Button>
         <Button
           onClick={async () => {
