@@ -1,5 +1,6 @@
 import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
+import InstagramProvider from "next-auth/providers/instagram";
 import RedditProvider from "next-auth/providers/reddit";
 import TwitterProvider from "next-auth/providers/twitter";
 import { JWT } from "next-auth/jwt";
@@ -32,6 +33,10 @@ export const authOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+    }),
+    InstagramProvider({
+      clientId: process.env.INSTAGRAM_CLIENT_ID as string,
+      clientSecret: process.env.INSTAGRAM_CLIENT_SECRET as string,
     }),
     RedditProvider({
       clientId: process.env.REDDIT_CLIENT_ID as string,

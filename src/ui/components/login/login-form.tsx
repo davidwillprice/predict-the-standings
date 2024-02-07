@@ -11,7 +11,7 @@ export const LoginForm = () => {
     <>
       <div className={styles.login}>
         {/**@todo Add icons for each login */}
-        {/**@todo Add Instagram and Apple logins */}
+        {/**@todo Add Apple login */}
         {/**@todo Add Patreon, Linkedin, and Spotify logins */}
         <Button
           onClick={async () => {
@@ -24,6 +24,12 @@ export const LoginForm = () => {
             await signIn("google", { callbackUrl: "/profile" });
           }}>
           Sign in via Google
+        </Button>
+        <Button
+          onClick={async () => {
+            await signIn("instagram", { callbackUrl: "/profile" });
+          }}>
+          Sign in via Instagram
         </Button>
         <Button
           onClick={async () => {
