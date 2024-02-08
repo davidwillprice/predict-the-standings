@@ -23,6 +23,8 @@ export default async function Page() {
   const session = await getServerSession(authOptions);
   if (session == null) {
     return redirect("/login");
+  } else if (session?.user.displayName === null) {
+    return redirect("/get-started");
   }
   const userId = session.user.id;
   const sport: Sport = "f1";

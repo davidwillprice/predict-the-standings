@@ -10,9 +10,12 @@ import { PanelHeading } from "@components/panels/panel-heading";
 const Page = async () => {
   const session = await getServerSession(authOptions);
   if (session !== null) {
-    return redirect("/profile");
+    if (session?.user.displayName === null) {
+      return redirect("/get-started");
+    } else {
+      return redirect("/profile");
+    }
   }
-  /**@todo Fix Reddit issue on PTS.com `An error occurred in the Server Components render. The specific message is omitted in production builds to avoid leaking sensitive details. A digest property is included on this error instance which may provide additional details about the nature of the error. Digest: 725504142`*/
   return (
     <>
       <PanelHeading>

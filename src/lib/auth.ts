@@ -11,6 +11,8 @@ import PostgresAdapter from "@auth/pg-adapter";
 import type { Adapter } from "next-auth/adapters";
 import { pool } from "@lib/db";
 
+import { DbUser } from "@custom-types/db";
+
 export const authOptions = {
   //debug: true,
   adapter: PostgresAdapter(pool) as Adapter,
@@ -24,6 +26,7 @@ export const authOptions = {
       user: User;
     }) {
       session.user.id = user.id;
+      session.user.displayName = (user as DbUser).display_name;
       return session;
     },
   },

@@ -34,7 +34,7 @@ export default async function ProfilePage() {
       <Panel>
         <p>
           Before you submit any predictions, please choose a display name which
-          will appear publically next to your predictions on the leaderboard.
+          will appear publicly next to your predictions on the leaderboard.
         </p>
         <GetStartedForm initialDisplayName={initialDisplayName} />
         {/**@todo Once they've submitted a value display name, show links to currently running competitions, other have a message of something like 'Come back soon' */}
