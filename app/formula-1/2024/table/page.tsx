@@ -5,10 +5,13 @@ const Page = () => {
   return (
     <>
       <PanelHeading>
-        <h1>Formula 1 - Leaderboards</h1>
+        <h1>Formula 1 - Table</h1>
       </PanelHeading>
       <Panel>
-        <p>Leaderboard page for the upcoming/current season.</p>
+        <p>
+          Shows the selected user&apos;s table compared to the standings using
+          url query, defaults to logged in user&apos;s table.
+        </p>
       </Panel>
     </>
   );

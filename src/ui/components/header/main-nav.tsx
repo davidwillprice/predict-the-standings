@@ -1,13 +1,11 @@
 "use client";
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
-
+import { ReactNode } from "react";
 import Link from "next/link";
 
 import Icon from "@svgs/icons/sq-icon";
 import HeaderLink from "@components/header/header-link";
-
-import { ReactNode } from "react";
 
 import styles from "@components/header/header.module.scss";
 import commonStyles from "@styles/common.module.scss";
@@ -24,13 +22,36 @@ export const MainNav = ({ children }: Props) => {
   const handleMobMenuCick = () => {
     toggleMobMenu(!mobMenuOpen);
   };
-
   useEffect(() => {
-    /**
-     * Whenever the page changes, the mobile menu is closed
-     */
+    /** Whenever the page changes, the mobile menu is closed*/
     toggleMobMenu(false);
   }, [pathname]);
+
+  const predictionLinks = pathname.startsWith("/formula-1") ? (
+    <>
+      {/**@todo Add year selector*/}
+      <HeaderLink href="/formula-1/2024" icon="group">
+        Leaderboards
+      </HeaderLink>
+      {/**@todo Only shows if user has made predictions for the year*/}
+      <HeaderLink href="/formula-1/2024/table" icon="f1">
+        Your Prediction Table
+      </HeaderLink>
+      <HeaderLink href="/formula-1/2024/stats" icon="stats">
+        Stats & Trivia
+      </HeaderLink>
+    </>
+  ) : (
+    <>
+      <HeaderLink href="/formula-1" icon="f1">
+        Formula 1
+      </HeaderLink>
+      <HeaderLink href="/premier-league" icon="premierLeague">
+        Premier League
+      </HeaderLink>
+    </>
+  );
+
   return (
     <>
       <div className={styles.pinned_header}>
@@ -61,25 +82,12 @@ export const MainNav = ({ children }: Props) => {
         <hr />
         <div>{children}</div>
         <hr />
-        <div>
-          <HeaderLink href="/formula-1" icon="f1">
-            Formula 1 Predictions
-          </HeaderLink>
-          <HeaderLink href="/premier-league" icon="premierLeague">
-            Premier League Predictions
-          </HeaderLink>
-        </div>
+        <div>{predictionLinks}</div>
         <hr />
         <div>
-          <div className={styles.dropdown}>
-            <div className={styles.dropdown__label}>
-              <div className={styles.icon}>
-                <Icon type="help" strokeWidth={2} />
-              </div>
-              Help
-            </div>
-            <i />
-          </div>
+          <HeaderLink href="/help" icon="help">
+            Help
+          </HeaderLink>
           <div className={styles.dropdown}>
             <div className={styles.dropdown__label}>
               <div className={styles.icon}>

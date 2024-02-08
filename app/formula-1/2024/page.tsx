@@ -5,12 +5,12 @@ const Page = () => {
   return (
     <>
       <PanelHeading>
-        <h1>Formula 1 - 2024</h1>
+        <h1>Formula 1 - Leaderboards</h1>
       </PanelHeading>
       <Panel>
         <p>
-          This page could work as an &apos;About&apos; but also be a dashboard
-          for the 2024 season.
+          Leaderboard page for the selected season. Clicking on the name of a
+          player takes you to their standings page.
         </p>
       </Panel>
     </>
