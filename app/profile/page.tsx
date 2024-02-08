@@ -20,9 +20,11 @@ export default async function ProfilePage() {
   const session = await getServerSession(authOptions);
   if (session == null) {
     return redirect("/login");
+  } else if (session?.user.displayName === null) {
+    return redirect("/get-started");
   }
 
-  const name = session?.user?.name as string;
+  const displayName = session?.user.displayName;
   const email = session?.user?.email;
   return (
     <>
@@ -31,9 +33,16 @@ export default async function ProfilePage() {
       </PanelHeading>
       <Panel>
         <form className={styles.form}>
+          {/**@todo Make display name editable here*/}
           <div className={styles.input_container}>
             <label htmlFor="name">Display Name</label>
-            <input id="name" type="name" name="name" value={name} />
+            <input
+              id="name"
+              type="name"
+              name="name"
+              value={displayName}
+              disabled
+            />
           </div>
           {email ? (
             <div className={styles.input_container}>
