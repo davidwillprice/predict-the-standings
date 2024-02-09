@@ -10,7 +10,6 @@ export class Entrant {
     this.color = color;
   }
 }
-
 export class F1DriverEntrant extends Entrant {
   team: string;
   constructor(
@@ -23,4 +22,25 @@ export class F1DriverEntrant extends Entrant {
     super(name, sName, id, color);
     this.team = team;
   }
+}
+
+export class Round {
+  trackName;
+  standings;
+  leaderboards: Leaderboards;
+  //entrantDiffTotals: EntrantDiffTotals;
+  constructor(trackName: string, driverStandings: Entrant[]) {
+    this.trackName = trackName;
+    this.standings = driverStandings;
+    this.leaderboards = [];
+  }
+}
+
+interface EntrantDiffTotals {
+  entrant: Entrant;
+  diffTotal: number;
+}
+interface Leaderboards {
+  // driver: { player: Player; percentCorrect: Number; prevRdDiff: number }[]
+  // team: { player: Player; percentCorrect: Number; prevRdDiff: number }[]
 }
