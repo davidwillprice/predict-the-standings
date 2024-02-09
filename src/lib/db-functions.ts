@@ -1,6 +1,4 @@
 "use server";
-import { cache } from "react";
-
 import { query } from "@lib/db";
 
 import { F1DriverEntrant } from "@custom-types/entrants";
@@ -38,22 +36,20 @@ export const getPredictionTable = async (
   }
 };
 
-export const getAllPredictionTablesQuery = cache(
-  async (season: string, sport: Sport) => {
-    const res = await query(`SELECT 
+export const getAllPredictionTablesQuery = async (
+  season: string,
+  sport: Sport
+) => {
+  const res = await query(`SELECT 
   users.id, 
   users.display_name, 
   ${sport}_${season}.prediction
   FROM 
   users INNER JOIN ${sport}_${season} ON ${sport}_${season}.user_id = users.id 
   ORDER BY users.id;`);
-    try {
-      return res.rows;
-    } catch (_) {
-      return;
-    }
-  }
-);
+  console.log("Running DB query");
+  return res.rows;
+};
 
 export const submitDisplayNameQuery = async (
   submittedDisplayName: string,

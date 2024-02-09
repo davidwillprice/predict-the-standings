@@ -1,3 +1,5 @@
+import { unstable_cache } from "next/cache";
+
 import { Panel } from "@components/panels/panel";
 import { PanelHeading } from "@components/panels/panel-heading";
 import { getAllPredictonData } from "@lib/game-functions";
@@ -5,13 +7,22 @@ import { getAllPredictonData } from "@lib/game-functions";
 const season = "2024";
 const sport = "f1";
 
-export const revalidate = 3600;
+const getCachedPredictionData = unstable_cache(
+  async () => {
+    try {
+      return await getAllPredictonData(season, sport);
+    } catch (_) {
+      console.log("Error");
+    }
+  },
+  [season, sport],
+  { revalidate: 3600 }
+);
 
 const Page = async () => {
   let predictionData;
   try {
-    predictionData = await getAllPredictonData(season, sport);
-    console.log(predictionData);
+    predictionData = await getCachedPredictionData();
   } catch (_) {
     console.log("Error");
   }
