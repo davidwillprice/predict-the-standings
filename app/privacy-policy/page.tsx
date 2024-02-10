@@ -232,10 +232,12 @@ export default function Page() {
           <div className={styles.con}>
             <table className={styles.table}>
               <thead>
-                <th>Cookie ID</th>
-                <th>Type</th>
-                <th>Security</th>
-                <th>Duration</th>
+                <tr>
+                  <th>Cookie ID</th>
+                  <th>Type</th>
+                  <th>Security</th>
+                  <th>Duration</th>
+                </tr>
               </thead>
               <tbody>
                 <tr>
