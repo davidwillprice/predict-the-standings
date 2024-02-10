@@ -25,7 +25,7 @@ export const submitDisplayName = async (formData: FormData) => {
     const res = await submitDisplayNameQuery(displayName, userId);
     if (res.length === 0) {
       /**No rows were returned from DB, indicating a duplicate displayname  */
-      throw new Error(`Display name '${displayName}' already exists.`);
+      throw new Error(`Display name '${displayName}' already exists`);
     }
   } catch (error: unknown) {
     if (error instanceof Error) {

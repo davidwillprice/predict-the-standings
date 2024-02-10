@@ -10,7 +10,7 @@ export const validateDisplayName = (
 
   const bannedDisplayNames = ["average"];
   if (bannedDisplayNames.includes(displayName.toLocaleLowerCase())) {
-    validationErrors.push(`Display name '${displayName}' already exists.`);
+    validationErrors.push(`Display name '${displayName}' already exists`);
   }
 
   if (displayName.length < 3)
