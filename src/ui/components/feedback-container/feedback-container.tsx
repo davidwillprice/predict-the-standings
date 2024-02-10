@@ -15,6 +15,6 @@ export const FeedbackContainer = ({ children, iconType }: Props) => (
     <div className={styles.icon}>
       <Icon type={iconType} strokeWidth={2} />
     </div>
-    {children}
+    <div className={styles.feedbackText}>{children}</div>
   </div>
 );

@@ -2,11 +2,11 @@
 
 .feedback {
   display: flex;
-  padding: 10px 15px 10px 20px;
+  align-items: center;
+  padding: 0px 15px 0px 20px;
   background-color: $primary-color;
   border-radius: 5px;
   box-shadow: $box-shadow;
-  align-items: center;
   position: relative;
   overflow: hidden;
   margin-bottom: 15px;
@@ -23,13 +23,13 @@
   &.success:after {
     background-color: $success-color;
   }
-  ul,
-  p {
-    margin-bottom: 0;
-  }
   ul {
     margin-left: 10px;
   }
+}
+
+.feedbackText {
+  margin-top: 15px;
 }
 
 .error .icon {

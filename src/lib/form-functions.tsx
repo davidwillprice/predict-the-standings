@@ -8,6 +8,11 @@ export const validateDisplayName = (
     validationErrors.push("Unknown error");
   }
 
+  const bannedDisplayNames = ["average"];
+  if (bannedDisplayNames.includes(displayName.toLocaleLowerCase())) {
+    validationErrors.push(`Display name '${displayName}' already exists.`);
+  }
+
   if (displayName.length < 3)
     validationErrors.push("Use a minimum of 3 characters");
 
