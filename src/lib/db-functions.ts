@@ -1,7 +1,7 @@
 "use server";
 import { query } from "@lib/db";
 
-import { F1DriverEntrant } from "@custom-types/entrants";
+import { F1DriverEntrant } from "@custom-types/game-types";
 import { Sport } from "@custom-types/misc";
 
 export const submitPredictions = async (
@@ -10,13 +10,13 @@ export const submitPredictions = async (
   sport: Sport,
   userId: number
 ) => {
-  await query(`INSERT INTO ${sport}_${season} (prediction_id, user_id, prediction)
+  await query(`INSERT INTO ${sport}_${season} (prediction_id, user_id, predictions)
   VALUES (${userId}, ${userId}, ARRAY[${entrantArr.map(
     (entrant) => `'${entrant.sName}'`
   )}])
   ON CONFLICT (prediction_id)
   DO UPDATE
-  SET user_id = ${userId}, prediction = ARRAY[${entrantArr.map(
+  SET user_id = ${userId}, predictions = ARRAY[${entrantArr.map(
     (entrant) => `'${entrant.sName}'`
   )}]`);
 };
@@ -26,11 +26,11 @@ export const getPredictionTable = async (
   sport: Sport,
   userId: number
 ) => {
-  const res = await query(`SELECT prediction
+  const res = await query(`SELECT predictions
   FROM ${sport}_${season}
   WHERE prediction_id = ${userId}`);
   try {
-    return res.rows[0]["prediction"];
+    return res.rows[0]["predictions"];
   } catch (_) {
     return;
   }
@@ -43,11 +43,11 @@ export const getAllPredictionTablesQuery = async (
   const res = await query(`SELECT 
   users.id, 
   users.display_name, 
-  ${sport}_${season}.prediction
+  ${sport}_${season}.predictions
   FROM 
   users INNER JOIN ${sport}_${season} ON ${sport}_${season}.user_id = users.id 
   ORDER BY users.id;`);
-  console.log("Running DB query");
+  console.log(`Running DB query at ${new Date().toISOString()}`);
   return res.rows;
 };
 
