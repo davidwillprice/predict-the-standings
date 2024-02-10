@@ -32,7 +32,7 @@ const Page = async () => {
         <h1>Formula 1 - Table</h1>
       </PanelHeading>
       <Panel>
-        <p>{predictionData ? predictionData[2].display_name : ""}</p>
+        <p>{predictionData ? predictionData[2].displayName : ""}</p>
         <p>
           Shows the selected user&apos;s table compared to the standings using
           url query, defaults to logged in user&apos;s table.

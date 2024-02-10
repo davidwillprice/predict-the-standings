@@ -1,4 +1,4 @@
-import { Entrant, F1DriverEntrant } from "@custom-types/entrants";
+import { Entrant, F1DriverEntrant } from "@custom-types/game-types";
 
 interface Entrants {
   drivers: {

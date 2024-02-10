@@ -10,6 +10,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "preview": "npm run build && npm run start",
     "seed": "node -r dotenv/config ./scripts/seed.js"
   },
   "dependencies": {
