@@ -6,7 +6,7 @@ export const pool = new Pool({
   password: process.env.POSTGRES_PASSWORD as string,
   database: process.env.POSTGRES_DATABASE as string,
   max: 20,
-  ssl: true,
+  ssl: process.env.NODE_ENV === "development" ? false : true,
   idleTimeoutMillis: 30000,
   connectionTimeoutMillis: 2000,
 });
