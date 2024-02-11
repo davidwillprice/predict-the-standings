@@ -207,18 +207,19 @@ const orderLeaderboards = (rounds: Round[]) => {
 const calcLeaderboardRdDiffs = (rounds: Round[]): Round[] => {
   rounds.forEach((round, roundIndex) => {
     /**Don't calculate the leaderboard changes of the first round */
-    if (roundIndex > 0) {
-      /**Loop over each user in order of the looped round's leaderboard*/
-      for (const [currentLbPos, currentUserData] of Object.entries(
-        round.leaderboards
-      )) {
-        /**Find that user's position in the leaderboard of the round previous to the looped round*/
-        const previousLbPos = rounds[roundIndex].leaderboards.findIndex(
-          (entrant) => entrant.user.id === currentUserData.user.id
-        );
-        /**Attach the user's leaderboard position change from the previous round to their data for the looped round*/
-        currentUserData.prevRdDiff = previousLbPos - +currentLbPos;
-      }
+    if (roundIndex === 0) {
+      return;
+    }
+    /**Loop over each user in order of the looped round's leaderboard*/
+    for (const [currentLbPos, currentUserData] of Object.entries(
+      round.leaderboards
+    )) {
+      /**Find that user's position in the leaderboard of the round previous to the looped round*/
+      const previousLbPos = rounds[roundIndex - 1].leaderboards.findIndex(
+        (entrant) => entrant.user.id === currentUserData.user.id
+      );
+      /**Attach the user's leaderboard position change from the previous round to their data for the looped round*/
+      currentUserData.prevRdDiff = previousLbPos - +currentLbPos;
     }
   });
   return rounds;

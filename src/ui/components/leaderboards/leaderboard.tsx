@@ -9,9 +9,6 @@ interface Props {
 }
 
 export const Leaderboard = ({ rounds, roundIndex }: Props) => {
-  rounds[roundIndex].leaderboards.map((row, index) =>
-    console.log(row.prevRdDiff)
-  );
   return (
     <div className={predictStyles.prediction_table}>
       <table className={styles.leaderboard}>
