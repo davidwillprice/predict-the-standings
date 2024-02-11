@@ -12,10 +12,6 @@ import { Sport } from "@custom-types/misc";
 
 import styles from "@components/submit-predictions/submit-predictions.module.scss";
 
-/**@todo Need to add error catching with warnings/confirmation that a submission is saved */
-/**@todo Need to limit database calls - Add lock for 10 seconds? - Add state to check if the table is the same as it was last submitted */
-/**@todo Need to lock button after season start*/
-/**@todo Need button to view leaderboards if season has started?*/
 interface Props {
   entrantArr: Entrant[];
   season: string;
@@ -63,22 +59,26 @@ export const SubmitPredictions = ({
         submitting ? (
           <LoadingSpinner />
         ) : (
+          /**@todo Need to lock button after season start*/
           <Button onClick={submissionHandler}>Submit Predictions</Button>
         )
       ) : submissionSuccessful.current ? (
         <FeedbackContainer iconType="success">
-          Submission Successful
+          <p>Submission Successful</p>
         </FeedbackContainer>
       ) : (
         ""
       )}
+      {/**@todo URGENT Hide error feedback if the predictions change after error started */}
+      {/**@todo Need to limit database calls - Add lock for 10 seconds? - Add state to check if the table is the same as it was last submitted */}
       {error ? (
         <FeedbackContainer iconType="error">
-          Error: {error.charAt(0).toUpperCase() + error.slice(1)}
+          <p>Error: {error.charAt(0).toUpperCase() + error.slice(1)}</p>
         </FeedbackContainer>
       ) : (
         ""
       )}
     </div>
+    /**@todo URGENT Need button to view leaderboards if season has started?*/
   );
 };

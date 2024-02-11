@@ -1,0 +1,16 @@
+.editable_prediction_table {
+  [data-drop-target] {
+    height: 30px;
+  }
+  [data-dragging] {
+    opacity: 0.3;
+  }
+  tr {
+    cursor: grab;
+  }
+  tr {
+    td:last-child {
+      text-align: left;
+    }
+  }
+}

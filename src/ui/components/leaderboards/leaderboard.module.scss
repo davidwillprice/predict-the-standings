@@ -1,9 +1,13 @@
 @import "@styles/sass-variables.scss";
 
+.leaderboard {
+  max-width: 400px;
+  width: 100%;
+}
 .position {
   text-align: center;
 }
-.positionDiff {
+.position_diff {
   width: 20px;
   i {
     border: solid $secondary-color;
@@ -12,15 +16,18 @@
     padding: 3px;
   }
 }
-.posChange i {
+.perfect_positions {
+  max-width: 92px;
+}
+.pos_change i {
   transform: rotate(225deg) translate(-1px, -1px);
   border-color: $success-color;
 }
-.negChange i {
+.neg_change i {
   transform: rotate(45deg) translate(-2px, -2px);
   border-color: $error-color;
 }
-.noChange i {
+.no_change i {
   border-width: 0 0 3px 0;
   padding: 1.5px 5px;
   transform: translateY(-4px);

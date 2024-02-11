@@ -28,7 +28,6 @@ const Page = async () => {
   let predictionData: PredictionData | null | undefined;
   try {
     predictionData = await getCachedPredictionData();
-    console.log(predictionData);
   } catch (_) {
     //console.log("Error");
   }

@@ -9,7 +9,8 @@ import {
 
 import { Entrant } from "@custom-types/game-types";
 
-import styles from "@styles/prediction-table.module.scss";
+import predictiontableStyles from "@styles/prediction-table.module.scss";
+import styles from "@components/submit-predictions/editable-prediction-table.module.scss";
 
 type Props = {
   entrantArr: Entrant[];
@@ -30,12 +31,13 @@ export function EditablePredictionTable({
   };
 
   return (
-    <div id="prediction-table" className={styles.prediction_table}>
+    <div
+      id="prediction-table"
+      className={`${predictiontableStyles.prediction_table} ${styles.editable_prediction_table}`}>
       <table>
         <thead>
           <tr>
-            <th></th>
-            <th>Order</th>
+            <th colSpan={2}>Order</th>
             <th></th>
             <th>Entrant</th>
           </tr>
@@ -52,7 +54,7 @@ export function EditablePredictionTable({
                     {(provided) => (
                       <tr
                         key={entrant.id}
-                        className={styles.prediction_table_row}
+                        className={predictiontableStyles.table_row}
                         ref={provided.innerRef}
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}>
@@ -60,7 +62,7 @@ export function EditablePredictionTable({
                         <td>{entrantArr.indexOf(entrant) + 1}</td>
                         <td>
                           <span
-                            className={`${styles.tab}`}
+                            className={`${predictiontableStyles.flair}`}
                             style={{ backgroundColor: entrant.color }}></span>
                         </td>
                         <td>{entrant.name}</td>

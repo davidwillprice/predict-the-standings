@@ -9,6 +9,9 @@ interface Props {
 }
 
 export const Leaderboard = ({ rounds, roundIndex }: Props) => {
+  rounds[roundIndex].leaderboards.map((row, index) =>
+    console.log(row.prevRdDiff)
+  );
   return (
     <div className={predictStyles.prediction_table}>
       <table className={styles.leaderboard}>
@@ -18,28 +21,29 @@ export const Leaderboard = ({ rounds, roundIndex }: Props) => {
             <th aria-label="Position change header"></th>
             <th>Name</th>
             <th>Accuracy</th>
-            <th>Perfect Predictions</th>
+            <th className={styles.perfect_positions}>Perfect Predictions</th>
           </tr>
         </thead>
         <tbody>
           {rounds[roundIndex].leaderboards.map((row, index) => (
-            <tr
-              key={row.user.displayName}
-              className={predictStyles.prediction_table_row}>
+            <tr key={row.user.displayName} className={predictStyles.table_row}>
               <td className={styles.position}>{index + 1}</td>
+
               <td
-                className={`${styles.positionDiff} ${
+                className={`${styles.position_diff} ${
                   row.prevRdDiff > 0
-                    ? styles.posChange
+                    ? styles.pos_change
                     : row.prevRdDiff < 0
-                    ? styles.negChange
-                    : styles.noChange
+                    ? styles.neg_change
+                    : styles.no_change
                 }`}>
-                <i></i>
+                <i />
               </td>
               <td>{row.user.displayName}</td>
               <td>{`${row.percentCorrect}%`}</td>
-              <td>{row.user.season[roundIndex].diffCounts[0]}</td>
+              <td className={styles.perfect_positions}>
+                {row.user.season[roundIndex].diffCounts[0]}
+              </td>
             </tr>
           ))}
         </tbody>
