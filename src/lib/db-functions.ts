@@ -1,11 +1,11 @@
 "use server";
 import { query } from "@lib/db";
 
-import { F1DriverEntrant } from "@custom-types/game-types";
+import { Entrant } from "@custom-types/game-types";
 import { Sport } from "@custom-types/misc";
 
 export const submitPredictions = async (
-  entrantArr: F1DriverEntrant[],
+  entrantArr: Entrant[],
   season: string,
   sport: Sport,
   userId: number

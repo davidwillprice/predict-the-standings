@@ -12,7 +12,7 @@ import { Panel } from "@components/panels/panel";
 import { PanelHeading } from "@components/panels/panel-heading";
 import { EditPredictions } from "@components/submit-predictions/edit-predictions";
 
-import { F1DriverEntrant } from "@custom-types/entrants";
+import { Entrant } from "@custom-types/game-types";
 import { Sport } from "@custom-types/misc";
 
 export const metadata: Metadata = {
@@ -32,32 +32,32 @@ export default async function Page() {
   const predictionFreezeDate = new Date("2024-02-29T11:30:00");
 
   const defaultEntrantsArr = sortF1DriverEntrantsAlphabetically([
-    entrants.drivers.ham,
-    entrants.drivers.bot,
-    entrants.drivers.lec,
-    entrants.drivers.sai,
-    entrants.drivers.ver,
-    entrants.drivers.per,
-    entrants.drivers.alo,
-    entrants.drivers.oco,
-    entrants.drivers.hul,
-    entrants.drivers.mag,
-    entrants.drivers.nor,
-    entrants.drivers.pia,
-    entrants.drivers.ric,
-    entrants.drivers.str,
-    entrants.drivers.zho,
-    entrants.drivers.alb,
-    entrants.drivers.tsu,
-    entrants.drivers.gas,
-    entrants.drivers.sar,
-    entrants.drivers.rus,
+    entrants.ham,
+    entrants.bot,
+    entrants.lec,
+    entrants.sai,
+    entrants.ver,
+    entrants.per,
+    entrants.alo,
+    entrants.oco,
+    entrants.hul,
+    entrants.mag,
+    entrants.nor,
+    entrants.pia,
+    entrants.ric,
+    entrants.str,
+    entrants.zho,
+    entrants.alb,
+    entrants.tsu,
+    entrants.gas,
+    entrants.sar,
+    entrants.rus,
   ]);
-  let entrantArr: F1DriverEntrant[];
+  let entrantArr: Entrant[];
   try {
     const dbPredictionTable = await getPredictionTable(season, sport, userId);
     entrantArr = dbPredictionTable.map(
-      (entrantStr: string) => entrants.drivers[entrantStr]
+      (entrantStr: string) => entrants[entrantStr]
     );
   } catch (_) {
     entrantArr = defaultEntrantsArr;

@@ -10,6 +10,7 @@ export const LoginForm = () => (
   <>
     <div className={styles.login}>
       {/**@todo Add icons for each login */}
+      {/**@todo Add loading spinner */}
       {/**Instagram provider seems to require a verified FB business account
        * Apple developer program costs $99py so can't add Apple provider*/}
       {/**@todo Add Patreon, Linkedin, and Spotify logins */}

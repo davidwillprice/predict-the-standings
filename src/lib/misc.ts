@@ -1,13 +1,11 @@
-import type { Entrant, F1DriverEntrant } from "@custom-types/entrants";
+import type { Entrant } from "@custom-types/game-types";
 
 export const sortEntrantsAlphabetically = (entrantArr: Entrant[]) => {
   return entrantArr.sort((a, b) =>
     a.name < b.name ? -1 : a.name > b.name ? 1 : 0
   );
 };
-export const sortF1DriverEntrantsAlphabetically = (
-  entrantArr: F1DriverEntrant[]
-) => {
+export const sortF1DriverEntrantsAlphabetically = (entrantArr: Entrant[]) => {
   return entrantArr.sort((a, b) =>
     a.name < b.name ? -1 : a.name > b.name ? 1 : 0
   );

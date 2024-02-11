@@ -36,20 +36,6 @@ export interface Entrants {
   [key: string]: Entrant;
 }
 
-export class F1DriverEntrant extends Entrant {
-  team: string;
-  constructor(
-    name: string,
-    sName: string,
-    id: number,
-    team: string,
-    color: string
-  ) {
-    super(name, sName, id, color);
-    this.team = team;
-  }
-}
-
 export class Round {
   trackName;
   standings;

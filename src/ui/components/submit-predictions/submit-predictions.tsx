@@ -5,7 +5,7 @@ import { Button } from "@components/button/button";
 import { LoadingSpinner } from "@components/loading-spinner/loading-spinner";
 import { FeedbackContainer } from "@components/feedback-container/feedback-container";
 
-import { F1DriverEntrant } from "@custom-types/entrants";
+import { Entrant } from "@custom-types/game-types";
 import { submitPredictions } from "@lib/db-functions";
 
 import { Sport } from "@custom-types/misc";
@@ -17,7 +17,7 @@ import styles from "@components/submit-predictions/submit-predictions.module.scs
 /**@todo Need to lock button after season start*/
 /**@todo Need button to view leaderboards if season has started?*/
 interface Props {
-  entrantArr: F1DriverEntrant[];
+  entrantArr: Entrant[];
   season: string;
   sport: Sport;
   userId: number;

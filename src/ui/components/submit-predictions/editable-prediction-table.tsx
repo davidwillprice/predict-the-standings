@@ -7,13 +7,13 @@ import {
   DropResult,
 } from "@hello-pangea/dnd";
 
-import { F1DriverEntrant } from "@custom-types/entrants";
+import { Entrant } from "@custom-types/game-types";
 
 import styles from "@styles/prediction-table.module.scss";
 
 type Props = {
-  entrantArr: F1DriverEntrant[];
-  handleEntrantState: (entrantArr: F1DriverEntrant[]) => void;
+  entrantArr: Entrant[];
+  handleEntrantState: (entrantArr: Entrant[]) => void;
 };
 
 export function EditablePredictionTable({
