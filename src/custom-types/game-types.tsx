@@ -53,11 +53,13 @@ interface EntrantDiffTotal {
   entrant: Entrant;
   diffTotal: number;
 }
-type Leaderboards = {
+type Leaderboards = Leaderboard[];
+
+export type Leaderboard = {
   user: User;
   percentCorrect: Number;
   prevRdDiff: number;
-}[];
+};
 
 interface RoundPerformance {
   diffTotal: number;

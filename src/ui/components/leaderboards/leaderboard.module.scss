@@ -1,5 +1,11 @@
 @import "@styles/sass-variables.scss";
-
+.con {
+  display: flex;
+  justify-content: space-between;
+  max-width: 600px;
+  margin: 0 auto;
+  align-items: center;
+}
 .leaderboard {
   max-width: 400px;
   width: 100%;
