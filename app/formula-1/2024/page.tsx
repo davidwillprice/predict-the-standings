@@ -4,7 +4,10 @@ import { Panel } from "@components/panels/panel";
 import { PanelHeading } from "@components/panels/panel-heading";
 import { getAllPredictonData } from "@lib/game-functions";
 
+import { rounds, entrants } from "@data/formula-1/2024";
+
 import { Sport } from "@custom-types/misc";
+import { PredictionData } from "@custom-types/game-types";
 
 const season = "2024";
 const sport: Sport = "f1";
@@ -12,7 +15,7 @@ const sport: Sport = "f1";
 const getCachedPredictionData = unstable_cache(
   async () => {
     try {
-      return await getAllPredictonData(season, sport);
+      return await getAllPredictonData(entrants, rounds, season, sport);
     } catch (_) {
       console.log("Failed to getAllPredictonData()");
     }
@@ -22,10 +25,10 @@ const getCachedPredictionData = unstable_cache(
 );
 
 const Page = async () => {
-  let predictionData;
+  let predictionData: PredictionData | null | undefined;
   try {
     predictionData = await getCachedPredictionData();
-    //console.log(predictionData);
+    console.log(predictionData);
   } catch (_) {
     //console.log("Error");
   }
