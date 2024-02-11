@@ -1,9 +1,9 @@
 import { unstable_cache } from "next/cache";
 
-import { Panel } from "@components/panels/panel";
 import { PanelHeading } from "@components/panels/panel-heading";
-import { getAllPredictonData } from "@lib/game-functions";
+import { LeaderboardContainer } from "@components/leaderboards/leaderboard-container";
 
+import { getAllPredictonData } from "@lib/game-functions";
 import { rounds, entrants } from "@data/formula-1/2024";
 
 import { Sport } from "@custom-types/misc";
@@ -37,13 +37,14 @@ const Page = async () => {
       <PanelHeading>
         <h1>Formula 1 - Leaderboards</h1>
       </PanelHeading>
-      <Panel>
-        <p>{predictionData ? JSON.stringify(predictionData, null, 2) : ""}</p>
-        <p>
-          Leaderboard page for the selected season. Clicking on the name of a
-          player takes you to their standings page.
-        </p>
-      </Panel>
+      {predictionData ? (
+        <LeaderboardContainer
+          rounds={JSON.parse(JSON.stringify(predictionData.rounds))}
+          users={JSON.parse(JSON.stringify(predictionData.users))}
+        />
+      ) : (
+        <p>Unable to obtain prediction data</p>
+      )}
     </>
   );
 };

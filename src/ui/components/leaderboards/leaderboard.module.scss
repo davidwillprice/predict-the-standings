@@ -1,0 +1,37 @@
+@import "@styles/sass-variables.scss";
+
+.position {
+  text-align: center;
+}
+.positionDiff {
+  width: 20px;
+  i {
+    border: solid $secondary-color;
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    padding: 3px;
+  }
+}
+.posChange i {
+  transform: rotate(225deg) translate(-1px, -1px);
+  border-color: $success-color;
+}
+.negChange i {
+  transform: rotate(45deg) translate(-2px, -2px);
+  border-color: $error-color;
+}
+.noChange i {
+  border-width: 0 0 3px 0;
+  padding: 1.5px 5px;
+  transform: translateY(-4px);
+  opacity: 0.2;
+}
+
+@media (max-width: $small-mobile-menu-breakpoint) {
+  .leaderboard {
+    td,
+    th {
+      font-size: 14px;
+    }
+  }
+}
