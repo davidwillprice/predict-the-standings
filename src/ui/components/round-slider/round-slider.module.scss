@@ -1,0 +1,68 @@
+@import "@styles/sass-variables.scss";
+
+.round_footer {
+  border-radius: 5px;
+  background-color: $primary-color;
+  box-sizing: border-box;
+  box-shadow: $box-shadow;
+  width: calc(100%);
+  padding: 15px;
+  margin: 15px auto 0;
+}
+.con {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  h2 {
+    text-align: center;
+  }
+}
+.slider_footer {
+  margin-top: 15px;
+  position: relative;
+}
+.notch_con {
+  display: flex;
+  position: absolute;
+  width: 100%;
+  z-index: 0;
+  justify-content: space-between;
+  padding-right: 11.5px;
+  padding-left: 11.5px;
+  margin-top: 0px;
+  .notch {
+    width: 2px;
+    height: 10px;
+    background-color: $secondary-color;
+  }
+}
+.slider {
+  appearance: none;
+  width: 100%;
+  height: 10px;
+  border-radius: 5px;
+  background: $quaternary-color;
+  outline: none;
+  margin-top: 10px;
+  z-index: 1;
+  position: relative;
+}
+.slider::slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: $primary-color;
+  cursor: pointer;
+  border: 2px solid $secondary-color;
+}
+
+.slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: $primary-color;
+  cursor: pointer;
+  border: 2px solid $secondary-color;
+}
