@@ -1,4 +1,4 @@
-import styles from "@components/leaderboards/leaderboard.module.scss";
+import styles from "@components/game/leaderboard.module.scss";
 import predictStyles from "@styles/prediction-table.module.scss";
 
 import { Round } from "@custom-types/game-types";

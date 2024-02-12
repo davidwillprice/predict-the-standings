@@ -6,7 +6,7 @@ import { getAllPredictonData } from "@lib/game-functions";
 import { rounds, entrants } from "@data/formula-1/2024";
 
 import { PanelHeading } from "@components/panels/panel-heading";
-import { LeaderboardContainer } from "@components/leaderboards/leaderboard-container";
+import { GameContainer } from "@components/game/game-container";
 
 import { Sport } from "@custom-types/misc";
 import { PredictionData } from "@custom-types/game-types";
@@ -41,7 +41,7 @@ const Page = async () => {
         <h1>Formula 1 - Leaderboards</h1>
       </PanelHeading>
       {predictionData ? (
-        <LeaderboardContainer
+        <GameContainer
           currentUserDisplayName={currentUserDisplayName}
           rounds={JSON.parse(JSON.stringify(predictionData.rounds))}
           users={JSON.parse(JSON.stringify(predictionData.users))}

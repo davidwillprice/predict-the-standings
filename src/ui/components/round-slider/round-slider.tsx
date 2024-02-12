@@ -23,8 +23,9 @@ export const RoundSlider = ({
       style={noOfRounds < 5 ? { maxWidth: "400px" } : {}}>
       <div className={styles.con}>
         {/**@todo Add arrow buttons to let people change the round without having to use the slider */}
+        {/**@todo Compare slider to Aria React's slider and W3 slider pattern to see what improvements can be made or possibly just implement the React Aria solution */}
         <h2>
-          Round {selectedRound + 1} :<span id="track-name"> {trackName}</span>
+          Round {selectedRound + 1}: <span id="track-name">{trackName}</span>
         </h2>
         {noOfRounds > 1 && (
           <div className={styles.slider_footer}>

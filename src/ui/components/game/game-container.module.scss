@@ -1,0 +1,8 @@
+@import "@styles/sass-variables.scss";
+.con {
+  display: flex;
+  justify-content: space-between;
+  max-width: 600px;
+  margin: 0 auto ($round-slider-height + 15px);
+  align-items: center;
+}

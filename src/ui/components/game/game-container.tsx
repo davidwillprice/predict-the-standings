@@ -6,7 +6,7 @@ import { Leaderboard } from "./leaderboard";
 import { PredictionTable } from "@components/predicition-table/prediction-table";
 import { RoundSlider } from "@components/round-slider/round-slider";
 
-import styles from "@components/leaderboards/leaderboard.module.scss";
+import styles from "@components/game/game-container.module.scss";
 
 import { Round, Users } from "@custom-types/game-types";
 
@@ -16,13 +16,14 @@ interface Props {
   users: Users;
 }
 
-export const LeaderboardContainer = ({
+export const GameContainer = ({
   rounds,
   users,
   currentUserDisplayName,
 }: Props) => {
+  const [mode, setMode] = useState("table");
   const [roundIndex, setRoundIndex] = useState(rounds.length - 1);
-  const [highlightedUser, setHighlightedUser] = useState(
+  const [selectedUser, setSelectedUser] = useState(
     rounds[roundIndex].leaderboards.find(
       (leaderboard) => leaderboard.user.displayName === currentUserDisplayName
     ) || rounds[roundIndex].leaderboards[0]
@@ -31,15 +32,21 @@ export const LeaderboardContainer = ({
   const changeRoundHandler = (newRoundIndex: number) => {
     setRoundIndex(newRoundIndex);
   };
+  const changeSelectedUser = () => {
+    /**@todo If there is no query string to select a user, automatically select the user's data. And if they aren't signed in default to showing the person in first */
+  };
   /**@todo URGENT Fix duplicating users bug */
   return (
     <>
       <div className={styles.con}>
-        <Leaderboard rounds={rounds} roundIndex={roundIndex} />
-        <PredictionTable
-          selectedRound={roundIndex}
-          userLeaderboard={highlightedUser}
-        />
+        {mode === "leaderboard" ? (
+          <Leaderboard rounds={rounds} roundIndex={roundIndex} />
+        ) : (
+          <PredictionTable
+            selectedRound={roundIndex}
+            userLeaderboard={selectedUser}
+          />
+        )}
       </div>
       {rounds.length > 0 && (
         <RoundSlider
