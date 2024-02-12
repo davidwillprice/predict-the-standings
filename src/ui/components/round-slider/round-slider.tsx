@@ -22,6 +22,7 @@ export const RoundSlider = ({
       className={styles.round_footer}
       style={noOfRounds < 5 ? { maxWidth: "400px" } : {}}>
       <div className={styles.con}>
+        {/**@todo Add arrow buttons to let people change the round without having to use the slider */}
         <h2>
           Round {selectedRound + 1} :<span id="track-name"> {trackName}</span>
         </h2>

@@ -5,13 +5,18 @@
   background-color: $primary-color;
   box-sizing: border-box;
   box-shadow: $box-shadow;
-  width: calc(100%);
+  width: calc(100% - ($header-width-desktop + 30px));
   padding: 15px;
-  margin: 15px auto 0;
+  margin: 15px 0 0 $header-width-desktop;
+  position: fixed;
+  bottom: 15px;
+  max-width: 100%;
+  left: 15px;
+  right: 15px;
 }
 .con {
   width: 100%;
-  max-width: 800px;
+  max-width: 1000px;
   margin: 0 auto;
   h2 {
     text-align: center;
@@ -65,4 +70,21 @@
   background: $primary-color;
   cursor: pointer;
   border: 2px solid $secondary-color;
+}
+
+@media (max-width: $tablet-menu-breakpoint) {
+  .round_footer {
+    width: calc(100% - ($header-width-tablet + 30px));
+    margin: 15px 0 0 $header-width-tablet;
+  }
+}
+
+@media (max-width: $mobile-menu-breakpoint) {
+  .round_footer {
+    width: calc(100% - 20px);
+    margin: 10px auto 0;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+  }
 }
