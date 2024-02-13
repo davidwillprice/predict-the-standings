@@ -11,7 +11,7 @@ export const PredictionTable = ({ selectedRound, userLeaderboard }: Props) => {
   const { percentCorrect, user } = userLeaderboard;
   const tableData = user.season[selectedRound].diffs;
   return (
-    <div id="prediction-table" className={styles.prediction_table}>
+    <div className={styles.prediction_table}>
       <table>
         <thead>
           <tr>
@@ -33,6 +33,7 @@ export const PredictionTable = ({ selectedRound, userLeaderboard }: Props) => {
           ))}
         </tbody>
       </table>
+      <p>Accuracy: {+percentCorrect}%</p>
     </div>
   );
 };

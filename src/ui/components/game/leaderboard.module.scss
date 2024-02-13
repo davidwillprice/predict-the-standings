@@ -1,7 +1,10 @@
 @import "@styles/sass-variables.scss";
 .leaderboard {
-  max-width: 400px;
+  max-width: 600px;
   width: 100%;
+}
+.table_row {
+  cursor: pointer;
 }
 .position {
   text-align: center;

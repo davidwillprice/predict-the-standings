@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
 
 import { Leaderboard } from "./leaderboard";
-import { PredictionTable } from "@components/predicition-table/prediction-table";
+import { PredictionTable } from "@components/prediction-table/prediction-table";
+import { StandingsTable } from "@components/prediction-table/standings-table";
 import { RoundSlider } from "@components/round-slider/round-slider";
 
 import styles from "@components/game/game-container.module.scss";
@@ -21,7 +23,11 @@ export const GameContainer = ({
   users,
   currentUserDisplayName,
 }: Props) => {
-  const [mode, setMode] = useState("table");
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+
+  const [mode, setMode] = useState("leaderboard");
   const [roundIndex, setRoundIndex] = useState(rounds.length - 1);
   const [selectedUser, setSelectedUser] = useState(
     rounds[roundIndex].leaderboards.find(
@@ -29,23 +35,61 @@ export const GameContainer = ({
     ) || rounds[roundIndex].leaderboards[0]
   );
 
+  useEffect(() => {
+    /** Whenever the page changes*/
+    console.log(searchParams.has("user"));
+    window.onpopstate = () => {
+      if (searchParams.has("user")) {
+        setMode("table");
+      } else {
+        setMode("leaderboard");
+      }
+    };
+    if (searchParams.has("user")) {
+      setMode("table");
+    } else {
+      setMode("leaderboard");
+    }
+  }, [pathname, searchParams]);
+
   const changeRoundHandler = (newRoundIndex: number) => {
     setRoundIndex(newRoundIndex);
   };
-  const changeSelectedUser = () => {
+  const changeSelectedUserHandler = (displayName: string) => {
     /**@todo If there is no query string to select a user, automatically select the user's data. And if they aren't signed in default to showing the person in first */
+    router.push(pathname + `?user=${displayName}`);
+    setMode("table");
   };
   /**@todo URGENT Fix duplicating users bug */
   return (
     <>
       <div className={styles.con}>
         {mode === "leaderboard" ? (
-          <Leaderboard rounds={rounds} roundIndex={roundIndex} />
+          <>
+            <div className={styles.main}>
+              <p>Select users to view their predictions.</p>
+              <Leaderboard
+                rounds={rounds}
+                roundIndex={roundIndex}
+                changeSelectedUserHandler={changeSelectedUserHandler}
+              />
+            </div>
+            <StandingsTable
+              selectedRound={roundIndex}
+              standingsArr={rounds[roundIndex].standings}
+            />
+          </>
         ) : (
-          <PredictionTable
-            selectedRound={roundIndex}
-            userLeaderboard={selectedUser}
-          />
+          <>
+            <PredictionTable
+              selectedRound={roundIndex}
+              userLeaderboard={selectedUser}
+            />
+            <StandingsTable
+              selectedRound={roundIndex}
+              standingsArr={rounds[roundIndex].standings}
+            />
+          </>
         )}
       </div>
       {rounds.length > 0 && (

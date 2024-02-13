@@ -6,9 +6,14 @@ import { Round } from "@custom-types/game-types";
 interface Props {
   rounds: Round[];
   roundIndex: number;
+  changeSelectedUserHandler: Function;
 }
 
-export const Leaderboard = ({ rounds, roundIndex }: Props) => {
+export const Leaderboard = ({
+  changeSelectedUserHandler,
+  rounds,
+  roundIndex,
+}: Props) => {
   return (
     <div className={predictStyles.prediction_table}>
       <table className={styles.leaderboard}>
@@ -23,9 +28,11 @@ export const Leaderboard = ({ rounds, roundIndex }: Props) => {
         </thead>
         <tbody>
           {rounds[roundIndex].leaderboards.map((row, index) => (
-            <tr key={row.user.displayName} className={predictStyles.table_row}>
+            <tr
+              key={row.user.displayName}
+              className={`${predictStyles.table_row} ${styles.table_row}`}
+              onClick={() => changeSelectedUserHandler(row.user.displayName)}>
               <td className={styles.position}>{index + 1}</td>
-
               <td
                 className={`${styles.position_diff} ${
                   row.prevRdDiff > 0
