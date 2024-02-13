@@ -4,6 +4,7 @@ export default function Home() {
   return (
     <>
       <Panel>
+        {/**@todo URGENT Add text including F1 disclaimer */}
         <p>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras volutpat
           dignissim imperdiet. Suspendisse lobortis sollicitudin libero id

@@ -12,6 +12,8 @@ const Page = () => {
       </PanelHeading>
       <Panel>
         <p>
+          {/**@todo URGENT Add text including F1 disclaimer */}
+          {/**@todo URGENT Add leaderboard link, and hide prediction link if passed freeze */}
           This page could work as an &apos;About&apos; page but also lists each
           of the previous/current seasons.
         </p>

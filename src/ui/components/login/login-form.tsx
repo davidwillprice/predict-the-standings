@@ -13,7 +13,7 @@ export const LoginForm = () => (
       {/**@todo Add loading spinner */}
       {/**Instagram provider seems to require a verified FB business account
        * Apple developer program costs $99py so can't add Apple provider*/}
-      {/**@todo Add Linkedin login */}
+      {/**@todo Add Linkedin/Discord login */}
       {/**@todo Fix Patreon & Spotify logins */}
       <div className={styles.btn_con}>
         <Button
