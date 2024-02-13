@@ -11,7 +11,7 @@ import { Sport } from "@custom-types/misc";
 import styles from "@components/submit-predictions/submit-predictions.module.scss";
 
 interface Props {
-  predictionFreezeDate: Date;
+  predictionFreezeTime: Date;
   children: string | ReactNode;
   initialEntrants: Entrant[];
   sport: Sport;
@@ -20,7 +20,7 @@ interface Props {
 }
 
 export const EditPredictions = ({
-  predictionFreezeDate,
+  predictionFreezeTime,
   initialEntrants,
   children,
   season,
@@ -48,6 +48,7 @@ export const EditPredictions = ({
           sport={sport}
           season={season}
           userId={userId}
+          predictionFreezeTime={predictionFreezeTime}
         />
       </div>
     </>

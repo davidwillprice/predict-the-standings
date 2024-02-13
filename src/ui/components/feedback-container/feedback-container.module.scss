@@ -28,8 +28,12 @@
   }
 }
 
-.feedbackText {
+.feedback_text {
   margin-top: 15px;
+  width: calc(100% - 30px);
+  span {
+    font-weight: 500;
+  }
 }
 
 .error .icon {

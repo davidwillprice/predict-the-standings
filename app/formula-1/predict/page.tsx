@@ -29,7 +29,7 @@ export default async function Page() {
   const userId = session.user.id;
   const sport: Sport = "f1";
   const season = "2024";
-  const predictionFreezeDate = new Date("2024-02-29T11:30:00");
+  const predictionFreezeTime = new Date("2024-02-29T11:30:00");
 
   const defaultEntrantsArr = sortF1DriverEntrantsAlphabetically([
     entrants.ham,
@@ -69,30 +69,39 @@ export default async function Page() {
         <h1>Predict the Final Standings</h1>
       </PanelHeading>
       <ContentContainer>
-        <EditPredictions
-          initialEntrants={JSON.parse(JSON.stringify(entrantArr))}
-          predictionFreezeDate={predictionFreezeDate}
-          season={season}
-          sport={sport}
-          userId={userId}>
+        {predictionFreezeTime.getTime() > new Date().getTime() ? (
+          <EditPredictions
+            initialEntrants={JSON.parse(JSON.stringify(entrantArr))}
+            predictionFreezeTime={predictionFreezeTime}
+            season={season}
+            sport={sport}
+            userId={userId}>
+            <Panel>
+              <p>
+                Drag the drivers into the order which you think they will be in
+                at the end of the&nbsp;season.
+              </p>
+              <p>
+                Any new drivers entering the season midway through won&apos;t be
+                included in the final standings.
+              </p>
+            </Panel>
+            <Panel>
+              <p>
+                Predictions will lock at the start of opening weekend&apos;s
+                Free Practice 1. You can edit your predictions up until the time
+                below:
+              </p>
+              <p>{predictionFreezeTime.toString()}</p>
+            </Panel>
+          </EditPredictions>
+        ) : (
           <Panel>
-            <p>
-              Drag the drivers into the order which you think they will be in at
-              the end of the&nbsp;season.
-            </p>
-            <p>
-              Any new drivers entering the season midway through won&apos;t be
-              included in the final standings.
+            <p style={{ textAlign: "center" }}>
+              The {season} season has started and predictions are frozen!
             </p>
           </Panel>
-          <Panel>
-            <p>
-              Predictions will lock at the start of opening weekend&apos;s Free
-              Practice 1. You can edit your predictions up until the time below:
-            </p>
-            <p>{predictionFreezeDate.toString()}</p>
-          </Panel>
-        </EditPredictions>
+        )}
       </ContentContainer>
     </>
   );

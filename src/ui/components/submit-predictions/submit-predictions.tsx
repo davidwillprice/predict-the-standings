@@ -1,5 +1,6 @@
 "use client";
 import { useState, useRef } from "react";
+import { useRouter } from "next/navigation";
 
 import { Button } from "@components/button/button";
 import { LoadingSpinner } from "@components/loading-spinner/loading-spinner";
@@ -14,6 +15,7 @@ import styles from "@components/submit-predictions/submit-predictions.module.scs
 
 interface Props {
   entrantArr: Entrant[];
+  predictionFreezeTime: Date;
   season: string;
   sport: Sport;
   userId: number;
@@ -21,10 +23,13 @@ interface Props {
 
 export const SubmitPredictions = ({
   entrantArr,
+  predictionFreezeTime,
   season,
   sport,
   userId,
 }: Props) => {
+  const router = useRouter();
+
   const submissionSuccessful = useRef(false);
   const [submitting, isSubmitting] = useState(false);
   const [savedEntrantArr, setSavedEntrantArr] = useState(entrantArr);
@@ -33,6 +38,14 @@ export const SubmitPredictions = ({
   const submissionHandler = async () => {
     isError(null);
     isSubmitting(true);
+
+    /**If passed the freeze time, show error */
+    if (predictionFreezeTime.getTime() < new Date().getTime()) {
+      isError("The season has started and predictions are frozen");
+      isSubmitting(false);
+      return;
+    }
+
     try {
       await submitPredictions(entrantArr, season, sport, userId);
       setSavedEntrantArr(entrantArr);
@@ -59,26 +72,39 @@ export const SubmitPredictions = ({
         submitting ? (
           <LoadingSpinner />
         ) : (
-          /**@todo URGENT Need to lock button after season start*/
           <Button onClick={submissionHandler}>Submit Predictions</Button>
         )
       ) : submissionSuccessful.current ? (
-        <FeedbackContainer iconType="success">
-          <p>Submission Successful</p>
-        </FeedbackContainer>
+        <>
+          <FeedbackContainer iconType="success">
+            <p>
+              <span>Submission Successful!</span>
+            </p>
+            <p>
+              Check the leaderboard page regularly throughout the season to see
+              how accurate you were. If you&apos;d like to see other
+              people&apos;s predictions, click the button below.
+            </p>
+          </FeedbackContainer>
+          {/**@todo Update to send to correct sport*/}
+          <Button onClick={() => router.push(`/formula-1/${season}`)}>
+            View other people&apos;s tables
+          </Button>
+        </>
       ) : (
         ""
       )}
-      {/**@todo URGENT Hide error feedback if the predictions change after error started */}
+      {/**@todo Hide error feedback if the predictions change after error started */}
       {/**@todo Need to limit database calls - Add lock for 10 seconds? - Add state to check if the table is the same as it was last submitted */}
       {error ? (
         <FeedbackContainer iconType="error">
-          <p>Error: {error.charAt(0).toUpperCase() + error.slice(1)}</p>
+          <p>
+            <span>Error: {error.charAt(0).toUpperCase() + error.slice(1)}</span>
+          </p>
         </FeedbackContainer>
       ) : (
         ""
       )}
     </div>
-    /**@todo URGENT Need button to view leaderboards if season has started?*/
   );
 };
