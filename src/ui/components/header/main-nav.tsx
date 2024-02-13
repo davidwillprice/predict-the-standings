@@ -34,10 +34,10 @@ export const MainNav = ({ children }: Props) => {
       <HeaderLink href="/formula-1/2024" icon="group">
         Leaderboards
       </HeaderLink>
-      {/**@todo Only shows if user has made predictions for the year*/}
+      {/**@todo Only shows if user has made predictions for the year
       <HeaderLink href="/formula-1/2024/table" icon="f1">
         Your Prediction Table
-      </HeaderLink>
+      </HeaderLink>*/}
       <HeaderLink href="/formula-1/2024/stats" icon="stats">
         Stats & Trivia
       </HeaderLink>

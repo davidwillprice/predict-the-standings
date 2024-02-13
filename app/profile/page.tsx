@@ -14,8 +14,6 @@ export const metadata: Metadata = {
   title: "Profile | Predict The Standings",
 };
 
-/**@todo Add ability to change display name, but limit changes to once a day or something to save DB calls */
-
 export default async function ProfilePage() {
   const session = await getServerSession(authOptions);
   if (session == null) {
@@ -33,7 +31,7 @@ export default async function ProfilePage() {
       </PanelHeading>
       <Panel>
         <form className={styles.form}>
-          {/**@todo Make display name editable here*/}
+          {/**@todo Add ability to change display name, but limit changes to once a day or something to save DB calls */}
           <div className={styles.input_container}>
             <label htmlFor="name">Display Name</label>
             <input

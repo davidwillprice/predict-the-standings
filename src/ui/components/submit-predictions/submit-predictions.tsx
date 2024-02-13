@@ -59,7 +59,7 @@ export const SubmitPredictions = ({
         submitting ? (
           <LoadingSpinner />
         ) : (
-          /**@todo Need to lock button after season start*/
+          /**@todo URGENT Need to lock button after season start*/
           <Button onClick={submissionHandler}>Submit Predictions</Button>
         )
       ) : submissionSuccessful.current ? (

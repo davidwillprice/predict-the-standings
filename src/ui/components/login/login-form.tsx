@@ -13,7 +13,8 @@ export const LoginForm = () => (
       {/**@todo Add loading spinner */}
       {/**Instagram provider seems to require a verified FB business account
        * Apple developer program costs $99py so can't add Apple provider*/}
-      {/**@todo Add Patreon, Linkedin, and Spotify logins */}
+      {/**@todo Add Linkedin login */}
+      {/**@todo Fix Patreon & Spotify logins */}
       <Button
         onClick={async () => {
           await signIn("github", { redirect: false });
@@ -26,24 +27,26 @@ export const LoginForm = () => (
         }}>
         Sign in via Google
       </Button>
+      {/** 
       <Button
         onClick={async () => {
           await signIn("patreon", { redirect: false });
         }}>
         Sign in via Patreon
-      </Button>
+      </Button>*/}
       <Button
         onClick={async () => {
           await signIn("reddit", { redirect: false });
         }}>
         Sign in via Reddit
       </Button>
-      <Button
+      {/**
+       <Button
         onClick={async () => {
           await signIn("spotify", { redirect: false });
         }}>
         Sign in via Spotify
-      </Button>
+      </Button>*/}
       <Button
         onClick={async () => {
           await signIn("twitter", { redirect: false });
