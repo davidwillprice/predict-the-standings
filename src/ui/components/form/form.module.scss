@@ -25,7 +25,8 @@
 }
 .formBtns {
   text-align: center;
-  margin-top: 15px;
+  margin: 15px auto 0;
+  max-width: 200px;
 }
 
 @media (max-width: $mobile-menu-breakpoint) {
