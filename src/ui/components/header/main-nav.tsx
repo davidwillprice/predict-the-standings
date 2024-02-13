@@ -89,7 +89,7 @@ export const MainNav = ({ children }: Props) => {
           <HeaderLink href="/help" icon="help">
             Help
           </HeaderLink>
-          <div className={styles.dropdown}>
+          {/* {<div className={styles.dropdown}>
             <div className={styles.dropdown__label}>
               <div className={styles.icon}>
                 <Icon type="accessibility" strokeWidth={2} />
@@ -97,7 +97,7 @@ export const MainNav = ({ children }: Props) => {
               Accessbility
             </div>
             <i />
-          </div>
+          </div>} */}
         </div>
       </nav>
     </>

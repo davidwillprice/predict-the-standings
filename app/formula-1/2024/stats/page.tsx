@@ -8,7 +8,7 @@ const Page = () => {
         <h1>Formula 1 - Stats</h1>
       </PanelHeading>
       <Panel>
-        <p>Stats page for the upcoming/current season.</p>
+        <p>Coming soon!</p>
       </Panel>
     </>
   );
