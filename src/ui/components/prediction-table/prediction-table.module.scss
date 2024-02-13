@@ -23,6 +23,11 @@
   th:last-child {
     padding-right: 10px;
   }
+  .accuracy {
+    text-align: center;
+    font-weight: 500;
+    margin-top: 10px;
+  }
 }
 
 .table_row {
@@ -48,4 +53,31 @@
   border-radius: 10px;
   background-color: black;
   display: block;
+}
+
+.posDiff {
+  text-align: right;
+  width: 35px;
+  height: 30px;
+  vertical-align: middle;
+  display: flex;
+  align-items: center;
+  padding-left: 8px;
+  justify-content: flex-start;
+  gap: 5px;
+  i {
+    border: solid $error-color;
+    border-width: 0 1.5px 1.5px 0;
+    display: inline-block;
+    padding: 3px;
+  }
+  &.up i {
+    transform: rotate(225deg) translate(-1px, -1px);
+  }
+  &.down i {
+    transform: rotate(45deg) translate(-2px, -2px);
+  }
+  &.perfect svg {
+    color: $success-color;
+  }
 }

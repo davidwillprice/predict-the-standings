@@ -1,4 +1,5 @@
 import type { Leaderboard } from "@custom-types/game-types";
+import Icon from "@ui/svgs/icons/sq-icon";
 
 import styles from "@components/prediction-table/prediction-table.module.scss";
 
@@ -36,11 +37,29 @@ export const PredictionTable = ({ selectedRound, userLeaderboard }: Props) => {
                   style={{ backgroundColor: rowData.entrant.color }}></span>
               </td>
               <td>{rowData.entrant.name}</td>
+              {/**@todo Convert to <td> but avoid standard <td> styling */}
+              <div
+                className={`${styles.posDiff} ${
+                  rowData.posDiff > 0
+                    ? styles.up
+                    : rowData.posDiff < 0
+                    ? styles.down
+                    : styles.perfect
+                }`}>
+                {rowData.posDiff === 0 ? (
+                  <Icon type={"success"} strokeWidth={2} />
+                ) : (
+                  <>
+                    <i></i>
+                    <span>{Math.abs(rowData.posDiff)}</span>
+                  </>
+                )}
+              </div>
             </tr>
           ))}
         </tbody>
       </table>
-      <p className={styles.heading}>Accuracy: {+percentCorrect}%</p>
+      <p className={styles.accuracy}>Accuracy: {+percentCorrect}%</p>
     </div>
   );
 };
