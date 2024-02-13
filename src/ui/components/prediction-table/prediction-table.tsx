@@ -1,19 +1,23 @@
-import type { Leaderboard } from "@custom-types/game-types";
+import type { User } from "@custom-types/game-types";
+import { calcPredictionsAccuracy } from "@lib/game-functions";
 import Icon from "@ui/svgs/icons/sq-icon";
 
 import styles from "@components/prediction-table/prediction-table.module.scss";
 
 interface Props {
   selectedRound: number;
-  userLeaderboard: Leaderboard;
+  selectedUser: User;
 }
 
-export const PredictionTable = ({ selectedRound, userLeaderboard }: Props) => {
-  const { percentCorrect, user } = userLeaderboard;
-  const tableData = user.season[selectedRound].diffs;
+export const PredictionTable = ({ selectedRound, selectedUser }: Props) => {
+  const tableData = selectedUser.season[selectedRound].diffs;
+  const accuracy = calcPredictionsAccuracy(
+    selectedUser.predictions.length,
+    selectedUser.season[selectedRound].diffTotal
+  );
   return (
     <div className={styles.prediction_table}>
-      <h4 className={styles.heading}>{user.displayName} Predictions</h4>
+      <h4 className={styles.heading}>{selectedUser.displayName} Predictions</h4>
       <table>
         <thead>
           <tr>
@@ -62,7 +66,7 @@ export const PredictionTable = ({ selectedRound, userLeaderboard }: Props) => {
           ))}
         </tbody>
       </table>
-      <p className={styles.accuracy}>Accuracy: {+percentCorrect}%</p>
+      <p className={styles.accuracy}>Accuracy: {accuracy}%</p>
     </div>
   );
 };

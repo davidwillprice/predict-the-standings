@@ -154,7 +154,7 @@ const calcLeaderboards = (rounds: Round[], users: Users): Round[] => {
   return rounds;
 };
 
-const calcPredictionsAccuracy = (
+export const calcPredictionsAccuracy = (
   noOfEntrants: number,
   penaltyPoints: number
 ): number => {

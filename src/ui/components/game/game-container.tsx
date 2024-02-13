@@ -11,7 +11,7 @@ import { Button } from "@components/button/button";
 
 import styles from "@components/game/game-container.module.scss";
 
-import { Round, Users } from "@custom-types/game-types";
+import { Round, Users, User } from "@custom-types/game-types";
 
 interface Props {
   currentUserDisplayName: string | null;
@@ -28,28 +28,36 @@ export const GameContainer = ({
   const searchParams = useSearchParams();
   const pathname = usePathname();
 
+  const selectedUserSetter = (displayName: string | null): User => {
+    return displayName && users[displayName]
+      ? users[displayName]
+      : rounds[roundIndex].leaderboards[0].user;
+  };
+
   const [mode, setMode] = useState("leaderboard");
   const [roundIndex, setRoundIndex] = useState(rounds.length - 1);
   const [selectedUser, setSelectedUser] = useState(
-    rounds[roundIndex].leaderboards.find(
-      (leaderboard) => leaderboard.user.displayName === currentUserDisplayName
-    ) || rounds[roundIndex].leaderboards[0]
+    selectedUserSetter(currentUserDisplayName)
   );
 
   useEffect(() => {
-    /** Whenever the page changes*/
-    console.log(searchParams.has("user"));
+    /** Whenever back or forwards button is pressed, change to the appropriate mode*/
+    const userSearchParam = searchParams.get("user");
     window.onpopstate = () => {
-      if (searchParams.has("user")) {
+      if (userSearchParam) {
         setMode("table");
+        setSelectedUser(selectedUserSetter(userSearchParam));
       } else {
         setMode("leaderboard");
+        router.push(pathname);
       }
     };
-    if (searchParams.has("user")) {
+    if (userSearchParam) {
       setMode("table");
+      setSelectedUser(selectedUserSetter(userSearchParam));
     } else {
       setMode("leaderboard");
+      router.push(pathname);
     }
   }, [pathname, searchParams]);
 
@@ -57,10 +65,11 @@ export const GameContainer = ({
     setRoundIndex(newRoundIndex);
   };
   const changeSelectedUserHandler = (displayName: string) => {
-    /**@todo If there is no query string to select a user, automatically select the user's data. And if they aren't signed in default to showing the person in first */
     router.push(pathname + `?user=${displayName}`);
+    setSelectedUser(selectedUserSetter(displayName));
     setMode("table");
   };
+
   /**@todo URGENT Fix duplicating users bug */
   return (
     <>
@@ -93,6 +102,7 @@ export const GameContainer = ({
               <Button
                 onClick={() => {
                   setMode("leaderboard");
+                  router.push(pathname);
                 }}>
                 Back
               </Button>
@@ -102,7 +112,7 @@ export const GameContainer = ({
             <div className={styles.tables}>
               <PredictionTable
                 selectedRound={roundIndex}
-                userLeaderboard={selectedUser}
+                selectedUser={selectedUser}
               />
               <StandingsTable
                 selectedRound={roundIndex}
