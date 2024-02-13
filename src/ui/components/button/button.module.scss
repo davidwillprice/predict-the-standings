@@ -12,7 +12,7 @@
   color: $secondary-color;
   &.disabled {
     color: rgba($secondary-color, 0.5);
-    cursor: auto;
+    cursor: not-allowed;
   }
 }
 @media (max-width: $mobile-menu-breakpoint) {
