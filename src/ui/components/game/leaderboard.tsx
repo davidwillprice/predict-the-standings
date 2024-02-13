@@ -1,5 +1,5 @@
 import styles from "@components/game/leaderboard.module.scss";
-import predictStyles from "@styles/prediction-table.module.scss";
+import predictStyles from "@components/prediction-table/prediction-table.module.scss";
 
 import { Round } from "@custom-types/game-types";
 

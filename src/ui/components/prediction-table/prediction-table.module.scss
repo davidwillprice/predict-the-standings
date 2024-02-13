@@ -1,8 +1,9 @@
 @import "@styles/sass-variables.scss";
 
 .prediction_table {
-  display: flex;
-  justify-content: center;
+  .heading {
+    text-align: center;
+  }
   table {
     border-collapse: separate;
     border-spacing: 0 5px;

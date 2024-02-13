@@ -5,7 +5,31 @@
   max-width: 800px;
   margin: 0 auto ($round-slider-height + 15px);
   align-items: center;
+  gap: 20px;
+  &.table_mode {
+    max-width: 600px;
+    align-items: baseline;
+  }
 }
 .main {
   width: 100%;
+}
+.options {
+  max-width: 150px;
+}
+
+@media (max-width: 800px) {
+  .leaderboard_mode {
+    .standings_table {
+      display: none;
+    }
+  }
+}
+
+@media (max-width: $tablet-menu-breakpoint) {
+  .con {
+    flex-direction: column;
+  }
+  .leaderboard_mode {
+  }
 }

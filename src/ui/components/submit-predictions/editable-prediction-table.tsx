@@ -9,7 +9,7 @@ import {
 
 import { Entrant } from "@custom-types/game-types";
 
-import predictiontableStyles from "@styles/prediction-table.module.scss";
+import predictiontableStyles from "@components/prediction-table/prediction-table.module.scss";
 import styles from "@components/submit-predictions/editable-prediction-table.module.scss";
 
 type Props = {
