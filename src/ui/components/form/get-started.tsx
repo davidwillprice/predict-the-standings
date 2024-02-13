@@ -58,7 +58,6 @@ export const GetStartedForm = ({ initialDisplayName }: Props) => {
       if (error instanceof Error) {
         setDisplayNameErrorArr([error.message]);
       }
-    } finally {
       isSubmitting(false);
     }
   };
