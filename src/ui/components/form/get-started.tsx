@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, FormEvent } from "react";
+import { useRouter } from "next/navigation";
 
 import { submitDisplayName } from "@lib/form-server-actions";
 import { validateDisplayName } from "@lib/form-functions";
@@ -17,10 +18,10 @@ interface Props {
 }
 
 export const GetStartedForm = ({ initialDisplayName }: Props) => {
+  const router = useRouter();
   /**@todo Don't pick something disruptive or offensive*/
   /**@todo If they haven't submitted a valid display name, redirect them from the prediction pages until they have*/
   /**@todo If possible, don't let them submit their display name if they already have it*/
-  /**@todo Improve the display of errors*/
 
   const [displayNameErrorArr, setDisplayNameErrorArr] = useState(
     validateDisplayName(initialDisplayName)
@@ -47,7 +48,11 @@ export const GetStartedForm = ({ initialDisplayName }: Props) => {
       if (errorMessage) {
         throw new Error(errorMessage);
       } else {
-        console.log("Successfully submitted display name");
+        {
+          /**@todo Show confirmation of display name for a few seconds before the redirect */
+          /**@todo Redirect to a page which shows a selection of possible predictions to submit */
+        }
+        router.push("/formula-1/predict");
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
