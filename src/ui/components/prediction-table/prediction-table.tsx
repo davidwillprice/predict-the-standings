@@ -36,7 +36,10 @@ export const PredictionTable = ({ selectedRound, userLeaderboard }: Props) => {
                   className={`${styles.flair}`}
                   style={{ backgroundColor: rowData.entrant.color }}></span>
               </td>
-              <td>{rowData.entrant.name}</td>
+              <td>
+                <span className={styles.name}>{rowData.entrant.name}</span>
+                <span className={styles.sName}>{rowData.entrant.sName}</span>
+              </td>
               {/**@todo Convert to <td> but avoid standard <td> styling */}
               <div
                 className={`${styles.posDiff} ${

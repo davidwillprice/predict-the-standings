@@ -96,17 +96,20 @@ export const GameContainer = ({
                 }}>
                 Back
               </Button>
-              <Button>Report Display Name</Button>
+              {/**@todo Add report display name feature 
+              <Button>Report Display Name</Button>*/}
             </div>
-            <PredictionTable
-              selectedRound={roundIndex}
-              userLeaderboard={selectedUser}
-            />
-            <StandingsTable
-              selectedRound={roundIndex}
-              standingsArr={rounds[roundIndex].standings}
-              className={styles.standings_table}
-            />
+            <div className={styles.tables}>
+              <PredictionTable
+                selectedRound={roundIndex}
+                userLeaderboard={selectedUser}
+              />
+              <StandingsTable
+                selectedRound={roundIndex}
+                standingsArr={rounds[roundIndex].standings}
+                className={styles.standings_table}
+              />
+            </div>
           </>
         )}
       </div>

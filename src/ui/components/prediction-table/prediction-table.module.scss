@@ -81,3 +81,16 @@
     color: $success-color;
   }
 }
+.sName {
+  display: none;
+}
+
+@media (max-width: 360px) {
+  .name {
+    display: none;
+  }
+  .sName {
+    display: inline;
+    text-transform: uppercase;
+  }
+}

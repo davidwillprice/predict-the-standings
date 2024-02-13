@@ -16,6 +16,13 @@
 }
 .options {
   max-width: 150px;
+  width: 100%;
+}
+.tables {
+  display: flex;
+  width: calc(100% - 150px);
+  justify-content: space-between;
+  gap: 20px;
 }
 
 @media (max-width: 800px) {
@@ -24,12 +31,12 @@
       display: none;
     }
   }
-}
-
-@media (max-width: $tablet-menu-breakpoint) {
   .con {
     flex-direction: column;
+    justify-content: space-between;
   }
-  .leaderboard_mode {
+  .tables {
+    width: 100%;
+    justify-content: center;
   }
 }
