@@ -13,7 +13,10 @@ const Page = async () => {
     if (session?.user.displayName === null) {
       return redirect("/get-started");
     } else {
-      return redirect("/profile");
+      {
+        /**@todo Update redirect to a more general location where they can see multiple sports */
+      }
+      return redirect("/formula-1/");
     }
   }
   return (
