@@ -7,6 +7,7 @@ import { rounds, entrants } from "@data/formula-1/2024";
 
 import { PanelHeading } from "@components/panels/panel-heading";
 import { GameContainer } from "@components/game/game-container";
+import { PreSeasonContainer } from "@components/game/pre-season-container";
 
 import { Sport } from "@custom-types/misc";
 import { PredictionData } from "@custom-types/game-types";
@@ -40,14 +41,18 @@ const Page = async () => {
       <PanelHeading>
         <h1>Formula 1 - Leaderboards</h1>
       </PanelHeading>
-      {predictionData ? (
+      {!predictionData ? (
+        <p>Unable to obtain prediction data</p>
+      ) : predictionData.rounds.length < 1 ? (
+        <PreSeasonContainer
+          users={JSON.parse(JSON.stringify(predictionData.users))}
+        />
+      ) : (
         <GameContainer
           currentUserDisplayName={currentUserDisplayName}
           rounds={JSON.parse(JSON.stringify(predictionData.rounds))}
           users={JSON.parse(JSON.stringify(predictionData.users))}
         />
-      ) : (
-        <p>Unable to obtain prediction data</p>
       )}
     </>
   );
