@@ -1,6 +1,7 @@
 "use client";
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 import { Button } from "@components/button/button";
 import { LoadingSpinner } from "@components/loading-spinner/loading-spinner";
@@ -81,15 +82,16 @@ export const SubmitPredictions = ({
               <span>Submission Successful!</span>
             </p>
             <p>
-              Check the leaderboard page regularly throughout the season to see
-              how accurate you were. If you&apos;d like to see other
-              people&apos;s predictions, click the button below.
+              Once the first race of the season completes, you&apos;ll be able
+              to track how accurate you are compared to everyone else on the{" "}
+              <Link href="/formula-1/2024">leaderboard page</Link> throughout
+              the season.
+            </p>
+            <p>
+              You can make more changes to your predictions until the opening
+              weekend&apos;s Free Practice 1.
             </p>
           </FeedbackContainer>
-          {/**@todo Update to send to correct sport*/}
-          <Button onClick={() => router.push(`/formula-1/${season}`)}>
-            View other people&apos;s tables
-          </Button>
         </>
       ) : (
         ""

@@ -5,6 +5,7 @@ import { authOptions } from "@lib/auth";
 import { getAllPredictonData } from "@lib/game-functions";
 import { rounds, entrants } from "@data/formula-1/2024";
 
+import { Panel } from "@components/panels/panel";
 import { PanelHeading } from "@components/panels/panel-heading";
 import { GameContainer } from "@components/game/game-container";
 import { PreSeasonContainer } from "@components/game/pre-season-container";
@@ -44,9 +45,17 @@ const Page = async () => {
       {!predictionData ? (
         <p>Unable to obtain prediction data</p>
       ) : predictionData.rounds.length < 1 ? (
+        /**@todo Re-enable preseason container once properly built - Or could have the below text show as a modal and then underneath a placeholder of what the leaderboard will look like?
         <PreSeasonContainer
           users={JSON.parse(JSON.stringify(predictionData.users))}
-        />
+        />*/
+        <Panel>
+          <p>
+            Once the first race of the season completes, the leaderboard board
+            will show here and you&apos;ll be able to track your position as the
+            season progresses.
+          </p>
+        </Panel>
       ) : (
         <GameContainer
           currentUserDisplayName={currentUserDisplayName}

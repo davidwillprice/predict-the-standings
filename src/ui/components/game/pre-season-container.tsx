@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter, useSearchParams, usePathname } from "next/navigation";
+import { useState } from "react";
 
 import { PreseasonLeaderboard } from "@components/game/pre-season-leaderboard";
+import { PreSeasonPredictionTable } from "@components/prediction-table/pre-season-prediction-table";
 
 import { Users, User } from "@custom-types/game-types";
 
@@ -14,30 +14,24 @@ interface Props {
 }
 
 export const PreSeasonContainer = ({ users }: Props) => {
-  //   const selectedUserSetter = (displayName: string | null): User => {
-  //     return displayName && users[displayName]
-  //       ? users[displayName]
-  //       : rounds[roundIndex].leaderboards[0].user;
-  //   };
-
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const pathname = usePathname();
-
-  //   const [selectedUser, setSelectedUser] = useState(
-  //     selectedUserSetter(currentUserDisplayName)
-  //   );
+  const [selectedUser, setSelectedUser] = useState<User>();
   const changeSelectedUserHandler = (displayName: string) => {
-    console.log("test");
-    // router.push(pathname + `?user=${displayName}`);
-    // setSelectedUser(selectedUserSetter(displayName));
+    setSelectedUser(users[displayName]);
   };
+  {
+    /**@todo Create alternative UI for when there are no predictions  */
+  }
   return (
     <div className={styles.con}>
       <PreseasonLeaderboard
         users={users}
         changeSelectedUserHandler={changeSelectedUserHandler}
       />
+      {selectedUser ? (
+        <PreSeasonPredictionTable selectedUser={selectedUser} />
+      ) : (
+        ""
+      )}
     </div>
   );
 };
