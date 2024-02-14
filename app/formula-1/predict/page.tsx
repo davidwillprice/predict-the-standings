@@ -3,7 +3,7 @@ import { getServerSession } from "next-auth/next";
 import { redirect } from "next/navigation";
 
 import { entrants } from "@data/formula-1/2023";
-import { sortF1DriverEntrantsAlphabetically } from "@lib/misc";
+import { sortEntrantsAlphabetically } from "@lib/misc";
 import { getPredictionTable } from "@lib/db-functions";
 import { authOptions } from "@lib/auth";
 
@@ -31,7 +31,7 @@ export default async function Page() {
   const season = "2024";
   const predictionFreezeTime = new Date("2024-02-29T11:30:00");
 
-  const defaultEntrantsArr = sortF1DriverEntrantsAlphabetically([
+  const defaultEntrantsArr = sortEntrantsAlphabetically([
     entrants.ham,
     entrants.bot,
     entrants.lec,
