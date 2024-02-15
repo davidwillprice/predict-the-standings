@@ -24,7 +24,11 @@ const Header = async () => {
     <header className={styles.header}>
       <MainNav>{profileLink}</MainNav>
       <nav className={styles.secondary_menu}>
+        {/**@todo Add secondary menu as a footer on mobile */}
         <hr />
+        <div>
+          <Link href="/terms-of-service">Terms of Service</Link>
+        </div>
         <div>
           <Link href="/privacy-policy">Privacy Policy</Link>
         </div>

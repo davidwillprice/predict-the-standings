@@ -1,5 +1,6 @@
 import { getServerSession } from "next-auth/next";
 import { redirect } from "next/navigation";
+import Link from "next/link";
 
 import { authOptions } from "@lib/auth";
 
@@ -26,6 +27,13 @@ const Page = async () => {
       </PanelHeading>
       <Panel>
         <LoginForm />
+        <div style={{ textAlign: "center" }}>
+          <hr />
+          <p>
+            <Link href="/terms-of-service">Terms of Service</Link> |{" "}
+            <Link href="/privacy-policy">Privacy Policy</Link>
+          </p>
+        </div>
       </Panel>
     </>
   );
