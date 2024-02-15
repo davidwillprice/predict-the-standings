@@ -14,47 +14,44 @@ const Page = () => {
       </PanelHeading>
       <Panel>
         <h2>Rules</h2>
-        {/**@todo Update help text to cover football as well as F1 */}
         {/**@todo Add example prediction table and leaderboard */}
         <ol>
           <li>
-            One penalty point is awarded for every position that a driver/team
-            is from their actual standing - These are shown to the right of each
-            predicted table row;
+            The accuracy rating on the leaderboard and under their prediction
+            table shows how close each player is to the actual standings;
           </li>
           <li>
-            If the player has made a perfect prediction, a green tick shows
-            instead of the penalty points;
+            The player(s) with the most accurate prediction table at the end of
+            the season wins;
           </li>
           <li>
-            The total penalty points for each player is shown at the bottom of
-            their prediction tables;
+            When viewing a prediction table, the number shown to the right of
+            each driver/team denotes how many positions that driver/team was
+            predicted away from their position in the actual standings;
           </li>
           <li>
-            Each players&apos; accuracy rating in the leaderboard shows how
-            close they are to a perfectly predicted table;
-          </li>
-          <li>
-            The player(s) with the most accurate driver and constructor tables
-            at the end of the season win.
+            If the player has perfectly predicted a driver/team, a green tick
+            shows next to the driver/team.
           </li>
         </ol>
         <h2>Additional Info</h2>
         <ul>
           <li>
             If players have equal accuracy ratings, perfect predictions will be
-            used a tie break, then predictions that were 1 off , then
-            predictions that were 2 off etc.
+            used a tie break, then predictions that were 1 off, then predictions
+            that were 2 off etc.
           </li>
           <li>
             The &apos;Average&apos; prediction tables were worked out by
             calculating the mean position of each driver/team across the other
             player prediction tables;
           </li>
-          <li>Stand-in drivers won&apos;t be added to the driver standings;</li>
           <li>
-            Other than that, the game&apos;s standings will be ordered as they
-            are in real life.
+            For Formula 1, stand-in drivers will be ignored from the standings;
+          </li>
+          <li>
+            Other than that, the actual standings will be ordered as they are in
+            real life.
           </li>
         </ul>
       </Panel>
