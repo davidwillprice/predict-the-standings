@@ -40,7 +40,7 @@ const Page = async () => {
   return (
     <>
       <PanelHeading>
-        <h1>Formula 1 - Leaderboards</h1>
+        <h1>Formula 1 - Leaderboard</h1>
       </PanelHeading>
       {!predictionData ? (
         <p>Unable to obtain prediction data</p>

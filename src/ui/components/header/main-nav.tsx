@@ -32,7 +32,7 @@ export const MainNav = ({ children }: Props) => {
       {/**@todo Add year selector*/}
       {/**@todo Add 'Edit Predictions' or 'Predict' depending on if the predictions are open and they are logged in*/}
       <HeaderLink href="/formula-1/2024" icon="group">
-        Leaderboards
+        Leaderboard
       </HeaderLink>
       {/**@todo Only shows if user has made predictions for the year
       <HeaderLink href="/formula-1/2024/table" icon="f1">
