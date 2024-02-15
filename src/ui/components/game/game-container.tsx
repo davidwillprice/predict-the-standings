@@ -16,6 +16,7 @@ import { Round, Users, User } from "@custom-types/game-types";
 interface Props {
   currentUserDisplayName: string | null;
   rounds: Round[];
+  season: number;
   users: Users;
 }
 
@@ -23,6 +24,7 @@ export const GameContainer = ({
   rounds,
   users,
   currentUserDisplayName,
+  season,
 }: Props) => {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -77,6 +79,7 @@ export const GameContainer = ({
         {mode === "leaderboard" ? (
           <>
             <div className={styles.main}>
+              <h1>Formula 1 {season} - Leaderboard</h1>
               <p>
                 Select users to view their predictions and compare them to the
                 actual standings.

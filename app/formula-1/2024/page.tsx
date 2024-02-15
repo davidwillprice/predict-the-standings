@@ -39,9 +39,6 @@ const Page = async () => {
   }
   return (
     <>
-      <PanelHeading>
-        <h1>Formula 1 - Leaderboard</h1>
-      </PanelHeading>
       {!predictionData ? (
         <p>Unable to obtain prediction data</p>
       ) : predictionData.rounds.length < 1 ? (
@@ -49,17 +46,23 @@ const Page = async () => {
         <PreSeasonContainer
           users={JSON.parse(JSON.stringify(predictionData.users))}
         />*/
-        <Panel>
-          <p>
-            Once the first race of the season completes, the leaderboard board
-            will show here and you&apos;ll be able to track your position as the
-            season progresses.
-          </p>
-        </Panel>
+        <>
+          <PanelHeading>
+            <h1>Formula 1 - Leaderboard</h1>
+          </PanelHeading>
+          <Panel>
+            <p>
+              Once the first race of the season completes, the leaderboard board
+              will show here and you&apos;ll be able to track your position as
+              the season progresses.
+            </p>
+          </Panel>
+        </>
       ) : (
         <GameContainer
           currentUserDisplayName={currentUserDisplayName}
           rounds={JSON.parse(JSON.stringify(predictionData.rounds))}
+          season={season}
           users={JSON.parse(JSON.stringify(predictionData.users))}
         />
       )}
