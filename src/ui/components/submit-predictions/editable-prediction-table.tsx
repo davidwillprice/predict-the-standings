@@ -65,7 +65,9 @@ export function EditablePredictionTable({
                             className={`${predictiontableStyles.flair}`}
                             style={{ backgroundColor: entrant.color }}></span>
                         </td>
-                        <td>{entrant.name}</td>
+                        <td className={predictiontableStyles.name_cell}>
+                          {entrant.name}
+                        </td>
                       </tr>
                     )}
                   </Draggable>
