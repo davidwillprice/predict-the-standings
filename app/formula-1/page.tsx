@@ -1,25 +1,89 @@
 import Link from "next/link";
+import { Metadata } from "next";
 
 import { Panel } from "@components/panels/panel";
 import { PanelHeading } from "@components/panels/panel-heading";
 import { Button } from "@components/button/button";
+import Icon from "@svgs/icons/sq-icon";
+
+import styles from "@components/button/button-containers.module.scss";
+
+export const metadata: Metadata = {
+  title: "Predict The Formula 1 Standings",
+};
 
 const Page = () => {
+  const predictionFreezeTime = new Date("2024-02-29T11:30:00");
   return (
     <>
       <PanelHeading>
-        <h1>Formula 1 - Homepage</h1>
+        <h1>Predict The Formula 1 Standings</h1>
       </PanelHeading>
       <Panel>
+        {/**@todo Add text for after the season has started */}
         <p>
-          {/**@todo URGENT Add text including F1 disclaimer */}
-          {/**@todo URGENT Add leaderboard link, and hide prediction link if passed freeze */}
-          This page could work as an &apos;About&apos; page but also lists each
-          of the previous/current seasons.
+          Compete to against people around the world to Predict The Standings
+          for the 2024 F1 Season.
         </p>
-        <Link href="/formula-1/predict">
-          <Button>Predict</Button>
-        </Link>
+        <ul>
+          <li>
+            The leaderboard will be updated after each round so you can see how
+            your predictions are performing throughout the season.
+          </li>
+          <li>
+            View stats and trivia on how controversial your each of predictions
+            are, and how accurately players have predicted each driver&apos;s
+            standing.
+          </li>
+        </ul>
+        {predictionFreezeTime.getTime() > new Date().getTime() ? (
+          <>
+            <p>
+              You have until the start of opening weekend&apos;s Free Practice 1
+              to submit (and edit) your predictions.
+            </p>
+            <div className={styles.single}>
+              <Link href="/formula-1/predict">
+                <Button>
+                  <Icon strokeWidth={2} type="listBullet" />
+                  Predict The Standings
+                </Button>
+              </Link>
+            </div>
+          </>
+        ) : (
+          ""
+        )}
+        <hr />
+        <div className={styles.triple}>
+          <Link href="/formula-1/2024">
+            <Button>
+              <Icon strokeWidth={2} type="group" />
+              Leaderboard
+            </Button>
+          </Link>
+          <Link href="/formula-1/2024/stats">
+            <Button>
+              <Icon strokeWidth={2} type="stats" />
+              Stats
+            </Button>
+          </Link>
+          <Link href="/help">
+            <Button>
+              <Icon strokeWidth={2} type="help" />
+              Help
+            </Button>
+          </Link>
+        </div>
+        <hr />
+        <p>
+          <small>
+            This website is unofficial and is not associated in any way with the
+            Formula 1 companies. F1, FORMULA ONE, FORMULA 1, FIA FORMULA ONE
+            WORLD CHAMPIONSHIP, GRAND PRIX and related marks are trade marks of
+            Formula One Licensing B.V.
+          </small>
+        </p>
       </Panel>
     </>
   );

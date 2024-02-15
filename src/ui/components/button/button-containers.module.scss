@@ -1,0 +1,12 @@
+.single {
+  max-width: 250px;
+  margin: 0 auto;
+}
+.triple {
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  a {
+    width: 30%;
+  }
+}

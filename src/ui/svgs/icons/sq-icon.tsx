@@ -6,6 +6,7 @@ export interface Props {
     | "f1"
     | "group"
     | "help"
+    | "listBullet"
     | "loading"
     | "login"
     | "profile"
@@ -83,6 +84,15 @@ const iconPaths = {
         strokeLinejoin="round"
         vectorEffect="non-scaling-stroke"
         d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 5.25h.008v.008H12v-.008Z"
+      />
+    </>
+  ),
+  listBullet: (
+    <>
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0ZM3.75 12h.007v.008H3.75V12Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm-.375 5.25h.007v.008H3.75v-.008Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"
       />
     </>
   ),
@@ -173,6 +183,8 @@ export default function Icon({ strokeWidth, type }: Props) {
       ? iconPaths.group
       : type === "help"
       ? iconPaths.help
+      : type === "listBullet"
+      ? iconPaths.listBullet
       : type === "loading"
       ? iconPaths.loading
       : type === "login"
