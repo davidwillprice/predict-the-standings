@@ -16,7 +16,7 @@ import { Round, Users, User } from "@custom-types/game-types";
 interface Props {
   currentUserDisplayName: string | null;
   rounds: Round[];
-  season: number;
+  season: string;
   users: Users;
 }
 
