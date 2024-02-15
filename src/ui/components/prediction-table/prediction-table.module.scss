@@ -41,7 +41,7 @@
     border-radius: 5px 0 0 5px;
     padding-left: 10px;
   }
-  td:last-child {
+  .name_cell {
     border-radius: 0 5px 5px 0;
     padding-right: 10px;
   }
@@ -55,7 +55,7 @@
   display: block;
 }
 
-.posDiff {
+.pos_diff_cell {
   text-align: right;
   width: 35px;
   height: 30px;

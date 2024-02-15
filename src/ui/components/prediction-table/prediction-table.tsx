@@ -40,13 +40,13 @@ export const PredictionTable = ({ selectedRound, selectedUser }: Props) => {
                   className={`${styles.flair}`}
                   style={{ backgroundColor: rowData.entrant.color }}></span>
               </td>
-              <td>
+              <td className={styles.name_cell}>
                 <span className={styles.name}>{rowData.entrant.name}</span>
                 <span className={styles.sName}>{rowData.entrant.sName}</span>
               </td>
               {/**@todo Convert to <td> but avoid standard <td> styling */}
               <div
-                className={`${styles.posDiff} ${
+                className={`${styles.pos_diff_cell} ${
                   rowData.posDiff > 0
                     ? styles.up
                     : rowData.posDiff < 0

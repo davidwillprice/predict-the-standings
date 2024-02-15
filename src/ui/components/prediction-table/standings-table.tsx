@@ -38,7 +38,7 @@ export const StandingsTable = ({
                   className={`${styles.flair}`}
                   style={{ backgroundColor: entrant.color }}></span>
               </td>
-              <td>
+              <td className={styles.name_cell}>
                 <span className={styles.name}>{entrant.name}</span>
                 <span className={styles.sName}>{entrant.sName}</span>
               </td>
