@@ -14,7 +14,6 @@ export default function Home() {
         <h1>Predict The Standings</h1>
       </PanelHeading>
       <Panel>
-        {/**@todo URGENT Add text including F1 disclaimer */}
         <p>
           Compete to against people around the world to Predict The Standings
           for various sports.

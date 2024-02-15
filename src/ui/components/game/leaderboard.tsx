@@ -33,6 +33,7 @@ export const Leaderboard = ({
               className={`${predictStyles.table_row} ${styles.table_row}`}
               onClick={() => changeSelectedUserHandler(row.user.displayName)}>
               <td className={styles.position}>{index + 1}</td>
+              {/**@todo Fix jittering by making icons into proper SVGs */}
               <td
                 className={`${styles.position_diff} ${
                   row.prevRdDiff > 0
