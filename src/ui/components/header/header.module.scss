@@ -7,6 +7,9 @@
   align-items: center;
   gap: 10px;
 }
+.link:hover {
+  opacity: 0.5;
+}
 .icon {
   width: 30px;
   height: 30px;
@@ -123,6 +126,9 @@
   align-self: flex-end;
   margin-top: auto;
   width: 100%;
+  a:hover {
+    opacity: 0.5;
+  }
 }
 
 @media (min-width: $mobile-menu-breakpoint) and (max-width: $tablet-menu-breakpoint) {
