@@ -39,7 +39,9 @@ export const GameContainer = ({
   const [selectedUser, setSelectedUser] = useState(
     selectedUserSetter(currentUserDisplayName)
   );
-
+  {
+    /**@todo URGENT Can't use back button to get off page */
+  }
   useEffect(() => {
     /** Whenever back or forwards button is pressed, change to the appropriate mode*/
     const userSearchParam = searchParams.get("user");
@@ -49,7 +51,6 @@ export const GameContainer = ({
         setSelectedUser(selectedUserSetter(userSearchParam));
       } else {
         setMode("leaderboard");
-        router.push(pathname);
       }
     };
     if (userSearchParam) {
@@ -57,7 +58,6 @@ export const GameContainer = ({
       setSelectedUser(selectedUserSetter(userSearchParam));
     } else {
       setMode("leaderboard");
-      router.push(pathname);
     }
   }, [pathname, searchParams]);
 
