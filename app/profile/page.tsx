@@ -23,7 +23,6 @@ export default async function ProfilePage() {
   }
 
   const displayName = session?.user.displayName;
-  const email = session?.user?.email;
   return (
     <>
       <PanelHeading>
@@ -42,23 +41,10 @@ export default async function ProfilePage() {
               disabled
             />
           </div>
-          {email ? (
-            <div className={styles.input_container}>
-              <label htmlFor="email">Email</label>
-              <input
-                id="email"
-                type="email"
-                name="email"
-                value={session?.user?.email as string}
-                disabled
-              />
-            </div>
-          ) : (
-            ""
-          )}
         </form>
         <hr />
         <div className={styles.formBtns}>
+          {/**@todo Add delete account button */}
           <SignOutBtn />
         </div>
       </Panel>
