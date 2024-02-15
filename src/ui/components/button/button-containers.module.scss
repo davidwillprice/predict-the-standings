@@ -1,12 +1,37 @@
+@import "@styles/sass-variables.scss";
+
 .single {
   max-width: 250px;
   margin: 0 auto;
 }
+.double,
 .triple {
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
+  gap: 20px;
   a {
-    width: 30%;
+    width: 100%;
+  }
+}
+.double {
+  max-width: 500px;
+}
+@media (max-width: $tablet-menu-breakpoint) {
+  .triple {
+    flex-direction: column;
+    gap: 0;
+    a {
+      width: auto;
+    }
+  }
+}
+@media (max-width: $mobile-menu-breakpoint) {
+  .double {
+    flex-direction: column;
+    gap: 0;
+    a {
+      width: auto;
+    }
   }
 }
