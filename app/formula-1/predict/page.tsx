@@ -6,6 +6,7 @@ import { entrants } from "@data/formula-1/2023";
 import { sortEntrantsAlphabetically } from "@lib/misc";
 import { getPredictionTable } from "@lib/db-functions";
 import { authOptions } from "@lib/auth";
+import { predictionFreezeTime } from "@data/formula-1/2024";
 
 import { ContentContainer } from "@components/content-container/content-container";
 import { Panel } from "@components/panels/panel";
@@ -29,7 +30,6 @@ export default async function Page() {
   const userId = session.user.id;
   const sport: Sport = "f1";
   const season = "2024";
-  const predictionFreezeTime = new Date("2024-02-29T11:30:00");
 
   const defaultEntrantsArr = sortEntrantsAlphabetically([
     entrants.ham,

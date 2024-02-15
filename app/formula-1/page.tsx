@@ -6,6 +6,8 @@ import { PanelHeading } from "@components/panels/panel-heading";
 import { Button } from "@components/button/button";
 import Icon from "@svgs/icons/sq-icon";
 
+import { predictionFreezeTime } from "@data/formula-1/2024";
+
 import styles from "@components/button/button-containers.module.scss";
 
 export const metadata: Metadata = {
@@ -13,7 +15,6 @@ export const metadata: Metadata = {
 };
 
 const Page = () => {
-  const predictionFreezeTime = new Date("2024-02-29T11:30:00");
   return (
     <>
       <PanelHeading>

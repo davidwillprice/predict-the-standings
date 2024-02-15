@@ -4,6 +4,8 @@ import { usePathname } from "next/navigation";
 import { ReactNode } from "react";
 import Link from "next/link";
 
+import { predictionFreezeTime } from "@data/formula-1/2024";
+
 import Icon from "@svgs/icons/sq-icon";
 import HeaderLink from "@components/header/header-link";
 
@@ -30,7 +32,13 @@ export const MainNav = ({ children }: Props) => {
   const predictionLinks = pathname.startsWith("/formula-1") ? (
     <>
       {/**@todo Add year selector*/}
-      {/**@todo Add 'Edit Predictions' or 'Predict' depending on if the predictions are open and they are logged in*/}
+      {predictionFreezeTime.getTime() > new Date().getTime() ? (
+        <HeaderLink href="/formula-1/predict" icon="listBullet">
+          Submit Predictions
+        </HeaderLink>
+      ) : (
+        ""
+      )}
       <HeaderLink href="/formula-1/2024" icon="group">
         Leaderboard
       </HeaderLink>
