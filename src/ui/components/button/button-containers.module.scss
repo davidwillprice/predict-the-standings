@@ -17,7 +17,7 @@
 .double {
   max-width: 500px;
 }
-@media (max-width: $tablet-menu-breakpoint) {
+@media (max-width: 800px) {
   .triple {
     flex-direction: column;
     gap: 0;
