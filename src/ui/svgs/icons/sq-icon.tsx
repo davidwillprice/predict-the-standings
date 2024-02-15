@@ -9,9 +9,11 @@ export interface Props {
     | "listBullet"
     | "loading"
     | "login"
+    | "logout"
     | "profile"
     | "premierLeague"
     | "stats"
+    | "submit"
     | "success"
     | "trophy";
 }
@@ -115,6 +117,15 @@ const iconPaths = {
       />
     </>
   ),
+  logout: (
+    <>
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9"
+      />
+    </>
+  ),
   premierLeague: (
     <>
       <g transform="matrix(1.05539,0,0,1.05539,-0.136956,-0.136956)">
@@ -159,7 +170,15 @@ const iconPaths = {
       />
     </>
   ),
-
+  submit: (
+    <>
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="m15 11.25-3-3m0 0-3 3m3-3v7.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+      />
+    </>
+  ),
   trophy: (
     <>
       <path
@@ -189,12 +208,16 @@ export default function Icon({ strokeWidth, type }: Props) {
       ? iconPaths.loading
       : type === "login"
       ? iconPaths.login
+      : type === "logout"
+      ? iconPaths.logout
       : type === "profile"
       ? iconPaths.profile
       : type === "premierLeague"
       ? iconPaths.premierLeague
       : type === "stats"
       ? iconPaths.stats
+      : type === "submit"
+      ? iconPaths.submit
       : type === "success"
       ? iconPaths.success
       : type === "trophy"

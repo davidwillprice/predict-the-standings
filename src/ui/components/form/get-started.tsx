@@ -8,10 +8,12 @@ import { validateDisplayName } from "@lib/form-functions";
 
 import { LoadingSpinner } from "@components/loading-spinner/loading-spinner";
 import { FeedbackContainer } from "@components/feedback-container/feedback-container";
+import Icon from "@svgs/icons/sq-icon";
 
 import styles from "@components/form/form.module.scss";
 import btnStyles from "@components/button/button.module.scss";
 import commonStyles from "@styles/common.module.scss";
+import btnConstyles from "@components/button/button-containers.module.scss";
 
 interface Props {
   initialDisplayName: string;
@@ -98,14 +100,17 @@ export const GetStartedForm = ({ initialDisplayName }: Props) => {
           {submitting ? (
             <LoadingSpinner />
           ) : (
-            <button
-              className={`${btnStyles.button} ${
-                isDisplayNameValid ? "" : btnStyles.disabled
-              }`}
-              type="submit"
-              disabled={!isDisplayNameValid}>
-              Submit Display Name
-            </button>
+            <div className={btnConstyles.single}>
+              <button
+                className={`${btnStyles.button} ${
+                  isDisplayNameValid ? "" : btnStyles.disabled
+                }`}
+                type="submit"
+                disabled={!isDisplayNameValid}>
+                <Icon strokeWidth={2} type="submit" />
+                Submit Display Name
+              </button>
+            </div>
           )}
         </div>
       </form>

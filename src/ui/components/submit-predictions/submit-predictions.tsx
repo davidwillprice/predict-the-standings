@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Button } from "@components/button/button";
 import { LoadingSpinner } from "@components/loading-spinner/loading-spinner";
 import { FeedbackContainer } from "@components/feedback-container/feedback-container";
+import Icon from "@svgs/icons/sq-icon";
 
 import { Entrant } from "@custom-types/game-types";
 import { submitPredictions } from "@lib/db-functions";
@@ -13,6 +14,7 @@ import { submitPredictions } from "@lib/db-functions";
 import { Sport } from "@custom-types/misc";
 
 import styles from "@components/submit-predictions/submit-predictions.module.scss";
+import btnConstyles from "@components/button/button-containers.module.scss";
 
 interface Props {
   entrantArr: Entrant[];
@@ -73,7 +75,12 @@ export const SubmitPredictions = ({
         submitting ? (
           <LoadingSpinner />
         ) : (
-          <Button onClick={submissionHandler}>Submit Predictions</Button>
+          <div className={btnConstyles.single}>
+            <Button onClick={submissionHandler}>
+              <Icon strokeWidth={2} type="submit" />
+              Submit Predictions
+            </Button>
+          </div>
         )
       ) : submissionSuccessful.current ? (
         <>
