@@ -11,6 +11,11 @@
   margin: 0;
   transition: 0.2s all;
 }
+svg,
+path,
+circle {
+  transition: 0s all;
+}
 
 html,
 body {

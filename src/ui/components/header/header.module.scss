@@ -178,6 +178,9 @@
     & > div {
       gap: 0px;
     }
+    .link_active::before {
+      height: 50%;
+    }
   }
   .secondary_menu {
     display: none;
