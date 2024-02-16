@@ -5,7 +5,7 @@ import { Round } from "@custom-types/game-types";
 import Icon from "@ui/svgs/icons/sq-icon";
 
 interface Props {
-  lastUpdated: Date;
+  lastUpdated: Date | string;
   rounds: Round[];
   roundIndex: number;
   changeSelectedUserHandler: Function;
@@ -17,6 +17,7 @@ export const Leaderboard = ({
   rounds,
   roundIndex,
 }: Props) => {
+  if (typeof lastUpdated === "string") lastUpdated = new Date(lastUpdated);
   return (
     <div className={predictStyles.prediction_table}>
       <table className={styles.leaderboard}>

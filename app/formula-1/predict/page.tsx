@@ -92,7 +92,7 @@ export default async function Page() {
                 Free Practice 1. You can edit your predictions up until the time
                 below:
               </p>
-              <p>{predictionFreezeTime.toString()}</p>
+              <p>{predictionFreezeTime.toLocaleString()}</p>
             </Panel>
           </EditPredictions>
         ) : (
