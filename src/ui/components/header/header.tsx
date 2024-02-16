@@ -25,6 +25,7 @@ const Header = async () => {
       <MainNav>{profileLink}</MainNav>
       <nav className={styles.secondary_menu}>
         {/**@todo Add secondary menu as a footer on mobile */}
+        {/**@todo Add Attribution page link */}
         <hr />
         <div>
           <Link href="/terms-of-service">Terms of Service</Link>

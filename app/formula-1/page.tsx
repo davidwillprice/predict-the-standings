@@ -23,8 +23,8 @@ const Page = () => {
       <Panel>
         {/**@todo Add text for after the season has started */}
         <p>
-          Compete to against people around the world to Predict The Standings
-          for the 2024 F1 Season.
+          Compete against people around the world to Predict The Standings for
+          the 2024 F1 Season.
         </p>
         <ul>
           <li>

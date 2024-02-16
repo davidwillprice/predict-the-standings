@@ -15,8 +15,8 @@ export default function Home() {
       </PanelHeading>
       <Panel>
         <p>
-          Compete to against people around the world to Predict The Standings
-          for various sports.
+          Compete against people around the world to Predict The Standings for
+          various sports.
         </p>
         <ul>
           <li>

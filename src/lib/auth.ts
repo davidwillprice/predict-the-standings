@@ -38,11 +38,11 @@ export const authOptions = {
       clientSecret: process.env.DISCORD_CLIENT_SECRET as string,
       allowDangerousEmailAccountLinking: true,
     }),
-    FacebookProvider({
-      clientId: process.env.FACEBOOK_CLIENT_ID as string,
-      clientSecret: process.env.FACEBOOK_CLIENT_SECRET as string,
-      allowDangerousEmailAccountLinking: true,
-    }),
+    // FacebookProvider({
+    //   clientId: process.env.FACEBOOK_CLIENT_ID as string,
+    //   clientSecret: process.env.FACEBOOK_CLIENT_SECRET as string,
+    //   allowDangerousEmailAccountLinking: true,
+    // }),
     GithubProvider({
       clientId: process.env.GITHUB_ID as string,
       clientSecret: process.env.GITHUB_SECRET as string,
@@ -53,24 +53,24 @@ export const authOptions = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
       allowDangerousEmailAccountLinking: true,
     }),
-    InstagramProvider({
-      clientId: process.env.INSTAGRAM_CLIENT_ID as string,
-      clientSecret: process.env.INSTAGRAM_CLIENT_SECRET as string,
-      allowDangerousEmailAccountLinking: true,
-    }),
-    PatreonProvider({
-      clientId: process.env.PATREON_IDT as string,
-      clientSecret: process.env.PATREON_SECRETT as string,
-    }),
+    // InstagramProvider({
+    //   clientId: process.env.INSTAGRAM_CLIENT_ID as string,
+    //   clientSecret: process.env.INSTAGRAM_CLIENT_SECRET as string,
+    //   allowDangerousEmailAccountLinking: true,
+    // }),
+    // PatreonProvider({
+    //   clientId: process.env.PATREON_IDT as string,
+    //   clientSecret: process.env.PATREON_SECRETT as string,
+    // }),
     RedditProvider({
       clientId: process.env.REDDIT_CLIENT_ID as string,
       clientSecret: process.env.REDDIT_CLIENT_SECRET as string,
       allowDangerousEmailAccountLinking: true,
     }),
-    SpotifyProvider({
-      clientId: process.env.SPOTIFY_CLIENT_ID as string,
-      clientSecret: process.env.SPOTIFY_CLIENT_SECRET as string,
-    }),
+    // SpotifyProvider({
+    //   clientId: process.env.SPOTIFY_CLIENT_ID as string,
+    //   clientSecret: process.env.SPOTIFY_CLIENT_SECRET as string,
+    // }),
     TwitterProvider({
       clientId: process.env.TWITTER_CLIENT_ID as string,
       clientSecret: process.env.TWITTER_CLIENT_SECRET as string,
