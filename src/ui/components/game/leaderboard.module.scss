@@ -11,8 +11,8 @@
 .table_row {
   cursor: pointer;
   &:hover td {
-    background-color: $secondary-color;
-    color: $primary-color;
+    background-color: var(--secondary-color);
+    color: var(--primary-color);
   }
 }
 .position {
@@ -21,7 +21,7 @@
 .position_diff {
   width: 25px;
   i {
-    border: solid $secondary-color;
+    border: solid var(--secondary-color);
     border-width: 0 3px 3px 0;
     display: inline-block;
     padding: 3px;
@@ -38,11 +38,11 @@
 }
 .pos_change i {
   transform: rotate(225deg) translate(-1px, -1px);
-  border-color: $success-color;
+  border-color: var(--success-color);
 }
 .neg_change i {
   transform: rotate(45deg) translate(-2px, -2px);
-  border-color: $error-color;
+  border-color: var(--error-color);
 }
 .no_change i {
   border-width: 0 0 3px 0;

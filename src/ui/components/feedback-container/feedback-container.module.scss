@@ -4,12 +4,15 @@
   display: flex;
   align-items: center;
   padding: 0px 15px 0px 20px;
-  background-color: $primary-color;
+  background-color: var(--primary-color);
   border-radius: 5px;
-  box-shadow: $box-shadow;
+  box-shadow: var(--box-shadow);
   position: relative;
   overflow: hidden;
   margin-bottom: 15px;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 500px;
   &:after {
     position: absolute;
     width: 10px;
@@ -18,10 +21,10 @@
     content: "";
   }
   &.error:after {
-    background-color: $error-color;
+    background-color: var(--error-color);
   }
   &.success:after {
-    background-color: $success-color;
+    background-color: var(--success-color);
   }
   ul {
     margin-left: 10px;
@@ -37,10 +40,10 @@
 }
 
 .error .icon {
-  color: $error-color;
+  color: var(--error-color);
 }
 .success .icon {
-  color: $success-color;
+  color: var(--success-color);
 }
 
 .icon {

@@ -3,11 +3,13 @@ import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { ReactNode } from "react";
 import Link from "next/link";
+import { useTheme } from "next-themes";
 
 import { predictionFreezeTime } from "@data/formula-1/2024";
 
 import Icon from "@svgs/icons/sq-icon";
 import HeaderLink from "@components/header/header-link";
+import { Button } from "@components/button/button";
 
 import styles from "@components/header/header.module.scss";
 import commonStyles from "@styles/common.module.scss";
@@ -18,6 +20,7 @@ interface Props {
 
 export const MainNav = ({ children }: Props) => {
   const pathname = usePathname();
+  const { theme, setTheme } = useTheme();
 
   const [mobMenuOpen, toggleMobMenu] = useState(false);
 
@@ -97,6 +100,14 @@ export const MainNav = ({ children }: Props) => {
           <HeaderLink href="/help" icon="help">
             Help
           </HeaderLink>
+          {/**@todo Fix incorrect icon initially showing */}
+          <Button
+            onClick={() => setTheme(theme === "light" ? "dark" : "light")}>
+            <Icon
+              type={theme === "light" ? "moon" : "sun"}
+              strokeWidth={2}></Icon>
+            Toggle Dark Mode
+          </Button>
           {/* {<div className={styles.dropdown}>
             <div className={styles.dropdown__label}>
               <div className={styles.icon}>

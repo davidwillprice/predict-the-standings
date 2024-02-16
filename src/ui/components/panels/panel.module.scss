@@ -1,11 +1,11 @@
 @import "@styles/sass-variables.scss";
 
 .panel {
-  background-color: $primary-color;
+  background-color: var(--primary-color);
   border-radius: 5px;
   padding: 30px 30px 15px 30px;
   width: 100%;
-  box-shadow: $box-shadow;
+  box-shadow: var(--box-shadow);
   max-width: 800px;
   margin: 0 auto 30px;
 }

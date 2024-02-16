@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Header from "@components/header/header";
 import { SessionProvider } from "@lib/next-auth-provider";
+import { Providers } from "./providers";
 
 import { Roboto } from "next/font/google";
 import "@styles/globals.scss";
@@ -26,14 +27,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={roboto.variable}>
+    <html lang="en" className={roboto.variable} suppressHydrationWarning>
       <body>
-        <SessionProvider>
-          <Header />
-          <div className={styles.content_container}>
-            <main className={styles.main}>{children}</main>
-          </div>
-        </SessionProvider>
+        <Providers>
+          <SessionProvider>
+            <Header />
+            <div className={styles.content_container}>
+              <main className={styles.main}>{children}</main>
+            </div>
+          </SessionProvider>
+        </Providers>
       </body>
     </html>
   );

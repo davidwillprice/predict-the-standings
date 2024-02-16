@@ -9,8 +9,8 @@
 }
 .primary_menu .link:hover,
 .secondary_menu a:hover {
-  background-color: $secondary-color;
-  color: $primary-color;
+  background-color: var(--secondary-color);
+  color: var(--primary-color);
 }
 .icon {
   width: 30px;
@@ -21,9 +21,9 @@
   i {
     border-width: 0 2px 2px 0;
     padding: 5px;
-    border-color: $secondary-color;
+    border-color: var(--secondary-color);
     transform: rotate(45deg) translate(-1px, -1px);
-    color: $secondary-color;
+    color: var(--secondary-color);
     border-style: solid;
   }
   &.active i {
@@ -36,7 +36,7 @@
   flex-direction: column;
   padding: 20px 15px;
   min-width: $header-width-desktop;
-  background-color: $primary-color;
+  background-color: var(--primary-color);
   position: fixed;
   height: 100%;
   hr {
@@ -56,7 +56,7 @@
     }
   }
   .menu_button {
-    background-color: $tertiary-color;
+    background-color: var(--tertiary-color);
     width: 40px;
     height: 40px;
     cursor: pointer;
@@ -64,7 +64,7 @@
     border-radius: 3px;
     border-width: 0;
     &__line {
-      background-color: $secondary-color;
+      background-color: var(--secondary-color);
       height: 3px;
       width: 75%;
       position: absolute;
@@ -119,7 +119,7 @@
   .link_active::before {
     width: 5px;
     height: 100%;
-    background-color: $secondary-color;
+    background-color: var(--secondary-color);
     position: absolute;
     content: "";
     border-radius: 5px;
@@ -178,7 +178,7 @@
     margin-top: 10px;
     .link,
     .dropdown {
-      border-bottom: 2px solid $tertiary-color;
+      border-bottom: 2px solid var(--tertiary-color);
     }
     .link:last-child,
     .dropdown:last-child {
