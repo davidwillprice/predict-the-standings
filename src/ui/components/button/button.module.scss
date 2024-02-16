@@ -16,7 +16,10 @@
   gap: 10px;
   font-weight: 500;
   &:hover {
-    opacity: 0.5;
+    translate: 0 -2px;
+    background-color: $secondary-color;
+    border-color: $secondary-color;
+    color: $primary-color;
   }
   &.disabled {
     color: rgba($secondary-color, 0.5);

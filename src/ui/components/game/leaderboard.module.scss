@@ -10,6 +10,10 @@
 }
 .table_row {
   cursor: pointer;
+  &:hover td {
+    background-color: $secondary-color;
+    color: $primary-color;
+  }
 }
 .position {
   text-align: center;
