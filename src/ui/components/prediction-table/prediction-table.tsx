@@ -34,7 +34,7 @@ export const PredictionTable = ({ selectedRound, selectedUser }: Props) => {
         <tbody>
           {tableData.map((rowData, index) => (
             <tr key={rowData.entrant.id} className={styles.table_row}>
-              <td>{index + 1}</td>
+              <td className={styles.position_cell}>{index + 1}</td>
               <td>
                 <span
                   className={`${styles.flair}`}

@@ -59,7 +59,9 @@ export function EditablePredictionTable({
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}>
                         <td>≡</td>
-                        <td>{entrantArr.indexOf(entrant) + 1}</td>
+                        <td className={predictiontableStyles.position_cell}>
+                          {entrantArr.indexOf(entrant) + 1}
+                        </td>
                         <td>
                           <span
                             className={`${predictiontableStyles.flair}`}
