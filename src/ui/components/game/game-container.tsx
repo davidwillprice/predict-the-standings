@@ -109,6 +109,11 @@ export const GameContainer = ({
                 }}>
                 Back
               </Button>
+              {selectedUser.information ? (
+                <p>Note: {selectedUser.information}</p>
+              ) : (
+                ""
+              )}
               {/**@todo Add report display name feature 
               <Button>Report Display Name</Button>*/}
             </div>

@@ -23,6 +23,8 @@ export const getAllPredictonData = async (
 
   //**Creates an 'average' user */
   users.average = new User("0", "average", []);
+  users.average.information =
+    "This user's predictions are the average of all other users.";
   users = generateAverageTable(entrants, users);
   users = orderAverageTable(users);
 
@@ -166,6 +168,7 @@ export const calcPredictionsAccuracy = (
 
 /** Order leaderboards by percentage correct, then use perfect predictions as tie break, then use predictions that were 1 off as a tie break, then use predictions that were 2 off as a tie break etc */
 const orderLeaderboards = (rounds: Round[]) => {
+  /** @todo Need to implement people sharing a leaderboard position if they have the same predictions */
   rounds.forEach((round, roundIndex) => {
     round.leaderboards.sort(function (a, b) {
       let order;

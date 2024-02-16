@@ -7,6 +7,7 @@ export interface PredictionData {
 export class User {
   id: string;
   displayName: string;
+  information: string;
   predictions: Entrant[];
   season: RoundPerformance[];
   constructor(id: string, displayName: string, predictions: Entrant[]) {
@@ -14,6 +15,7 @@ export class User {
     this.displayName = displayName;
     this.predictions = predictions;
     this.season = [];
+    this.information = "";
   }
 }
 export interface Users {
