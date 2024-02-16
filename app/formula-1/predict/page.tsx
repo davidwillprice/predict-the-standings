@@ -23,7 +23,7 @@ export const metadata: Metadata = {
 export default async function Page() {
   const session = await getServerSession(authOptions);
   if (session == null) {
-    return redirect("/login");
+    return redirect("/login?error=login");
   } else if (session?.user.displayName === null) {
     return redirect("/get-started");
   }

@@ -7,8 +7,13 @@ import { authOptions } from "@lib/auth";
 import { Panel } from "@components/panels/panel";
 import { LoginForm } from "@components/login/login-form";
 import { PanelHeading } from "@components/panels/panel-heading";
+import { FeedbackContainer } from "@components/feedback-container/feedback-container";
 
-const Page = async () => {
+interface Props {
+  searchParams: { [key: string]: string };
+}
+
+const Page = async ({ searchParams }: Props) => {
   const session = await getServerSession(authOptions);
   if (session !== null) {
     if (session?.user.displayName === null) {
@@ -20,11 +25,23 @@ const Page = async () => {
       return redirect("/formula-1/");
     }
   }
+  const gatedPageError = searchParams["error"];
   return (
     <>
       <PanelHeading>
         <h1>Login</h1>
       </PanelHeading>
+      {gatedPageError ? (
+        <FeedbackContainer iconType="error">
+          {gatedPageError === "display-name" ? (
+            <p>Please login before you update your display name.</p>
+          ) : (
+            <p>Please login before you submit or edit predictions.</p>
+          )}
+        </FeedbackContainer>
+      ) : (
+        ""
+      )}
       <Panel>
         <LoginForm />
         <div style={{ textAlign: "center" }}>

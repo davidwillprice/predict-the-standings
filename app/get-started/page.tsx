@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 export default async function ProfilePage() {
   const session = await getServerSession(authOptions);
   if (session == null) {
-    return redirect("/login");
+    return redirect("/login?error=display-name");
   }
 
   const name = session?.user?.name as string;
