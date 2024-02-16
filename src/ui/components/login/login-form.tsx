@@ -24,6 +24,12 @@ export const LoginForm = () => (
         </Button>
         <Button
           onClick={async () => {
+            await signIn("facebook", { redirect: false });
+          }}>
+          Sign in via Facebook
+        </Button>
+        <Button
+          onClick={async () => {
             await signIn("github", { redirect: false });
           }}>
           Sign in via Github
