@@ -3,6 +3,10 @@
   max-width: 600px;
   width: 100%;
   margin-bottom: 10px;
+  svg {
+    height: 15px;
+    margin-left: 5px;
+  }
 }
 .table_row {
   cursor: pointer;
@@ -18,6 +22,10 @@
     display: inline-block;
     padding: 3px;
   }
+}
+.name_cell {
+  display: flex;
+  align-items: center;
 }
 .perfect_positions {
   max-width: 92px;

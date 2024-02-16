@@ -2,6 +2,7 @@ import styles from "@components/game/leaderboard.module.scss";
 import predictStyles from "@components/prediction-table/prediction-table.module.scss";
 
 import { Round } from "@custom-types/game-types";
+import Icon from "@ui/svgs/icons/sq-icon";
 
 interface Props {
   lastUpdated: Date;
@@ -45,7 +46,10 @@ export const Leaderboard = ({
                 }`}>
                 <i />
               </td>
-              <td>{row.user.displayName}</td>
+              <td className={styles.name_cell}>
+                {row.user.displayName}{" "}
+                {row.user.information && <Icon type="star" strokeWidth={1} />}
+              </td>
               <td>{`${row.percentCorrect}%`}</td>
               <td className={styles.perfect_positions}>
                 {row.user.season[roundIndex].diffCounts[0]}

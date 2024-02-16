@@ -83,7 +83,7 @@ export const GameContainer = ({
             <div className={styles.main}>
               <h1>Formula 1 {season} - Leaderboard</h1>
               <p>
-                Select users to view their predictions and compare them to the
+                Select players to view their predictions and compare them to the
                 actual standings.
               </p>
               <Leaderboard

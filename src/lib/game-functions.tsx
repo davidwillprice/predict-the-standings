@@ -22,9 +22,9 @@ export const getAllPredictonData = async (
   if (!users) return null;
 
   //**Creates an 'average' user */
-  users.average = new User("0", "average", []);
-  users.average.information =
-    "This user's predictions are the average of all other users.";
+  users.Average = new User("0", "Average", []);
+  users.Average.information =
+    "This prediction table is an automated average of all other player predictions.";
   users = generateAverageTable(entrants, users);
   users = orderAverageTable(users);
 
@@ -81,14 +81,14 @@ const generateAverageTable = (entrants: Entrants, users: Users) => {
       noOfUsers++;
     }
     entrant.avgPrePos = predictionPosTotal / noOfUsers;
-    users.average.predictions.push(entrant);
+    users.Average.predictions.push(entrant);
   }
   return users;
 };
 
 //**Sort 'average' user by their percentage correct, highest first */
 const orderAverageTable = (user: Users): Users => {
-  user.average.predictions.sort((a, b) =>
+  user.Average.predictions.sort((a, b) =>
     a.avgPrePos! > b.avgPrePos! ? 1 : -1
   );
   return user;
