@@ -6,9 +6,11 @@
   margin: 0 auto 15px;
   input {
     width: calc(100% - 100px);
-    border: 1px #d4d4d4 solid;
+    border: 1px $quaternary-color solid;
     border-radius: 3px;
     padding: 5px 3%;
+    background-color: $primary-color;
+    color: $secondary-color;
   }
   display: flex;
   flex-direction: column;
