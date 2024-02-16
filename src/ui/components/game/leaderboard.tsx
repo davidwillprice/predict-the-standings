@@ -4,6 +4,7 @@ import predictStyles from "@components/prediction-table/prediction-table.module.
 import { Round } from "@custom-types/game-types";
 
 interface Props {
+  lastUpdated: Date;
   rounds: Round[];
   roundIndex: number;
   changeSelectedUserHandler: Function;
@@ -11,6 +12,7 @@ interface Props {
 
 export const Leaderboard = ({
   changeSelectedUserHandler,
+  lastUpdated,
   rounds,
   roundIndex,
 }: Props) => {
@@ -33,7 +35,6 @@ export const Leaderboard = ({
               className={`${predictStyles.table_row} ${styles.table_row}`}
               onClick={() => changeSelectedUserHandler(row.user.displayName)}>
               <td className={styles.position}>{index + 1}</td>
-              {/**@todo Fix jittering by making icons into proper SVGs */}
               <td
                 className={`${styles.position_diff} ${
                   row.prevRdDiff > 0
@@ -53,6 +54,13 @@ export const Leaderboard = ({
           ))}
         </tbody>
       </table>
+      {lastUpdated ? (
+        <p>
+          <small>Last updated: {lastUpdated.toLocaleString()}</small>
+        </p>
+      ) : (
+        ""
+      )}
     </div>
   );
 };

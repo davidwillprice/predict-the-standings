@@ -15,6 +15,7 @@ import { Round, Users, User } from "@custom-types/game-types";
 
 interface Props {
   currentUserDisplayName: string | null;
+  lastUpdated: Date;
   rounds: Round[];
   season: string;
   users: Users;
@@ -22,6 +23,7 @@ interface Props {
 
 export const GameContainer = ({
   rounds,
+  lastUpdated,
   users,
   currentUserDisplayName,
   season,
@@ -85,6 +87,7 @@ export const GameContainer = ({
                 actual standings.
               </p>
               <Leaderboard
+                lastUpdated={lastUpdated}
                 rounds={rounds}
                 roundIndex={roundIndex}
                 changeSelectedUserHandler={changeSelectedUserHandler}

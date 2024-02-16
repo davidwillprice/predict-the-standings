@@ -1,5 +1,6 @@
 export interface PredictionData {
   rounds: Round[];
+  lastUpdated: Date;
   users: Users;
 }
 

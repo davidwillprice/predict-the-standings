@@ -36,7 +36,7 @@ export const getAllPredictonData = async (
 
   rounds = generateEntrantDiffTotals(rounds, users);
 
-  return { rounds: rounds, users: users };
+  return { rounds: rounds, lastUpdated: new Date(), users: users };
 };
 
 /**Get users and their predictions from the database and check all the appropriate data is set */

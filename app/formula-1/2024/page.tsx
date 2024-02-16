@@ -17,6 +17,7 @@ const season = "2024";
 const sport: Sport = "f1";
 
 const getCachedPredictionData = unstable_cache(
+  /**@todo Instead of it being time based, revalidate based on when the website is deployed as that's how I'll be adding new race data */
   async () => {
     try {
       return await getAllPredictonData(entrants, rounds, season, sport);
@@ -25,7 +26,7 @@ const getCachedPredictionData = unstable_cache(
     }
   },
   [season, sport],
-  { revalidate: 60 }
+  { revalidate: 3600 }
 );
 
 const Page = async () => {
@@ -61,6 +62,7 @@ const Page = async () => {
       ) : (
         <GameContainer
           currentUserDisplayName={currentUserDisplayName}
+          lastUpdated={predictionData.lastUpdated}
           rounds={JSON.parse(JSON.stringify(predictionData.rounds))}
           season={season}
           users={JSON.parse(JSON.stringify(predictionData.users))}

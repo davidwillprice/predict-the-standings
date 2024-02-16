@@ -2,6 +2,7 @@
 .leaderboard {
   max-width: 600px;
   width: 100%;
+  margin-bottom: 10px;
 }
 .table_row {
   cursor: pointer;
@@ -10,7 +11,7 @@
   text-align: center;
 }
 .position_diff {
-  width: 20px;
+  width: 25px;
   i {
     border: solid $secondary-color;
     border-width: 0 3px 3px 0;
@@ -20,6 +21,8 @@
 }
 .perfect_positions {
   max-width: 92px;
+  border-radius: 0 5px 5px 0;
+  padding-right: 10px;
 }
 .pos_change i {
   transform: rotate(225deg) translate(-1px, -1px);
