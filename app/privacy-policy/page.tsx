@@ -42,6 +42,16 @@ export default function Page() {
             account passwords.
           </p>
           <p>
+            If you log in using Discord&apos;s OAuth, we may collect the
+            following information:
+          </p>
+          <ul>
+            <li>
+              Your Discord account information, including your username, avatar,
+              email address, and banner.
+            </li>
+          </ul>
+          <p>
             If you log in using Google&apos;s OAuth, we may collect the
             following information:
           </p>

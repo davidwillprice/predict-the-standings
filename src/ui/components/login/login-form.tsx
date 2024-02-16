@@ -13,9 +13,15 @@ export const LoginForm = () => (
       {/**@todo Add loading spinner */}
       {/**Instagram provider seems to require a verified FB business account
        * Apple developer program costs $99py so can't add Apple provider*/}
-      {/**@todo Add Linkedin/Discord login */}
+      {/**@todo Add Linkedin (requires LinkedIn Page) login */}
       {/**@todo Fix Patreon & Spotify logins */}
       <div className={styles.btn_con}>
+        <Button
+          onClick={async () => {
+            await signIn("discord", { redirect: false });
+          }}>
+          Sign in via Discord
+        </Button>
         <Button
           onClick={async () => {
             await signIn("github", { redirect: false });
