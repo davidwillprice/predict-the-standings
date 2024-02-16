@@ -2,8 +2,11 @@ export interface Props {
   strokeWidth: number;
   type:
     | "accessibility"
+    | "discord"
     | "error"
     | "f1"
+    | "github"
+    | "google"
     | "group"
     | "help"
     | "listBullet"
@@ -12,11 +15,13 @@ export interface Props {
     | "logout"
     | "profile"
     | "premierLeague"
+    | "reddit"
     | "star"
     | "stats"
     | "submit"
     | "success"
-    | "trophy";
+    | "trophy"
+    | "twitter";
 }
 
 const iconPaths = {
@@ -45,6 +50,15 @@ const iconPaths = {
       </g>
     </>
   ),
+  discord: (
+    <>
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M8 12a1 1 0 1 0 2 0a1 1 0 0 0 -2 0" />
+      <path d="M14 12a1 1 0 1 0 2 0a1 1 0 0 0 -2 0" />
+      <path d="M15.5 17c0 1 1.5 3 2 3c1.5 0 2.833 -1.667 3.5 -3c.667 -1.667 .5 -5.833 -1.5 -11.5c-1.457 -1.015 -3 -1.34 -4.5 -1.5l-.972 1.923a11.913 11.913 0 0 0 -4.053 0l-.975 -1.923c-1.5 .16 -3.043 .485 -4.5 1.5c-2 5.667 -2.167 9.833 -1.5 11.5c.667 1.333 2 3 3.5 3c.5 0 2 -2 2 -3" />
+      <path d="M7 16.5c3.5 1 6.5 1 10 0" />
+    </>
+  ),
   error: (
     <>
       <path
@@ -68,6 +82,22 @@ const iconPaths = {
           d="M12.5,11L12.5,7M12.5,11C13.165,11 13.729,11.433 13.926,12.032M12.5,11C11.835,11 11.271,11.433 11.075,12.032M12.5,7C10.185,7 8.205,8.43 7.393,10.454M12.5,7C14.815,7 16.795,8.43 17.607,10.454M8.611,16.389L11.439,13.561M16.389,16.389L13.561,13.561M13.561,13.561C13.832,13.289 14,12.914 14,12.5C14,12.336 13.974,12.179 13.926,12.032M13.561,13.561C13.289,13.832 12.914,14 12.5,14C11.672,14 11,13.328 11,12.5C11,12.336 11.026,12.179 11.075,12.032M13.926,12.032L17.607,10.454M11.075,12.032L7.393,10.454M7.393,10.454C7.14,11.087 7,11.777 7,12.5C7,15.538 9.462,18 12.5,18C15.538,18 18,15.538 18,12.5C18,11.777 17.86,11.087 17.607,10.454"
         />
       </g>
+    </>
+  ),
+  github: (
+    <>
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+    </>
+  ),
+  google: (
+    <>
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path
+        d="M12 2a9.96 9.96 0 0 1 6.29 2.226a1 1 0 0 1 .04 1.52l-1.51 1.362a1 1 0 0 1 -1.265 .06a6 6 0 1 0 2.103 6.836l.001 -.004h-3.66a1 1 0 0 1 -.992 -.883l-.007 -.117v-2a1 1 0 0 1 1 -1h6.945a1 1 0 0 1 .994 .89c.04 .367 .061 .737 .061 1.11c0 5.523 -4.477 10 -10 10s-10 -4.477 -10 -10s4.477 -10 10 -10z"
+        stroke-width="0"
+        fill="currentColor"
+      />
     </>
   ),
   group: (
@@ -152,6 +182,17 @@ const iconPaths = {
         d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z"></path>
     </>
   ),
+  reddit: (
+    <>
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 8c2.648 0 5.028 .826 6.675 2.14a2.5 2.5 0 0 1 2.326 4.36c0 3.59 -4.03 6.5 -9 6.5c-4.875 0 -8.845 -2.8 -9 -6.294l-1 -.206a2.5 2.5 0 0 1 2.326 -4.36c1.646 -1.313 4.026 -2.14 6.674 -2.14z" />
+      <path d="M12 8l1 -5l6 1" />
+      <path d="M19 4m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+      <circle cx="9" cy="13" r=".5" fill="currentColor" />
+      <circle cx="15" cy="13" r=".5" fill="currentColor" />
+      <path d="M10 17c.667 .333 1.333 .5 2 .5s1.333 -.167 2 -.5" />
+    </>
+  ),
   star: (
     <>
       <path
@@ -198,16 +239,28 @@ const iconPaths = {
         d="M16.5 18.75h-9m9 0a3 3 0 013 3h-15a3 3 0 013-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-.871M7.5 18.75v-3.375c0-.621.504-1.125 1.125-1.125h.872m5.007 0H9.497m5.007 0a7.454 7.454 0 01-.982-3.172M9.497 14.25a7.454 7.454 0 00.981-3.172M5.25 4.236c-.982.143-1.954.317-2.916.52A6.003 6.003 0 007.73 9.728M5.25 4.236V4.5c0 2.108.966 3.99 2.48 5.228M5.25 4.236V2.721A48.339 48.339 0 0112 2.25c2.291 0 4.545.16 6.75.47v1.516M7.73 9.728a6.726 6.726 0 002.748 1.35m8.272-6.842V4.5c0 2.108-.966 3.99-2.48 5.228m2.48-5.492a46.32 46.32 0 012.916.52 6.003 6.003 0 01-5.395 4.972m0 0a6.726 6.726 0 01-2.749 1.35m0 0a6.772 6.772 0 01-3.044 0"></path>
     </>
   ),
+  twitter: (
+    <>
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c0 -.249 1.51 -2.772 1.818 -4.013z" />
+    </>
+  ),
 };
 
 export default function Icon({ strokeWidth, type }: Props) {
   const content =
     type === "accessibility"
       ? iconPaths.accessibility
+      : type === "discord"
+      ? iconPaths.discord
       : type === "error"
       ? iconPaths.error
       : type === "f1"
       ? iconPaths.f1
+      : type === "github"
+      ? iconPaths.github
+      : type === "google"
+      ? iconPaths.google
       : type === "group"
       ? iconPaths.group
       : type === "help"
@@ -224,6 +277,8 @@ export default function Icon({ strokeWidth, type }: Props) {
       ? iconPaths.profile
       : type === "premierLeague"
       ? iconPaths.premierLeague
+      : type === "reddit"
+      ? iconPaths.reddit
       : type === "star"
       ? iconPaths.star
       : type === "stats"
@@ -234,6 +289,8 @@ export default function Icon({ strokeWidth, type }: Props) {
       ? iconPaths.success
       : type === "trophy"
       ? iconPaths.trophy
+      : type === "twitter"
+      ? iconPaths.twitter
       : "";
   if (!content) {
     throw new Error("Icon type hasn't been correctly set");

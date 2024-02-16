@@ -5,6 +5,7 @@ import { signIn } from "next-auth/react";
 import { Button } from "@components/button/button";
 
 import styles from "@components/login/login.module.scss";
+import Icon from "@ui/svgs/icons/sq-icon";
 
 export const LoginForm = () => (
   <>
@@ -17,9 +18,11 @@ export const LoginForm = () => (
       {/**@todo Fix Patreon & Spotify logins */}
       <div className={styles.btn_con}>
         <Button
+          className={styles.discord}
           onClick={async () => {
             await signIn("discord", { redirect: false });
           }}>
+          <Icon strokeWidth={2} type="discord" />
           Sign in via Discord
         </Button>
         {/** 
@@ -30,15 +33,19 @@ export const LoginForm = () => (
           Sign in via Facebook
         </Button>*/}
         <Button
+          className={styles.github}
           onClick={async () => {
             await signIn("github", { redirect: false });
           }}>
+          <Icon strokeWidth={2} type="github" />
           Sign in via Github
         </Button>
         <Button
+          className={styles.google}
           onClick={async () => {
             await signIn("google", { redirect: false });
           }}>
+          <Icon strokeWidth={2} type="google" />
           Sign in via Google
         </Button>
         {/** 
@@ -49,9 +56,11 @@ export const LoginForm = () => (
         Sign in via Patreon
       </Button>*/}
         <Button
+          className={styles.reddit}
           onClick={async () => {
             await signIn("reddit", { redirect: false });
           }}>
+          <Icon strokeWidth={2} type="reddit" />
           Sign in via Reddit
         </Button>
         {/**
@@ -62,9 +71,11 @@ export const LoginForm = () => (
         Sign in via Spotify
       </Button>*/}
         <Button
+          className={styles.twitter}
           onClick={async () => {
             await signIn("twitter", { redirect: false });
           }}>
+          <Icon strokeWidth={2} type="twitter" />
           Sign in via Twitter
         </Button>
       </div>

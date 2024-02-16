@@ -6,4 +6,41 @@
 }
 .btn_con {
   max-width: 200px;
+  button {
+    justify-content: flex-start;
+    &:hover {
+      color: white;
+      opacity: 1;
+    }
+  }
+  .discord {
+    &:hover {
+      background-color: #5562ea;
+      border-color: #5562ea;
+    }
+  }
+  .github {
+    &:hover {
+      background-color: black;
+      border-color: black;
+    }
+  }
+  .google {
+    &:hover {
+      background-color: #31aa52;
+      border-color: #31aa52;
+    }
+  }
+  .reddit {
+    &:hover {
+      background-color: #f74300;
+      border-color: #f74300;
+    }
+  }
+  .twitter {
+    &:hover {
+      background-color: #1c96e9;
+      border-color: #1c96e9;
+    }
+  }
 }

@@ -6,8 +6,8 @@ interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode;
 }
 
-export const Button = ({ children, ...rest }: Props) => (
-  <button {...rest} className={styles.button}>
+export const Button = ({ children, className, ...rest }: Props) => (
+  <button {...rest} className={`${styles.button} ${className}`}>
     {children}
   </button>
 );
