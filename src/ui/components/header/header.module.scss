@@ -7,8 +7,10 @@
   align-items: center;
   gap: 10px;
 }
-.link:hover {
-  opacity: 0.5;
+.primary_menu .link:hover,
+.secondary_menu a:hover {
+  background-color: $secondary-color;
+  color: $primary-color;
 }
 .icon {
   width: 30px;
@@ -49,6 +51,9 @@
     display: flex;
     align-items: center;
     gap: 10px;
+    &:hover {
+      opacity: 0.5;
+    }
   }
   .menu_button {
     background-color: $tertiary-color;
@@ -104,10 +109,12 @@
   & > div {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 10px;
   }
   .link {
     position: relative;
+    border-radius: 3px;
+    padding: 5px;
   }
   .link_active::before {
     width: 5px;
@@ -122,12 +129,14 @@
 .secondary_menu {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 10px;
   align-self: flex-end;
   margin-top: auto;
   width: 100%;
-  a:hover {
-    opacity: 0.5;
+  a {
+    width: 100%;
+    padding: 5px;
+    border-radius: 3px;
   }
 }
 
@@ -165,7 +174,7 @@
     padding-bottom: 10px;
   }
   .primary_menu {
-    gap: 0px;
+    gap: 0;
     margin-top: 10px;
     .link,
     .dropdown {
@@ -176,7 +185,7 @@
       border-bottom: none;
     }
     & > div {
-      gap: 0px;
+      gap: 0;
     }
     .link_active::before {
       height: 50%;

@@ -27,12 +27,9 @@ const Header = async () => {
         {/**@todo Add secondary menu as a footer on mobile */}
         {/**@todo Add Attribution page link */}
         <hr />
-        <div>
-          <Link href="/terms-of-service">Terms of Service</Link>
-        </div>
-        <div>
-          <Link href="/privacy-policy">Privacy Policy</Link>
-        </div>
+        <Link href="/terms-of-service">Terms of Service</Link>
+
+        <Link href="/privacy-policy">Privacy Policy</Link>
       </nav>
     </header>
   );
