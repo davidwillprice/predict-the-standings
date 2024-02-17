@@ -21,7 +21,10 @@ export const AccessibilityOptions = () => {
   }
 
   return (
-    <Button onClick={() => setTheme(theme === "light" ? "dark" : "light")}>
+    <Button
+      onClick={() =>
+        setTheme(theme === "light" || theme === undefined ? "dark" : "light")
+      }>
       <Icon
         type={theme === "light" || theme === undefined ? "moon" : "sun"}
         strokeWidth={2}></Icon>
