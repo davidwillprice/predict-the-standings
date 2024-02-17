@@ -49,7 +49,7 @@ const Page = async () => {
         />*/
         <>
           <PanelHeading>
-            <h1>Formula 1 - Leaderboard</h1>
+            <h1>Formula 1 {season} - Leaderboard</h1>
           </PanelHeading>
           <Panel>
             <p>

@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import { getServerSession } from "next-auth/next";
 import { redirect } from "next/navigation";
 
-import { entrants } from "@data/formula-1/2023";
+import { entrants } from "@data/formula-1/2024";
 import { sortEntrantsAlphabetically } from "@lib/misc";
 import { getPredictionTable } from "@lib/db-functions";
 import { authOptions } from "@lib/auth";
