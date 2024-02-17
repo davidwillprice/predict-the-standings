@@ -6,6 +6,15 @@
   justify-content: center;
   align-items: center;
 }
+.text_center {
+  text-align: center;
+}
+.bold {
+  font-weight: 500;
+}
+.font_lg {
+  font-size: 17px;
+}
 
 @media (max-width: $mobile-menu-breakpoint) {
   html .mobile_hide {

@@ -1,4 +1,8 @@
 .editable_prediction_table {
+  table {
+    margin: 0 auto;
+    width: 100%;
+  }
   [data-drop-target] {
     height: 30px;
   }

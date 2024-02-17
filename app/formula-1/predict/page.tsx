@@ -13,6 +13,8 @@ import { Panel } from "@components/panels/panel";
 import { PanelHeading } from "@components/panels/panel-heading";
 import { EditPredictions } from "@components/submit-predictions/edit-predictions";
 
+import commonStyles from "@styles/common.module.scss";
+
 import { Entrant } from "@custom-types/game-types";
 import { Sport } from "@custom-types/misc";
 
@@ -92,12 +94,15 @@ export default async function Page() {
                 Free Practice 1. You can edit your predictions up until the time
                 below:
               </p>
-              <p>{predictionFreezeTime.toLocaleString()}</p>
+              <p
+                className={`${commonStyles.text_center} ${commonStyles.bold} ${commonStyles.font_lg}`}>
+                {predictionFreezeTime.toLocaleString()}
+              </p>
             </Panel>
           </EditPredictions>
         ) : (
           <Panel>
-            <p style={{ textAlign: "center" }}>
+            <p className={commonStyles.text_center}>
               The {season} season has started and predictions are frozen!
             </p>
           </Panel>
