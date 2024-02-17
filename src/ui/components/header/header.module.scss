@@ -1,8 +1,6 @@
 @import "@styles/sass-variables.scss";
 
-.link,
-.dropdown__label,
-.dropdown {
+.link {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -15,20 +13,6 @@
 .icon {
   width: 30px;
   height: 30px;
-}
-.dropdown {
-  justify-content: space-between;
-  i {
-    border-width: 0 2px 2px 0;
-    padding: 5px;
-    border-color: var(--secondary-color);
-    transform: rotate(45deg) translate(-1px, -1px);
-    color: var(--secondary-color);
-    border-style: solid;
-  }
-  &.active i {
-    transform: rotate(225deg) translate(-1px, -1px);
-  }
 }
 
 .header {
@@ -149,8 +133,7 @@
   }
   .primary_menu {
     gap: 10px;
-    .link,
-    .dropdown {
+    .link {
       padding-top: 10px;
       padding-bottom: 10px;
     }
@@ -176,12 +159,10 @@
   .primary_menu {
     gap: 0;
     margin-top: 10px;
-    .link,
-    .dropdown {
+    .link {
       border-bottom: 2px solid var(--tertiary-color);
     }
-    .link:last-child,
-    .dropdown:last-child {
+    .link:last-child {
       border-bottom: none;
     }
     & > div {
@@ -194,8 +175,7 @@
   .secondary_menu {
     display: none;
   }
-  .link,
-  .dropdown {
+  .link {
     padding-top: 10px;
     padding-bottom: 10px;
   }

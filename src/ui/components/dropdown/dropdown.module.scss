@@ -1,0 +1,72 @@
+@import "@styles/sass-variables.scss";
+
+.dropdown {
+  justify-content: space-between;
+  width: 100%;
+  position: relative;
+  i {
+    border-width: 0 2px 2px 0;
+    padding: 5px;
+    border-color: var(--secondary-color);
+    transform: rotate(45deg) translate(-1px, -1px);
+    color: var(--secondary-color);
+    border-style: solid;
+  }
+  &.open i {
+    transform: rotate(225deg) translate(-1px, -1px);
+  }
+  &.open::before {
+    width: 5px;
+    height: 100%;
+    background-color: var(--secondary-color);
+    position: absolute;
+    content: "";
+    border-radius: 5px;
+    left: -7px;
+  }
+}
+
+.btn {
+  display: flex;
+  border: none;
+  font-size: 15px;
+  justify-content: space-between;
+  background-color: var(--primary-color);
+  width: 100%;
+  color: var(--secondary-color);
+  padding: 5px;
+  position: relative;
+  cursor: pointer;
+  align-items: center;
+  svg {
+    width: 30px;
+    height: 30px;
+  }
+}
+.label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.options {
+  margin: 5px 0 0 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+@media (min-width: $mobile-menu-breakpoint) and (max-width: $tablet-menu-breakpoint) {
+  .dropdown {
+    svg {
+      display: none;
+    }
+  }
+}
+@media (max-width: $mobile-menu-breakpoint) {
+  .dropdown {
+    &.open::before {
+      margin-top: 5px;
+      height: calc(100% - 5px);
+    }
+  }
+}
