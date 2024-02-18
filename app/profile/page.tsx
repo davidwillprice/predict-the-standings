@@ -7,6 +7,7 @@ import { authOptions } from "@lib/auth";
 import { Panel } from "@components/panels/panel";
 import { PanelHeading } from "@components/panels/panel-heading";
 import { SignOutBtn } from "@components/profile/sign-out";
+import { ProfileForm } from "@components/form/profile-form";
 
 import styles from "@components/form/form.module.scss";
 
@@ -22,26 +23,15 @@ export default async function ProfilePage() {
     return redirect("/get-started");
   }
 
-  const displayName = session?.user.displayName;
+  const initialDisplayName = session?.user.displayName;
+
   return (
     <>
       <PanelHeading>
         <h2>Account</h2>
       </PanelHeading>
       <Panel>
-        <form className={styles.form}>
-          {/**@todo Add ability to change display name, but limit changes to once a day or something to save DB calls */}
-          <div className={styles.input_container}>
-            <label htmlFor="name">Display Name</label>
-            <input
-              id="name"
-              type="name"
-              name="name"
-              value={displayName}
-              disabled
-            />
-          </div>
-        </form>
+        <ProfileForm initialDisplayName={initialDisplayName} />
         <hr />
         <div className={styles.formBtns}>
           {/**@todo Add delete account button */}

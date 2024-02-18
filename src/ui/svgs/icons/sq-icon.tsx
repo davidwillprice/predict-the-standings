@@ -3,6 +3,7 @@ export interface Props {
   type:
     | "accessibility"
     | "discord"
+    | "edit"
     | "error"
     | "f1"
     | "github"
@@ -59,6 +60,15 @@ const iconPaths = {
       <path d="M14 12a1 1 0 1 0 2 0a1 1 0 0 0 -2 0" />
       <path d="M15.5 17c0 1 1.5 3 2 3c1.5 0 2.833 -1.667 3.5 -3c.667 -1.667 .5 -5.833 -1.5 -11.5c-1.457 -1.015 -3 -1.34 -4.5 -1.5l-.972 1.923a11.913 11.913 0 0 0 -4.053 0l-.975 -1.923c-1.5 .16 -3.043 .485 -4.5 1.5c-2 5.667 -2.167 9.833 -1.5 11.5c.667 1.333 2 3 3.5 3c.5 0 2 -2 2 -3" />
       <path d="M7 16.5c3.5 1 6.5 1 10 0" />
+    </>
+  ),
+  edit: (
+    <>
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"
+      />
     </>
   ),
   error: (
@@ -273,6 +283,8 @@ export default function Icon({ strokeWidth, type }: Props) {
       ? iconPaths.accessibility
       : type === "discord"
       ? iconPaths.discord
+      : type === "edit"
+      ? iconPaths.edit
       : type === "error"
       ? iconPaths.error
       : type === "f1"
