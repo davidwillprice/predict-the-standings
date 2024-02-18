@@ -21,7 +21,9 @@
 }
 @media (max-width: $mobile-menu-breakpoint) {
   .content_container {
+    min-height: calc(100vh - $header-height-mobile);
     flex-direction: column;
+    justify-content: center;
     width: 100%;
     margin-top: $header-height-mobile;
     margin-left: 0px;

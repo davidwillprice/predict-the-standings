@@ -5,6 +5,7 @@ import { Panel } from "@components/panels/panel";
 import { PanelHeading } from "@components/panels/panel-heading";
 import { Button } from "@components/button/button";
 import Icon from "@svgs/icons/sq-icon";
+import { Countdown } from "@components/countdown/countdown";
 
 import { predictionFreezeTime } from "@data/formula-1/2024";
 
@@ -51,6 +52,7 @@ const Page = () => {
                 </Button>
               </Link>
             </div>
+            <Countdown deadline={predictionFreezeTime} />
           </>
         ) : (
           ""
