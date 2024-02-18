@@ -1,5 +1,15 @@
 @import "@styles/sass-variables.scss";
 
+.edit_predictions_con {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  gap: 5%;
+}
+
 .submitPredictionsCon {
   display: flex;
   flex-direction: column;
@@ -14,10 +24,8 @@
 }
 
 @media (max-width: $tablet-menu-breakpoint) {
-  .predictionTableCon {
-    order: 2;
-  }
-  .infoCon {
-    order: 1;
+  .edit_predictions_con {
+    flex-direction: column;
+    width: 100%;
   }
 }

@@ -2,6 +2,7 @@
 
 import { ReactNode, useState } from "react";
 
+import { PanelHeading } from "@components/panels/panel-heading";
 import { EditablePredictionTable } from "@components/submit-predictions/editable-prediction-table";
 import { SubmitPredictions } from "@components/submit-predictions/submit-predictions";
 
@@ -34,14 +35,12 @@ export const EditPredictions = ({
     setEntrantArr(entrantArr);
   };
   return (
-    <>
-      <div className={styles.predictionTableCon}>
-        <EditablePredictionTable
-          entrantArr={entrantArr}
-          handleEntrantState={handleEntrantState}
-        />
-      </div>
+    <div className={styles.edit_predictions_con}>
       <div className={styles.infoCon}>
+        <PanelHeading align="center">
+          <h1>Predict the F1 {season} Standings</h1>
+        </PanelHeading>
+
         {children}
         <SubmitPredictions
           entrantArr={entrantArr}
@@ -51,6 +50,12 @@ export const EditPredictions = ({
           predictionFreezeTime={predictionFreezeTime}
         />
       </div>
-    </>
+      <div className={styles.predictionTableCon}>
+        <EditablePredictionTable
+          entrantArr={entrantArr}
+          handleEntrantState={handleEntrantState}
+        />
+      </div>
+    </div>
   );
 };

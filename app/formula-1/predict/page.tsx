@@ -8,10 +8,9 @@ import { getPredictionTable } from "@lib/db-functions";
 import { authOptions } from "@lib/auth";
 import { predictionFreezeTime } from "@data/formula-1/2024";
 
-import { ContentContainer } from "@components/content-container/content-container";
 import { Panel } from "@components/panels/panel";
-import { PanelHeading } from "@components/panels/panel-heading";
 import { EditPredictions } from "@components/submit-predictions/edit-predictions";
+import { Countdown } from "@components/countdown/countdown";
 
 import commonStyles from "@styles/common.module.scss";
 
@@ -67,47 +66,42 @@ export default async function Page() {
 
   return (
     <>
-      <PanelHeading align="center">
-        <h1>Predict the Final Standings</h1>
-      </PanelHeading>
-      <ContentContainer>
-        {predictionFreezeTime.getTime() > new Date().getTime() ? (
-          <EditPredictions
-            initialEntrants={JSON.parse(JSON.stringify(entrantArr))}
-            predictionFreezeTime={predictionFreezeTime}
-            season={season}
-            sport={sport}
-            userId={userId}>
-            <Panel>
-              <p>
-                Drag the drivers into the order which you think they will be in
-                at the end of the&nbsp;season.
-              </p>
-              <p>
-                Any new drivers entering the season midway through won&apos;t be
-                included in the final standings.
-              </p>
-            </Panel>
-            <Panel>
-              <p>
-                Predictions will lock at the start of opening weekend&apos;s
-                Free Practice 1. You can edit your predictions up until the time
-                below:
-              </p>
-              <p
-                className={`${commonStyles.text_center} ${commonStyles.bold} ${commonStyles.font_lg}`}>
-                {predictionFreezeTime.toLocaleString()}
-              </p>
-            </Panel>
-          </EditPredictions>
-        ) : (
+      {predictionFreezeTime.getTime() > new Date().getTime() ? (
+        <EditPredictions
+          initialEntrants={JSON.parse(JSON.stringify(entrantArr))}
+          predictionFreezeTime={predictionFreezeTime}
+          season={season}
+          sport={sport}
+          userId={userId}>
           <Panel>
-            <p className={commonStyles.text_center}>
-              The {season} season has started and predictions are frozen!
+            <p>
+              Drag the drivers into the order which you think they will be in at
+              the end of the&nbsp;season.
+            </p>
+            <p>
+              Any new drivers entering the season midway through won&apos;t be
+              included in the final standings.
             </p>
           </Panel>
-        )}
-      </ContentContainer>
+          <Panel>
+            <p>
+              Predictions will lock at the start of opening weekend&apos;s Free
+              Practice 1. You can edit your predictions up until{" "}
+              {predictionFreezeTime.toDateString() +
+                " " +
+                predictionFreezeTime.toTimeString()}
+              .
+            </p>
+            <Countdown deadline={predictionFreezeTime} />
+          </Panel>
+        </EditPredictions>
+      ) : (
+        <Panel>
+          <p className={commonStyles.text_center}>
+            The {season} season has started and predictions are frozen!
+          </p>
+        </Panel>
+      )}
     </>
   );
 }
