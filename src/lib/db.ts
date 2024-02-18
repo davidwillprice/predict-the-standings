@@ -6,6 +6,7 @@ export const pool = new Pool({
   password: process.env.POSTGRES_PASSWORD as string,
   database: process.env.POSTGRES_DATABASE as string,
   max: 20,
+  /**Local DB doesn't want SSl, the live Vercel DB does*/
   ssl: process.env.NODE_ENV === "development" ? false : true,
   idleTimeoutMillis: 30000,
   connectionTimeoutMillis: 2000,

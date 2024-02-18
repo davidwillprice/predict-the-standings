@@ -58,7 +58,7 @@ export const GetStartedForm = ({ initialDisplayName }: Props) => {
     isSubmitting(true);
     try {
       /**Stop users from repeatedly submitting display names */
-      const dayInMilliseconds = 8;
+      const dayInMilliseconds = 86400000;
       if (
         session?.user.lastDisplayNameSubmissionDate &&
         new Date().getTime() -

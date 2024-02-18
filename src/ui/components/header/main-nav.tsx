@@ -23,6 +23,9 @@ export const MainNav = ({ children }: Props) => {
 
   const [mobMenuOpen, toggleMobMenu] = useState(false);
 
+  {
+    /**@todo Make mobile menu close if content outside of it is tapped */
+  }
   const handleMobMenuCick = () => {
     toggleMobMenu(!mobMenuOpen);
   };
