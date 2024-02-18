@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, FormEvent } from "react";
+import { useState, FormEvent, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 
 import { submitDisplayName } from "@lib/form-server-actions";
 import { validateDisplayName } from "@lib/form-functions";
@@ -32,15 +33,23 @@ export const GetStartedForm = ({ initialDisplayName }: Props) => {
     validateDisplayName(initialDisplayName)
   );
   const [submitting, isSubmitting] = useState(false);
-
+  const submissionSuccessful = useRef(false);
   const isDisplayNameValid = displayNameErrorArr.length === 0;
+
+  const redirect = () => {
+    setTimeout(() => {
+      router.push("/formula-1/predict");
+    }, 3000);
+  };
 
   const handleDisplayNameChange = (
     event: React.FormEvent<HTMLInputElement>
   ) => {
     const newDisplayName = event.currentTarget.value;
+    submissionSuccessful.current = false;
     setDisplayNameErrorArr(validateDisplayName(newDisplayName));
   };
+
   const handleDisplayNameSubmission = async (
     event: FormEvent<HTMLFormElement>
   ) => {
@@ -49,7 +58,7 @@ export const GetStartedForm = ({ initialDisplayName }: Props) => {
     isSubmitting(true);
     try {
       /**Stop users from repeatedly submitting display names */
-      const dayInMilliseconds = 86400000;
+      const dayInMilliseconds = 8;
       if (
         session?.user.lastDisplayNameSubmissionDate &&
         new Date().getTime() -
@@ -75,7 +84,9 @@ export const GetStartedForm = ({ initialDisplayName }: Props) => {
             lastDisplayNameSubmissionDate: new Date(),
           },
         });
-        router.push("/formula-1/predict");
+        isSubmitting(false);
+        redirect();
+        submissionSuccessful.current = true;
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -101,9 +112,14 @@ export const GetStartedForm = ({ initialDisplayName }: Props) => {
             defaultValue={initialDisplayName}
             autoComplete="off"
             aria-invalid={!isDisplayNameValid}
-            aria-describedby={isDisplayNameValid ? "false" : "displayNameError"}
+            aria-describedby={
+              isDisplayNameValid ? "displayNameSuccess" : "displayNameError"
+            }
           />
         </div>
+        {/**If the display name is invalid, show why
+         * If submitting, show a spinner. Else if the submission was successful, show a feedback banner. Else show a submission button
+         */}
         {!isDisplayNameValid ? (
           <FeedbackContainer iconType="error">
             {displayNameErrorArr.length === 1 ? (
@@ -122,6 +138,19 @@ export const GetStartedForm = ({ initialDisplayName }: Props) => {
         <div className={commonStyles.flexColCenter}>
           {submitting ? (
             <LoadingSpinner />
+          ) : submissionSuccessful.current ? (
+            <FeedbackContainer iconType="success">
+              <p id="displayNameSuccess">
+                Submission Successful! You will be redirected in 3 seconds.
+              </p>
+              <p id="displayNameSuccess">
+                If you aren&apos;t automatically redirected, please{" "}
+                <Link href="/formula-1/predict">
+                  follow this link to submit your predictions
+                </Link>
+                .
+              </p>
+            </FeedbackContainer>
           ) : (
             <div className={btnConstyles.single}>
               <button
