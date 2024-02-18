@@ -2,6 +2,7 @@
 
 import { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 import { submitDisplayName } from "@lib/form-server-actions";
 import { validateDisplayName } from "@lib/form-functions";
@@ -17,12 +18,14 @@ import btnConstyles from "@components/button/button-containers.module.scss";
 
 interface Props {
   initialDisplayName: string;
+  lastDisplayNameSubmissionDate: Date | undefined;
 }
 
 export const GetStartedForm = ({ initialDisplayName }: Props) => {
   const router = useRouter();
+  const { data: session, update } = useSession();
+
   /**@todo Don't pick something disruptive or offensive*/
-  /**@todo If they haven't submitted a valid display name, redirect them from the prediction pages until they have*/
   /**@todo If possible, don't let them submit their display name if they already have it*/
 
   const [displayNameErrorArr, setDisplayNameErrorArr] = useState(
@@ -38,7 +41,6 @@ export const GetStartedForm = ({ initialDisplayName }: Props) => {
     const newDisplayName = event.currentTarget.value;
     setDisplayNameErrorArr(validateDisplayName(newDisplayName));
   };
-
   const handleDisplayNameSubmission = async (
     event: FormEvent<HTMLFormElement>
   ) => {
@@ -46,14 +48,33 @@ export const GetStartedForm = ({ initialDisplayName }: Props) => {
     const formData = new FormData(event.currentTarget);
     isSubmitting(true);
     try {
+      /**Stop users from repeatedly submitting display names */
+      const dayInMilliseconds = 86400000;
+      if (
+        session?.user.lastDisplayNameSubmissionDate &&
+        new Date().getTime() -
+          Date.parse(session?.user.lastDisplayNameSubmissionDate) <
+          dayInMilliseconds
+      ) {
+        throw new Error("You can only submit a new display name once a day");
+      }
+
       const errorMessage = await submitDisplayName(formData);
       if (errorMessage) {
         throw new Error(errorMessage);
       } else {
         {
           /**@todo Show confirmation of display name for a few seconds before the redirect */
-          /**@todo Redirect to a page which shows a selection of possible predictions to submit */
+          /**@todo Once they've submitted a value display name, show links to currently running competitions, or have a message of something like 'Come back soon' if there are no predictions to make at the moment */
         }
+        await update({
+          ...session,
+          user: {
+            ...session?.user,
+            displayName: formData.get("displayName"),
+            lastDisplayNameSubmissionDate: new Date(),
+          },
+        });
         router.push("/formula-1/predict");
       }
     } catch (error: unknown) {
@@ -68,7 +89,9 @@ export const GetStartedForm = ({ initialDisplayName }: Props) => {
     <>
       <form className={styles.form} onSubmit={handleDisplayNameSubmission}>
         <div className={styles.input_container}>
-          <label htmlFor="displayName">Display Name:</label>
+          <label className={commonStyles.bold} htmlFor="displayName">
+            Display Name:
+          </label>
           <input
             required
             pattern="^[a-zA-Z0-9_]*$"
@@ -86,7 +109,7 @@ export const GetStartedForm = ({ initialDisplayName }: Props) => {
             {displayNameErrorArr.length === 1 ? (
               <p id="displayNameError">{displayNameErrorArr[0]}</p>
             ) : (
-              <ul id="displayNameError" className={styles.rules}>
+              <ul id="displayNameError" className={styles.rulesErrors}>
                 {displayNameErrorArr.map((error) => (
                   <li key={error}>{error}</li>
                 ))}

@@ -1,5 +1,10 @@
 @import "@styles/sass-variables.scss";
 
+.displayNameRules {
+  display: grid;
+  grid-template-columns: 60% 40%;
+  gap: 0 15px;
+}
 .form {
   width: 100%;
   max-width: 500px;
@@ -22,13 +27,19 @@
   justify-content: space-between;
   margin-bottom: 10px;
 }
-.rules {
+.rulesErrors {
   text-align: left;
 }
 .formBtns {
   text-align: center;
   margin: 15px auto 0;
   max-width: 200px;
+}
+
+@media (max-width: 1000px) {
+  .displayNameRules {
+    display: block;
+  }
 }
 
 @media (max-width: $mobile-menu-breakpoint) {
