@@ -4,4 +4,5 @@ export interface DbUser {
   email?: string | null;
   image?: string | null;
   display_name: string | null;
+  lastDisplayNameSubmissionDate: Date | null;
 }

@@ -26,7 +26,7 @@ export const validateDisplayName = (
 
   if (!/^[a-zA-Z0-9_]+$/.test(displayName))
     validationErrors.push(
-      "Only use alphanumeric characters, and underscores (_)"
+      "Only use alphanumeric characters and underscores (_)"
     );
 
   return validationErrors;
