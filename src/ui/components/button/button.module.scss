@@ -15,7 +15,7 @@
   color: var(--secondary-color);
   gap: 10px;
   font-weight: 500;
-  &:hover {
+  &:not(.disabled):hover {
     translate: 0 -2px;
     background-color: var(--secondary-color);
     border-color: var(--secondary-color);
