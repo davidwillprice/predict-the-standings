@@ -16,7 +16,7 @@ interface Props {
 const Page = async ({ searchParams }: Props) => {
   const session = await getServerSession(authOptions);
   if (session !== null) {
-    if (session?.user.displayName === null) {
+    if (!session?.user.displayName) {
       return redirect("/get-started");
     } else {
       {

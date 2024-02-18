@@ -26,7 +26,7 @@ export default async function Page() {
   const session = await getServerSession(authOptions);
   if (session == null) {
     return redirect("/login?error=login");
-  } else if (session?.user.displayName === null) {
+  } else if (!session?.user.displayName) {
     return redirect("/get-started");
   }
   const userId = session.user.id;
