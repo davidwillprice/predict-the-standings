@@ -29,3 +29,9 @@
     width: 100%;
   }
 }
+@media (max-width: $mobile-menu-breakpoint) {
+  .prediction_table_con {
+    width: 100%;
+    max-width: 400px;
+  }
+}

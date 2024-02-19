@@ -50,7 +50,7 @@ export const EditPredictions = ({
           predictionFreezeTime={predictionFreezeTime}
         />
       </div>
-      <div className={styles.predictionTableCon}>
+      <div className={styles.prediction_table_con}>
         <EditablePredictionTable
           entrantArr={entrantArr}
           handleEntrantState={handleEntrantState}
