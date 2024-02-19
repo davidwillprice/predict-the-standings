@@ -21,7 +21,7 @@
 }
 @media (max-width: $mobile-menu-breakpoint) {
   .content_container {
-    min-height: calc(100vh - $header-height-mobile);
+    min-height: calc(100vh - ($header-height-mobile + $footer-height-mobile));
     flex-direction: column;
     justify-content: center;
     width: 100%;

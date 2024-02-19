@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
-import Header from "@components/header/header";
 import { SessionProvider } from "@lib/next-auth-provider";
 import { Providers } from "./providers";
-
 import { Roboto } from "next/font/google";
+
+import Header from "@components/header/header";
+import { SecondaryMenu } from "@components/header/secondary-menu";
+
 import "@styles/globals.scss";
 import styles from "@styles/layout.module.scss";
 
@@ -35,6 +37,7 @@ export default function RootLayout({
             <div className={styles.content_container}>
               <main className={styles.main}>{children}</main>
             </div>
+            <SecondaryMenu type="footer" />
           </SessionProvider>
         </Providers>
       </body>
