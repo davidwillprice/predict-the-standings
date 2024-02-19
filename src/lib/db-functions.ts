@@ -56,7 +56,8 @@ export const submitDisplayNameQuery = async (
   userId: number
 ) => {
   const res = await query(`UPDATE users
-  SET display_name = '${submittedDisplayName}'
+  SET display_name = '${submittedDisplayName}',
+  last_display_name_submission = ${new Date().getTime()}
   WHERE id = ${userId}
     AND NOT EXISTS (
       SELECT ${userId}

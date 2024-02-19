@@ -24,6 +24,7 @@ export const authOptions: NextAuthOptions = {
           ...token,
           id: user.id,
           displayName: user.display_name,
+          lastDisplayNameSubmissionDate: user.last_display_name_submission,
         };
 
       /**useSession().update() has been triggered so merge the token with the new passed data */

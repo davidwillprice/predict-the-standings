@@ -19,7 +19,7 @@ import btnConstyles from "@components/button/button-containers.module.scss";
 
 interface Props {
   initialDisplayName: string;
-  lastDisplayNameSubmissionDate: Date | undefined;
+  lastDisplayNameSubmissionDate: number | undefined;
 }
 
 export const GetStartedForm = ({ initialDisplayName }: Props) => {
@@ -61,8 +61,7 @@ export const GetStartedForm = ({ initialDisplayName }: Props) => {
       const dayInMilliseconds = 86400000;
       if (
         session?.user.lastDisplayNameSubmissionDate &&
-        new Date().getTime() -
-          Date.parse(session?.user.lastDisplayNameSubmissionDate) <
+        new Date().getTime() - session?.user.lastDisplayNameSubmissionDate <
           dayInMilliseconds
       ) {
         throw new Error("You can only submit a new display name once a day");
@@ -73,7 +72,6 @@ export const GetStartedForm = ({ initialDisplayName }: Props) => {
         throw new Error(errorMessage);
       } else {
         {
-          /**@todo Show confirmation of display name for a few seconds before the redirect */
           /**@todo Once they've submitted a value display name, show links to currently running competitions, or have a message of something like 'Come back soon' if there are no predictions to make at the moment */
         }
         await update({
@@ -81,7 +79,7 @@ export const GetStartedForm = ({ initialDisplayName }: Props) => {
           user: {
             ...session?.user,
             displayName: formData.get("displayName"),
-            lastDisplayNameSubmissionDate: new Date(),
+            lastDisplayNameSubmissionDate: new Date().getTime(),
           },
         });
         isSubmitting(false);

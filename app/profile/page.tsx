@@ -10,6 +10,7 @@ import { SignOutBtn } from "@components/profile/sign-out";
 import { ProfileForm } from "@components/form/profile-form";
 
 import styles from "@components/form/form.module.scss";
+import commonStyles from "@styles/common.module.scss";
 
 export const metadata: Metadata = {
   title: "Profile | Predict The Standings",
@@ -31,6 +32,9 @@ export default async function ProfilePage() {
         <h2>Account</h2>
       </PanelHeading>
       <Panel>
+        <p className={commonStyles.text_center}>
+          <small>You can change your display name once a day</small>
+        </p>
         <ProfileForm initialDisplayName={initialDisplayName} />
         <hr />
         <div className={styles.formBtns}>

@@ -5,12 +5,12 @@ declare module "next-auth" {
     user: {
       id: string;
       displayName: string;
-      lastDisplayNameSubmissionDate: Date;
+      lastDisplayNameSubmissionDate: number;
     } & DefaultSession["user"];
   }
   interface User {
     id: string;
     display_name: string;
-    lastDisplayNameSubmissionDate: Date;
+    last_display_name_submission: number;
   }
 }
