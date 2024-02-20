@@ -40,15 +40,14 @@ export const getAllPredictionTablesQuery = async (
   season: string,
   sport: Sport
 ) => {
-  const res = await query(`SELECT 
+  console.log(`Running DB query at ${new Date().toISOString()}`);
+  return await query(`SELECT
   users.id, 
   users.display_name, 
   ${sport}_${season}.predictions
   FROM 
   users INNER JOIN ${sport}_${season} ON ${sport}_${season}.user_id = users.id 
   ORDER BY users.id;`);
-  console.log(`Running DB query at ${new Date().toISOString()}`);
-  return res.rows;
 };
 
 export const submitDisplayNameQuery = async (

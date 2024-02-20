@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { unstable_cache } from "next/cache";
 import { getServerSession } from "next-auth/next";
 
@@ -9,6 +10,7 @@ import { Panel } from "@components/panels/panel";
 import { PanelHeading } from "@components/panels/panel-heading";
 import { GameContainer } from "@components/game/game-container";
 import { PreSeasonContainer } from "@components/game/pre-season-container";
+import { FeedbackContainer } from "@components/feedback-container/feedback-container";
 
 import { Sport } from "@custom-types/misc";
 import { PredictionData } from "@custom-types/game-types";
@@ -30,18 +32,29 @@ const getCachedPredictionData = unstable_cache(
 );
 
 const Page = async () => {
+  let error = "";
   const session = await getServerSession(authOptions);
   const currentUserDisplayName = session?.user.displayName;
-  let predictionData: PredictionData | null | undefined;
+  let predictionData: PredictionData | undefined;
   try {
-    predictionData = await getCachedPredictionData();
-  } catch (_) {
-    //console.log("Error");
+    const res = await getCachedPredictionData();
+    if (typeof res === "string") {
+      error = res;
+    } else {
+      predictionData = res;
+    }
+  } catch (e: unknown) {
+    if (e instanceof Error) {
+      error = e.message;
+    }
+    error = "Unknown front-end error";
   }
   return (
     <>
-      {!predictionData ? (
-        <p>Unable to obtain prediction data</p>
+      {error || !predictionData ? (
+        <FeedbackContainer iconType={"error"}>
+          <p>{error}</p>
+        </FeedbackContainer>
       ) : predictionData.rounds.length < 1 ? (
         /**@todo Re-enable preseason container once properly built - Or could have the below text show as a modal and then underneath a placeholder of what the leaderboard will look like?
         <PreSeasonContainer

@@ -19,7 +19,8 @@ export const metadata: Metadata = {
 export default async function ProfilePage() {
   const session = await getServerSession(authOptions);
   if (session == null) return redirect("/login");
-  if (!session.user.displayName) return redirect("/get-started");
+  //**Stopping redirecting people without a display name as it seems to be causing issues */
+  //if (!session.user.displayName) return redirect("/get-started");
 
   const initialDisplayName = session?.user.displayName;
 

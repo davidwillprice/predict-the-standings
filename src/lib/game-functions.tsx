@@ -15,11 +15,11 @@ export const getAllPredictonData = async (
   rounds: Round[],
   season: string,
   sport: Sport
-): Promise<PredictionData | null> => {
-  let users = await getUserData(entrants, season, sport);
-
-  //**If getUsersData didn't generate valid data, return null so an error can be displayed in the UI */
-  if (!users) return null;
+): Promise<PredictionData | string> => {
+  let res = await getUserData(entrants, season, sport);
+  //**If getUsersData didn't generate valid Users, return error message */
+  if (typeof res === "string") return res;
+  let users = res;
 
   //**Creates an 'average' user */
   users.Average = new User("0", "Average", []);
@@ -46,10 +46,19 @@ const getUserData = async (
   entrants: Entrants,
   season: string,
   sport: Sport
-): Promise<Users | null> => {
-  const predictonDataRes = await getAllPredictionTablesQuery(season, sport);
+): Promise<Users | string> => {
+  let predictionDataRes;
+  try {
+    const res = await getAllPredictionTablesQuery(season, sport);
+    predictionDataRes = res.rows;
+  } catch (e: unknown) {
+    if (e instanceof Error) {
+      return e.message;
+    }
+    return "Unknown database error";
+  }
   let error = false;
-  const Users: Users = predictonDataRes.reduce((acc, user) => {
+  const Users: Users = predictionDataRes.reduce((acc, user) => {
     const dbId: string | null = user["id"];
     const dbDisplayName: string | null = user["display_name"];
     const dbPredictions: string[] | null = user["predictions"];
@@ -67,7 +76,7 @@ const getUserData = async (
       return {};
     }
   }, {} as Record<string, User>);
-  if (error) return null;
+  if (error) return "Unable construct users from database data";
   return Users;
 };
 
