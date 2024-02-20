@@ -44,8 +44,7 @@ export const PredictionTable = ({ selectedRound, selectedUser }: Props) => {
                 <span className={styles.name}>{rowData.entrant.name}</span>
                 <span className={styles.sName}>{rowData.entrant.sName}</span>
               </td>
-              {/**@todo Convert to <td> but avoid standard <td> styling */}
-              <div
+              <td
                 className={`${styles.pos_diff_cell} ${
                   rowData.posDiff > 0
                     ? styles.up
@@ -61,7 +60,7 @@ export const PredictionTable = ({ selectedRound, selectedUser }: Props) => {
                     <span>{Math.abs(rowData.posDiff)}</span>
                   </>
                 )}
-              </div>
+              </td>
             </tr>
           ))}
         </tbody>

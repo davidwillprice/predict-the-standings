@@ -31,6 +31,7 @@
 }
 
 .table_row {
+  position: relative;
   td {
     padding: 5px 5px;
     border: none;
@@ -45,8 +46,34 @@
     text-align: center;
   }
   .name_cell {
-    border-radius: 0 5px 5px 0;
     padding-right: 10px;
+  }
+  .pos_diff_cell {
+    border-radius: 0 5px 5px 0;
+    text-align: right;
+    height: 30px;
+    vertical-align: middle;
+    display: flex;
+    align-items: center;
+    padding-left: 8px;
+    padding-right: 10px;
+    justify-content: flex-start;
+    gap: 5px;
+    i {
+      border: solid var(--error-color);
+      border-width: 0 1.5px 1.5px 0;
+      display: inline-block;
+      padding: 3px;
+    }
+    &.up i {
+      transform: rotate(225deg) translate(-1px, -1px);
+    }
+    &.down i {
+      transform: rotate(45deg) translate(-2px, -2px);
+    }
+    &.perfect svg {
+      color: var(--success-color);
+    }
   }
 }
 
@@ -58,32 +85,6 @@
   display: block;
 }
 
-.pos_diff_cell {
-  text-align: right;
-  width: 35px;
-  height: 30px;
-  vertical-align: middle;
-  display: flex;
-  align-items: center;
-  padding-left: 8px;
-  justify-content: flex-start;
-  gap: 5px;
-  i {
-    border: solid var(--error-color);
-    border-width: 0 1.5px 1.5px 0;
-    display: inline-block;
-    padding: 3px;
-  }
-  &.up i {
-    transform: rotate(225deg) translate(-1px, -1px);
-  }
-  &.down i {
-    transform: rotate(45deg) translate(-2px, -2px);
-  }
-  &.perfect svg {
-    color: var(--success-color);
-  }
-}
 .sName {
   display: none;
 }
