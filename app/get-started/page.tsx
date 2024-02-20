@@ -17,14 +17,14 @@ export const metadata: Metadata = {
 
 export default async function ProfilePage() {
   const session = await getServerSession(authOptions);
-  if (session == null) {
+  if (!session || !session.user) {
     return redirect("/login?error=display-name");
   }
 
-  const name = session?.user?.name as string;
-  const email = session?.user?.email;
+  const name = session.user.name as string;
+  const email = session.user.email;
   const lastDisplayNameSubmissionDate: number | undefined =
-    session?.user?.lastDisplayNameSubmissionDate;
+    session.user.lastDisplayNameSubmissionDate;
 
   /**If the Next Auth gave an email address, use the first part of that as a suggested display name. Else use the user's name as Reddit provides their Reddit username there */
   /**@todo If they already have a display name, stop them trying to submit the same display name */

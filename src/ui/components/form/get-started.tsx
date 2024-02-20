@@ -97,7 +97,7 @@ export const GetStartedForm = ({ initialDisplayName }: Props) => {
   return (
     <>
       <form className={styles.form} onSubmit={handleDisplayNameSubmission}>
-        <div className={styles.input_container}>
+        <div className={styles.input_row}>
           <label className={commonStyles.bold} htmlFor="displayName">
             Display Name:
           </label>
