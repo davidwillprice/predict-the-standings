@@ -1,8 +1,8 @@
 import { Entrant, Entrants, Round } from "@custom-types/game-types";
 
-export const predictionFreezeTime = new Date("2024-02-29T11:30:00");
+const predictionFreezeTime = new Date("2024-02-29T11:30:00");
 
-export const entrants: Entrants = {
+const drivers: Entrants = {
   ham: new Entrant("Hamilton", "ham", 44, "#00d2be"),
   rus: new Entrant("Russell", "rus", 63, "#00d2be"),
   lec: new Entrant("Leclerc", "lec", 16, "#dc0000"),
@@ -25,18 +25,18 @@ export const entrants: Entrants = {
   sar: new Entrant("Sargeant", "sar", 2, "#37BEDD"),
 };
 
-/*  teams: {
-    mer: new Entrant("Mercedes", "mer", 1, "#00d2be"),
-    fer: new Entrant("Ferrari", "fer", 2, "#dc0000"),
-    rbr: new Entrant("Red Bull", "rbr", 3, "#00327d"),
-    mcl: new Entrant("McLaren", "mcl", 4, "#ff8700"),
-    alp: new Entrant("Alpine", "alp", 5, "#fa85b9"),
-    vca: new Entrant("Visa Cash App RB", "vca", 6, "#3726c5"),
-    ast: new Entrant("Aston Martin", "ast", 7, "#1B8E2D"),
-    has: new Entrant("Haas", "has", 8, "#909599"),
-    sta: new Entrant("Sauber", "sta", 9, "#21D800"),
-    wil: new Entrant("Williams", "wil", 10, "#37BEDD"),
-  },*/
+const teams: Entrants = {
+  mer: new Entrant("Mercedes", "mer", 1, "#00d2be"),
+  fer: new Entrant("Ferrari", "fer", 2, "#dc0000"),
+  rbr: new Entrant("Red Bull", "rbr", 3, "#00327d"),
+  mcl: new Entrant("McLaren", "mcl", 4, "#ff8700"),
+  alp: new Entrant("Alpine", "alp", 5, "#fa85b9"),
+  vca: new Entrant("Visa Cash App RB", "vca", 6, "#3726c5"),
+  ast: new Entrant("Aston Martin", "ast", 7, "#1B8E2D"),
+  has: new Entrant("Haas", "has", 8, "#909599"),
+  sta: new Entrant("Sauber", "sta", 9, "#21D800"),
+  wil: new Entrant("Williams", "wil", 10, "#37BEDD"),
+};
 
 const {
   ham,
@@ -59,9 +59,9 @@ const {
   gas,
   sar,
   rus,
-} = entrants;
+} = drivers;
 
-export let rounds = [
+let rounds: Round[] = [
   // new Round("Bahrain GP", [
   //   ver,
   //   per,
@@ -239,3 +239,10 @@ export let rounds = [
   //   ric,
   // ]),
 ];
+
+export const seasonData2024 = {
+  rounds: rounds,
+  drivers: drivers,
+  teams: teams,
+  predictionFreezeTime: predictionFreezeTime,
+};

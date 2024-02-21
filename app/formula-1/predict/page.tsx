@@ -2,11 +2,10 @@ import { Metadata } from "next";
 import { getServerSession } from "next-auth/next";
 import { redirect } from "next/navigation";
 
-import { entrants } from "@data/formula-1/2024";
 import { sortEntrantsAlphabetically } from "@lib/misc";
 import { getPredictionTable } from "@lib/db-functions";
 import { authOptions } from "@lib/auth";
-import { predictionFreezeTime } from "@data/formula-1/2024";
+import { allSeasonData } from "@data/formula-1/season-data";
 
 import { Panel } from "@components/panels/panel";
 import { EditPredictions } from "@components/submit-predictions/edit-predictions";
@@ -28,6 +27,8 @@ export default async function Page() {
   } else if (!session?.user.displayName) {
     return redirect("/get-started");
   }
+
+  const { predictionFreezeTime, drivers: entrants } = allSeasonData["2024"];
   const userId = session.user.id;
   const sport: Sport = "f1";
   const season = "2024";
