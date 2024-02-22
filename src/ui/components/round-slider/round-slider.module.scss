@@ -7,11 +7,11 @@
   box-shadow: var(--box-shadow);
   width: calc(100% - ($header-width-desktop + 30px));
   padding: 15px;
-  margin: 15px 0 0 $header-width-desktop;
+  margin: 15px auto;
   position: fixed;
-  bottom: 15px;
+  bottom: 0px;
   max-width: 100%;
-  left: 15px;
+  left: $header-width-desktop;
   right: 15px;
 }
 .con {
@@ -75,12 +75,13 @@
 @media (max-width: $tablet-menu-breakpoint) {
   .round_footer {
     width: calc(100% - ($header-width-tablet + 30px));
-    margin: 15px 0 0 $header-width-tablet;
+    left: $header-width-tablet + 15px;
   }
 }
 
 @media (max-width: $mobile-menu-breakpoint) {
   .round_footer {
+    position: sticky;
     width: calc(100% - 20px);
     margin: 10px auto 0;
     left: 10px;

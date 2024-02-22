@@ -16,7 +16,7 @@ export const RoundSlider = ({
   const onChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     changeRound(+event.target.value);
   };
-
+  /**@todo URGENT Fix round slider covering mobile footer */
   return (
     <div
       className={styles.round_footer}
