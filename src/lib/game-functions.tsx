@@ -61,7 +61,7 @@ const getUserData = async (
   const Users: Users = predictionDataRes.reduce((acc, user) => {
     const dbId: string | null = user["id"];
     const dbDisplayName: string | null = user["display_name"];
-    const dbPredictions: string[] | null = user["predictions"];
+    const dbPredictions: string[] | null = user["driver_predictions"];
     if (dbId && dbDisplayName && dbPredictions) {
       return {
         ...acc,

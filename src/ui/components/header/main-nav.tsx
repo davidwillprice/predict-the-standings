@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 import { ReactNode } from "react";
 import Link from "next/link";
 
-import { predictionFreezeTime } from "@data/formula-1/2024";
+import { allSeasonData } from "@data/formula-1/season-data";
 
 import Icon from "@svgs/icons/sq-icon";
 import HeaderLink from "@components/header/header-link";
@@ -34,6 +34,7 @@ export const MainNav = ({ children }: Props) => {
     toggleMobMenu(false);
   }, [pathname]);
 
+  const { predictionFreezeTime } = allSeasonData["2024"];
   const predictionLinks = pathname.startsWith("/formula-1") ? (
     <>
       {/**@todo Add year selector*/}

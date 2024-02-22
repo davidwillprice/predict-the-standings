@@ -7,7 +7,7 @@ import { Button } from "@components/button/button";
 import Icon from "@svgs/icons/sq-icon";
 import { Countdown } from "@components/countdown/countdown";
 
-import { predictionFreezeTime } from "@data/formula-1/2024";
+import { allSeasonData } from "@data/formula-1/season-data";
 
 import styles from "@components/button/button-containers.module.scss";
 
@@ -16,6 +16,7 @@ export const metadata: Metadata = {
 };
 
 const Page = () => {
+  const { predictionFreezeTime } = allSeasonData["2024"];
   return (
     <>
       <PanelHeading>

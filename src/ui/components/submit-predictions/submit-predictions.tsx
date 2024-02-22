@@ -1,6 +1,5 @@
 "use client";
 import { useState, useRef } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 import { Button } from "@components/button/button";
@@ -9,7 +8,7 @@ import { FeedbackContainer } from "@components/feedback-container/feedback-conta
 import Icon from "@svgs/icons/sq-icon";
 
 import { Entrant } from "@custom-types/game-types";
-import { submitPredictions } from "@lib/db-functions";
+import { submitPredictionsQuery } from "@lib/db-functions";
 
 import { Sport } from "@custom-types/misc";
 
@@ -17,25 +16,26 @@ import styles from "@components/submit-predictions/submit-predictions.module.scs
 import btnConstyles from "@components/button/button-containers.module.scss";
 
 interface Props {
-  entrantArr: Entrant[];
+  driverArr: Entrant[];
   predictionFreezeTime: Date;
   season: string;
   sport: Sport;
+  teamArr: Entrant[];
   userId: number;
 }
 
 export const SubmitPredictions = ({
-  entrantArr,
+  driverArr,
   predictionFreezeTime,
   season,
   sport,
+  teamArr,
   userId,
 }: Props) => {
-  const router = useRouter();
-
   const submissionSuccessful = useRef(false);
   const [submitting, isSubmitting] = useState(false);
-  const [savedEntrantArr, setSavedEntrantArr] = useState(entrantArr);
+  const [savedDriverArr, setSavedDriverArr] = useState(driverArr);
+  const [savedTeamArr, setSavedTeamArr] = useState(teamArr);
   const [error, isError] = useState<string | null>(null);
 
   const submissionHandler = async () => {
@@ -50,8 +50,9 @@ export const SubmitPredictions = ({
     }
 
     try {
-      await submitPredictions(entrantArr, season, sport, userId);
-      setSavedEntrantArr(entrantArr);
+      await submitPredictionsQuery(driverArr, season, sport, teamArr, userId);
+      setSavedDriverArr(driverArr);
+      setSavedTeamArr(teamArr);
       submissionSuccessful.current = true;
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -61,7 +62,7 @@ export const SubmitPredictions = ({
     isSubmitting(false);
   };
 
-  if (savedEntrantArr !== entrantArr) {
+  if (savedDriverArr !== driverArr || savedTeamArr !== teamArr) {
     submissionSuccessful.current = false;
   }
 
@@ -71,7 +72,7 @@ export const SubmitPredictions = ({
    */
   return (
     <div className={styles.submitPredictionsCon}>
-      {savedEntrantArr !== entrantArr ? (
+      {savedDriverArr !== driverArr || savedTeamArr !== teamArr ? (
         submitting ? (
           <LoadingSpinner />
         ) : (

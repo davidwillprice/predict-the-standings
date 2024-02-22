@@ -15,6 +15,10 @@
 .font_lg {
   font-size: 17px;
 }
+.anchor {
+  padding-top: $header-height-mobile + 10px;
+  margin-top: -($header-height-mobile + 10px);
+}
 
 @media (max-width: $mobile-menu-breakpoint) {
   html .mobile_hide {

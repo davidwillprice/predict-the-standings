@@ -4,33 +4,36 @@ import { query } from "@lib/db";
 import { Entrant } from "@custom-types/game-types";
 import { Sport } from "@custom-types/misc";
 
-export const submitPredictions = async (
-  entrantArr: Entrant[],
+export const submitPredictionsQuery = async (
+  driverArr: Entrant[],
   season: string,
   sport: Sport,
+  teamArr: Entrant[],
   userId: number
 ) => {
-  await query(`INSERT INTO ${sport}_${season} (prediction_id, user_id, predictions)
-  VALUES (${userId}, ${userId}, ARRAY[${entrantArr.map(
+  await query(`INSERT INTO ${sport}_${season} (prediction_id, user_id, driver_predictions, team_predictions)
+  VALUES (${userId}, ${userId}, ARRAY[${driverArr.map(
     (entrant) => `'${entrant.sName}'`
-  )}])
+  )}], ARRAY[${teamArr.map((entrant) => `'${entrant.sName}'`)}])
   ON CONFLICT (prediction_id)
   DO UPDATE
-  SET user_id = ${userId}, predictions = ARRAY[${entrantArr.map(
+  SET user_id = ${userId}, driver_predictions = ARRAY[${driverArr.map(
+    (entrant) => `'${entrant.sName}'`
+  )}], team_predictions = ARRAY[${teamArr.map(
     (entrant) => `'${entrant.sName}'`
   )}]`);
 };
 
-export const getPredictionTable = async (
+export const getF1PredictionTablesQuery = async (
   season: string,
   sport: Sport,
   userId: number
 ) => {
-  const res = await query(`SELECT predictions
+  const res = await query(`SELECT driver_predictions, team_predictions
   FROM ${sport}_${season}
   WHERE prediction_id = ${userId}`);
   try {
-    return res.rows[0]["predictions"];
+    return res.rows[0];
   } catch (_) {
     return;
   }
@@ -44,7 +47,7 @@ export const getAllPredictionTablesQuery = async (
   return await query(`SELECT
   users.id, 
   users.display_name, 
-  ${sport}_${season}.predictions
+  ${sport}_${season}.driver_predictions
   FROM 
   users INNER JOIN ${sport}_${season} ON ${sport}_${season}.user_id = users.id 
   ORDER BY users.id;`);
