@@ -14,11 +14,13 @@ import styles from "@components/submit-predictions/editable-prediction-table.mod
 
 type Props = {
   entrantArr: Entrant[];
+  entrantType: string;
   handleEntrantState: (entrantArr: Entrant[]) => void;
 };
 
 export function EditablePredictionTable({
   entrantArr,
+  entrantType,
   handleEntrantState,
 }: Props) {
   const handleDragEnd = (result: DropResult) => {
@@ -39,7 +41,7 @@ export function EditablePredictionTable({
           <tr>
             <th colSpan={2}>Order</th>
             <th></th>
-            <th>Entrant</th>
+            <th>{entrantType}</th>
           </tr>
         </thead>
         <DragDropContext onDragEnd={handleDragEnd}>
@@ -68,7 +70,12 @@ export function EditablePredictionTable({
                             style={{ backgroundColor: entrant.color }}></span>
                         </td>
                         <td className={predictiontableStyles.name_cell}>
-                          {entrant.name}
+                          <span className={predictiontableStyles.name}>
+                            {entrant.name}
+                          </span>
+                          <span className={predictiontableStyles.sName}>
+                            {entrant.sName}
+                          </span>
                         </td>
                       </tr>
                     )}

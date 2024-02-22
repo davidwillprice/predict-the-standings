@@ -51,6 +51,7 @@
   }
   .name_cell {
     padding-right: 10px;
+    min-width: 105px;
   }
   .pos_diff_cell {
     text-align: right;
@@ -93,6 +94,11 @@
 }
 
 @media (max-width: 360px) {
+  .table_row {
+    .name_cell {
+      min-width: auto;
+    }
+  }
   .name {
     display: none;
   }

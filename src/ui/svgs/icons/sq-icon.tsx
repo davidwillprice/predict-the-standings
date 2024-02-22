@@ -24,7 +24,8 @@ export interface Props {
     | "sun"
     | "success"
     | "trophy"
-    | "twitter";
+    | "twitter"
+    | "up";
 }
 
 const iconPaths = {
@@ -247,7 +248,7 @@ const iconPaths = {
       <path
         strokeLinecap="round"
         strokeLinejoin="round"
-        d="m15 11.25-3-3m0 0-3 3m3-3v7.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+        d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5"
       />
     </>
   ),
@@ -273,6 +274,15 @@ const iconPaths = {
     <>
       <path stroke="none" d="M0 0h24v24H0z" fill="none" />
       <path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c0 -.249 1.51 -2.772 1.818 -4.013z" />
+    </>
+  ),
+  up: (
+    <>
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="m15 11.25-3-3m0 0-3 3m3-3v7.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+      />
     </>
   ),
 };
@@ -327,6 +337,8 @@ export default function Icon({ strokeWidth, type }: Props) {
       ? iconPaths.trophy
       : type === "twitter"
       ? iconPaths.twitter
+      : type === "up"
+      ? iconPaths.up
       : "";
   if (!content) {
     throw new Error("Icon type hasn't been correctly set");

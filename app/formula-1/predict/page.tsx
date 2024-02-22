@@ -3,7 +3,7 @@ import { getServerSession } from "next-auth/next";
 import { redirect } from "next/navigation";
 
 import { sortEntrantsAlphabetically } from "@lib/misc";
-import { getPredictionTable } from "@lib/db-functions";
+import { getF1PredictionTablesQuery } from "@lib/db-functions";
 import { authOptions } from "@lib/auth";
 import { allSeasonData } from "@data/formula-1/season-data";
 
@@ -28,56 +28,91 @@ export default async function Page() {
     return redirect("/get-started");
   }
 
-  const { predictionFreezeTime, drivers: entrants } = allSeasonData["2024"];
+  const { predictionFreezeTime, drivers, teams } = allSeasonData["2024"];
   const userId = session.user.id;
   const sport: Sport = "f1";
   const season = "2024";
 
-  const defaultEntrantsArr = sortEntrantsAlphabetically([
-    entrants.ham,
-    entrants.bot,
-    entrants.lec,
-    entrants.sai,
-    entrants.ver,
-    entrants.per,
-    entrants.alo,
-    entrants.oco,
-    entrants.hul,
-    entrants.mag,
-    entrants.nor,
-    entrants.pia,
-    entrants.ric,
-    entrants.str,
-    entrants.zho,
-    entrants.alb,
-    entrants.tsu,
-    entrants.gas,
-    entrants.sar,
-    entrants.rus,
+  const defaultDriverArr = sortEntrantsAlphabetically([
+    drivers.ham,
+    drivers.bot,
+    drivers.lec,
+    drivers.sai,
+    drivers.ver,
+    drivers.per,
+    drivers.alo,
+    drivers.oco,
+    drivers.hul,
+    drivers.mag,
+    drivers.nor,
+    drivers.pia,
+    drivers.ric,
+    drivers.str,
+    drivers.zho,
+    drivers.alb,
+    drivers.tsu,
+    drivers.gas,
+    drivers.sar,
+    drivers.rus,
   ]);
-  let entrantArr: Entrant[];
+  const defaultTeamArr = sortEntrantsAlphabetically([
+    teams.mer,
+    teams.fer,
+    teams.red,
+    teams.mcl,
+    teams.alp,
+    teams.rb,
+    teams.ast,
+    teams.has,
+    teams.sau,
+    teams.wil,
+  ]);
+  let driverArr: Entrant[];
+  let teamArr: Entrant[];
   try {
-    const dbPredictionTable = await getPredictionTable(season, sport, userId);
-    entrantArr = dbPredictionTable.map(
-      (entrantStr: string) => entrants[entrantStr]
+    const tablesQueryRow = await getF1PredictionTablesQuery(
+      season,
+      sport,
+      userId
     );
+    if (!tablesQueryRow) {
+      throw new Error();
+    }
+    /**Check if there is existing drivers predictions, and if not use an alphabetically ordered array of drivers */
+    if (tablesQueryRow["driver_predictions"]) {
+      driverArr = tablesQueryRow["driver_predictions"].map(
+        (entrantStr: string) => drivers[entrantStr]
+      );
+    } else {
+      driverArr = defaultDriverArr;
+    }
+    /**Check if there is existing teams predictions, and if not use an alphabetically ordered array of teams */
+    if (tablesQueryRow["team_predictions"] !== null) {
+      teamArr = tablesQueryRow["team_predictions"].map(
+        (entrantStr: string) => teams[entrantStr]
+      );
+    } else {
+      teamArr = defaultTeamArr;
+    }
   } catch (_) {
-    entrantArr = defaultEntrantsArr;
+    driverArr = defaultDriverArr;
+    teamArr = defaultTeamArr;
   }
 
   return (
     <>
       {predictionFreezeTime.getTime() > new Date().getTime() ? (
         <EditPredictions
-          initialEntrants={JSON.parse(JSON.stringify(entrantArr))}
+          initialDrivers={JSON.parse(JSON.stringify(driverArr))}
+          initialTeams={JSON.parse(JSON.stringify(teamArr))}
           predictionFreezeTime={predictionFreezeTime}
           season={season}
           sport={sport}
           userId={userId}>
           <Panel>
             <p>
-              Drag the drivers into the order which you think they will be in at
-              the end of the&nbsp;season.
+              Drag the drivers and teams into the order which you think they
+              will be in at the end of the&nbsp;season.
             </p>
             <p>
               Any new drivers entering the season midway through won&apos;t be
@@ -95,6 +130,9 @@ export default async function Page() {
             </p>
             <Countdown deadline={predictionFreezeTime} />
           </Panel>
+          <div
+            id="submit-predictions-con"
+            className={commonStyles.anchor}></div>
         </EditPredictions>
       ) : (
         <Panel>
