@@ -10,13 +10,13 @@ export const submitPredictions = async (
   sport: Sport,
   userId: number
 ) => {
-  await query(`INSERT INTO ${sport}_${season} (prediction_id, user_id, predictions)
+  await query(`INSERT INTO ${sport}_${season} (prediction_id, user_id, driver_predictions)
   VALUES (${userId}, ${userId}, ARRAY[${entrantArr.map(
     (entrant) => `'${entrant.sName}'`
   )}])
   ON CONFLICT (prediction_id)
   DO UPDATE
-  SET user_id = ${userId}, predictions = ARRAY[${entrantArr.map(
+  SET user_id = ${userId}, driver_predictions = ARRAY[${entrantArr.map(
     (entrant) => `'${entrant.sName}'`
   )}]`);
 };
@@ -26,11 +26,11 @@ export const getPredictionTable = async (
   sport: Sport,
   userId: number
 ) => {
-  const res = await query(`SELECT predictions
+  const res = await query(`SELECT driver_predictions
   FROM ${sport}_${season}
   WHERE prediction_id = ${userId}`);
   try {
-    return res.rows[0]["predictions"];
+    return res.rows[0]["driver_predictions"];
   } catch (_) {
     return;
   }
@@ -44,7 +44,7 @@ export const getAllPredictionTablesQuery = async (
   return await query(`SELECT
   users.id, 
   users.display_name, 
-  ${sport}_${season}.predictions
+  ${sport}_${season}.driver_predictions
   FROM 
   users INNER JOIN ${sport}_${season} ON ${sport}_${season}.user_id = users.id 
   ORDER BY users.id;`);
