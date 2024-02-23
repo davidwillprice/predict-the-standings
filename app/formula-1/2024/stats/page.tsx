@@ -2,6 +2,8 @@ import { Panel } from "@components/panels/panel";
 import { PanelHeading } from "@components/panels/panel-heading";
 
 const Page = () => {
+  /**@todo Stat for copying last years standings */
+  /**@todo Record how many times people update their standings for a '"Jack submitted X predictions, Y more than anybody else. Indecisive."' stat */
   return (
     <>
       <PanelHeading>

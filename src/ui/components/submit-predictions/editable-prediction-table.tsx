@@ -32,6 +32,7 @@ export function EditablePredictionTable({
     handleEntrantState([...newEntrantArr]);
   };
 
+  /**@todo Fix wierd glitching when entrants are put into place */
   return (
     <div
       id="prediction-table"
