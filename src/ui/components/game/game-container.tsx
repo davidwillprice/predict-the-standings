@@ -35,7 +35,7 @@ export const GameContainer = ({
   const selectedUserSetter = (displayName: string | null): User => {
     return displayName && users[displayName]
       ? users[displayName]
-      : rounds[roundIndex].leaderboards[0].user;
+      : rounds[roundIndex].leaderboards["driver"][0].user;
   };
 
   const [mode, setMode] = useState("leaderboard");
@@ -96,7 +96,7 @@ export const GameContainer = ({
             <StandingsTable
               className={styles.standings_table}
               selectedRound={roundIndex}
-              standingsArr={rounds[roundIndex].standings}
+              standingsArr={rounds[roundIndex].standings.driver}
             />
           </>
         ) : (
@@ -124,7 +124,7 @@ export const GameContainer = ({
               />
               <StandingsTable
                 selectedRound={roundIndex}
-                standingsArr={rounds[roundIndex].standings}
+                standingsArr={rounds[roundIndex].standings.driver}
                 className={styles.standings_table}
               />
             </div>

@@ -39,7 +39,7 @@ export const getF1PredictionTablesQuery = async (
   }
 };
 
-export const getAllPredictionTablesQuery = async (
+export const getAllF1PredictionTablesQuery = async (
   season: string,
   sport: Sport
 ) => {
@@ -47,7 +47,8 @@ export const getAllPredictionTablesQuery = async (
   return await query(`SELECT
   users.id, 
   users.display_name, 
-  ${sport}_${season}.driver_predictions
+  ${sport}_${season}.driver_predictions,
+  ${sport}_${season}.team_predictions
   FROM 
   users INNER JOIN ${sport}_${season} ON ${sport}_${season}.user_id = users.id 
   ORDER BY users.id;`);

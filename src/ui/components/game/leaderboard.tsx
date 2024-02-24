@@ -31,7 +31,7 @@ export const Leaderboard = ({
           </tr>
         </thead>
         <tbody>
-          {rounds[roundIndex].leaderboards.map((row, index) => (
+          {rounds[roundIndex].leaderboards.driver.map((row, index) => (
             <tr
               key={row.user.displayName}
               className={`${predictStyles.table_row} ${styles.table_row}`}
@@ -53,7 +53,7 @@ export const Leaderboard = ({
               </td>
               <td>{`${row.percentCorrect}%`}</td>
               <td className={styles.perfect_positions}>
-                {row.user.season[roundIndex].diffCounts[0]}
+                {row.user.season.driver[roundIndex].diffCounts[0]}
               </td>
             </tr>
           ))}

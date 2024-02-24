@@ -8,13 +8,17 @@ export class User {
   id: string;
   displayName: string;
   information: string;
-  predictions: Entrant[];
-  season: RoundPerformance[];
-  constructor(id: string, displayName: string, predictions: Entrant[]) {
+  predictions: { [key: string]: Entrant[] };
+  season: { [key: string]: RoundPerformance[] };
+  constructor(
+    id: string,
+    displayName: string,
+    predictions: { [key: string]: Entrant[] }
+  ) {
     this.id = id;
     this.displayName = displayName;
     this.predictions = predictions;
-    this.season = [];
+    this.season = {};
     this.information = "";
   }
 }
@@ -40,15 +44,15 @@ export interface Entrants {
 }
 
 export class Round {
+  entrantDiffTotals: { [key: string]: EntrantDiffTotal[] };
+  leaderboards: { [key: string]: Leaderboard[] };
+  standings: { [key: string]: Entrant[] };
   trackName;
-  standings;
-  leaderboards: Leaderboards;
-  entrantDiffTotals: EntrantDiffTotal[];
-  constructor(trackName: string, driverStandings: Entrant[]) {
+  constructor(trackName: string, standings: {}) {
     this.trackName = trackName;
-    this.standings = driverStandings;
-    this.leaderboards = [];
-    this.entrantDiffTotals = [];
+    this.standings = standings;
+    this.leaderboards = {};
+    this.entrantDiffTotals = {};
   }
 }
 
@@ -56,7 +60,6 @@ interface EntrantDiffTotal {
   entrant: Entrant;
   diffTotal: number;
 }
-type Leaderboards = Leaderboard[];
 
 export type Leaderboard = {
   user: User;

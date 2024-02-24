@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { unstable_cache } from "next/cache";
 import { getServerSession } from "next-auth/next";
 
@@ -17,13 +16,13 @@ import { PredictionData } from "@custom-types/game-types";
 
 const season = "2024";
 const sport: Sport = "f1";
-const { drivers, rounds } = allSeasonData["2024"];
+const { drivers, teams, rounds } = allSeasonData["2024"];
 
 const getCachedPredictionData = unstable_cache(
   /**@todo Instead of it being time based, revalidate based on when the website is deployed as that's how I'll be adding new race data */
   async () => {
     try {
-      return await getAllPredictonData(drivers, rounds, season, sport);
+      return await getAllPredictonData(drivers, teams, rounds, season, sport);
     } catch (_) {
       console.log("Failed to getAllPredictonData()");
     }
