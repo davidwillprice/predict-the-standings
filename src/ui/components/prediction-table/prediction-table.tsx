@@ -10,10 +10,10 @@ interface Props {
 }
 
 export const PredictionTable = ({ selectedRound, selectedUser }: Props) => {
-  const tableData = selectedUser.season[selectedRound].diffs;
+  const tableData = selectedUser.season.driver[selectedRound].diffs;
   const accuracy = calcPredictionsAccuracy(
-    selectedUser.predictions.length,
-    selectedUser.season[selectedRound].diffTotal
+    selectedUser.predictions.driver.length,
+    selectedUser.season.driver[selectedRound].diffTotal
   );
   return (
     <div className={styles.prediction_table}>
