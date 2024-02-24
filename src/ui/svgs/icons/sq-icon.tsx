@@ -3,6 +3,7 @@ export interface Props {
   type:
     | "accessibility"
     | "discord"
+    | "driver"
     | "edit"
     | "error"
     | "f1"
@@ -25,7 +26,8 @@ export interface Props {
     | "success"
     | "trophy"
     | "twitter"
-    | "up";
+    | "up"
+    | "wrenchScrewdriver";
 }
 
 const iconPaths = {
@@ -61,6 +63,13 @@ const iconPaths = {
       <path d="M14 12a1 1 0 1 0 2 0a1 1 0 0 0 -2 0" />
       <path d="M15.5 17c0 1 1.5 3 2 3c1.5 0 2.833 -1.667 3.5 -3c.667 -1.667 .5 -5.833 -1.5 -11.5c-1.457 -1.015 -3 -1.34 -4.5 -1.5l-.972 1.923a11.913 11.913 0 0 0 -4.053 0l-.975 -1.923c-1.5 .16 -3.043 .485 -4.5 1.5c-2 5.667 -2.167 9.833 -1.5 11.5c.667 1.333 2 3 3.5 3c.5 0 2 -2 2 -3" />
       <path d="M7 16.5c3.5 1 6.5 1 10 0" />
+    </>
+  ),
+  driver: (
+    <>
+      {" "}
+      <path d="M21.256,8.382C21.555,9.316 22.546,17.497 22.138,19.05C21.679,20.798 21.391,23.375 18.066,22.146C13.976,20.694 3.746,17.113 2.921,16.697C1.546,12.996 1.704,6.936 4.101,5.54C3.871,5.139 3.289,3.92 3.16,3.625C4.731,2.054 9.691,1.533 11.912,1.533C14.841,1.533 17.487,2.845 19.29,4.909C20.166,5.911 20.842,7.09 21.256,8.382Z" />
+      <path d="M22.204,16.608C20.681,16.315 18.883,15.554 16.722,16.03C14.463,15.655 10.885,12.119 12.972,9.874C14.071,8.83 16.456,10.86 21.657,10.818" />
     </>
   ),
   edit: (
@@ -285,6 +294,15 @@ const iconPaths = {
       />
     </>
   ),
+  wrenchScrewdriver: (
+    <>
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M11.42 15.17 17.25 21A2.652 2.652 0 0 0 21 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 1 1-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 0 0 4.486-6.336l-3.276 3.277a3.004 3.004 0 0 1-2.25-2.25l3.276-3.276a4.5 4.5 0 0 0-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437 1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008Z"
+      />
+    </>
+  ),
 };
 
 export default function Icon({ strokeWidth, type }: Props) {
@@ -293,6 +311,8 @@ export default function Icon({ strokeWidth, type }: Props) {
       ? iconPaths.accessibility
       : type === "discord"
       ? iconPaths.discord
+      : type === "driver"
+      ? iconPaths.driver
       : type === "edit"
       ? iconPaths.edit
       : type === "error"
@@ -339,6 +359,8 @@ export default function Icon({ strokeWidth, type }: Props) {
       ? iconPaths.twitter
       : type === "up"
       ? iconPaths.up
+      : type === "wrenchScrewdriver"
+      ? iconPaths.wrenchScrewdriver
       : "";
   if (!content) {
     throw new Error("Icon type hasn't been correctly set");
