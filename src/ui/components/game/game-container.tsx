@@ -8,6 +8,8 @@ import { PredictionTable } from "@components/prediction-table/prediction-table";
 import { StandingsTable } from "@components/prediction-table/standings-table";
 import { RoundSlider } from "@components/round-slider/round-slider";
 import { Button } from "@components/button/button";
+import Icon from "@ui/svgs/icons/sq-icon";
+import btnStyles from "@components/button/button.module.scss";
 
 import styles from "@components/game/game-container.module.scss";
 
@@ -107,7 +109,7 @@ export const GameContainer = ({
     setSelectedUser(setInitialUser(currentSearchParams));
   }, [currentSearchParams]);
 
-  /**Updates round in state and query string */
+  /**Updates round in query string */
   const changeRoundHandler = (newRoundIndex: number) => {
     /**Uses router.replace() rather than router.push() as I don't want round chnages clogging up the user history */
     router.replace(
@@ -115,13 +117,19 @@ export const GameContainer = ({
         "?" +
         createQueryString("round", (newRoundIndex + 1).toString())
     );
-    setRoundIndex(newRoundIndex);
   };
 
-  /**Updates user in state and query string */
+  /**Updates entrantType in query string */
+  const changeEntrantTypeHandler = () => {
+    const newEntrantType = entrantType === "team" ? "driver" : "constructors";
+    router.push(
+      pathname + "?" + createQueryString("leaderboard", newEntrantType)
+    );
+  };
+
+  /**Updates user in query string */
   const changeSelectedUserHandler = (displayName: string) => {
     router.push(pathname + "?" + createQueryString("user", displayName));
-    setSelectedUser(users[displayName]);
   };
 
   return (
@@ -187,6 +195,13 @@ export const GameContainer = ({
           changeRound={changeRoundHandler}
         />
       )}
+      <Button
+        className={`${btnStyles.button} ${styles.switchEntrantTypeBtn}`}
+        onClick={changeEntrantTypeHandler}>
+        <Icon type={entrantType === "team" ? "driver" : "f1"} strokeWidth={2} />
+        Switch to {entrantType === "team" ? "Drivers" : "Constructors"}{" "}
+        Leaderboard
+      </Button>
     </>
   );
 };

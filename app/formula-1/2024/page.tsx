@@ -10,8 +10,6 @@ import { PanelHeading } from "@components/panels/panel-heading";
 import { GameContainer } from "@components/game/game-container";
 import { PreSeasonContainer } from "@components/game/pre-season-container";
 import { FeedbackContainer } from "@components/feedback-container/feedback-container";
-import Icon from "@ui/svgs/icons/sq-icon";
-import { Button } from "@components/button/button";
 
 import { Sport } from "@custom-types/misc";
 import { PredictionData } from "@custom-types/game-types";
@@ -90,25 +88,12 @@ const Page = async ({ searchParams }: Props) => {
           rounds={JSON.parse(JSON.stringify(predictionData.rounds))}
           currentSearchParams={searchParams}
           users={JSON.parse(JSON.stringify(predictionData.users))}>
-          <div style={{ display: "flex" }}>
-            <div>
-              {heading}
-              <p>
-                Select players to view their predictions and compare them to the
-                actual standings.
-              </p>
-            </div>
-            <div>
-              {/**@todo implement an additional button to change the entrant type
-              <Button>
-                <Icon type="driver" strokeWidth={2} />
-                Drivers
-              </Button>
-              <Button>
-                <Icon type="wrenchScrewdriver" strokeWidth={2} />
-                Constructors
-              </Button> */}
-            </div>
+          <div>
+            {heading}
+            <p>
+              Select players to view their predictions and compare them to the
+              actual standings.
+            </p>
           </div>
         </GameContainer>
       )}

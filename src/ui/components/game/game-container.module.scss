@@ -25,6 +25,12 @@
   gap: 20px;
 }
 
+@media (min-width: 800px) {
+  .switchEntrantTypeBtn {
+    display: none;
+  }
+}
+
 @media (max-width: 800px) {
   .leaderboard_mode {
     .standings_table {
@@ -39,5 +45,8 @@
   .tables {
     width: 100%;
     justify-content: center;
+  }
+  .switchEntrantTypeBtn {
+    margin-top: 20px;
   }
 }
