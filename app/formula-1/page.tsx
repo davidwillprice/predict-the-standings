@@ -25,18 +25,18 @@ const Page = () => {
       <Panel>
         {/**@todo Add text for after the season has started */}
         <p>
-          Compete against people around the world to Predict The Standings for
-          the 2024 F1 Season.
+          Compete against people around the world to predict the driver and
+          constructor standings for the 2024 F1 Season.
         </p>
         <ul>
           <li>
-            The leaderboard will be updated after each round so you can see how
+            The leaderboards will be updated after each round so you can see how
             your predictions are performing throughout the season.
           </li>
           <li>
             View stats and trivia on how controversial your each of predictions
             are, and how accurately players have predicted each driver&apos;s
-            standing.
+            and constructor&apos;s standing.
           </li>
         </ul>
         {predictionFreezeTime.getTime() > new Date().getTime() ? (
@@ -59,11 +59,17 @@ const Page = () => {
           ""
         )}
         <hr />
-        <div className={styles.triple}>
+        <div className={styles.quadruple}>
           <Link href="/formula-1/2024">
             <Button>
-              <Icon strokeWidth={2} type="group" />
-              Leaderboard
+              <Icon strokeWidth={2} type="driver" />
+              Drivers Leaderboard
+            </Button>
+          </Link>
+          <Link href="/formula-1/2024/?leaderboard=constructors">
+            <Button>
+              <Icon strokeWidth={2} type="f1" />
+              Constructors Leaderboard
             </Button>
           </Link>
           <Link href="/formula-1/2024/stats">

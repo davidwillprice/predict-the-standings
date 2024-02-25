@@ -14,6 +14,12 @@
     width: 100%;
   }
 }
+.quadruple {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0 20px;
+  align-items: center;
+}
 .double {
   max-width: 500px;
 }
@@ -24,6 +30,11 @@
     a {
       width: auto;
     }
+  }
+  .quadruple {
+    display: block;
+    max-width: 300px;
+    margin: 0 auto;
   }
 }
 @media (max-width: $mobile-menu-breakpoint) {
