@@ -5,6 +5,7 @@ import { Round } from "@custom-types/game-types";
 import Icon from "@ui/svgs/icons/sq-icon";
 
 interface Props {
+  entrantType: string;
   lastUpdated: Date | string;
   rounds: Round[];
   roundIndex: number;
@@ -13,6 +14,7 @@ interface Props {
 
 export const Leaderboard = ({
   changeSelectedUserHandler,
+  entrantType,
   lastUpdated,
   rounds,
   roundIndex,
@@ -31,7 +33,7 @@ export const Leaderboard = ({
           </tr>
         </thead>
         <tbody>
-          {rounds[roundIndex].leaderboards.driver.map((row, index) => (
+          {rounds[roundIndex].leaderboards[entrantType].map((row, index) => (
             <tr
               key={row.user.displayName}
               className={`${predictStyles.table_row} ${styles.table_row}`}
@@ -53,7 +55,7 @@ export const Leaderboard = ({
               </td>
               <td>{`${row.percentCorrect}%`}</td>
               <td className={styles.perfect_positions}>
-                {row.user.season.driver[roundIndex].diffCounts[0]}
+                {row.user.season[entrantType][roundIndex].diffCounts[0]}
               </td>
             </tr>
           ))}

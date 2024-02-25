@@ -5,15 +5,20 @@ import Icon from "@ui/svgs/icons/sq-icon";
 import styles from "@components/prediction-table/prediction-table.module.scss";
 
 interface Props {
+  entrantType: string;
   selectedRound: number;
   selectedUser: User;
 }
 
-export const PredictionTable = ({ selectedRound, selectedUser }: Props) => {
-  const tableData = selectedUser.season.driver[selectedRound].diffs;
+export const PredictionTable = ({
+  entrantType,
+  selectedRound,
+  selectedUser,
+}: Props) => {
+  const tableData = selectedUser.season[entrantType][selectedRound].diffs;
   const accuracy = calcPredictionsAccuracy(
-    selectedUser.predictions.driver.length,
-    selectedUser.season.driver[selectedRound].diffTotal
+    selectedUser.predictions[entrantType].length,
+    selectedUser.season[entrantType][selectedRound].diffTotal
   );
   return (
     <div className={styles.prediction_table}>

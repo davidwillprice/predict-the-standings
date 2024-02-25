@@ -3,16 +3,11 @@ import type { Entrant } from "@custom-types/game-types";
 import styles from "@components/prediction-table/prediction-table.module.scss";
 
 interface Props {
-  selectedRound: number;
   standingsArr: Entrant[];
   className: string;
 }
 
-export const StandingsTable = ({
-  className,
-  selectedRound,
-  standingsArr,
-}: Props) => {
+export const StandingsTable = ({ className, standingsArr }: Props) => {
   return (
     <div className={`${styles.prediction_table} ${className}`}>
       <h4 className={styles.heading}>Actual Standings</h4>

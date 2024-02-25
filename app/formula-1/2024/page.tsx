@@ -10,6 +10,8 @@ import { PanelHeading } from "@components/panels/panel-heading";
 import { GameContainer } from "@components/game/game-container";
 import { PreSeasonContainer } from "@components/game/pre-season-container";
 import { FeedbackContainer } from "@components/feedback-container/feedback-container";
+import Icon from "@ui/svgs/icons/sq-icon";
+import { Button } from "@components/button/button";
 
 import { Sport } from "@custom-types/misc";
 import { PredictionData } from "@custom-types/game-types";
@@ -31,7 +33,11 @@ const getCachedPredictionData = unstable_cache(
   { revalidate: 3600 }
 );
 
-const Page = async () => {
+interface Props {
+  searchParams: { [key: string]: string | string[] | undefined };
+}
+
+const Page = async ({ searchParams }: Props) => {
   let error = "";
   const session = await getServerSession(authOptions);
   const currentUserDisplayName = session?.user.displayName;
@@ -49,6 +55,15 @@ const Page = async () => {
     }
     error = "Unknown front-end error";
   }
+
+  const heading = (
+    <h1>
+      Formula 1 {season} -{" "}
+      {searchParams.leaderboard === "constructors" ? "Constructors" : "Drivers"}{" "}
+      Leaderboard
+    </h1>
+  );
+
   return (
     <>
       {error || !predictionData ? (
@@ -61,14 +76,12 @@ const Page = async () => {
           users={JSON.parse(JSON.stringify(predictionData.users))}
         />*/
         <>
-          <PanelHeading>
-            <h1>Formula 1 {season} - Leaderboard</h1>
-          </PanelHeading>
+          <PanelHeading>{heading}</PanelHeading>
           <Panel>
             <p>
               Once the first race of the season completes, the leaderboard board
-              will show here and you&apos;ll be able to track your position as
-              the season progresses.
+              will show here and you&apos;ll be able to track everyone&apos;s
+              prediction performance as the season progresses.
             </p>
           </Panel>
         </>
@@ -77,9 +90,29 @@ const Page = async () => {
           currentUserDisplayName={currentUserDisplayName}
           lastUpdated={predictionData.lastUpdated}
           rounds={JSON.parse(JSON.stringify(predictionData.rounds))}
-          season={season}
-          users={JSON.parse(JSON.stringify(predictionData.users))}
-        />
+          currentSearchParams={searchParams}
+          users={JSON.parse(JSON.stringify(predictionData.users))}>
+          <div style={{ display: "flex" }}>
+            <div>
+              {heading}
+              <p>
+                Select players to view their predictions and compare them to the
+                actual standings.
+              </p>
+            </div>
+            <div>
+              {/**@todo implement an additional button to change the entrant type
+              <Button>
+                <Icon type="driver" strokeWidth={2} />
+                Drivers
+              </Button>
+              <Button>
+                <Icon type="wrenchScrewdriver" strokeWidth={2} />
+                Constructors
+              </Button> */}
+            </div>
+          </div>
+        </GameContainer>
       )}
     </>
   );

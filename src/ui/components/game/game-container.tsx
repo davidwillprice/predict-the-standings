@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, ReactNode, useCallback } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 
 import { Leaderboard } from "./leaderboard";
@@ -14,79 +14,128 @@ import styles from "@components/game/game-container.module.scss";
 import { Round, Users, User } from "@custom-types/game-types";
 
 interface Props {
+  children: ReactNode;
   currentUserDisplayName: string | null;
   lastUpdated: Date;
   rounds: Round[];
-  season: string;
+  currentSearchParams: { [key: string]: string | string[] | undefined };
   users: Users;
 }
 
 export const GameContainer = ({
+  children,
   rounds,
   lastUpdated,
   users,
   currentUserDisplayName,
-  season,
+  currentSearchParams,
 }: Props) => {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
 
-  const selectedUserSetter = (displayName: string | null): User => {
-    return displayName && users[displayName]
-      ? users[displayName]
-      : rounds[roundIndex].leaderboards["driver"][0].user;
+  const createQueryString = useCallback(
+    (name: string, value: string) => {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set(name, value);
+
+      return params.toString();
+    },
+    [searchParams]
+  );
+
+  /**If searchParams have a valid round query, return it - Else default to latest round
+   * @returns roundIndex number
+   */
+  const setInitialRounds = (searchParams: {
+    [key: string]: string | string[] | undefined;
+  }): number => {
+    if (typeof searchParams.round === "string") {
+      const round = Number(searchParams.round);
+      if (
+        Number.isInteger(Number(searchParams.round)) &&
+        0 < round &&
+        round <= rounds.length - 1
+      ) {
+        return round - 1;
+      }
+    }
+    return rounds.length - 1;
   };
 
-  const [mode, setMode] = useState("leaderboard");
-  const [roundIndex, setRoundIndex] = useState(rounds.length - 1);
-  const [selectedUser, setSelectedUser] = useState(
-    selectedUserSetter(currentUserDisplayName)
-  );
-  useEffect(() => {
-    /** Whenever back or forwards button is pressed, change to the appropriate mode*/
-    const userSearchParam = searchParams.get("user");
-    window.onpopstate = () => {
-      if (userSearchParam) {
-        setMode("table");
-        setSelectedUser(selectedUserSetter(userSearchParam));
-      } else {
-        setMode("leaderboard");
-      }
-    };
-    if (userSearchParam) {
-      setMode("table");
-      setSelectedUser(selectedUserSetter(userSearchParam));
-    } else {
-      setMode("leaderboard");
+  /**If searchParams have a valid entrantType query, return it - Else default to driver
+   * @returns entrantType string
+   */
+  const setInitialEntrantType = (searchParams: {
+    [key: string]: string | string[] | undefined;
+  }): string => {
+    if (
+      typeof searchParams.leaderboard === "string" &&
+      searchParams.leaderboard === "constructors"
+    )
+      return "team";
+    else {
+      return "driver";
     }
-  }, [pathname, searchParams]);
+  };
 
+  /**If searchParams have a valid user query, return the User - Else default to null*/
+  const setInitialUser = (searchParams: {
+    [key: string]: string | string[] | undefined;
+  }): User | null => {
+    if (typeof searchParams.user === "string" && users[searchParams.user]) {
+      return users[searchParams.user];
+    } else {
+      return null;
+    }
+  };
+
+  const [roundIndex, setRoundIndex] = useState(
+    setInitialRounds(currentSearchParams)
+  );
+  const [entrantType, setEntrantType] = useState(
+    setInitialEntrantType(currentSearchParams)
+  );
+  /**@todo Probably need to readd "mode" state to allow for the current user to be automatically navigated to when pagination is added */
+  const [selectedUser, setSelectedUser] = useState(
+    setInitialUser(currentSearchParams)
+  );
+
+  useEffect(() => {
+    setEntrantType(setInitialEntrantType(currentSearchParams));
+    setRoundIndex(setInitialRounds(currentSearchParams));
+    setSelectedUser(setInitialUser(currentSearchParams));
+  }, [currentSearchParams]);
+
+  /**Updates round in state and query string */
   const changeRoundHandler = (newRoundIndex: number) => {
+    /**Uses router.replace() rather than router.push() as I don't want round chnages clogging up the user history */
+    router.replace(
+      pathname +
+        "?" +
+        createQueryString("round", (newRoundIndex + 1).toString())
+    );
     setRoundIndex(newRoundIndex);
   };
+
+  /**Updates user in state and query string */
   const changeSelectedUserHandler = (displayName: string) => {
-    router.push(pathname + `?user=${displayName}`);
-    setSelectedUser(selectedUserSetter(displayName));
-    setMode("table");
+    router.push(pathname + "?" + createQueryString("user", displayName));
+    setSelectedUser(users[displayName]);
   };
 
-  /**@todo URGENT Fix duplicating users bug */
   return (
     <>
       <div
         className={`${styles.con} ${
-          mode === "leaderboard" ? styles.leaderboard_mode : styles.table_mode
+          selectedUser ? styles.table_mode : styles.leaderboard_mode
         }`}>
-        {mode === "leaderboard" ? (
+        {!selectedUser ? (
           <>
             <div className={styles.main}>
-              <h1>Formula 1 {season} - Leaderboard</h1>
-              <p>
-                Select players to view their predictions and compare them to the
-                actual standings.
-              </p>
+              {children}
               <Leaderboard
+                entrantType={entrantType}
                 lastUpdated={lastUpdated}
                 rounds={rounds}
                 roundIndex={roundIndex}
@@ -95,8 +144,7 @@ export const GameContainer = ({
             </div>
             <StandingsTable
               className={styles.standings_table}
-              selectedRound={roundIndex}
-              standingsArr={rounds[roundIndex].standings.driver}
+              standingsArr={rounds[roundIndex].standings[entrantType]}
             />
           </>
         ) : (
@@ -104,8 +152,8 @@ export const GameContainer = ({
             <div className={styles.options}>
               <Button
                 onClick={() => {
-                  setMode("leaderboard");
-                  router.push(pathname);
+                  setSelectedUser(null);
+                  router.back();
                 }}>
                 Back
               </Button>
@@ -119,12 +167,12 @@ export const GameContainer = ({
             </div>
             <div className={styles.tables}>
               <PredictionTable
+                entrantType={entrantType}
                 selectedRound={roundIndex}
                 selectedUser={selectedUser}
               />
               <StandingsTable
-                selectedRound={roundIndex}
-                standingsArr={rounds[roundIndex].standings.driver}
+                standingsArr={rounds[roundIndex].standings[entrantType]}
                 className={styles.standings_table}
               />
             </div>

@@ -61,7 +61,7 @@ const {
   rus,
 } = drivers;
 
-const { mer, fer, red, sau, wil, ast, rb, mcl, has, alp } = drivers;
+const { mer, fer, red, sau, wil, ast, rb, mcl, has, alp } = teams;
 
 let rounds: Round[] = [
   // new Round("Bahrain GP", {
