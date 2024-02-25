@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { ReactNode } from "react";
 import Link from "next/link";
 
@@ -20,6 +20,7 @@ interface Props {
 
 export const MainNav = ({ children }: Props) => {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   const [mobMenuOpen, toggleMobMenu] = useState(false);
 
@@ -32,7 +33,7 @@ export const MainNav = ({ children }: Props) => {
   useEffect(() => {
     /** Whenever the page changes, the mobile menu is closed*/
     toggleMobMenu(false);
-  }, [pathname]);
+  }, [pathname, searchParams]);
 
   const { predictionFreezeTime } = allSeasonData["2024"];
   const predictionLinks = pathname.startsWith("/formula-1") ? (

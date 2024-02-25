@@ -25,12 +25,6 @@
   gap: 20px;
 }
 
-@media (min-width: 800px) {
-  .switchEntrantTypeBtn {
-    display: none;
-  }
-}
-
 @media (max-width: 800px) {
   .leaderboard_mode {
     .standings_table {
@@ -40,12 +34,20 @@
   .con {
     flex-direction: column;
     justify-content: space-between;
-    margin: 0 auto;
+    margin-bottom: 0;
   }
   .tables {
     width: 100%;
     justify-content: center;
   }
+}
+@media (min-width: 600px) {
+  .switchEntrantTypeBtn {
+    display: none;
+  }
+}
+
+@media (max-width: 600px) {
   .switchEntrantTypeBtn {
     margin-top: 20px;
   }
