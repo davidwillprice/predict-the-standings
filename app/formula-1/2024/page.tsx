@@ -1,5 +1,6 @@
 import { unstable_cache } from "next/cache";
 import { getServerSession } from "next-auth/next";
+import Link from "next/link";
 
 import { authOptions } from "@lib/auth";
 import { getAllPredictonData } from "@lib/game-functions";
@@ -10,6 +11,10 @@ import { PanelHeading } from "@components/panels/panel-heading";
 import { GameContainer } from "@components/game/game-container";
 import { PreSeasonContainer } from "@components/game/pre-season-container";
 import { FeedbackContainer } from "@components/feedback-container/feedback-container";
+import Icon from "@svgs/icons/sq-icon";
+
+import btnConStyles from "@components/button/button-containers.module.scss";
+import btnStyles from "@components/button/button.module.scss";
 
 import { Sport } from "@custom-types/misc";
 import { PredictionData } from "@custom-types/game-types";
@@ -73,10 +78,23 @@ const Page = async ({ searchParams }: Props) => {
           <PanelHeading>{heading}</PanelHeading>
           <Panel>
             <p>
-              Once the first race of the season completes, the leaderboard board
-              will show here and you&apos;ll be able to track everyone&apos;s
-              prediction performance as the season progresses.
+              Once the first race of the season completes, the{" "}
+              {searchParams.leaderboard === "constructors"
+                ? "constructors"
+                : "drivers"}{" "}
+              leaderboard will show here and you&apos;ll be able to track{" "}
+              {currentUserDisplayName ? "your" : "everyone&apos;s prediction"}{" "}
+              performance as the season progresses.
             </p>
+            <hr />
+            <div className={btnConStyles.single}>
+              <Link href="/formula-1/predict" className={btnStyles.button}>
+                <Icon strokeWidth={2} type="listBullet" />
+                {currentUserDisplayName
+                  ? "Edit Your Predictions"
+                  : "Predict The Standings"}
+              </Link>
+            </div>
           </Panel>
           {/**@todo Re-enable preseason container once properly built - Or could have the below text show as a modal and then underneath a placeholder of what the leaderboard will look like?
            * <PreSeasonContainer />*/}
