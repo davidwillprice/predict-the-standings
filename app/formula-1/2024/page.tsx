@@ -71,10 +71,6 @@ const Page = async ({ searchParams }: Props) => {
           <p>{error}</p>
         </FeedbackContainer>
       ) : predictionData.rounds.length < 1 ? (
-        /**@todo Re-enable preseason container once properly built - Or could have the below text show as a modal and then underneath a placeholder of what the leaderboard will look like?
-        <PreSeasonContainer
-          users={JSON.parse(JSON.stringify(predictionData.users))}
-        />*/
         <>
           <PanelHeading>{heading}</PanelHeading>
           <Panel>
@@ -84,6 +80,8 @@ const Page = async ({ searchParams }: Props) => {
               prediction performance as the season progresses.
             </p>
           </Panel>
+          {/**@todo Re-enable preseason container once properly built - Or could have the below text show as a modal and then underneath a placeholder of what the leaderboard will look like?
+           * <PreSeasonContainer />*/}
         </>
       ) : (
         <GameContainer

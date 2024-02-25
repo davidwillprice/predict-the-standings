@@ -5,33 +5,32 @@ import { Users } from "@custom-types/game-types";
 import styles from "@components/game/leaderboard.module.scss";
 import predictStyles from "@components/prediction-table/prediction-table.module.scss";
 
-interface Props {
-  changeSelectedUserHandler: Function;
-  users: Users;
-}
-
-export const PreseasonLeaderboard = ({
-  changeSelectedUserHandler,
-  users,
-}: Props) => {
-  const userArr = sortUsersAlphabetically(Object.values(users));
+export const PreseasonLeaderboard = () => {
+  const dummyRows = 10;
   return (
     <div className={predictStyles.prediction_table}>
       <table className={styles.leaderboard}>
         <thead>
           <tr>
             <th className={styles.position}>Pos</th>
+            <th aria-label="Position change header"></th>
             <th>Name</th>
+            <th>Accuracy</th>
+            <th className={styles.perfect_positions}>Perfect Predictions</th>
           </tr>
         </thead>
         <tbody>
-          {userArr.map((user, index) => (
+          {[...Array(dummyRows)].map((_, index) => (
             <tr
-              key={user.displayName}
-              className={`${predictStyles.table_row} ${styles.table_row}`}
-              onClick={() => changeSelectedUserHandler(user.displayName)}>
+              key={index}
+              className={`${predictStyles.table_row} ${styles.table_row}`}>
               <td className={styles.position}>{index + 1}</td>
-              <td>{user.displayName}</td>
+              <td className={`${styles.position_diff} ${styles.no_change}`}>
+                <i />
+              </td>
+              <td className={styles.name_cell}></td>
+              <td></td>
+              <td className={styles.perfect_positions}></td>
             </tr>
           ))}
         </tbody>
