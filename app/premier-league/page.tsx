@@ -8,7 +8,10 @@ const Page = () => {
         <h1>Premier League - Homepage</h1>
       </PanelHeading>
       <Panel>
-        <p>Coming soon!</p>
+        <p>
+          Coming soon! Submissions will be open for the 2024/2025 season once
+          its teams are confirmed.
+        </p>
       </Panel>
     </>
   );

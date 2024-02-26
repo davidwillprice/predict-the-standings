@@ -10,6 +10,7 @@ import { Countdown } from "@components/countdown/countdown";
 import { allSeasonData } from "@data/formula-1/season-data";
 
 import styles from "@components/button/button-containers.module.scss";
+import btnStyles from "@components/button/button.module.scss";
 
 export const metadata: Metadata = {
   title: "Predict The Formula 1 Standings",
@@ -46,11 +47,9 @@ const Page = () => {
               to submit (and edit) your predictions.
             </p>
             <div className={styles.single}>
-              <Link href="/formula-1/predict">
-                <Button>
-                  <Icon strokeWidth={2} type="listBullet" />
-                  Predict The Standings
-                </Button>
+              <Link href="/formula-1/predict" className={btnStyles.button}>
+                <Icon strokeWidth={2} type="listBullet" />
+                Predict The Standings
               </Link>
             </div>
             <Countdown deadline={predictionFreezeTime} />
@@ -60,29 +59,23 @@ const Page = () => {
         )}
         <hr />
         <div className={styles.quadruple}>
-          <Link href="/formula-1/2024">
-            <Button>
-              <Icon strokeWidth={2} type="driver" />
-              Drivers Leaderboard
-            </Button>
+          <Link href="/formula-1/2024" className={btnStyles.button}>
+            <Icon strokeWidth={2} type="driver" />
+            Drivers Leaderboard
           </Link>
-          <Link href="/formula-1/2024/?leaderboard=constructors">
-            <Button>
-              <Icon strokeWidth={2} type="f1" />
-              Constructors Leaderboard
-            </Button>
+          <Link
+            href="/formula-1/2024/?leaderboard=constructors"
+            className={btnStyles.button}>
+            <Icon strokeWidth={2} type="f1" />
+            Constructors Leaderboard
           </Link>
-          <Link href="/formula-1/2024/stats">
-            <Button>
-              <Icon strokeWidth={2} type="stats" />
-              Stats
-            </Button>
+          <Link href="/formula-1/2024/stats" className={btnStyles.button}>
+            <Icon strokeWidth={2} type="stats" />
+            Stats
           </Link>
-          <Link href="/help">
-            <Button>
-              <Icon strokeWidth={2} type="help" />
-              Help
-            </Button>
+          <Link href="/help" className={btnStyles.button}>
+            <Icon strokeWidth={2} type="help" />
+            Help
           </Link>
         </div>
         <hr />
