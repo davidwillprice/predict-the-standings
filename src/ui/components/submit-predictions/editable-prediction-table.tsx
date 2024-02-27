@@ -40,7 +40,9 @@ export function EditablePredictionTable({
       <table>
         <thead>
           <tr>
-            <th colSpan={2}>Order</th>
+            <th colSpan={2}>
+              <span>Order</span>
+            </th>
             <th></th>
             <th>{entrantType}</th>
           </tr>
@@ -61,11 +63,11 @@ export function EditablePredictionTable({
                         ref={provided.innerRef}
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}>
-                        <td>≡</td>
+                        <td className={predictiontableStyles.drag_cell}>≡</td>
                         <td className={predictiontableStyles.position_cell}>
                           {entrantArr.indexOf(entrant) + 1}
                         </td>
-                        <td>
+                        <td className={predictiontableStyles.flair_cell}>
                           <span
                             className={`${predictiontableStyles.flair}`}
                             style={{ backgroundColor: entrant.color }}></span>

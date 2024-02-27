@@ -94,16 +94,52 @@
 }
 
 @media (max-width: 380px) {
-  .table_row {
+  .prediction_table {
+    width: 100%;
+    table {
+      width: 100%;
+    }
+    th {
+      padding: 3px 0;
+      span {
+        display: none;
+      }
+    }
+    .table_row {
+      font-size: 14px;
+      td {
+        padding: 3px 3px;
+      }
+      td:first-child {
+        padding-left: 7px;
+      }
+      td:last-child {
+        padding-right: 7px;
+      }
+      .drag_cell {
+        max-width: 20px;
+      }
+      .position_cell {
+        max-width: 25px;
+      }
+      .name_cell {
+        min-width: auto;
+      }
+    }
+  }
+}
+
+@media (max-width: 350px) {
+  .prediction_table {
+    .name {
+      display: none;
+    }
+    .sName {
+      display: inline;
+      text-transform: uppercase;
+    }
     .name_cell {
       min-width: auto;
     }
-  }
-  .name {
-    display: none;
-  }
-  .sName {
-    display: inline;
-    text-transform: uppercase;
   }
 }

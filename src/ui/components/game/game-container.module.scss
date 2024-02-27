@@ -52,3 +52,8 @@
     margin-top: 20px;
   }
 }
+@media (max-width: 380px) {
+  .tables {
+    gap: 10px;
+  }
+}
