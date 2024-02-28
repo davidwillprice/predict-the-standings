@@ -32,8 +32,7 @@ const getCachedPredictionData = unstable_cache(
       console.log("Failed to getAllPredictonData()");
     }
   },
-  [season, sport],
-  { revalidate: 3600 }
+  [season, sport]
 );
 
 interface Props {
