@@ -55,8 +55,9 @@ const Page = async ({ searchParams }: Props) => {
   } catch (e: unknown) {
     if (e instanceof Error) {
       error = e.message;
+    } else {
+      error = "Unknown front-end error";
     }
-    error = "Unknown front-end error";
   }
 
   const heading = (
@@ -69,11 +70,7 @@ const Page = async ({ searchParams }: Props) => {
 
   return (
     <>
-      {error || !predictionData ? (
-        <FeedbackContainer iconType={"error"}>
-          <p>{error}</p>
-        </FeedbackContainer>
-      ) : predictionData.rounds.length < 1 ? (
+      {rounds.length < 1 ? (
         <>
           <PanelHeading>{heading}</PanelHeading>
           <Panel>
@@ -99,6 +96,10 @@ const Page = async ({ searchParams }: Props) => {
           {/**@todo Re-enable preseason container once properly built - Or could have the below text show as a modal and then underneath a placeholder of what the leaderboard will look like?
            * <PreSeasonContainer />*/}
         </>
+      ) : error || !predictionData ? (
+        <FeedbackContainer iconType={"error"}>
+          <p>{error}</p>
+        </FeedbackContainer>
       ) : (
         <GameContainer
           currentUserDisplayName={currentUserDisplayName}
