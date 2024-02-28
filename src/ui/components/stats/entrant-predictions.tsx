@@ -1,5 +1,7 @@
 "use client";
 
+import { Entrants } from "@custom-types/game-types";
+
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -22,24 +24,55 @@ ChartJS.register(
   Legend
 );
 
-export const options = {
-  responsive: true,
-};
+interface Props {
+  entrants: Entrants;
+}
 
-const labels = [
-  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
-];
+/**@todo Change values depending on dark mode or not */
+ChartJS.defaults.color = "#010136";
+ChartJS.defaults.borderColor = "#01013640";
 
-export const data = {
-  labels,
-  datasets: [
-    {
-      label: "Verstappen",
-      data: [8, 2, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      borderColor: "rgb(255, 99, 132)",
-      backgroundColor: "rgba(255, 99, 132, 0.5)",
+export const EntrantPredictions = ({ entrants }: Props) => {
+  const options = {
+    responsive: true,
+    scales: {
+      x: {
+        title: { text: "Predicted Position", display: true },
+      },
+      y: {
+        title: { text: "% of People", display: true },
+        ticks: {
+          callback: (value: string | number) => {
+            return value + "%";
+          },
+        },
+      },
     },
-  ],
+  };
+  const labels = entrants["ver"].predictionedPositions.map((_, index) => {
+    const pos = index + 1;
+    const lastNumberOfPos = pos.toString().slice(-1);
+    return (
+      pos +
+      (lastNumberOfPos === "1"
+        ? "st"
+        : lastNumberOfPos === "2"
+        ? "nd"
+        : lastNumberOfPos === "3"
+        ? "rd"
+        : "th")
+    );
+  });
+  const data = {
+    labels,
+    datasets: [
+      {
+        label: entrants["ver"].name,
+        data: entrants["ver"].predictionedPositions,
+        borderColor: entrants["ver"].color,
+        backgroundColor: entrants["ver"].color + "50",
+      },
+    ],
+  };
+  return <Line options={options} data={data} />;
 };
-
-export const EntrantPredictions = () => <Line options={options} data={data} />;
