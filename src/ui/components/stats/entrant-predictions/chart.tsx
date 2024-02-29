@@ -75,5 +75,9 @@ export const Chart = ({ entrant }: Props) => {
       },
     ],
   };
-  return <Line style={{ minHeight: "300px" }} options={options} data={data} />;
+  return (
+    <div>
+      <Line style={{ minHeight: "300px" }} options={options} data={data} />
+    </div>
+  );
 };

@@ -90,6 +90,7 @@ const Page = async () => {
       ) : (
         <>
           <Panel>
+            <h2>Prediction Stats</h2>
             <div className={styles.entrantPredictions}>
               <EntrantPredictions
                 predictionData={JSON.parse(JSON.stringify(predictionData))}
