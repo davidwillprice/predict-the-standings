@@ -348,8 +348,8 @@ const getEntrantPredictedPositions = (
     }
 
     /**Turn predictedPositions into percentage */
-    entrant.predictionedPositions = entrant.predictionedPositions.map(
-      (pos) => (pos / noOfUsers) * 100
+    entrant.predictionedPositions = entrant.predictionedPositions.map((pos) =>
+      Math.round((pos / noOfUsers) * 100)
     );
   }
   return entrants;

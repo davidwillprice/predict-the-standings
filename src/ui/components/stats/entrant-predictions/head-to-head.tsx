@@ -29,7 +29,7 @@ export const HeadToHead = ({ teammates }: Props) => {
 
   return (
     <div className={styles.head_to_head}>
-      <h3>% of People Who Favoured Each Teammate</h3>
+      <h3>% of People Who Favoured Each&nbsp;Teammate</h3>
       <div
         className={styles.con}
         style={{
@@ -47,6 +47,15 @@ export const HeadToHead = ({ teammates }: Props) => {
           {no2Driver.name} {no2Driver.pcPredictedToBeatTeammate}%
         </div>
       </div>
+      {no1Driver.avgPrePos && no2Driver.avgPrePos ? (
+        <p className={styles.avgPos}>
+          On average, people predicted {no1Driver.name} would finish{" "}
+          {Math.round((no2Driver.avgPrePos - no1Driver.avgPrePos) * 10) / 10}{" "}
+          positions higher than {no2Driver.name}.
+        </p>
+      ) : (
+        ""
+      )}
     </div>
   );
 };
