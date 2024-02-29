@@ -52,8 +52,8 @@ export const MainNav = ({ children }: Props) => {
       <HeaderLink href="/formula-1/2024/?leaderboard=constructors" icon="f1">
         Constructors Leaderboard
       </HeaderLink>
-      <HeaderLink href="/formula-1/2024/stats" icon="stats">
-        Stats & Trivia
+      <HeaderLink href="/formula-1/2024/stats/driver-and-team" icon="stats">
+        Driver & Team Stats
       </HeaderLink>
     </>
   ) : (

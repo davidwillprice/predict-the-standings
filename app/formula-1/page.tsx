@@ -69,7 +69,9 @@ const Page = () => {
             <Icon strokeWidth={2} type="f1" />
             Constructors Leaderboard
           </Link>
-          <Link href="/formula-1/2024/stats" className={btnStyles.button}>
+          <Link
+            href="/formula-1/2024/stats/driver-and-team"
+            className={btnStyles.button}>
             <Icon strokeWidth={2} type="stats" />
             Stats
           </Link>

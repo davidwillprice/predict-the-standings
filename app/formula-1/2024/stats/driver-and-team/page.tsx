@@ -68,7 +68,7 @@ const Page = async () => {
   return (
     <>
       <PanelHeading>
-        <h1>Formula 1 - Stats & Trivia</h1>
+        <h1>Formula 1 {season} - Driver & Team Stats</h1>
       </PanelHeading>
       {rounds.length < 1 ? (
         <>
