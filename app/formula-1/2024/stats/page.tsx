@@ -1,17 +1,111 @@
+import { unstable_cache } from "next/cache";
+import { getServerSession } from "next-auth/next";
+import Link from "next/link";
+
+import { authOptions } from "@lib/auth";
+import { getAllPredictonData } from "@lib/game-functions";
+import { allSeasonData } from "@data/formula-1/season-data";
+
 import { Panel } from "@components/panels/panel";
 import { PanelHeading } from "@components/panels/panel-heading";
+import { EntrantPredictions } from "@components/stats/entrant-predictions/entrant-predictions";
+import { FeedbackContainer } from "@components/feedback-container/feedback-container";
+import Icon from "@svgs/icons/sq-icon";
 
-const Page = () => {
+import styles from "@components/stats/stats.module.scss";
+import btnConStyles from "@components/button/button-containers.module.scss";
+import btnStyles from "@components/button/button.module.scss";
+
+import { Sport } from "@custom-types/misc";
+import { PredictionData } from "@custom-types/game-types";
+
+const season = "2024";
+const sport: Sport = "f1";
+const {
+  drivers: initialDrivers,
+  teams: initialTeams,
+  rounds,
+} = allSeasonData["2024"];
+
+const getCachedPredictionData = unstable_cache(
+  /**@todo Instead of it being time based, revalidate based on when the website is deployed as that's how I'll be adding new race data */
+  async () => {
+    try {
+      return await getAllPredictonData(
+        initialDrivers,
+        initialTeams,
+        rounds,
+        season,
+        sport
+      );
+    } catch (_) {
+      console.log("Failed to getAllPredictonData()");
+    }
+  },
+  [season, sport]
+);
+
+const Page = async () => {
+  let error = "";
+  const session = await getServerSession(authOptions);
+  const currentUserDisplayName = session?.user.displayName;
+  let predictionData: PredictionData | undefined;
+
+  try {
+    const res = await getCachedPredictionData();
+    if (typeof res === "string") {
+      error = res;
+    } else {
+      predictionData = res;
+    }
+  } catch (e: unknown) {
+    if (e instanceof Error) {
+      error = e.message;
+    } else {
+      error = "Unknown front-end error";
+    }
+  }
   /**@todo Stat for copying last years standings */
   /**@todo Record how many times people update their standings for a '"Jack submitted X predictions, Y more than anybody else. Indecisive."' stat */
   return (
     <>
       <PanelHeading>
-        <h1>Formula 1 - Stats</h1>
+        <h1>Formula 1 - Stats & Trivia</h1>
       </PanelHeading>
-      <Panel>
-        <p>Coming soon!</p>
-      </Panel>
+      {rounds.length < 1 ? (
+        <>
+          <Panel>
+            <p>
+              Once the first race of the season completes, various stats will
+              show on this page for each of the drivers, teams and players.
+            </p>
+            <hr />
+            {/**@todo URGENT Hide the predictions buttons here and on game-container once predictions are locked */}
+            <div className={btnConStyles.single}>
+              <Link href="/formula-1/predict" className={btnStyles.button}>
+                <Icon strokeWidth={2} type="listBullet" />
+                {currentUserDisplayName
+                  ? "Edit Your Predictions"
+                  : "Predict The Standings"}
+              </Link>
+            </div>
+          </Panel>
+        </>
+      ) : error || !predictionData ? (
+        <FeedbackContainer iconType={"error"}>
+          <p>{error}</p>
+        </FeedbackContainer>
+      ) : (
+        <>
+          <Panel>
+            <div className={styles.entrantPredictions}>
+              <EntrantPredictions
+                predictionData={JSON.parse(JSON.stringify(predictionData))}
+              />
+            </div>
+          </Panel>
+        </>
+      )}
     </>
   );
 };

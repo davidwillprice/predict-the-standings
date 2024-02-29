@@ -1,4 +1,5 @@
 export interface PredictionData {
+  entrants: { [key: string]: Entrants };
   rounds: Round[];
   lastUpdated: Date;
   users: Users;
@@ -32,11 +33,13 @@ export class Entrant {
   id: number;
   color: string;
   avgPrePos?: number;
+  predictionedPositions: number[];
   constructor(name: string, sName: string, id: number, color: string) {
     this.name = name;
     this.sName = sName;
     this.id = id;
     this.color = color;
+    this.predictionedPositions = [];
   }
 }
 export interface Entrants {

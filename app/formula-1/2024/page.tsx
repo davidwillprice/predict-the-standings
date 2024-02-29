@@ -21,19 +21,28 @@ import { PredictionData } from "@custom-types/game-types";
 
 const season = "2024";
 const sport: Sport = "f1";
-const { drivers, teams, rounds } = allSeasonData["2024"];
+const {
+  drivers: initialDrivers,
+  teams: initialTeams,
+  rounds,
+} = allSeasonData["2024"];
 
 const getCachedPredictionData = unstable_cache(
   /**@todo Instead of it being time based, revalidate based on when the website is deployed as that's how I'll be adding new race data */
   async () => {
     try {
-      return await getAllPredictonData(drivers, teams, rounds, season, sport);
+      return await getAllPredictonData(
+        initialDrivers,
+        initialTeams,
+        rounds,
+        season,
+        sport
+      );
     } catch (_) {
       console.log("Failed to getAllPredictonData()");
     }
   },
-  [season, sport],
-  { revalidate: 3600 }
+  [season, sport]
 );
 
 interface Props {

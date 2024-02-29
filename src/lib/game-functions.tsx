@@ -44,7 +44,15 @@ export const getAllPredictonData = async (
 
   rounds = generateEntrantDiffTotals(rounds, users);
 
-  return { rounds: rounds, lastUpdated: new Date(), users: users };
+  drivers = getEntrantPredictedPositions(drivers, "driver", users);
+  teams = getEntrantPredictedPositions(teams, "team", users);
+
+  return {
+    entrants: { drivers: drivers, teams: teams },
+    rounds: rounds,
+    lastUpdated: new Date(),
+    users: users,
+  };
 };
 
 /**Get users and their predictions from the database and check all the appropriate data is set */
@@ -314,4 +322,32 @@ const generateEntrantDiffTotals = (rounds: Round[], users: Users): Round[] => {
     }
   });
   return rounds;
+};
+
+/**For use on the stats page, generate an array for each entrant with the percentage of people who predicted them in each position */
+const getEntrantPredictedPositions = (
+  entrants: Entrants,
+  entrantType: string,
+  users: Users
+) => {
+  const noOfEntrants = Object.keys(entrants).length;
+  const noOfUsers = Object.keys(users).length;
+
+  for (const entrant of Object.values(entrants)) {
+    /**Create blank position array */
+    for (let i = 0; i < noOfEntrants; i++) {
+      entrant.predictionedPositions.push(0);
+    }
+    /**Loop over users, obtain the position index they predicted the entrant in, then plus one to that index in the entrant position array  */
+    for (const user of Object.values(users)) {
+      const userPredictedPos = user.predictions[entrantType].indexOf(entrant);
+      entrant.predictionedPositions[userPredictedPos]++;
+    }
+
+    /**Turn predictedPositions into percentage */
+    entrant.predictionedPositions = entrant.predictionedPositions.map(
+      (pos) => (pos / noOfUsers) * 100
+    );
+  }
+  return entrants;
 };

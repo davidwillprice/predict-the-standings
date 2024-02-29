@@ -71,7 +71,9 @@ p a {
   text-decoration: underline;
 }
 
-button {
+button,
+input,
+select {
   font-family: var(--font-roboto);
 }
 
