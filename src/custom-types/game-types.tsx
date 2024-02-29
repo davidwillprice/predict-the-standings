@@ -34,6 +34,7 @@ export class Entrant {
   color: string;
   avgPrePos?: number;
   predictionedPositions: number[];
+  pcPredictedToBeatTeammate?: number;
   constructor(name: string, sName: string, id: number, color: string) {
     this.name = name;
     this.sName = sName;

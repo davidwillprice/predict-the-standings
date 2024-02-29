@@ -47,6 +47,8 @@ export const getAllPredictonData = async (
   drivers = getEntrantPredictedPositions(drivers, "driver", users);
   teams = getEntrantPredictedPositions(teams, "team", users);
 
+  drivers = generateTeammateHeadToHead(drivers, teams, users);
+
   return {
     entrants: { drivers: drivers, teams: teams },
     rounds: rounds,
@@ -331,7 +333,7 @@ const getEntrantPredictedPositions = (
   users: Users
 ) => {
   const noOfEntrants = Object.keys(entrants).length;
-  const noOfUsers = Object.keys(users).length;
+  const noOfUsers = Object.keys(users).length - 1;
 
   for (const entrant of Object.values(entrants)) {
     /**Create blank position array */
@@ -340,6 +342,7 @@ const getEntrantPredictedPositions = (
     }
     /**Loop over users, obtain the position index they predicted the entrant in, then plus one to that index in the entrant position array  */
     for (const user of Object.values(users)) {
+      if (user.displayName === "Average") continue;
       const userPredictedPos = user.predictions[entrantType].indexOf(entrant);
       entrant.predictionedPositions[userPredictedPos]++;
     }
@@ -350,4 +353,34 @@ const getEntrantPredictedPositions = (
     );
   }
   return entrants;
+};
+
+/**For every user, find their highest predicted driver for each team, total for all users, then convert that to a percentage and attach it to the driver */
+const generateTeammateHeadToHead = (
+  drivers: Entrants,
+  teams: Entrants,
+  users: Users
+) => {
+  const noOfUsers = Object.keys(users).length - 1;
+  for (const team of Object.values(teams)) {
+    for (const user of Object.values(users)) {
+      if (user.displayName === "Average") continue;
+      const higherPredictedDriver = user.predictions["driver"].find(
+        (driver) => driver.color === team.color
+      );
+      if (
+        typeof higherPredictedDriver?.pcPredictedToBeatTeammate !== "number"
+      ) {
+        higherPredictedDriver!.pcPredictedToBeatTeammate = 1;
+      } else {
+        higherPredictedDriver!.pcPredictedToBeatTeammate++;
+      }
+    }
+  }
+  for (const driver of Object.values(drivers)) {
+    driver.pcPredictedToBeatTeammate = driver.pcPredictedToBeatTeammate
+      ? Math.round((driver.pcPredictedToBeatTeammate / noOfUsers) * 100)
+      : 0;
+  }
+  return drivers;
 };
