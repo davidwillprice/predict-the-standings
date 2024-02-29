@@ -24,6 +24,7 @@ export const LoginForm = () => {
          * Apple developer program costs $99py so can't add Apple provider*/}
         {/**@todo Add Linkedin (requires LinkedIn Page) login */}
         {/**@todo Fix Patreon & Spotify logins */}
+        {/**@todo If there is a login redirect query, redirect the user to the page they couldn't previously access */}
         {submitting ? (
           <LoadingSpinner />
         ) : (

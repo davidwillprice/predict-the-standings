@@ -49,8 +49,7 @@ export default function Page() {
           </p>
           <p>
             Users are encouraged to select a display name that isn&apos;t
-            disruptive or offensive, and not to abuse the submitting of
-            predictions.
+            disruptive or discriminatory.
           </p>
           <p>Our website is not intended for children under the age of 13.</p>
         </section>
