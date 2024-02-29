@@ -1,6 +1,6 @@
 "use client";
 
-import { Entrants } from "@custom-types/game-types";
+import { Entrant } from "@custom-types/game-types";
 
 import {
   Chart as ChartJS,
@@ -25,16 +25,17 @@ ChartJS.register(
 );
 
 interface Props {
-  entrants: Entrants;
+  entrant: Entrant;
 }
 
 /**@todo Change values depending on dark mode or not */
 ChartJS.defaults.color = "#010136";
 ChartJS.defaults.borderColor = "#01013640";
 
-export const EntrantPredictions = ({ entrants }: Props) => {
+export const Chart = ({ entrant }: Props) => {
   const options = {
     responsive: true,
+    maintainAspectRatio: false,
     scales: {
       x: {
         title: { text: "Predicted Position", display: true },
@@ -49,7 +50,7 @@ export const EntrantPredictions = ({ entrants }: Props) => {
       },
     },
   };
-  const labels = entrants["ver"].predictionedPositions.map((_, index) => {
+  const labels = entrant.predictionedPositions.map((_, index) => {
     const pos = index + 1;
     const lastNumberOfPos = pos.toString().slice(-1);
     return (
@@ -67,12 +68,12 @@ export const EntrantPredictions = ({ entrants }: Props) => {
     labels,
     datasets: [
       {
-        label: entrants["ver"].name,
-        data: entrants["ver"].predictionedPositions,
-        borderColor: entrants["ver"].color,
-        backgroundColor: entrants["ver"].color + "50",
+        label: entrant.name,
+        data: entrant.predictionedPositions,
+        borderColor: entrant.color,
+        backgroundColor: entrant.color + "50",
       },
     ],
   };
-  return <Line options={options} data={data} />;
+  return <Line style={{ minHeight: "300px" }} options={options} data={data} />;
 };

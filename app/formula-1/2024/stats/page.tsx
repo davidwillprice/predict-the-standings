@@ -8,7 +8,7 @@ import { allSeasonData } from "@data/formula-1/season-data";
 
 import { Panel } from "@components/panels/panel";
 import { PanelHeading } from "@components/panels/panel-heading";
-import { EntrantPredictions } from "@components/stats/entrant-predictions";
+import { EntrantPredictions } from "@components/stats/entrant-predictions/entrant-predictions";
 import { FeedbackContainer } from "@components/feedback-container/feedback-container";
 import Icon from "@svgs/icons/sq-icon";
 
@@ -70,7 +70,7 @@ const Page = async () => {
   return (
     <>
       <PanelHeading>
-        <h1>Formula 1 - Stats</h1>
+        <h1>Formula 1 - Stats & Trivia</h1>
       </PanelHeading>
       {rounds.length < 1 ? (
         <>
@@ -100,9 +100,7 @@ const Page = async () => {
           <Panel>
             <div className={styles.entrantPredictions}>
               <EntrantPredictions
-                entrants={JSON.parse(
-                  JSON.stringify(predictionData.entrants["drivers"])
-                )}
+                predictionData={JSON.parse(JSON.stringify(predictionData))}
               />
             </div>
           </Panel>
