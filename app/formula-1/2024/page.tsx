@@ -1,6 +1,5 @@
 import { unstable_cache } from "next/cache";
 import { getServerSession } from "next-auth/next";
-import Link from "next/link";
 
 import { authOptions } from "@lib/auth";
 import { getAllPredictonData } from "@lib/game-functions";
@@ -11,10 +10,7 @@ import { PanelHeading } from "@components/panels/panel-heading";
 import { GameContainer } from "@components/game/game-container";
 import { PreSeasonContainer } from "@components/game/pre-season-container";
 import { FeedbackContainer } from "@components/feedback-container/feedback-container";
-import Icon from "@svgs/icons/sq-icon";
-
-import btnConStyles from "@components/button/button-containers.module.scss";
-import btnStyles from "@components/button/button.module.scss";
+import { PromptPredictions } from "@components/submit-predictions/prompt-predictions";
 
 import { Sport } from "@custom-types/misc";
 import { PredictionData } from "@custom-types/game-types";
@@ -25,6 +21,7 @@ const {
   drivers: initialDrivers,
   teams: initialTeams,
   rounds,
+  predictionFreezeTime,
 } = allSeasonData["2024"];
 
 const getCachedPredictionData = unstable_cache(
@@ -92,15 +89,10 @@ const Page = async ({ searchParams }: Props) => {
               {currentUserDisplayName ? "your" : "everyone&apos;s prediction"}{" "}
               performance as the season progresses.
             </p>
-            <hr />
-            <div className={btnConStyles.single}>
-              <Link href="/formula-1/predict" className={btnStyles.button}>
-                <Icon strokeWidth={2} type="listBullet" />
-                {currentUserDisplayName
-                  ? "Edit Your Predictions"
-                  : "Predict The Standings"}
-              </Link>
-            </div>
+            <PromptPredictions
+              currentUserDisplayName={currentUserDisplayName}
+              predictionFreezeTime={predictionFreezeTime}
+            />
           </Panel>
           {/**@todo Re-enable preseason container once properly built - Or could have the below text show as a modal and then underneath a placeholder of what the leaderboard will look like?
            * <PreSeasonContainer />*/}

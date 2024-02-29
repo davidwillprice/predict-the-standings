@@ -1,6 +1,5 @@
 import { unstable_cache } from "next/cache";
 import { getServerSession } from "next-auth/next";
-import Link from "next/link";
 
 import { authOptions } from "@lib/auth";
 import { getAllPredictonData } from "@lib/game-functions";
@@ -10,11 +9,9 @@ import { Panel } from "@components/panels/panel";
 import { PanelHeading } from "@components/panels/panel-heading";
 import { EntrantPredictions } from "@components/stats/entrant-predictions/entrant-predictions";
 import { FeedbackContainer } from "@components/feedback-container/feedback-container";
-import Icon from "@svgs/icons/sq-icon";
+import { PromptPredictions } from "@components/submit-predictions/prompt-predictions";
 
 import styles from "@components/stats/stats.module.scss";
-import btnConStyles from "@components/button/button-containers.module.scss";
-import btnStyles from "@components/button/button.module.scss";
 
 import { Sport } from "@custom-types/misc";
 import { PredictionData } from "@custom-types/game-types";
@@ -25,6 +22,7 @@ const {
   drivers: initialDrivers,
   teams: initialTeams,
   rounds,
+  predictionFreezeTime,
 } = allSeasonData["2024"];
 
 const getCachedPredictionData = unstable_cache(
@@ -79,16 +77,10 @@ const Page = async () => {
               Once the first race of the season completes, various stats will
               show on this page for each of the drivers, teams and players.
             </p>
-            <hr />
-            {/**@todo URGENT Hide the predictions buttons here and on game-container once predictions are locked */}
-            <div className={btnConStyles.single}>
-              <Link href="/formula-1/predict" className={btnStyles.button}>
-                <Icon strokeWidth={2} type="listBullet" />
-                {currentUserDisplayName
-                  ? "Edit Your Predictions"
-                  : "Predict The Standings"}
-              </Link>
-            </div>
+            <PromptPredictions
+              currentUserDisplayName={currentUserDisplayName}
+              predictionFreezeTime={predictionFreezeTime}
+            />
           </Panel>
         </>
       ) : error || !predictionData ? (
