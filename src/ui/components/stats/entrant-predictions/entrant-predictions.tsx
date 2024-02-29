@@ -5,7 +5,6 @@ import { useState } from "react";
 import { sortEntrantsAlphabetically } from "@lib/misc";
 
 import { Chart } from "./chart";
-import { HeadToHead } from "@components/stats/entrant-predictions/head-to-head";
 
 import { PredictionData } from "@custom-types/game-types";
 
@@ -89,11 +88,6 @@ export const EntrantPredictions = ({ predictionData }: Props) => {
       <div className={styles.chart}>
         <Chart entrant={JSON.parse(JSON.stringify(selectedEntrant))} />
       </div>
-      <HeadToHead
-        teammates={predictionData.rounds[0].standings["driver"].filter(
-          (driver) => driver.color === selectedEntrant.color
-        )}
-      />
     </div>
   );
 };

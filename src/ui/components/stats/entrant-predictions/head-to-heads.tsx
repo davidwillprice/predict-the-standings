@@ -1,12 +1,18 @@
+import { sortEntrantsAlphabetically } from "@lib/misc";
+
 import type { Entrant } from "@custom-types/game-types";
 
 import styles from "@components/stats/stats.module.scss";
 
-interface Props {
+interface HeadToHeadProps {
   teammates: Entrant[];
 }
+interface HeadToHeadsProps {
+  drivers: Entrant[];
+  teams: Entrant[];
+}
 
-export const HeadToHead = ({ teammates }: Props) => {
+const HeadToHead = ({ teammates }: HeadToHeadProps) => {
   let no1Driver;
   let no2Driver;
   if (
@@ -29,23 +35,28 @@ export const HeadToHead = ({ teammates }: Props) => {
 
   return (
     <div className={styles.head_to_head}>
-      <h3>% of People Who Favoured Each&nbsp;Teammate</h3>
       <div
         className={styles.con}
         style={{
           backgroundColor: no1Driver.color,
           color: no1Driver.contrastColor,
         }}>
+        {/**@todo Add rough logo or subtle team text to background of head to heads */}
+        {/**@todo When season ends, tick which driver actually won the head to head */}
+        <div className={styles.driver_details}>
+          <p>
+            {no1Driver.pcPredictedToBeatTeammate}% {no1Driver.name}
+          </p>
+        </div>
+        <div className={styles.driver_details}>
+          <p>
+            {no2Driver.name} {no2Driver.pcPredictedToBeatTeammate}%
+          </p>
+        </div>
         <div
           className={styles.bg}
           style={{ width: no2Driver.pcPredictedToBeatTeammate + "%" }}
         />
-        <div className={styles.driver_details}>
-          {no1Driver.pcPredictedToBeatTeammate}% {no1Driver.name}
-        </div>
-        <div className={styles.driver_details}>
-          {no2Driver.name} {no2Driver.pcPredictedToBeatTeammate}%
-        </div>
       </div>
       {no1Driver.avgPrePos && no2Driver.avgPrePos ? (
         <p className={styles.avgPos}>
@@ -59,3 +70,18 @@ export const HeadToHead = ({ teammates }: Props) => {
     </div>
   );
 };
+
+export const HeadToHeads = ({ drivers, teams }: HeadToHeadsProps) => (
+  <div className={styles.head_to_heads}>
+    <h3>% of People Who Favoured Each&nbsp;Teammate</h3>
+    {teams.map((team, index) => (
+      <>
+        <HeadToHead
+          key={team.name}
+          teammates={drivers.filter((driver) => driver.color === team.color)}
+        />
+        {index !== teams.length - 1 ? <hr /> : ""}
+      </>
+    ))}
+  </div>
+);

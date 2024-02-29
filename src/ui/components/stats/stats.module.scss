@@ -11,6 +11,11 @@
       margin-bottom: 3px;
     }
   }
+}
+.head_to_heads {
+  hr {
+    margin-bottom: 20px;
+  }
   .head_to_head {
     width: 100%;
     margin-bottom: 20px;
@@ -19,7 +24,7 @@
       width: 100%;
       display: flex;
       justify-content: space-between;
-      padding: 20px;
+      padding: 20px 20px 5px;
       margin-bottom: 10px;
       border-radius: 5px;
       font-size: 17px;
@@ -50,11 +55,14 @@
   }
 }
 @media (max-width: 400px) {
-  .entrantPredictions {
+  .head_to_heads {
     .head_to_head {
       .con {
         font-size: 14px;
         padding: 10px;
+        p {
+          margin-bottom: 0;
+        }
       }
     }
   }

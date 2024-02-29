@@ -10,6 +10,7 @@ import { PanelHeading } from "@components/panels/panel-heading";
 import { EntrantPredictions } from "@components/stats/entrant-predictions/entrant-predictions";
 import { FeedbackContainer } from "@components/feedback-container/feedback-container";
 import { PromptPredictions } from "@components/submit-predictions/prompt-predictions";
+import { HeadToHeads } from "@components/stats/entrant-predictions/head-to-heads";
 
 import styles from "@components/stats/stats.module.scss";
 
@@ -96,6 +97,15 @@ const Page = async () => {
                 predictionData={JSON.parse(JSON.stringify(predictionData))}
               />
             </div>
+          </Panel>
+          <Panel>
+            <HeadToHeads
+              drivers={predictionData.rounds[0].standings["driver"]}
+              teams={
+                predictionData.rounds[predictionData.rounds.length - 1]
+                  .standings["team"]
+              }
+            />
           </Panel>
         </>
       )}
