@@ -66,8 +66,6 @@ const Page = async () => {
       error = "Unknown front-end error";
     }
   }
-  /**@todo Stat for copying last years standings */
-  /**@todo Record how many times people update their standings for a '"Jack submitted X predictions, Y more than anybody else. Indecisive."' stat */
   return (
     <>
       <PanelHeading>
@@ -78,10 +76,10 @@ const Page = async () => {
           <Panel>
             <p>
               Once the first race of the season completes, various stats will
-              show on this page for each of the drivers, teams and players.
+              show on this page for each of the drivers and teams.
             </p>
             <PromptPredictions
-              currentUserDisplayName={currentUserDisplayName}
+              isSignedIn={Boolean(currentUserDisplayName)}
               predictionFreezeTime={predictionFreezeTime}
             />
           </Panel>

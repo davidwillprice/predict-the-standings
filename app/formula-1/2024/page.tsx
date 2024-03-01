@@ -90,7 +90,7 @@ const Page = async ({ searchParams }: Props) => {
               performance as the season progresses.
             </p>
             <PromptPredictions
-              currentUserDisplayName={currentUserDisplayName}
+              isSignedIn={Boolean(currentUserDisplayName)}
               predictionFreezeTime={predictionFreezeTime}
             />
           </Panel>
