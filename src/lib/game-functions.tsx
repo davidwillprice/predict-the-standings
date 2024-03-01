@@ -208,9 +208,12 @@ export const calcPredictionsAccuracy = (
   noOfEntrants: number,
   penaltyPoints: number
 ): number => {
-  /**@todo Rework out how to calculate this from the noOfEntrants */
-  const maxDiff = 200;
-
+  let maxDiff = 0;
+  noOfEntrants--;
+  while (noOfEntrants > 0) {
+    maxDiff += noOfEntrants * 2;
+    noOfEntrants -= 2;
+  }
   return Math.round(((maxDiff - penaltyPoints) / maxDiff) * 100);
 };
 
