@@ -59,10 +59,9 @@ export const EntrantAccuracy = ({ rounds, isSeasonOver }: Props) => {
         return (
           <li key={entrant.name}>
             {`${entrant.name} ${isSeasonOver ? "was" : "is"} the ${accType} 
-            accurately predicted ${entrantType}, with the average prediction
-            being off by ${
+            accurately predicted ${entrantType} (on avg ${
               avgMisposition === 0 ? 0.1 : avgMisposition
-            } position${avgMisposition !== 1 ? "s" : ""}.`}
+            } position${avgMisposition !== 1 ? "s" : ""} off).`}
           </li>
         );
       })}
