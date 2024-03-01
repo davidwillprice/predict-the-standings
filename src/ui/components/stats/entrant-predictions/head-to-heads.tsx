@@ -1,3 +1,5 @@
+import { Fragment } from "react";
+
 import { sortEntrantsAlphabetically } from "@lib/misc";
 
 import type { Entrant } from "@custom-types/game-types";
@@ -32,7 +34,10 @@ const HeadToHead = ({ teammates }: HeadToHeadProps) => {
   } else {
     throw new Error("No driver head to head data");
   }
-
+  const avgPosDifBetweenNo1AndNo2 =
+    no1Driver.avgPrePos && no2Driver.avgPrePos
+      ? Math.round((no2Driver.avgPrePos - no1Driver.avgPrePos) * 10) / 10
+      : null;
   return (
     <div className={styles.head_to_head}>
       <div
@@ -58,11 +63,23 @@ const HeadToHead = ({ teammates }: HeadToHeadProps) => {
           style={{ width: no2Driver.pcPredictedToBeatTeammate + "%" }}
         />
       </div>
-      {no1Driver.avgPrePos && no2Driver.avgPrePos ? (
+      {avgPosDifBetweenNo1AndNo2 ? (
         <p className={styles.avgPos}>
-          On average, people predicted {no1Driver.name} would finish{" "}
-          {Math.round((no2Driver.avgPrePos - no1Driver.avgPrePos) * 10) / 10}{" "}
-          positions higher than {no2Driver.name}.
+          {avgPosDifBetweenNo1AndNo2 > 0
+            ? `On average, people predicted ${
+                no1Driver.name
+              } would finish ${avgPosDifBetweenNo1AndNo2} position${
+                avgPosDifBetweenNo1AndNo2 !== 1 ? "s" : ""
+              } higher than ${no2Driver.name}.`
+            : avgPosDifBetweenNo1AndNo2 < 0
+            ? `However on average, ${
+                no2Driver.name
+              } was actually predicted to finish ${Math.abs(
+                avgPosDifBetweenNo1AndNo2
+              )} position${
+                Math.abs(avgPosDifBetweenNo1AndNo2) !== 1 ? "s" : ""
+              } higher than ${no1Driver.name}.`
+            : `However, both ${no1Driver.name} and ${no2Driver.name} had the same average predicted finish position (${no1Driver.avgPrePos}).`}
         </p>
       ) : (
         ""
@@ -75,13 +92,13 @@ export const HeadToHeads = ({ drivers, teams }: HeadToHeadsProps) => (
   <div className={styles.head_to_heads}>
     <h3>% of People Who Favoured Each&nbsp;Teammate</h3>
     {teams.map((team, index) => (
-      <>
+      <Fragment key={team.name}>
         <HeadToHead
           key={team.name}
           teammates={drivers.filter((driver) => driver.color === team.color)}
         />
         {index !== teams.length - 1 ? <hr /> : ""}
-      </>
+      </Fragment>
     ))}
   </div>
 );
