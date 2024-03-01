@@ -35,6 +35,8 @@ export const getAllPredictonData = async (
   users = calcUsersPerformance("driver", rounds, users);
   users = calcUsersPerformance("team", rounds, users);
 
+  users = generateControversyData(users);
+
   rounds = calcLeaderboards("driver", rounds, users);
   rounds = calcLeaderboards("team", rounds, users);
 
@@ -387,3 +389,25 @@ const generateTeammateHeadToHead = (
   }
   return drivers;
 };
+
+/**Calculate how far away each user's predictions are from the average predictions */
+export function generateControversyData(users: Users): Users {
+  for (const user of Object.values(users)) {
+    if (user.displayName === "Average") continue;
+
+    for (const entrantType of Object.keys(user.predictions)) {
+      user.predictionsFromAvg[entrantType] = 0;
+
+      for (const [predictedPos, entrant] of Object.entries(
+        user.predictions[entrantType]
+      )) {
+        const avgPredictedPos =
+          users.Average.predictions[entrantType].indexOf(entrant);
+
+        const posDiffs = Math.abs(+predictedPos - avgPredictedPos);
+        user.predictionsFromAvg[entrantType] += posDiffs;
+      }
+    }
+  }
+  return users;
+}

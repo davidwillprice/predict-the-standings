@@ -11,6 +11,7 @@ export class User {
   information: string;
   predictions: { [key: string]: Entrant[] };
   season: { [key: string]: RoundPerformance[] };
+  predictionsFromAvg: { [key: string]: number };
   constructor(
     id: string,
     displayName: string,
@@ -21,6 +22,7 @@ export class User {
     this.predictions = predictions;
     this.season = {};
     this.information = "";
+    this.predictionsFromAvg = {};
   }
 }
 export interface Users {
