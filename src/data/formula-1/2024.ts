@@ -117,8 +117,9 @@ let rounds: Round[] = [
 ];
 
 export const seasonData2024 = {
-  rounds: rounds,
   drivers: drivers,
-  teams: teams,
+  isSeasonOver: false,
   predictionFreezeTime: predictionFreezeTime,
+  rounds: rounds,
+  teams: teams,
 };

@@ -11,6 +11,7 @@ import { EntrantPredictions } from "@components/stats/entrant-predictions/entran
 import { FeedbackContainer } from "@components/feedback-container/feedback-container";
 import { PromptPredictions } from "@components/submit-predictions/prompt-predictions";
 import { HeadToHeads } from "@components/stats/entrant-predictions/head-to-heads";
+import { EntrantAccuracy } from "@components/stats/entrant-predictions/entrant-accuracy";
 
 import styles from "@components/stats/stats.module.scss";
 
@@ -24,6 +25,7 @@ const {
   teams: initialTeams,
   rounds,
   predictionFreezeTime,
+  isSeasonOver,
 } = allSeasonData["2024"];
 
 const getCachedPredictionData = unstable_cache(
@@ -95,6 +97,10 @@ const Page = async () => {
             <div className={styles.entrantPredictions}>
               <EntrantPredictions
                 predictionData={JSON.parse(JSON.stringify(predictionData))}
+              />
+              <EntrantAccuracy
+                rounds={JSON.parse(JSON.stringify(predictionData.rounds))}
+                isSeasonOver={isSeasonOver}
               />
             </div>
           </Panel>
