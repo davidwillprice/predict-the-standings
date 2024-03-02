@@ -49,7 +49,9 @@ interface Props {
 const Page = async ({ searchParams }: Props) => {
   let error = "";
   const session = await getServerSession(authOptions);
+  const currentUserId = session?.user.id;
   const currentUserDisplayName = session?.user.displayName;
+
   let predictionData: PredictionData | undefined;
   try {
     const res = await getCachedPredictionData();
@@ -104,6 +106,7 @@ const Page = async ({ searchParams }: Props) => {
       ) : (
         <GameContainer
           currentUserDisplayName={currentUserDisplayName}
+          currentUserId={currentUserId}
           lastUpdated={predictionData.lastUpdated}
           rounds={JSON.parse(JSON.stringify(predictionData.rounds))}
           currentSearchParams={searchParams}

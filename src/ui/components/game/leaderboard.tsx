@@ -5,6 +5,8 @@ import { Round } from "@custom-types/game-types";
 import Icon from "@ui/svgs/icons/sq-icon";
 
 interface Props {
+  currentUserId: string | null;
+  currentUserDisplayName: string | null;
   entrantType: string;
   lastUpdated: Date | string;
   rounds: Round[];
@@ -14,6 +16,8 @@ interface Props {
 
 export const Leaderboard = ({
   changeSelectedUserHandler,
+  currentUserId,
+  currentUserDisplayName,
   entrantType,
   lastUpdated,
   rounds,
@@ -50,7 +54,9 @@ export const Leaderboard = ({
                 <i />
               </td>
               <td className={styles.name_cell}>
-                {row.user.displayName}{" "}
+                {row.user.id === currentUserId
+                  ? currentUserDisplayName
+                  : row.user.displayName}{" "}
                 {row.user.information && <Icon type="star" strokeWidth={1} />}
               </td>
               <td>{`${row.percentCorrect}%`}</td>

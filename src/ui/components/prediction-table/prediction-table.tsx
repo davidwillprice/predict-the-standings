@@ -5,12 +5,16 @@ import Icon from "@ui/svgs/icons/sq-icon";
 import styles from "@components/prediction-table/prediction-table.module.scss";
 
 interface Props {
+  currentUserId: string | null;
+  currentUserDisplayName: string | null;
   entrantType: string;
   selectedRound: number;
   selectedUser: User;
 }
 
 export const PredictionTable = ({
+  currentUserId,
+  currentUserDisplayName,
   entrantType,
   selectedRound,
   selectedUser,
@@ -22,7 +26,12 @@ export const PredictionTable = ({
   );
   return (
     <div className={styles.prediction_table}>
-      <h4 className={styles.heading}>{selectedUser.displayName} Predictions</h4>
+      <h4 className={styles.heading}>
+        {selectedUser.id === currentUserId
+          ? currentUserDisplayName
+          : selectedUser.displayName}{" "}
+        Predictions
+      </h4>
       <table>
         <thead>
           <tr>

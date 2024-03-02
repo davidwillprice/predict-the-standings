@@ -17,6 +17,7 @@ import { Round, Users, User } from "@custom-types/game-types";
 
 interface Props {
   children: ReactNode;
+  currentUserId: string | null;
   currentUserDisplayName: string | null;
   lastUpdated: Date;
   rounds: Round[];
@@ -29,6 +30,7 @@ export const GameContainer = ({
   rounds,
   lastUpdated,
   users,
+  currentUserId,
   currentUserDisplayName,
   currentSearchParams,
 }: Props) => {
@@ -146,6 +148,8 @@ export const GameContainer = ({
             <div className={styles.main}>
               {children}
               <Leaderboard
+                currentUserDisplayName={currentUserDisplayName}
+                currentUserId={currentUserId}
                 entrantType={entrantType}
                 lastUpdated={lastUpdated}
                 rounds={rounds}
@@ -178,6 +182,8 @@ export const GameContainer = ({
             </div>
             <div className={styles.tables}>
               <PredictionTable
+                currentUserDisplayName={currentUserDisplayName}
+                currentUserId={currentUserId}
                 entrantType={entrantType}
                 selectedRound={roundIndex}
                 selectedUser={selectedUser}
