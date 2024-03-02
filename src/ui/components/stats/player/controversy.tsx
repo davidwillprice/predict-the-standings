@@ -1,4 +1,4 @@
-import { formatArrayIntoList } from "@lib/misc";
+import { formatArrayIntoList, calcPercentile } from "@lib/misc";
 
 import { Users, User } from "@custom-types/game-types";
 
@@ -69,12 +69,63 @@ export const Controversy = ({ currentUserId, isSeasonOver, users }: Props) => {
       new MostOrLeastControData(leastControPlayers, "least", entrantType)
     );
   }
-  console.log(mostOrLeastControPlayers);
-  /**@todo Add logged in users controversy */
 
+  class UserControData {
+    difFromAvg: number;
+    percentile: number;
+    entrantType: string;
+    constructor(difFromAvg: number, entrantType: string) {
+      this.difFromAvg = difFromAvg;
+      this.percentile = calcPercentile(
+        controversyArrs[entrantType].map(
+          (user) => user.predictionsFromAvg[entrantType]
+        ),
+        difFromAvg
+      );
+      this.entrantType = entrantType;
+    }
+  }
+  const userControArr = [];
+  if (currentUser) {
+    for (const entrantType of Object.keys(currentUser.predictionsFromAvg)) {
+      userControArr.push(
+        new UserControData(
+          currentUser.predictionsFromAvg[entrantType],
+          entrantType
+        )
+      );
+    }
+  }
+
+  {
+    /**@todo "X, Y, and Z were the only players to predict Hamilton would win the WDC" */
+  }
   return (
     <>
-      <h2>Most and Least Controversial Players</h2>
+      <h2>Controversial Predictions</h2>
+      {currentUser ? (
+        <>
+          <ul>
+            {userControArr.map((data) => (
+              <li key={data.entrantType}>
+                You had{" "}
+                {data.percentile < 20
+                  ? "very safe"
+                  : data.percentile < 60
+                  ? "pretty safe"
+                  : data.percentile < 80
+                  ? "controversial"
+                  : "very controversial"}{" "}
+                {data.entrantType} predictions ({data.difFromAvg} position
+                differences from the average predictions).
+              </li>
+            ))}
+          </ul>
+          <hr />
+        </>
+      ) : (
+        ""
+      )}
       <ul>
         {mostOrLeastControPlayers.map((userData) => {
           const { users, difFromAvg, controType, entrantType } = userData;

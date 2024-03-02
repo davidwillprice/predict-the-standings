@@ -26,6 +26,18 @@ export const formatArrayIntoList = (arr: string[]): string => {
   return arr.join();
 };
 
+export const calcPercentile = (arr: number[], val: number): number => {
+  let count = 0;
+  arr.forEach((v) => {
+    if (v < val) {
+      count++;
+    } else if (v == val) {
+      count += 0.5;
+    }
+  });
+  return (100 * count) / arr.length;
+};
+
 //3 as e
 //1 as i
 //0 as o
