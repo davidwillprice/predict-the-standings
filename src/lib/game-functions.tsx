@@ -23,8 +23,8 @@ export const getAllPredictonData = async (
   let users = res;
 
   //**Creates an 'average' user */
-  users.Average = new User("0", "Average", {});
-  users.Average.information =
+  users.user0 = new User("0", "Average", {});
+  users.user0.information =
     "This prediction table is an automated average of all other player predictions.";
 
   users = generateAveragePredictions(drivers, "driver", users);
@@ -85,7 +85,7 @@ const getUserData = async (
     if (dbId && dbDisplayName && dbDriverPredictions && dbTeamPredictions) {
       return {
         ...acc,
-        [dbDisplayName]: new User(dbId, dbDisplayName, {
+        [`user${dbId}`]: new User(dbId, dbDisplayName, {
           driver: dbDriverPredictions.map((entrant) => drivers[entrant]),
           team: dbTeamPredictions.map((entrant) => teams[entrant]),
         }),
@@ -105,7 +105,7 @@ const generateAveragePredictions = (
   entrantType: string,
   users: Users
 ) => {
-  users.Average.predictions[entrantType] = [];
+  users.user0.predictions[entrantType] = [];
   for (const entrant of Object.values(entrants)) {
     let predictionPosTotal = 0;
     let noOfUsers = 0;
@@ -114,15 +114,15 @@ const generateAveragePredictions = (
       noOfUsers++;
     }
     entrant.avgPrePos = predictionPosTotal / noOfUsers;
-    users.Average.predictions[entrantType].push(entrant);
+    users.user0.predictions[entrantType].push(entrant);
   }
   return users;
 };
 
 //**Sort all 'average' user's predictions by how popular each entrant was */
 const orderAveragePredictions = (users: Users): Users => {
-  for (const entrantType in users.Average.predictions) {
-    users.Average.predictions[entrantType].sort((a, b) =>
+  for (const entrantType in users.user0.predictions) {
+    users.user0.predictions[entrantType].sort((a, b) =>
       a.avgPrePos! > b.avgPrePos! ? 1 : -1
     );
   }
@@ -402,7 +402,7 @@ export function generateControversyData(users: Users): Users {
         user.predictions[entrantType]
       )) {
         const avgPredictedPos =
-          users.Average.predictions[entrantType].indexOf(entrant);
+          users.user0.predictions[entrantType].indexOf(entrant);
 
         const posDiffs = Math.abs(+predictedPos - avgPredictedPos);
         user.predictionsFromAvg[entrantType] += posDiffs;

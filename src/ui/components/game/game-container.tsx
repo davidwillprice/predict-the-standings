@@ -85,8 +85,11 @@ export const GameContainer = ({
   const setInitialUser = (searchParams: {
     [key: string]: string | string[] | undefined;
   }): User | null => {
-    if (typeof searchParams.user === "string" && users[searchParams.user]) {
-      return users[searchParams.user];
+    if (
+      typeof searchParams.user === "string" &&
+      users["user" + searchParams.user]
+    ) {
+      return users["user" + searchParams.user];
     } else {
       return null;
     }
@@ -128,8 +131,8 @@ export const GameContainer = ({
   };
 
   /**Updates user in query string */
-  const changeSelectedUserHandler = (displayName: string) => {
-    router.push(pathname + "?" + createQueryString("user", displayName));
+  const changeSelectedUserHandler = (userId: string) => {
+    router.push(pathname + "?" + createQueryString("user", userId));
   };
 
   return (

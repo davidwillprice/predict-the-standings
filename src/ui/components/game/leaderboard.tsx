@@ -37,7 +37,7 @@ export const Leaderboard = ({
             <tr
               key={row.user.displayName}
               className={`${predictStyles.table_row} ${styles.table_row}`}
-              onClick={() => changeSelectedUserHandler(row.user.displayName)}>
+              onClick={() => changeSelectedUserHandler(row.user.id)}>
               <td className={styles.position}>{index + 1}</td>
               <td
                 className={`${styles.position_diff} ${
