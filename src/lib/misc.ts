@@ -11,6 +11,21 @@ export const sortUsersAlphabetically = (userArr: User[]) => {
   );
 };
 
+/**
+ * @returns Strings with commas and 'and' between them
+ */
+export const formatArrayIntoList = (arr: string[]): string => {
+  if (arr.length === 1) return arr[0];
+
+  arr[arr.length - 1] = "and " + arr[arr.length - 1];
+  if (arr.length === 2) {
+    arr = [arr.join(" ")];
+  } else {
+    arr = [arr.join(", ")];
+  }
+  return arr.join();
+};
+
 //3 as e
 //1 as i
 //0 as o

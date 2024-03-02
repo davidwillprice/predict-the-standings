@@ -1,3 +1,5 @@
+import { formatArrayIntoList } from "@lib/misc";
+
 import { Users, User } from "@custom-types/game-types";
 
 interface Props {
@@ -11,15 +13,19 @@ export const Controversy = ({ currentUserId, isSeasonOver, users }: Props) => {
 
   const currentUser: User | undefined = users["user" + currentUserId];
 
-  class MostOrLeastControPlayer {
-    user: User;
+  class MostOrLeastControData {
+    users: User[];
     difFromAvg: number;
     controType: "most" | "least";
     entrantType: string;
-    constructor(user: User, controType: "most" | "least", entrantType: string) {
-      this.user = user;
+    constructor(
+      users: User[],
+      controType: "most" | "least",
+      entrantType: string
+    ) {
+      this.users = users;
       this.controType = controType;
-      this.difFromAvg = user.predictionsFromAvg[entrantType];
+      this.difFromAvg = users[0].predictionsFromAvg[entrantType];
       this.entrantType = entrantType;
     }
   }
@@ -41,21 +47,29 @@ export const Controversy = ({ currentUserId, isSeasonOver, users }: Props) => {
         : -1
     );
   }
-  /**@todo Account for multiple users having the same level of controversy */
+
   let mostOrLeastControPlayers = [];
   for (const [entrantType, userArr] of Object.entries(controversyArrs)) {
+    const mostControPlayers = userArr.filter(
+      (user) =>
+        user.predictionsFromAvg[entrantType] ===
+        userArr[userArr.length - 1].predictionsFromAvg[entrantType]
+    );
+
     mostOrLeastControPlayers.push(
-      new MostOrLeastControPlayer(
-        userArr[userArr.length - 1],
-        "most",
-        entrantType
-      )
+      new MostOrLeastControData(mostControPlayers, "most", entrantType)
+    );
+
+    const leastControPlayers = userArr.filter(
+      (user) =>
+        user.predictionsFromAvg[entrantType] ===
+        userArr[0].predictionsFromAvg[entrantType]
     );
     mostOrLeastControPlayers.push(
-      new MostOrLeastControPlayer(userArr[0], "least", entrantType)
+      new MostOrLeastControData(leastControPlayers, "least", entrantType)
     );
   }
-
+  console.log(mostOrLeastControPlayers);
   /**@todo Add logged in users controversy */
 
   return (
@@ -63,10 +77,12 @@ export const Controversy = ({ currentUserId, isSeasonOver, users }: Props) => {
       <h2>Most and Least Controversial Players</h2>
       <ul>
         {mostOrLeastControPlayers.map((userData) => {
-          const { user, difFromAvg, controType, entrantType } = userData;
+          const { users, difFromAvg, controType, entrantType } = userData;
           return (
-            <li key={user.id}>
-              {`${user.displayName} had the ${controType} 
+            <li key={controType + entrantType}>
+              {`${formatArrayIntoList(
+                users.map((user) => user.displayName)
+              )} had the ${controType} 
             'controversial' ${entrantType} predictions (${difFromAvg} position differences from the average predictions).`}
             </li>
           );
