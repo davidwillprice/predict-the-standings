@@ -9,8 +9,20 @@ interface Props {
 export const Controversy = ({ currentUserId, isSeasonOver, users }: Props) => {
   let controversyArrs: { [key: string]: User[] } = {};
 
-  //   const currentUser = currentUserId ? users.find((user)=> currentUserId === user.id);
-  //   if
+  const currentUser: User | undefined = users["user" + currentUserId];
+
+  class MostOrLeastControPlayer {
+    user: User;
+    difFromAvg: number;
+    controType: "most" | "least";
+    entrantType: string;
+    constructor(user: User, controType: "most" | "least", entrantType: string) {
+      this.user = user;
+      this.controType = controType;
+      this.difFromAvg = user.predictionsFromAvg[entrantType];
+      this.entrantType = entrantType;
+    }
+  }
 
   /**Populate controversyArrs with the users in any order */
   for (const user of Object.values(users)) {
@@ -29,11 +41,37 @@ export const Controversy = ({ currentUserId, isSeasonOver, users }: Props) => {
         : -1
     );
   }
+  /**@todo Account for multiple users having the same level of controversy */
+  let mostOrLeastControPlayers = [];
+  for (const [entrantType, userArr] of Object.entries(controversyArrs)) {
+    mostOrLeastControPlayers.push(
+      new MostOrLeastControPlayer(
+        userArr[userArr.length - 1],
+        "most",
+        entrantType
+      )
+    );
+    mostOrLeastControPlayers.push(
+      new MostOrLeastControPlayer(userArr[0], "least", entrantType)
+    );
+  }
+
+  /**@todo Add logged in users controversy */
 
   return (
     <>
-      <h2>Controversial Predictions</h2>
-      <ul></ul>
+      <h2>Most and Least Controversial Players</h2>
+      <ul>
+        {mostOrLeastControPlayers.map((userData) => {
+          const { user, difFromAvg, controType, entrantType } = userData;
+          return (
+            <li key={user.id}>
+              {`${user.displayName} had the ${controType} 
+            'controversial' ${entrantType} predictions (${difFromAvg} position differences from the average predictions).`}
+            </li>
+          );
+        })}
+      </ul>
     </>
   );
 };
