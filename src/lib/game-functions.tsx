@@ -189,7 +189,8 @@ const calcLeaderboards = (
   users: Users
 ): Round[] => {
   rounds.forEach((round, roundIndex) => {
-    if (!round.leaderboards[entrantType]) round.leaderboards[entrantType] = [];
+    /**Create blank leaderboard to avoid clashes with previous data */
+    round.leaderboards[entrantType] = [];
 
     for (let user of Object.values(users)) {
       round.leaderboards[entrantType].push({
@@ -341,7 +342,8 @@ const getEntrantPredictedPositions = (
   const noOfUsers = Object.keys(users).length - 1;
 
   for (const entrant of Object.values(entrants)) {
-    /**Create blank position array */
+    /**Create set up base position array */
+    entrant.predictionedPositions = [];
     for (let i = 0; i < noOfEntrants; i++) {
       entrant.predictionedPositions.push(0);
     }

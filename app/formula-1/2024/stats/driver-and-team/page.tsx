@@ -29,7 +29,7 @@ const {
 } = allSeasonData["2024"];
 
 const getCachedPredictionData = unstable_cache(
-  /**@todo Instead of it being time based, revalidate based on when the website is deployed as that's how I'll be adding new race data */
+  /**@todo URGENT Check data is no longer getting messed up by old cache */
   async () => {
     try {
       return await getAllPredictonData(
