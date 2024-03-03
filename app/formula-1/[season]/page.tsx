@@ -1,5 +1,7 @@
+import { NextPage } from "next";
 import { unstable_cache } from "next/cache";
 import { getServerSession } from "next-auth/next";
+import { notFound } from "next/navigation";
 
 import { authOptions } from "@lib/auth";
 import { getAllPredictonData } from "@lib/game-functions";
@@ -12,41 +14,43 @@ import { PreSeasonContainer } from "@components/game/pre-season-container";
 import { FeedbackContainer } from "@components/feedback-container/feedback-container";
 import { PromptPredictions } from "@components/submit-predictions/prompt-predictions";
 
-import { Sport } from "@custom-types/misc";
 import { PredictionData } from "@custom-types/game-types";
+import { PageProps } from "@custom-types/misc";
 
-const season = "2024";
-const sport: Sport = "f1";
-const {
-  drivers: initialDrivers,
-  teams: initialTeams,
-  rounds,
-  predictionFreezeTime,
-} = allSeasonData["2024"];
-
-const getCachedPredictionData = unstable_cache(
-  /**@todo Instead of it being time based, revalidate based on when the website is deployed as that's how I'll be adding new race data */
-  async () => {
-    try {
-      return await getAllPredictonData(
-        initialDrivers,
-        initialTeams,
-        rounds,
-        season,
-        sport
-      );
-    } catch (_) {
-      console.log("Failed to getAllPredictonData()");
-    }
-  },
-  [season, sport]
-);
-
-interface Props {
-  searchParams: { [key: string]: string | string[] | undefined };
+export async function generateStaticParams() {
+  return Object.keys(allSeasonData).map((season) => ({
+    season: season,
+  }));
 }
 
-const Page = async ({ searchParams }: Props) => {
+const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
+  const { season } = params;
+  if (allSeasonData[season] === undefined) notFound();
+  const {
+    drivers: initialDrivers,
+    teams: initialTeams,
+    rounds,
+    predictionFreezeTime,
+  } = allSeasonData[season];
+
+  const getCachedPredictionData = unstable_cache(
+    /**@todo Instead of it being time based, revalidate based on when the website is deployed as that's how I'll be adding new race data */
+    async () => {
+      try {
+        return await getAllPredictonData(
+          initialDrivers,
+          initialTeams,
+          rounds,
+          season,
+          "f1"
+        );
+      } catch (_) {
+        console.log("Failed to getAllPredictonData()");
+      }
+    },
+    [season]
+  );
+
   let error = "";
   const session = await getServerSession(authOptions);
   const currentUserId = session?.user.id;

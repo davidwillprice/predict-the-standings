@@ -40,7 +40,7 @@ export const MainNav = ({ children }: Props) => {
     <>
       {/**@todo Add year selector*/}
       {predictionFreezeTime.getTime() > new Date().getTime() ? (
-        <HeaderLink href="/formula-1/predict" icon="listBullet">
+        <HeaderLink href="/formula-1/2024/predict" icon="listBullet">
           Submit Predictions
         </HeaderLink>
       ) : (

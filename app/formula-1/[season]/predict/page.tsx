@@ -1,6 +1,8 @@
 import { Metadata } from "next";
 import { getServerSession } from "next-auth/next";
 import { redirect } from "next/navigation";
+import { NextPage } from "next";
+import { notFound } from "next/navigation";
 
 import { sortEntrantsAlphabetically } from "@lib/misc";
 import { getF1PredictionTablesQuery } from "@lib/db-functions";
@@ -13,14 +15,16 @@ import { Countdown } from "@components/countdown/countdown";
 
 import commonStyles from "@styles/common.module.scss";
 
+import { PageProps } from "@custom-types/misc";
 import { Entrant } from "@custom-types/game-types";
-import { Sport } from "@custom-types/misc";
 
 export const metadata: Metadata = {
   title: "Make Your Predictions | Predict The Standings",
 };
 
-export default async function Page() {
+const Page: NextPage<PageProps> = async ({ params }) => {
+  const { season } = params;
+  if (allSeasonData[season] === undefined) notFound();
   const session = await getServerSession(authOptions);
   if (session == null) {
     return redirect("/login?error=login");
@@ -28,10 +32,8 @@ export default async function Page() {
     return redirect("/get-started");
   }
 
-  const { predictionFreezeTime, drivers, teams } = allSeasonData["2024"];
+  const { predictionFreezeTime, drivers, teams } = allSeasonData[season];
   const userId = session.user.id;
-  const sport: Sport = "f1";
-  const season = "2024";
 
   const defaultDriverArr = sortEntrantsAlphabetically([
     drivers.ham,
@@ -72,7 +74,7 @@ export default async function Page() {
   try {
     const tablesQueryRow = await getF1PredictionTablesQuery(
       season,
-      sport,
+      "f1",
       userId
     );
     if (!tablesQueryRow) {
@@ -107,7 +109,7 @@ export default async function Page() {
           initialTeams={JSON.parse(JSON.stringify(teamArr))}
           predictionFreezeTime={predictionFreezeTime}
           season={season}
-          sport={sport}
+          sport={"f1"}
           userId={userId}>
           <Panel>
             <p>
@@ -143,4 +145,6 @@ export default async function Page() {
       )}
     </>
   );
-}
+};
+
+export default Page;

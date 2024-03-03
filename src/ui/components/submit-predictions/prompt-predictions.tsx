@@ -18,7 +18,7 @@ export const PromptPredictions = ({
     <>
       <hr />
       <div className={btnConStyles.single}>
-        <Link href="/formula-1/predict" className={btnStyles.button}>
+        <Link href="/formula-1/2024/predict" className={btnStyles.button}>
           <Icon strokeWidth={2} type="listBullet" />
           {isSignedIn ? "Edit Your Predictions" : "Predict The Standings"}
         </Link>

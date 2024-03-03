@@ -47,7 +47,7 @@ const Page = () => {
               to submit (and edit) your predictions.
             </p>
             <div className={styles.single}>
-              <Link href="/formula-1/predict" className={btnStyles.button}>
+              <Link href="/formula-1/2024/predict" className={btnStyles.button}>
                 <Icon strokeWidth={2} type="listBullet" />
                 Predict The Standings
               </Link>

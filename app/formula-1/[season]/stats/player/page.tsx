@@ -1,5 +1,7 @@
 import { unstable_cache } from "next/cache";
 import { getServerSession } from "next-auth/next";
+import { NextPage } from "next";
+import { notFound } from "next/navigation";
 
 import { authOptions } from "@lib/auth";
 import { getAllPredictonData } from "@lib/game-functions";
@@ -11,38 +13,44 @@ import { FeedbackContainer } from "@components/feedback-container/feedback-conta
 import { PromptPredictions } from "@components/submit-predictions/prompt-predictions";
 import { Controversy } from "@components/stats/player/controversy";
 
-import { Sport } from "@custom-types/misc";
 import { PredictionData } from "@custom-types/game-types";
+import { PageProps } from "@custom-types/misc";
 
-const season = "2024";
-const sport: Sport = "f1";
-const {
-  drivers: initialDrivers,
-  teams: initialTeams,
-  rounds,
-  predictionFreezeTime,
-  isSeasonOver,
-} = allSeasonData["2024"];
+export async function generateStaticParams() {
+  return Object.keys(allSeasonData).map((season) => ({
+    season: season,
+  }));
+}
 
-const getCachedPredictionData = unstable_cache(
-  /**@todo Instead of it being time based, revalidate based on when the website is deployed as that's how I'll be adding new race data */
-  async () => {
-    try {
-      return await getAllPredictonData(
-        initialDrivers,
-        initialTeams,
-        rounds,
-        season,
-        sport
-      );
-    } catch (_) {
-      console.log("Failed to getAllPredictonData()");
-    }
-  },
-  [season, sport]
-);
+const Page: NextPage<PageProps> = async ({ params }) => {
+  const { season } = params;
+  if (allSeasonData[season] === undefined) notFound();
+  const {
+    drivers: initialDrivers,
+    teams: initialTeams,
+    rounds,
+    predictionFreezeTime,
+    isSeasonOver,
+  } = allSeasonData[season];
 
-const Page = async () => {
+  const getCachedPredictionData = unstable_cache(
+    /**@todo Instead of it being time based, revalidate based on when the website is deployed as that's how I'll be adding new race data */
+    async () => {
+      try {
+        return await getAllPredictonData(
+          initialDrivers,
+          initialTeams,
+          rounds,
+          season,
+          "f1"
+        );
+      } catch (_) {
+        console.log("Failed to getAllPredictonData()");
+      }
+    },
+    [season, "f1"]
+  );
+
   let error = "";
   const session = await getServerSession(authOptions);
   const currentUserId = session?.user.id;
