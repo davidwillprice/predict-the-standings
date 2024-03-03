@@ -63,6 +63,7 @@ const Page = () => {
             <Icon strokeWidth={2} type="driver" />
             Drivers Leaderboard
           </Link>
+          {/**@todo Fix this button looking weird on mobile */}
           <Link
             href="/formula-1/2024/?leaderboard=constructors"
             className={btnStyles.button}>
@@ -75,6 +76,14 @@ const Page = () => {
             <Icon strokeWidth={2} type="stats" />
             Driver & Team Stats
           </Link>
+          <Link
+            href="/formula-1/2024/stats/player"
+            className={btnStyles.button}>
+            <Icon strokeWidth={2} type="group" />
+            Player Stats
+          </Link>
+        </div>
+        <div className={styles.single}>
           <Link href="/help" className={btnStyles.button}>
             <Icon strokeWidth={2} type="help" />
             Help
