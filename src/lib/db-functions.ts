@@ -11,7 +11,7 @@ export const submitPredictionsQuery = async (
   teamArr: Entrant[],
   userId: number
 ) => {
-  await query(`INSERT INTO ${sport}_${season} (prediction_id, user_id, driver_predictions, team_predictions)
+  await query(`INSERT INTO ${sport}_${season} (prediction_id, user_id, driver_predictions, team_predictions, last_submission_time)
   VALUES (${userId}, ${userId}, ARRAY[${driverArr.map(
     (entrant) => `'${entrant.sName}'`
   )}], ARRAY[${teamArr.map((entrant) => `'${entrant.sName}'`)}])
@@ -20,7 +20,8 @@ export const submitPredictionsQuery = async (
   SET user_id = ${userId}, driver_predictions = ARRAY[${driverArr.map(
     (entrant) => `'${entrant.sName}'`
   )}], team_predictions = ARRAY[${teamArr.map(
-    (entrant) => `'${entrant.sName}'`
+    (entrant) =>
+      `'${entrant.sName}', last_submission_time = ${new Date().getTime()}`
   )}]`);
 };
 

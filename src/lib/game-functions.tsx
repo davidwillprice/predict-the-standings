@@ -221,7 +221,7 @@ export const calcPredictionsAccuracy = (
 
 /** Order leaderboards by percentage correct, then use perfect predictions as tie break, then use predictions that were 1 off as a tie break, then use predictions that were 2 off as a tie break etc */
 const orderLeaderboards = (rounds: Round[]) => {
-  /** @todo Need to implement people sharing a leaderboard position if they have the same predictions */
+  /** @todo Implement tie break where if people have the same exact predictionorder then it goes in order of whose prediction was earliest?*/
   rounds.forEach((round, roundIndex) => {
     for (const entrantType in round.leaderboards) {
       round.leaderboards[entrantType].sort(function (a, b) {
