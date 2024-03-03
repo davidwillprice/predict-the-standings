@@ -4,7 +4,7 @@ import { NextPage } from "next";
 import { notFound } from "next/navigation";
 
 import { authOptions } from "@lib/auth";
-import { getAllPredictonData } from "@lib/game-functions";
+import { getAllPredictionData } from "@lib/game-functions";
 import { allSeasonData } from "@data/formula-1/season-data";
 
 import { Panel } from "@components/panels/panel";
@@ -37,7 +37,7 @@ const Page: NextPage<PageProps> = async ({ params }) => {
     /**@todo Instead of it being time based, revalidate based on when the website is deployed as that's how I'll be adding new race data */
     async () => {
       try {
-        return await getAllPredictonData(
+        return await getAllPredictionData(
           initialDrivers,
           initialTeams,
           rounds,
@@ -45,7 +45,7 @@ const Page: NextPage<PageProps> = async ({ params }) => {
           "f1"
         );
       } catch (_) {
-        console.log("Failed to getAllPredictonData()");
+        console.log("Failed to getAllPredictionData()");
       }
     },
     [season, "f1"]

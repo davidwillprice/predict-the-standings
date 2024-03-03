@@ -10,7 +10,7 @@ import {
   Users,
 } from "@custom-types/game-types";
 
-export const getAllPredictonData = async (
+export const getAllPredictionData = async (
   drivers: Entrants,
   teams: Entrants,
   rounds: Round[],
@@ -113,7 +113,7 @@ const generateAveragePredictions = (
       predictionPosTotal += user.predictions[entrantType].indexOf(entrant) + 1;
       noOfUsers++;
     }
-    entrant.avgPrePos = predictionPosTotal / noOfUsers;
+    entrant.avgPrePos = Math.round((predictionPosTotal / noOfUsers) * 10) / 10;
     users.user0.predictions[entrantType].push(entrant);
   }
   return users;
@@ -329,6 +329,7 @@ const generateEntrantDiffTotals = (rounds: Round[], users: Users): Round[] => {
       );
     }
   });
+
   return rounds;
 };
 
