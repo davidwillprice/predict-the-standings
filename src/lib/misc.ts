@@ -38,6 +38,20 @@ export const calcPercentile = (arr: number[], val: number): number => {
   return (100 * count) / arr.length;
 };
 
+export const numberToOrdinalNumber = (number: number): string => {
+  const lastNumberOfPos = number.toString().slice(-1);
+  return (
+    number +
+    (lastNumberOfPos === "1"
+      ? "st"
+      : lastNumberOfPos === "2"
+      ? "nd"
+      : lastNumberOfPos === "3"
+      ? "rd"
+      : "th")
+  );
+};
+
 //3 as e
 //1 as i
 //0 as o

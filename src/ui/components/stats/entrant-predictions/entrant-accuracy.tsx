@@ -1,3 +1,5 @@
+import { numberToOrdinalNumber } from "@lib/misc";
+
 import { Round, Entrant } from "@custom-types/game-types";
 
 interface Props {
@@ -8,11 +10,11 @@ interface Props {
 /**Populates an array with the most and least accurate entrants of all types using a class, then renders bullet points of them */
 export const EntrantAccuracy = ({ rounds, isSeasonOver }: Props) => {
   const mostRecentRound = rounds[rounds.length - 1];
-
+  /**@todo Add round slider to see how accuracies changed? */
   class MostOrLeastAccEntrant {
-    entrant: Entrant;
     avgMisposition: number;
     accType: "most" | "least";
+    entrant: Entrant;
     entrantType: string;
     constructor(
       entrant: Entrant,
@@ -22,7 +24,7 @@ export const EntrantAccuracy = ({ rounds, isSeasonOver }: Props) => {
     ) {
       this.entrant = entrant;
       this.avgMisposition =
-        Math.round(
+        Math.ceil(
           (diffTotal / mostRecentRound.leaderboards[entrantType].length) * 10
         ) / 10;
       this.accType = accType;
@@ -51,7 +53,6 @@ export const EntrantAccuracy = ({ rounds, isSeasonOver }: Props) => {
       )
     );
   }
-
   return (
     <ul>
       {mostOrLeastAccEntrants.map((entrantData) => {
@@ -59,9 +60,17 @@ export const EntrantAccuracy = ({ rounds, isSeasonOver }: Props) => {
         return (
           <li key={entrant.name}>
             {`${entrant.name} ${isSeasonOver ? "was" : "is"} the ${accType} 
-            accurately predicted ${entrantType} (on avg ${
-              avgMisposition === 0 ? 0.1 : avgMisposition
-            } position${avgMisposition !== 1 ? "s" : ""} off).`}
+            accurately predicted ${entrantType} (${
+              avgMisposition === 0
+                ? `everyone correctly predicted they would ${
+                    isSeasonOver ? "finish" : "be"
+                  } ${numberToOrdinalNumber(
+                    entrant.predictionedPositions.indexOf(100) + 1
+                  )}).`
+                : `on avg ${avgMisposition} position${
+                    avgMisposition !== 1 ? "s" : ""
+                  } off).`
+            }`}
           </li>
         );
       })}

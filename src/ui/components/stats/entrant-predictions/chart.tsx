@@ -1,5 +1,7 @@
 "use client";
 
+import { numberToOrdinalNumber } from "@lib/misc";
+
 import { Entrant } from "@custom-types/game-types";
 
 import {
@@ -50,20 +52,9 @@ export const Chart = ({ entrant }: Props) => {
       },
     },
   };
-  const labels = entrant.predictionedPositions.map((_, index) => {
-    const pos = index + 1;
-    const lastNumberOfPos = pos.toString().slice(-1);
-    return (
-      pos +
-      (lastNumberOfPos === "1"
-        ? "st"
-        : lastNumberOfPos === "2"
-        ? "nd"
-        : lastNumberOfPos === "3"
-        ? "rd"
-        : "th")
-    );
-  });
+  const labels = entrant.predictionedPositions.map((_, index) =>
+    numberToOrdinalNumber(index + 1)
+  );
   const data = {
     labels,
     datasets: [
