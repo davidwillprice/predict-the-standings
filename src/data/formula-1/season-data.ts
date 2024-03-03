@@ -13,6 +13,6 @@ interface AllSeasonData {
 }
 
 export const allSeasonData: AllSeasonData = {
-  "2023": seasonData2023,
+  //"2023": seasonData2023,
   "2024": seasonData2024,
 };

@@ -414,3 +414,8 @@ export function generateControversyData(users: Users): Users {
   }
   return users;
 }
+
+const getObjFileSize = (obj: object) => {
+  const size = new TextEncoder().encode(JSON.stringify(obj)).length;
+  console.log(size / 1024 + "kb");
+};

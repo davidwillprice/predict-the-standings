@@ -52,6 +52,11 @@ export const numberToOrdinalNumber = (number: number): string => {
   );
 };
 
+export const getObjFileSize = (obj: object) => {
+  const size = new TextEncoder().encode(JSON.stringify(obj)).length;
+  console.log(size / 1024 + "kb");
+};
+
 //3 as e
 //1 as i
 //0 as o

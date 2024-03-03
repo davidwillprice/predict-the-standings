@@ -58,6 +58,7 @@ export const Leaderboard = ({
                   ? currentUserDisplayName
                   : row.user.displayName}{" "}
                 {row.user.information && <Icon type="star" strokeWidth={1} />}
+                {/**@todo Add which entrants are causing them the biggest issues? */}
               </td>
               <td>{`${row.percentCorrect}%`}</td>
               <td className={styles.perfect_positions}>
