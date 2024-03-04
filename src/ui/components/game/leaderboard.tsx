@@ -1,3 +1,5 @@
+import { allSeasonData } from "@data/formula-1/season-data";
+
 import styles from "@components/game/leaderboard.module.scss";
 import predictStyles from "@components/prediction-table/prediction-table.module.scss";
 
@@ -12,6 +14,7 @@ interface Props {
   rounds: Round[];
   roundIndex: number;
   changeSelectedUserHandler: Function;
+  season: string;
 }
 
 export const Leaderboard = ({
@@ -20,10 +23,14 @@ export const Leaderboard = ({
   currentUserDisplayName,
   entrantType,
   lastUpdated,
+  season,
   rounds,
   roundIndex,
 }: Props) => {
+  const { isSeasonOver } = allSeasonData[season];
+
   if (typeof lastUpdated === "string") lastUpdated = new Date(lastUpdated);
+
   return (
     <div className={predictStyles.prediction_table}>
       <table className={styles.leaderboard}>
@@ -42,7 +49,15 @@ export const Leaderboard = ({
               key={row.user.displayName}
               className={`${predictStyles.table_row} ${styles.table_row}`}
               onClick={() => changeSelectedUserHandler(row.user.id)}>
-              <td className={styles.position}>{index + 1}</td>
+              <td className={styles.position}>
+                {isSeasonOver &&
+                index === 0 &&
+                roundIndex === rounds.length - 1 ? (
+                  <Icon type="trophy" strokeWidth={1} />
+                ) : (
+                  index + 1
+                )}
+              </td>
               <td
                 className={`${styles.position_diff} ${
                   row.prevRdDiff > 0

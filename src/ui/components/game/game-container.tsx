@@ -23,6 +23,7 @@ interface Props {
   rounds: Round[];
   currentSearchParams: { [key: string]: string | string[] | undefined };
   users: Users;
+  season: string;
 }
 
 export const GameContainer = ({
@@ -33,6 +34,7 @@ export const GameContainer = ({
   currentUserId,
   currentUserDisplayName,
   currentSearchParams,
+  season,
 }: Props) => {
   const router = useRouter();
   const pathname = usePathname();
@@ -154,6 +156,7 @@ export const GameContainer = ({
                 lastUpdated={lastUpdated}
                 rounds={rounds}
                 roundIndex={roundIndex}
+                season={season}
                 changeSelectedUserHandler={changeSelectedUserHandler}
               />
             </div>

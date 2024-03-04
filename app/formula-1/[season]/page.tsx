@@ -114,7 +114,8 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
           lastUpdated={predictionData.lastUpdated}
           rounds={JSON.parse(JSON.stringify(predictionData.rounds))}
           currentSearchParams={searchParams}
-          users={JSON.parse(JSON.stringify(predictionData.users))}>
+          users={JSON.parse(JSON.stringify(predictionData.users))}
+          season={season}>
           <div>
             {heading}
             <p>
