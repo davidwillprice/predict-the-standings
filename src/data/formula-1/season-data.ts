@@ -1,4 +1,4 @@
-import { seasonData2024 } from "./2024";
+import { seasonData2024 } from "./2024/season";
 import { seasonData2023 } from "./2023";
 import type { Entrant, Round } from "@custom-types/game-types";
 
