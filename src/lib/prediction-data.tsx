@@ -1,4 +1,6 @@
-import { getAllF1PredictionTablesQuery } from "./db-functions";
+import { promises as fs } from "fs";
+
+import { getAllDisplayNamesQuery } from "./db-functions";
 /**@todo Bring all data into a single file so different seasons and sports can be obtained automatically */
 
 import { Sport } from "@custom-types/misc";
@@ -8,6 +10,7 @@ import {
   Round,
   User,
   Users,
+  JsonPrediction,
 } from "@custom-types/game-types";
 
 export const getAllPredictionData = async (
@@ -17,13 +20,13 @@ export const getAllPredictionData = async (
   season: string,
   sport: Sport
 ): Promise<PredictionData | string> => {
-  let res = await getUserData(drivers, season, sport, teams);
+  let res = await getUserPredictions(drivers, season, sport, teams);
   //**If getUsersData didn't generate valid Users, return error message */
   if (typeof res === "string") return res;
   let users = res;
 
   //**Creates an 'average' user */
-  users.user0 = new User("0", "Average", {});
+  users.user0 = new User(0, {});
   users.user0.information =
     "This prediction table is an automated average of all other player predictions.";
 
@@ -60,16 +63,19 @@ export const getAllPredictionData = async (
 };
 
 /**Get users and their predictions from the database and check all the appropriate data is set */
-const getUserData = async (
+const getUserPredictions = async (
   drivers: Entrants,
   season: string,
   sport: Sport,
   teams: Entrants
 ): Promise<Users | string> => {
-  let predictionDataRes;
+  let predictionDataRes: JsonPrediction[];
   try {
-    const res = await getAllF1PredictionTablesQuery(season, sport);
-    predictionDataRes = res.rows;
+    const file = await fs.readFile(
+      process.cwd() + `/src/data/formula-1/${season}/prediction.json`,
+      "utf8"
+    );
+    predictionDataRes = JSON.parse(file);
   } catch (e: unknown) {
     if (e instanceof Error) {
       return e.message;
@@ -77,15 +83,15 @@ const getUserData = async (
     return "Unknown database error";
   }
   let error = false;
-  const Users: Users = predictionDataRes.reduce((acc, user) => {
-    const dbId: string | null = user["id"];
-    const dbDisplayName: string | null = user["display_name"];
+  const users: Users = predictionDataRes.reduce((acc, user) => {
+    const dbId: number | null = user["user_id"];
     const dbDriverPredictions: string[] | null = user["driver_predictions"];
     const dbTeamPredictions: string[] | null = user["team_predictions"];
-    if (dbId && dbDisplayName && dbDriverPredictions && dbTeamPredictions) {
+
+    if (dbId && dbDriverPredictions && dbTeamPredictions) {
       return {
         ...acc,
-        [`user${dbId}`]: new User(dbId, dbDisplayName, {
+        [`user${dbId}`]: new User(dbId, {
           driver: dbDriverPredictions.map((entrant) => drivers[entrant]),
           team: dbTeamPredictions.map((entrant) => teams[entrant]),
         }),
@@ -96,7 +102,7 @@ const getUserData = async (
     }
   }, {} as Record<string, User>);
   if (error) return "Unable construct users from database data";
-  return Users;
+  return users;
 };
 
 /**Loop over each entrant finding their index in each user's prediction table, calculating an average and then adding it to each entrant as new avgPrePos property */
@@ -350,7 +356,9 @@ const getEntrantPredictedPositions = (
     }
     /**Loop over users, obtain the position index they predicted the entrant in, then plus one to that index in the entrant position array  */
     for (const user of Object.values(users)) {
-      if (user.displayName === "Average") continue;
+      /**If the user is the generated average, ignore their predictions */
+      if (user.id === 0) continue;
+
       const userPredictedPos = user.predictions[entrantType].indexOf(entrant);
       entrant.predictionedPositions[userPredictedPos]++;
     }
@@ -369,10 +377,16 @@ const generateTeammateHeadToHead = (
   teams: Entrants,
   users: Users
 ) => {
+  /**Clear any old values from previous renders*/
+  for (const driver of Object.values(drivers)) {
+    driver.pcPredictedToBeatTeammate = 0;
+  }
   const noOfUsers = Object.keys(users).length - 1;
   for (const team of Object.values(teams)) {
     for (const user of Object.values(users)) {
-      if (user.displayName === "Average") continue;
+      /**If the user is the generated average, ignore their predictions */
+      if (user.id === 0) continue;
+
       const higherPredictedDriver = user.predictions["driver"].find(
         (driver) => driver.color === team.color
       );
@@ -396,7 +410,8 @@ const generateTeammateHeadToHead = (
 /**Calculate how far away each user's predictions are from the average predictions */
 export function generateControversyData(users: Users): Users {
   for (const user of Object.values(users)) {
-    if (user.displayName === "Average") continue;
+    /**If the user is the generated average, ignore their predictions */
+    if (user.id === 0) continue;
 
     for (const entrantType of Object.keys(user.predictions)) {
       user.predictionsFromAvg[entrantType] = 0;
@@ -414,8 +429,3 @@ export function generateControversyData(users: Users): Users {
   }
   return users;
 }
-
-const getObjFileSize = (obj: object) => {
-  const size = new TextEncoder().encode(JSON.stringify(obj)).length;
-  console.log(size / 1024 + "kb");
-};

@@ -132,7 +132,10 @@ export const Controversy = ({ currentUserId, isSeasonOver, users }: Props) => {
           return (
             <li key={controType + entrantType}>
               {`${formatArrayIntoList(
-                users.map((user) => user.displayName)
+                users.map((user) => {
+                  if (!user.displayName) throw new Error();
+                  return user.displayName;
+                })
               )} had the ${controType} 
             'controversial' ${entrantType} predictions (${difFromAvg} position differences from the average predictions).`}
             </li>

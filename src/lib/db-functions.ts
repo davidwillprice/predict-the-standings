@@ -40,18 +40,14 @@ export const getF1PredictionTablesQuery = async (
   }
 };
 
-export const getAllF1PredictionTablesQuery = async (
-  season: string,
-  sport: Sport
-) => {
-  console.log(`Running DB query at ${new Date().toISOString()}`);
+export const getAllDisplayNamesQuery = async () => {
+  console.log(
+    `Running DB query to get display names at ${new Date().toISOString()}`
+  );
   return await query(`SELECT
   users.id, 
-  users.display_name, 
-  ${sport}_${season}.driver_predictions,
-  ${sport}_${season}.team_predictions
-  FROM 
-  users INNER JOIN ${sport}_${season} ON ${sport}_${season}.user_id = users.id 
+  users.display_name
+  FROM users
   ORDER BY users.id;`);
 };
 

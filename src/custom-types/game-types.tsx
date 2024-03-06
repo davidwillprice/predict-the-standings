@@ -1,24 +1,13 @@
-export interface PredictionData {
-  entrants: { [key: string]: Entrants };
-  rounds: Round[];
-  lastUpdated: Date;
-  users: Users;
-}
-
 export class User {
-  id: string;
-  displayName: string;
+  id: number;
+  displayName?: string;
   information: string;
   predictions: { [key: string]: Entrant[] };
   season: { [key: string]: RoundPerformance[] };
   predictionsFromAvg: { [key: string]: number };
-  constructor(
-    id: string,
-    displayName: string,
-    predictions: { [key: string]: Entrant[] }
-  ) {
+  constructor(id: number, predictions: { [key: string]: Entrant[] }) {
     this.id = id;
-    this.displayName = displayName;
+    this.displayName = "";
     this.predictions = predictions;
     this.season = {};
     this.information = "";
@@ -27,6 +16,17 @@ export class User {
 }
 export interface Users {
   [key: string]: User;
+}
+
+export interface JsonPrediction {
+  user_id: number;
+  driver_predictions: string[];
+  team_predictions: string[];
+}
+
+export interface UserIdData {
+  id: number;
+  display_name: string;
 }
 
 export class Entrant {
@@ -86,4 +86,11 @@ interface RoundPerformance {
   diffs: { entrant: Entrant; posDiff: number }[];
   /**No of perfect predictions, then predictions that were off by one, then predictions that were off by two etc) */
   diffCounts: number[];
+}
+
+export interface PredictionData {
+  entrants: { [key: string]: Entrants };
+  rounds: Round[];
+  lastUpdated: Date;
+  users: Users;
 }

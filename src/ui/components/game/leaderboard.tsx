@@ -69,7 +69,7 @@ export const Leaderboard = ({
                 <i />
               </td>
               <td className={styles.name_cell}>
-                {row.user.id === currentUserId
+                {row.user.id.toString() === currentUserId
                   ? currentUserDisplayName
                   : row.user.displayName}{" "}
                 {row.user.information && <Icon type="star" strokeWidth={1} />}

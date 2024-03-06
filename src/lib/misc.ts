@@ -5,11 +5,6 @@ export const sortEntrantsAlphabetically = (entrantArr: Entrant[]) => {
     a.name < b.name ? -1 : a.name > b.name ? 1 : 0
   );
 };
-export const sortUsersAlphabetically = (userArr: User[]) => {
-  return userArr.sort((a, b) =>
-    a.displayName < b.displayName ? -1 : a.displayName > b.displayName ? 1 : 0
-  );
-};
 
 /**
  * @returns Strings with commas and 'and' between them

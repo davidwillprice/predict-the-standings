@@ -1,10 +1,9 @@
-import { unstable_cache } from "next/cache";
 import { getServerSession } from "next-auth/next";
 import { NextPage } from "next";
 import { notFound } from "next/navigation";
 
 import { authOptions } from "@lib/auth";
-import { getAllPredictionData } from "@lib/game-functions";
+import { getAllPredictionData } from "@lib/prediction-data";
 import { allSeasonData } from "@data/formula-1/season-data";
 
 import { Panel } from "@components/panels/panel";
@@ -37,31 +36,19 @@ const Page: NextPage<PageProps> = async ({ params }) => {
     isSeasonOver,
   } = allSeasonData[season];
 
-  const getCachedPredictionData = unstable_cache(
-    /**@todo URGENT Check data is no longer getting messed up by old cache */
-    async () => {
-      try {
-        return await getAllPredictionData(
-          initialDrivers,
-          initialTeams,
-          rounds,
-          season,
-          "f1"
-        );
-      } catch (_) {
-        console.log("Failed to getAllPredictionData()");
-      }
-    },
-    [season, "f1"]
-  );
-
   let error = "";
   const session = await getServerSession(authOptions);
   const currentUserDisplayName = session?.user.displayName;
-  let predictionData: PredictionData | undefined;
 
+  let predictionData: PredictionData | undefined;
   try {
-    const res = await getCachedPredictionData();
+    const res = await getAllPredictionData(
+      initialDrivers,
+      initialTeams,
+      rounds,
+      season,
+      "f1"
+    );
     if (typeof res === "string") {
       error = res;
     } else {
@@ -71,9 +58,10 @@ const Page: NextPage<PageProps> = async ({ params }) => {
     if (e instanceof Error) {
       error = e.message;
     } else {
-      error = "Unknown front-end error";
+      error = "Unable to get local predictionData for unknown reason";
     }
   }
+
   return (
     <>
       <PanelHeading>

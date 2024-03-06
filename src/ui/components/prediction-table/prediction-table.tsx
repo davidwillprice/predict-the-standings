@@ -1,5 +1,5 @@
 import type { User } from "@custom-types/game-types";
-import { calcPredictionsAccuracy } from "@lib/game-functions";
+import { calcPredictionsAccuracy } from "@lib/prediction-data";
 import Icon from "@ui/svgs/icons/sq-icon";
 
 import styles from "@components/prediction-table/prediction-table.module.scss";
@@ -27,7 +27,7 @@ export const PredictionTable = ({
   return (
     <div className={styles.prediction_table}>
       <h4 className={styles.heading}>
-        {selectedUser.id === currentUserId
+        {selectedUser.id.toString() === currentUserId
           ? currentUserDisplayName
           : selectedUser.displayName}{" "}
         Predictions

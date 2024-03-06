@@ -4,8 +4,9 @@ import { NextPage } from "next";
 import { notFound } from "next/navigation";
 
 import { authOptions } from "@lib/auth";
-import { getAllPredictionData } from "@lib/game-functions";
+import { getAllPredictionData } from "@lib/prediction-data";
 import { allSeasonData } from "@data/formula-1/season-data";
+import { getAllDisplayNamesQuery } from "@lib/db-functions";
 
 import { Panel } from "@components/panels/panel";
 import { PanelHeading } from "@components/panels/panel-heading";
@@ -13,7 +14,7 @@ import { FeedbackContainer } from "@components/feedback-container/feedback-conta
 import { PromptPredictions } from "@components/submit-predictions/prompt-predictions";
 import { Controversy } from "@components/stats/player/controversy";
 
-import { PredictionData } from "@custom-types/game-types";
+import { PredictionData, UserIdData } from "@custom-types/game-types";
 import { PageProps } from "@custom-types/misc";
 
 export async function generateStaticParams() {
@@ -33,31 +34,49 @@ const Page: NextPage<PageProps> = async ({ params }) => {
     isSeasonOver,
   } = allSeasonData[season];
 
-  const getCachedPredictionData = unstable_cache(
-    /**@todo Instead of it being time based, revalidate based on when the website is deployed as that's how I'll be adding new race data */
-    async () => {
-      try {
-        return await getAllPredictionData(
-          initialDrivers,
-          initialTeams,
-          rounds,
-          season,
-          "f1"
-        );
-      } catch (_) {
-        console.log("Failed to getAllPredictionData()");
-      }
-    },
-    [season, "f1"]
-  );
-
   let error = "";
   const session = await getServerSession(authOptions);
   const currentUserId = session?.user.id;
-  let predictionData: PredictionData | undefined;
+  /**@todo Add updated current display name to different stats */
+  const currentUserDisplayName = session?.user.displayName;
 
+  const getCachedDisplayNames = unstable_cache(async () => {
+    try {
+      const test = await getAllDisplayNamesQuery();
+      console.log(test.rows);
+      return test.rows;
+    } catch (_) {
+      console.log("Failed to get display names");
+    }
+  }, ["displayNames"]);
+
+  let displayNameData: UserIdData[] | undefined;
   try {
-    const res = await getCachedPredictionData();
+    const res = await getCachedDisplayNames();
+    if (typeof res === "string") {
+      error = res;
+    } else if (res === undefined) {
+      error = "Display name data is undefined";
+    } else {
+      displayNameData = res as UserIdData[];
+    }
+  } catch (e: unknown) {
+    if (e instanceof Error) {
+      error = e.message;
+    } else {
+      error = "Unknown front-end error";
+    }
+  }
+
+  let predictionData: PredictionData | undefined;
+  try {
+    const res = await getAllPredictionData(
+      initialDrivers,
+      initialTeams,
+      rounds,
+      season,
+      "f1"
+    );
     if (typeof res === "string") {
       error = res;
     } else {
@@ -67,7 +86,14 @@ const Page: NextPage<PageProps> = async ({ params }) => {
     if (e instanceof Error) {
       error = e.message;
     } else {
-      error = "Unknown front-end error";
+      error = "Unable to get local predictionData for unknown reason";
+    }
+  }
+  if (predictionData && displayNameData) {
+    for (const user of Object.values(predictionData.users)) {
+      user.displayName =
+        displayNameData.find((dbUser) => dbUser.id === user.id)?.display_name ||
+        "Average";
     }
   }
   /**@todo Stat for copying last years standings */
