@@ -93,6 +93,7 @@ const Page: NextPage<PageProps> = async ({ params }) => {
                 predictionData={JSON.parse(JSON.stringify(predictionData))}
               />
               <EntrantAccuracy
+                entrants={JSON.parse(JSON.stringify(predictionData.entrants))}
                 rounds={JSON.parse(JSON.stringify(predictionData.rounds))}
                 isSeasonOver={isSeasonOver}
               />
@@ -100,8 +101,9 @@ const Page: NextPage<PageProps> = async ({ params }) => {
           </Panel>
           <Panel>
             <HeadToHeads
-              drivers={predictionData.rounds[0].standings["driver"]}
-              teams={
+              driverIdArr={predictionData.rounds[0].standings["driver"]}
+              entrants={JSON.parse(JSON.stringify(predictionData.entrants))}
+              teamIdArr={
                 predictionData.rounds[predictionData.rounds.length - 1]
                   .standings["team"]
               }

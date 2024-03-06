@@ -13,12 +13,13 @@ import btnStyles from "@components/button/button.module.scss";
 
 import styles from "@components/game/game-container.module.scss";
 
-import { Round, Users, User } from "@custom-types/game-types";
+import { Round, Users, User, Entrants } from "@custom-types/game-types";
 
 interface Props {
   children: ReactNode;
   currentUserId: string | null;
   currentUserDisplayName: string | null;
+  entrants: { [key: string]: Entrants };
   lastUpdated: Date;
   rounds: Round[];
   currentSearchParams: { [key: string]: string | string[] | undefined };
@@ -28,6 +29,7 @@ interface Props {
 
 export const GameContainer = ({
   children,
+  entrants,
   rounds,
   lastUpdated,
   users,
@@ -162,6 +164,7 @@ export const GameContainer = ({
             </div>
             <StandingsTable
               className={styles.standings_table}
+              entrants={entrants[entrantType]}
               standingsArr={rounds[roundIndex].standings[entrantType]}
             />
           </>
@@ -187,13 +190,15 @@ export const GameContainer = ({
               <PredictionTable
                 currentUserDisplayName={currentUserDisplayName}
                 currentUserId={currentUserId}
+                entrants={entrants[entrantType]}
                 entrantType={entrantType}
                 selectedRound={roundIndex}
                 selectedUser={selectedUser}
               />
               <StandingsTable
-                standingsArr={rounds[roundIndex].standings[entrantType]}
                 className={styles.standings_table}
+                entrants={entrants[entrantType]}
+                standingsArr={rounds[roundIndex].standings[entrantType]}
               />
             </div>
           </>

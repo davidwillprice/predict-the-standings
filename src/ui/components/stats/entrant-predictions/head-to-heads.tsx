@@ -1,8 +1,6 @@
 import { Fragment } from "react";
 
-import { sortEntrantsAlphabetically } from "@lib/misc";
-
-import type { Entrant } from "@custom-types/game-types";
+import type { Entrant, EntrantId, Entrants } from "@custom-types/game-types";
 
 import styles from "@components/stats/stats.module.scss";
 
@@ -10,8 +8,9 @@ interface HeadToHeadProps {
   teammates: Entrant[];
 }
 interface HeadToHeadsProps {
-  drivers: Entrant[];
-  teams: Entrant[];
+  driverIdArr: EntrantId[];
+  entrants: { [key: string]: Entrants };
+  teamIdArr: EntrantId[];
 }
 
 const HeadToHead = ({ teammates }: HeadToHeadProps) => {
@@ -88,17 +87,25 @@ const HeadToHead = ({ teammates }: HeadToHeadProps) => {
   );
 };
 
-export const HeadToHeads = ({ drivers, teams }: HeadToHeadsProps) => (
-  <div className={styles.head_to_heads}>
-    <h3>% of People Who Favoured Each&nbsp;Teammate</h3>
-    {teams.map((team, index) => (
-      <Fragment key={team.name}>
-        <HeadToHead
-          key={team.name}
-          teammates={drivers.filter((driver) => driver.color === team.color)}
-        />
-        {index !== teams.length - 1 ? <hr /> : ""}
-      </Fragment>
-    ))}
-  </div>
-);
+export const HeadToHeads = ({
+  driverIdArr,
+  entrants,
+  teamIdArr,
+}: HeadToHeadsProps) => {
+  const drivers = driverIdArr.map((id) => entrants["driver"][id]);
+  const teams = teamIdArr.map((id) => entrants["team"][id]);
+  return (
+    <div className={styles.head_to_heads}>
+      <h3>% of People Who Favoured Each&nbsp;Teammate</h3>
+      {teams.map((team, index) => (
+        <Fragment key={team.name}>
+          <HeadToHead
+            key={team.name}
+            teammates={drivers.filter((driver) => driver.color === team.color)}
+          />
+          {index !== teams.length - 1 ? <hr /> : ""}
+        </Fragment>
+      ))}
+    </div>
+  );
+};

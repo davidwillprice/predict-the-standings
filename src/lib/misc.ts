@@ -1,4 +1,4 @@
-import type { Entrant, User } from "@custom-types/game-types";
+import type { Entrant } from "@custom-types/game-types";
 
 export const sortEntrantsAlphabetically = (entrantArr: Entrant[]) => {
   return entrantArr.sort((a, b) =>

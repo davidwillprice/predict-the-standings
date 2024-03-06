@@ -1,14 +1,15 @@
 import { numberToOrdinalNumber } from "@lib/misc";
 
-import { Round, Entrant } from "@custom-types/game-types";
+import { Round, Entrant, Entrants } from "@custom-types/game-types";
 
 interface Props {
-  rounds: Round[];
+  entrants: { [key: string]: Entrants };
   isSeasonOver: Boolean;
+  rounds: Round[];
 }
 
 /**Populates an array with the most and least accurate entrants of all types using a class, then renders bullet points of them */
-export const EntrantAccuracy = ({ rounds, isSeasonOver }: Props) => {
+export const EntrantAccuracy = ({ entrants, isSeasonOver, rounds }: Props) => {
   const mostRecentRound = rounds[rounds.length - 1];
   /**@todo Add round slider to see how accuracies changed? */
   class MostOrLeastAccEntrant {
@@ -33,21 +34,27 @@ export const EntrantAccuracy = ({ rounds, isSeasonOver }: Props) => {
   }
 
   let mostOrLeastAccEntrants = [];
-  for (const [entrantType, entrants] of Object.entries(
+  for (const [entrantType, entrantDiffTotals] of Object.entries(
     mostRecentRound.entrantDiffTotals
   )) {
+    const mostAccEntrantId = entrantDiffTotals[0].entrant;
+
     mostOrLeastAccEntrants.push(
       new MostOrLeastAccEntrant(
-        entrants[0].entrant,
-        entrants[0].diffTotal,
+        entrants[entrantType][mostAccEntrantId],
+        entrantDiffTotals[0].diffTotal,
         "most",
         entrantType
       )
     );
+
+    const leastAccEntrantId =
+      entrantDiffTotals[entrantDiffTotals.length - 1].entrant;
+
     mostOrLeastAccEntrants.push(
       new MostOrLeastAccEntrant(
-        entrants[entrants.length - 1].entrant,
-        entrants[entrants.length - 1].diffTotal,
+        entrants[entrantType][leastAccEntrantId],
+        entrantDiffTotals[entrantDiffTotals.length - 1].diffTotal,
         "least",
         entrantType
       )

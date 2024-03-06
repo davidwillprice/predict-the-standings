@@ -43,7 +43,6 @@ const Page: NextPage<PageProps> = async ({ params }) => {
   const getCachedDisplayNames = unstable_cache(async () => {
     try {
       const test = await getAllDisplayNamesQuery();
-      console.log(test.rows);
       return test.rows;
     } catch (_) {
       console.log("Failed to get display names");

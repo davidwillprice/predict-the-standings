@@ -7,6 +7,7 @@ import { authOptions } from "@lib/auth";
 import { getAllPredictionData } from "@lib/prediction-data";
 import { allSeasonData } from "@data/formula-1/season-data";
 import { getAllDisplayNamesQuery } from "@lib/db-functions";
+import { getObjFileSize } from "@lib/misc";
 
 import { Panel } from "@components/panels/panel";
 import { PanelHeading } from "@components/panels/panel-heading";
@@ -42,7 +43,6 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
   const getCachedDisplayNames = unstable_cache(async () => {
     try {
       const test = await getAllDisplayNamesQuery();
-      console.log(test.rows);
       return test.rows;
     } catch (_) {
       console.log("Failed to get display names");
@@ -89,6 +89,7 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
     }
   }
   if (predictionData && displayNameData) {
+    getObjFileSize(predictionData.rounds[3].leaderboards);
     for (const user of Object.values(predictionData.users)) {
       user.displayName =
         displayNameData.find((dbUser) => dbUser.id === user.id)?.display_name ||
@@ -135,6 +136,7 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
         <GameContainer
           currentUserDisplayName={currentUserDisplayName}
           currentUserId={currentUserId}
+          entrants={JSON.parse(JSON.stringify(predictionData.entrants))}
           lastUpdated={predictionData.lastUpdated}
           rounds={JSON.parse(JSON.stringify(predictionData.rounds))}
           currentSearchParams={searchParams}

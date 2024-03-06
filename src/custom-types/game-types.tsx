@@ -2,10 +2,10 @@ export class User {
   id: number;
   displayName?: string;
   information: string;
-  predictions: { [key: string]: Entrant[] };
+  predictions: { [key: string]: EntrantId[] };
   season: { [key: string]: RoundPerformance[] };
   predictionsFromAvg: { [key: string]: number };
-  constructor(id: number, predictions: { [key: string]: Entrant[] }) {
+  constructor(id: number, predictions: { [key: string]: EntrantId[] }) {
     this.id = id;
     this.displayName = "";
     this.predictions = predictions;
@@ -53,6 +53,7 @@ export class Entrant {
     this.predictionedPositions = [];
   }
 }
+export type EntrantId = string;
 export interface Entrants {
   [key: string]: Entrant;
 }
@@ -60,7 +61,7 @@ export interface Entrants {
 export class Round {
   entrantDiffTotals: { [key: string]: EntrantDiffTotal[] };
   leaderboards: { [key: string]: Leaderboard[] };
-  standings: { [key: string]: Entrant[] };
+  standings: { [key: string]: EntrantId[] };
   trackName;
   constructor(trackName: string, standings: {}) {
     this.trackName = trackName;
@@ -71,7 +72,7 @@ export class Round {
 }
 
 interface EntrantDiffTotal {
-  entrant: Entrant;
+  entrant: EntrantId;
   diffTotal: number;
 }
 
@@ -83,7 +84,7 @@ export type Leaderboard = {
 
 interface RoundPerformance {
   diffTotal: number;
-  diffs: { entrant: Entrant; posDiff: number }[];
+  diffs: { entrant: EntrantId; posDiff: number }[];
   /**No of perfect predictions, then predictions that were off by one, then predictions that were off by two etc) */
   diffCounts: number[];
 }
