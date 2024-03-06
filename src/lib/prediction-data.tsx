@@ -43,9 +43,9 @@ export const getAllPredictionData = async (
   rounds = calcLeaderboards("driver", rounds, users);
   rounds = calcLeaderboards("team", rounds, users);
 
-  rounds = orderLeaderboards(rounds);
+  rounds = orderLeaderboards(rounds, users);
 
-  rounds = calcLeaderboardRdDiffs(rounds);
+  rounds = calcLeaderboardRdDiffs(rounds, users);
 
   rounds = generateEntrantDiffTotals(rounds, users);
 
@@ -205,7 +205,7 @@ const calcLeaderboards = (
 
     for (let user of Object.values(users)) {
       round.leaderboards[entrantType].push({
-        user: user,
+        userId: user.id,
         percentCorrect: calcPredictionsAccuracy(
           user.predictions[entrantType].length,
           user.season[entrantType][roundIndex].diffTotal
@@ -232,12 +232,13 @@ export const calcPredictionsAccuracy = (
 };
 
 /** Order leaderboards by percentage correct, then use perfect predictions as tie break, then use predictions that were 1 off as a tie break, then use predictions that were 2 off as a tie break etc */
-const orderLeaderboards = (rounds: Round[]) => {
-  /** @todo Implement tie break where if people have the same exact predictionorder then it goes in order of whose prediction was earliest?*/
+const orderLeaderboards = (rounds: Round[], users: Users) => {
+  /** @todo Implement tie break where if people have the same exact prediction order then it goes in order of whose prediction was earliest?*/
   rounds.forEach((round, roundIndex) => {
     for (const entrantType in round.leaderboards) {
       round.leaderboards[entrantType].sort(function (a, b) {
         let order;
+
         if (a.percentCorrect !== b.percentCorrect) {
           /**Sort by percentage correct, highest first*/
           return a.percentCorrect < b.percentCorrect
@@ -247,15 +248,19 @@ const orderLeaderboards = (rounds: Round[]) => {
           for (let i = 0; i < round.standings[entrantType].length; i++) {
             /**If a has bigger diffCount than b return 1*/
             if (
-              a.user.season[entrantType][roundIndex].diffCounts[i] <
-              b.user.season[entrantType][roundIndex].diffCounts[i]
+              users["user" + a.userId].season[entrantType][roundIndex]
+                .diffCounts[i] <
+              users["user" + b.userId].season[entrantType][roundIndex]
+                .diffCounts[i]
             ) {
               order = 1;
               break;
             } else if (
               /**If b has bigger diffCount than a return -1*/
-              a.user.season[entrantType][roundIndex].diffCounts[i] >
-              b.user.season[entrantType][roundIndex].diffCounts[i]
+              users["user" + a.userId].season[entrantType][roundIndex]
+                .diffCounts[i] >
+              users["user" + b.userId].season[entrantType][roundIndex]
+                .diffCounts[i]
             ) {
               order = -1;
               break;
@@ -272,12 +277,11 @@ const orderLeaderboards = (rounds: Round[]) => {
       });
     }
   });
-
   return rounds;
 };
 
 /**Calculate how each user's leaderboard position has changed since the previous round */
-const calcLeaderboardRdDiffs = (rounds: Round[]): Round[] => {
+const calcLeaderboardRdDiffs = (rounds: Round[], users: Users): Round[] => {
   rounds.forEach((round, roundIndex) => {
     for (const entrantType in round.leaderboards) {
       /**Don't calculate the leaderboard changes of the first round */
@@ -291,7 +295,7 @@ const calcLeaderboardRdDiffs = (rounds: Round[]): Round[] => {
         /**Find that user's position in the leaderboard of the round previous to the looped round*/
         const previousLbPos = rounds[roundIndex - 1].leaderboards[
           entrantType
-        ].findIndex((entrant) => entrant.user.id === currentUserData.user.id);
+        ].findIndex((entrant) => entrant.userId === currentUserData.userId);
         /**Attach the user's leaderboard position change from the previous round to their data for the looped round*/
         currentUserData.prevRdDiff = previousLbPos - +currentLbPos;
       }

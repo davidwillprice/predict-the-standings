@@ -152,6 +152,7 @@ export const GameContainer = ({
             <div className={styles.main}>
               {children}
               <Leaderboard
+                changeSelectedUserHandler={changeSelectedUserHandler}
                 currentUserDisplayName={currentUserDisplayName}
                 currentUserId={currentUserId}
                 entrantType={entrantType}
@@ -159,7 +160,7 @@ export const GameContainer = ({
                 rounds={rounds}
                 roundIndex={roundIndex}
                 season={season}
-                changeSelectedUserHandler={changeSelectedUserHandler}
+                users={users}
               />
             </div>
             <StandingsTable

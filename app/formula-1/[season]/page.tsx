@@ -89,7 +89,7 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
     }
   }
   if (predictionData && displayNameData) {
-    getObjFileSize(predictionData.rounds[3].leaderboards);
+    getObjFileSize(predictionData);
     for (const user of Object.values(predictionData.users)) {
       user.displayName =
         displayNameData.find((dbUser) => dbUser.id === user.id)?.display_name ||
