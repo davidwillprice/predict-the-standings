@@ -28,7 +28,7 @@ export const PredictionTable = ({
   );
   const entrantTableData = tableData.map((rowData) => ({
     posDiff: rowData.posDiff,
-    entrant: entrants[rowData.entrant],
+    entrant: entrants[rowData.entrantId],
   }));
   return (
     <div className={styles.prediction_table}>

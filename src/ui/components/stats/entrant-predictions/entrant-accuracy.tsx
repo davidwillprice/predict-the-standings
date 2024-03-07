@@ -37,7 +37,7 @@ export const EntrantAccuracy = ({ entrants, isSeasonOver, rounds }: Props) => {
   for (const [entrantType, entrantDiffTotals] of Object.entries(
     mostRecentRound.entrantDiffTotals
   )) {
-    const mostAccEntrantId = entrantDiffTotals[0].entrant;
+    const mostAccEntrantId = entrantDiffTotals[0].entrantId;
 
     mostOrLeastAccEntrants.push(
       new MostOrLeastAccEntrant(
@@ -49,7 +49,7 @@ export const EntrantAccuracy = ({ entrants, isSeasonOver, rounds }: Props) => {
     );
 
     const leastAccEntrantId =
-      entrantDiffTotals[entrantDiffTotals.length - 1].entrant;
+      entrantDiffTotals[entrantDiffTotals.length - 1].entrantId;
 
     mostOrLeastAccEntrants.push(
       new MostOrLeastAccEntrant(

@@ -45,7 +45,7 @@ export const getAllPredictionData = async (
 
   rounds = orderLeaderboards(rounds, users);
 
-  rounds = calcLeaderboardRdDiffs(rounds, users);
+  rounds = calcLeaderboardRdDiffs(rounds);
 
   rounds = generateEntrantDiffTotals(rounds, users);
 
@@ -130,8 +130,9 @@ const orderAveragePredictions = (
   users: Users
 ): Users => {
   for (const entrantType in users.user0.predictions) {
-    users.user0.predictions[entrantType].sort((a, b) =>
-      entrants[entrantType][a].avgPrePos! > entrants[entrantType][b].avgPrePos!
+    users.user0.predictions[entrantType].sort((entrantIdA, entrantIdB) =>
+      entrants[entrantType][entrantIdA].avgPrePos! >
+      entrants[entrantType][entrantIdB].avgPrePos!
         ? 1
         : -1
     );
@@ -174,11 +175,11 @@ const calcUserRoundPerformance = (
   round: Round,
   roundIndex: number
 ): User => {
-  for (const [predictedPos, entrant] of Object.entries(
+  for (const [predictedPos, entrantId] of Object.entries(
     user.predictions[entrantType]
   )) {
     /**Find the position the user predicted that entrant would come in the standings*/
-    const actualPos = round.standings[entrantType].indexOf(entrant);
+    const actualPos = round.standings[entrantType].indexOf(entrantId);
     /**Work out how many positions the user is off*/
     const posDiff = actualPos - +predictedPos;
     user.season[entrantType][roundIndex].diffCounts[Math.abs(posDiff)]++;
@@ -186,7 +187,7 @@ const calcUserRoundPerformance = (
     user.season[entrantType][roundIndex].diffTotal += Math.abs(posDiff);
     /**Add the entrant and their posDiff to the user's data*/
     user.season[entrantType][roundIndex].diffs.push({
-      entrant: entrant,
+      entrantId: entrantId,
       posDiff,
     });
   }
@@ -236,31 +237,38 @@ const orderLeaderboards = (rounds: Round[], users: Users) => {
   /** @todo Implement tie break where if people have the same exact prediction order then it goes in order of whose prediction was earliest?*/
   rounds.forEach((round, roundIndex) => {
     for (const entrantType in round.leaderboards) {
-      round.leaderboards[entrantType].sort(function (a, b) {
+      round.leaderboards[entrantType].sort(function (
+        leaderboardA,
+        leaderboardB
+      ) {
         let order;
 
-        if (a.percentCorrect !== b.percentCorrect) {
+        if (leaderboardA.percentCorrect !== leaderboardB.percentCorrect) {
           /**Sort by percentage correct, highest first*/
-          return a.percentCorrect < b.percentCorrect
+          return leaderboardA.percentCorrect < leaderboardB.percentCorrect
             ? (order = 1)
             : (order = -1);
         } else {
           for (let i = 0; i < round.standings[entrantType].length; i++) {
             /**If a has bigger diffCount than b return 1*/
             if (
-              users["user" + a.userId].season[entrantType][roundIndex]
-                .diffCounts[i] <
-              users["user" + b.userId].season[entrantType][roundIndex]
-                .diffCounts[i]
+              users["user" + leaderboardA.userId].season[entrantType][
+                roundIndex
+              ].diffCounts[i] <
+              users["user" + leaderboardB.userId].season[entrantType][
+                roundIndex
+              ].diffCounts[i]
             ) {
               order = 1;
               break;
             } else if (
               /**If b has bigger diffCount than a return -1*/
-              users["user" + a.userId].season[entrantType][roundIndex]
-                .diffCounts[i] >
-              users["user" + b.userId].season[entrantType][roundIndex]
-                .diffCounts[i]
+              users["user" + leaderboardA.userId].season[entrantType][
+                roundIndex
+              ].diffCounts[i] >
+              users["user" + leaderboardB.userId].season[entrantType][
+                roundIndex
+              ].diffCounts[i]
             ) {
               order = -1;
               break;
@@ -281,7 +289,7 @@ const orderLeaderboards = (rounds: Round[], users: Users) => {
 };
 
 /**Calculate how each user's leaderboard position has changed since the previous round */
-const calcLeaderboardRdDiffs = (rounds: Round[], users: Users): Round[] => {
+const calcLeaderboardRdDiffs = (rounds: Round[]): Round[] => {
   rounds.forEach((round, roundIndex) => {
     for (const entrantType in round.leaderboards) {
       /**Don't calculate the leaderboard changes of the first round */
@@ -314,26 +322,26 @@ const generateEntrantDiffTotals = (rounds: Round[], users: Users): Round[] => {
       /**Loop over users to get their diffs for each entrant*/
       for (const user of Object.values(users)) {
         /**Loop over entrants to add each entrant's diffs to each total before moving onto the next user*/
-        for (const entrant of user.predictions[entrantType]) {
+        for (const entrantId of user.predictions[entrantType]) {
           /**If the entrantDiffTotals doesn't already contain an object for the entrant, push {entrant:[entrant], diffTotal:0}*/
           if (
             !round.entrantDiffTotals[entrantType].find(
-              (x) => x.entrant === entrant
+              (x) => x.entrantId === entrantId
             )
           ) {
             round.entrantDiffTotals[entrantType].push({
-              entrant: entrant,
+              entrantId: entrantId,
               diffTotal: 0,
             });
           }
           /**Find entrant in user's predictions for the round*/
           const entrantStanding = user.season[entrantType][
             roundIndex
-          ].diffs.find((element) => element.entrant === entrant)!;
+          ].diffs.find((element) => element.entrantId === entrantId)!;
           /**Find entrantDiff total*/
           let entrantTotal = rounds[roundIndex].entrantDiffTotals[
             entrantType
-          ].find((element) => element.entrant === entrant)!;
+          ].find((element) => element.entrantId === entrantId)!;
           /**Add entrantStanding.posDiff to entrant's diff total*/
           entrantTotal.diffTotal += Math.abs(entrantStanding.posDiff);
         }

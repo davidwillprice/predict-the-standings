@@ -72,7 +72,7 @@ export class Round {
 }
 
 interface EntrantDiffTotal {
-  entrant: EntrantId;
+  entrantId: EntrantId;
   diffTotal: number;
 }
 
@@ -84,7 +84,7 @@ export type Leaderboard = {
 
 interface RoundPerformance {
   diffTotal: number;
-  diffs: { entrant: EntrantId; posDiff: number }[];
+  diffs: { entrantId: EntrantId; posDiff: number }[];
   /**No of perfect predictions, then predictions that were off by one, then predictions that were off by two etc) */
   diffCounts: number[];
 }
