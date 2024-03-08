@@ -1,13 +1,19 @@
-import type { Entrant } from "@custom-types/game-types";
+import type { Entrants } from "@custom-types/game-types";
 
 import styles from "@components/prediction-table/prediction-table.module.scss";
 
 interface Props {
-  standingsArr: Entrant[];
   className: string;
+  entrants: Entrants;
+  standingsArr: string[];
 }
 
-export const StandingsTable = ({ className, standingsArr }: Props) => {
+export const StandingsTable = ({
+  entrants,
+  className,
+  standingsArr,
+}: Props) => {
+  const entrantArr = standingsArr.map((entrant) => entrants[entrant]);
   return (
     <div className={`${styles.prediction_table} ${className}`}>
       <h4 className={styles.heading}>Actual Standings</h4>
@@ -25,7 +31,7 @@ export const StandingsTable = ({ className, standingsArr }: Props) => {
           </tr>
         </thead>
         <tbody>
-          {standingsArr.map((entrant, index) => (
+          {entrantArr.map((entrant, index) => (
             <tr key={entrant.id} className={styles.table_row}>
               <td className={styles.position_cell}>{index + 1}</td>
               <td>

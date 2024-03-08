@@ -1,13 +1,8 @@
-import type { Entrant, User } from "@custom-types/game-types";
+import type { Entrant } from "@custom-types/game-types";
 
 export const sortEntrantsAlphabetically = (entrantArr: Entrant[]) => {
   return entrantArr.sort((a, b) =>
     a.name < b.name ? -1 : a.name > b.name ? 1 : 0
-  );
-};
-export const sortUsersAlphabetically = (userArr: User[]) => {
-  return userArr.sort((a, b) =>
-    a.displayName < b.displayName ? -1 : a.displayName > b.displayName ? 1 : 0
   );
 };
 

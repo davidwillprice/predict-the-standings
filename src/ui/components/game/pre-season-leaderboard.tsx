@@ -1,5 +1,3 @@
-import { sortUsersAlphabetically } from "@lib/misc";
-
 import { Users } from "@custom-types/game-types";
 
 import styles from "@components/game/leaderboard.module.scss";

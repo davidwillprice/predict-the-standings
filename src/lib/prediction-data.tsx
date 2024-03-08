@@ -1,6 +1,4 @@
-import { getAllF1PredictionTablesQuery } from "./db-functions";
-/**@todo Bring all data into a single file so different seasons and sports can be obtained automatically */
-
+import { predictions } from "@data/formula-1/2024/prediction";
 import { Sport } from "@custom-types/misc";
 import {
   PredictionData,
@@ -8,6 +6,7 @@ import {
   Round,
   User,
   Users,
+  JsonPrediction,
 } from "@custom-types/game-types";
 
 export const getAllPredictionData = async (
@@ -17,30 +16,30 @@ export const getAllPredictionData = async (
   season: string,
   sport: Sport
 ): Promise<PredictionData | string> => {
-  let res = await getUserData(drivers, season, sport, teams);
+  let res = await getUserPredictions(season, sport);
   //**If getUsersData didn't generate valid Users, return error message */
   if (typeof res === "string") return res;
   let users = res;
 
   //**Creates an 'average' user */
-  users.user0 = new User("0", "Average", {});
+  users.user0 = new User(0, {});
   users.user0.information =
     "This prediction table is an automated average of all other player predictions.";
 
+  const entrants = { driver: drivers, team: teams };
   users = generateAveragePredictions(drivers, "driver", users);
   users = generateAveragePredictions(teams, "team", users);
 
-  users = orderAveragePredictions(users);
+  users = orderAveragePredictions(entrants, users);
 
-  users = calcUsersPerformance("driver", rounds, users);
-  users = calcUsersPerformance("team", rounds, users);
+  users = calcUsersPerformance(entrants, rounds, users);
 
   users = generateControversyData(users);
 
   rounds = calcLeaderboards("driver", rounds, users);
   rounds = calcLeaderboards("team", rounds, users);
 
-  rounds = orderLeaderboards(rounds);
+  rounds = orderLeaderboards(rounds, users);
 
   rounds = calcLeaderboardRdDiffs(rounds);
 
@@ -52,7 +51,7 @@ export const getAllPredictionData = async (
   drivers = generateTeammateHeadToHead(drivers, teams, users);
 
   return {
-    entrants: { drivers: drivers, teams: teams },
+    entrants: entrants,
     rounds: rounds,
     lastUpdated: new Date(),
     users: users,
@@ -60,34 +59,24 @@ export const getAllPredictionData = async (
 };
 
 /**Get users and their predictions from the database and check all the appropriate data is set */
-const getUserData = async (
-  drivers: Entrants,
+const getUserPredictions = async (
   season: string,
-  sport: Sport,
-  teams: Entrants
+  sport: Sport
 ): Promise<Users | string> => {
-  let predictionDataRes;
-  try {
-    const res = await getAllF1PredictionTablesQuery(season, sport);
-    predictionDataRes = res.rows;
-  } catch (e: unknown) {
-    if (e instanceof Error) {
-      return e.message;
-    }
-    return "Unknown database error";
-  }
+  /**@todo Temporarily manually importing predicitions, need to move to DB */
+  const predictionDataRes = predictions;
   let error = false;
-  const Users: Users = predictionDataRes.reduce((acc, user) => {
-    const dbId: string | null = user["id"];
-    const dbDisplayName: string | null = user["display_name"];
+  const users: Users = predictionDataRes.reduce((acc, user) => {
+    const dbId: number | null = user["user_id"];
     const dbDriverPredictions: string[] | null = user["driver_predictions"];
     const dbTeamPredictions: string[] | null = user["team_predictions"];
-    if (dbId && dbDisplayName && dbDriverPredictions && dbTeamPredictions) {
+
+    if (dbId && dbDriverPredictions && dbTeamPredictions) {
       return {
         ...acc,
-        [`user${dbId}`]: new User(dbId, dbDisplayName, {
-          driver: dbDriverPredictions.map((entrant) => drivers[entrant]),
-          team: dbTeamPredictions.map((entrant) => teams[entrant]),
+        [`user${dbId}`]: new User(dbId, {
+          driver: dbDriverPredictions,
+          team: dbTeamPredictions,
         }),
       };
     } else {
@@ -96,7 +85,7 @@ const getUserData = async (
     }
   }, {} as Record<string, User>);
   if (error) return "Unable construct users from database data";
-  return Users;
+  return users;
 };
 
 /**Loop over each entrant finding their index in each user's prediction table, calculating an average and then adding it to each entrant as new avgPrePos property */
@@ -110,20 +99,27 @@ const generateAveragePredictions = (
     let predictionPosTotal = 0;
     let noOfUsers = 0;
     for (const user of Object.values(users)) {
-      predictionPosTotal += user.predictions[entrantType].indexOf(entrant) + 1;
+      predictionPosTotal +=
+        user.predictions[entrantType].indexOf(entrant.sName) + 1;
       noOfUsers++;
     }
     entrant.avgPrePos = Math.round((predictionPosTotal / noOfUsers) * 10) / 10;
-    users.user0.predictions[entrantType].push(entrant);
+    users.user0.predictions[entrantType].push(entrant.sName);
   }
   return users;
 };
 
 //**Sort all 'average' user's predictions by how popular each entrant was */
-const orderAveragePredictions = (users: Users): Users => {
+const orderAveragePredictions = (
+  entrants: { [key: string]: Entrants },
+  users: Users
+): Users => {
   for (const entrantType in users.user0.predictions) {
-    users.user0.predictions[entrantType].sort((a, b) =>
-      a.avgPrePos! > b.avgPrePos! ? 1 : -1
+    users.user0.predictions[entrantType].sort((entrantIdA, entrantIdB) =>
+      entrants[entrantType][entrantIdA].avgPrePos! >
+      entrants[entrantType][entrantIdB].avgPrePos!
+        ? 1
+        : -1
     );
   }
   return users;
@@ -131,28 +127,29 @@ const orderAveragePredictions = (users: Users): Users => {
 
 //**Based on the user predictions and round data, calculate the differences in entrant predictions for each user, their diff totals and their count of each difference (perfect predictions, predictions that were one off etc) */
 const calcUsersPerformance = (
-  entrantType: string,
+  entrants: { [key: string]: Entrants },
   rounds: Round[],
   users: Users
 ) => {
-  rounds.forEach((round, roundIndex) => {
-    /**Loop through each user to generate their entrant differences in this particular round*/
-    for (let user of Object.values(users)) {
-      if (!user.season[entrantType]) user.season[entrantType] = [];
-      /**Push blank round performance ready to fill out with data */
-      user.season[entrantType].push({
-        diffTotal: 0,
-        diffs: [],
-        diffCounts: [],
-      });
-      for (let i = 0; i < user.predictions[entrantType].length; i++) {
-        user.season[entrantType][roundIndex].diffCounts.push(0);
+  for (const entrantType of Object.keys(entrants)) {
+    rounds.forEach((round, roundIndex) => {
+      /**Loop through each user to generate their entrant differences in this particular round*/
+      for (let user of Object.values(users)) {
+        if (!user.season[entrantType]) user.season[entrantType] = [];
+        /**Push blank round performance ready to fill out with data */
+        user.season[entrantType].push({
+          diffTotal: 0,
+          diffs: [],
+          diffCounts: [],
+        });
+        for (let i = 0; i < user.predictions[entrantType].length; i++) {
+          user.season[entrantType][roundIndex].diffCounts.push(0);
+        }
+
+        user = calcUserRoundPerformance(entrantType, user, round, roundIndex);
       }
-
-      user = calcUserRoundPerformance(entrantType, user, round, roundIndex);
-    }
-  });
-
+    });
+  }
   return users;
 };
 
@@ -163,11 +160,11 @@ const calcUserRoundPerformance = (
   round: Round,
   roundIndex: number
 ): User => {
-  for (const [predictedPos, entrant] of Object.entries(
+  for (const [predictedPos, entrantId] of Object.entries(
     user.predictions[entrantType]
   )) {
     /**Find the position the user predicted that entrant would come in the standings*/
-    const actualPos = round.standings[entrantType].indexOf(entrant);
+    const actualPos = round.standings[entrantType].indexOf(entrantId);
     /**Work out how many positions the user is off*/
     const posDiff = actualPos - +predictedPos;
     user.season[entrantType][roundIndex].diffCounts[Math.abs(posDiff)]++;
@@ -175,7 +172,7 @@ const calcUserRoundPerformance = (
     user.season[entrantType][roundIndex].diffTotal += Math.abs(posDiff);
     /**Add the entrant and their posDiff to the user's data*/
     user.season[entrantType][roundIndex].diffs.push({
-      entrant: entrant,
+      entrantId: entrantId,
       posDiff,
     });
   }
@@ -194,7 +191,7 @@ const calcLeaderboards = (
 
     for (let user of Object.values(users)) {
       round.leaderboards[entrantType].push({
-        user: user,
+        userId: user.id,
         percentCorrect: calcPredictionsAccuracy(
           user.predictions[entrantType].length,
           user.season[entrantType][roundIndex].diffTotal
@@ -221,30 +218,42 @@ export const calcPredictionsAccuracy = (
 };
 
 /** Order leaderboards by percentage correct, then use perfect predictions as tie break, then use predictions that were 1 off as a tie break, then use predictions that were 2 off as a tie break etc */
-const orderLeaderboards = (rounds: Round[]) => {
-  /** @todo Implement tie break where if people have the same exact predictionorder then it goes in order of whose prediction was earliest?*/
+const orderLeaderboards = (rounds: Round[], users: Users) => {
+  /** @todo Implement tie break where if people have the same exact prediction order then it goes in order of whose prediction was earliest?*/
   rounds.forEach((round, roundIndex) => {
     for (const entrantType in round.leaderboards) {
-      round.leaderboards[entrantType].sort(function (a, b) {
+      round.leaderboards[entrantType].sort(function (
+        leaderboardA,
+        leaderboardB
+      ) {
         let order;
-        if (a.percentCorrect !== b.percentCorrect) {
+
+        if (leaderboardA.percentCorrect !== leaderboardB.percentCorrect) {
           /**Sort by percentage correct, highest first*/
-          return a.percentCorrect < b.percentCorrect
+          return leaderboardA.percentCorrect < leaderboardB.percentCorrect
             ? (order = 1)
             : (order = -1);
         } else {
           for (let i = 0; i < round.standings[entrantType].length; i++) {
             /**If a has bigger diffCount than b return 1*/
             if (
-              a.user.season[entrantType][roundIndex].diffCounts[i] <
-              b.user.season[entrantType][roundIndex].diffCounts[i]
+              users["user" + leaderboardA.userId].season[entrantType][
+                roundIndex
+              ].diffCounts[i] <
+              users["user" + leaderboardB.userId].season[entrantType][
+                roundIndex
+              ].diffCounts[i]
             ) {
               order = 1;
               break;
             } else if (
               /**If b has bigger diffCount than a return -1*/
-              a.user.season[entrantType][roundIndex].diffCounts[i] >
-              b.user.season[entrantType][roundIndex].diffCounts[i]
+              users["user" + leaderboardA.userId].season[entrantType][
+                roundIndex
+              ].diffCounts[i] >
+              users["user" + leaderboardB.userId].season[entrantType][
+                roundIndex
+              ].diffCounts[i]
             ) {
               order = -1;
               break;
@@ -261,7 +270,6 @@ const orderLeaderboards = (rounds: Round[]) => {
       });
     }
   });
-
   return rounds;
 };
 
@@ -280,7 +288,7 @@ const calcLeaderboardRdDiffs = (rounds: Round[]): Round[] => {
         /**Find that user's position in the leaderboard of the round previous to the looped round*/
         const previousLbPos = rounds[roundIndex - 1].leaderboards[
           entrantType
-        ].findIndex((entrant) => entrant.user.id === currentUserData.user.id);
+        ].findIndex((entrant) => entrant.userId === currentUserData.userId);
         /**Attach the user's leaderboard position change from the previous round to their data for the looped round*/
         currentUserData.prevRdDiff = previousLbPos - +currentLbPos;
       }
@@ -299,26 +307,26 @@ const generateEntrantDiffTotals = (rounds: Round[], users: Users): Round[] => {
       /**Loop over users to get their diffs for each entrant*/
       for (const user of Object.values(users)) {
         /**Loop over entrants to add each entrant's diffs to each total before moving onto the next user*/
-        for (const entrant of user.predictions[entrantType]) {
+        for (const entrantId of user.predictions[entrantType]) {
           /**If the entrantDiffTotals doesn't already contain an object for the entrant, push {entrant:[entrant], diffTotal:0}*/
           if (
             !round.entrantDiffTotals[entrantType].find(
-              (x) => x.entrant === entrant
+              (x) => x.entrantId === entrantId
             )
           ) {
             round.entrantDiffTotals[entrantType].push({
-              entrant: entrant,
+              entrantId: entrantId,
               diffTotal: 0,
             });
           }
           /**Find entrant in user's predictions for the round*/
           const entrantStanding = user.season[entrantType][
             roundIndex
-          ].diffs.find((element) => element.entrant.sName === entrant.sName)!;
+          ].diffs.find((element) => element.entrantId === entrantId)!;
           /**Find entrantDiff total*/
           let entrantTotal = rounds[roundIndex].entrantDiffTotals[
             entrantType
-          ].find((element) => element.entrant === entrant)!;
+          ].find((element) => element.entrantId === entrantId)!;
           /**Add entrantStanding.posDiff to entrant's diff total*/
           entrantTotal.diffTotal += Math.abs(entrantStanding.posDiff);
         }
@@ -350,8 +358,12 @@ const getEntrantPredictedPositions = (
     }
     /**Loop over users, obtain the position index they predicted the entrant in, then plus one to that index in the entrant position array  */
     for (const user of Object.values(users)) {
-      if (user.displayName === "Average") continue;
-      const userPredictedPos = user.predictions[entrantType].indexOf(entrant);
+      /**If the user is the generated average, ignore their predictions */
+      if (user.id === 0) continue;
+
+      const userPredictedPos = user.predictions[entrantType].indexOf(
+        entrant.sName
+      );
       entrant.predictionedPositions[userPredictedPos]++;
     }
 
@@ -369,19 +381,32 @@ const generateTeammateHeadToHead = (
   teams: Entrants,
   users: Users
 ) => {
+  /**Clear any old values from previous renders*/
+  for (const driver of Object.values(drivers)) {
+    driver.pcPredictedToBeatTeammate = 0;
+  }
   const noOfUsers = Object.keys(users).length - 1;
   for (const team of Object.values(teams)) {
+    /**Array of driverIds */
+    let teammatesArr: string[] = [];
+    for (const driver of Object.values(drivers)) {
+      if (driver.color === team.color) teammatesArr.push(driver.sName);
+    }
+
     for (const user of Object.values(users)) {
-      if (user.displayName === "Average") continue;
-      const higherPredictedDriver = user.predictions["driver"].find(
-        (driver) => driver.color === team.color
-      );
-      if (
-        typeof higherPredictedDriver?.pcPredictedToBeatTeammate !== "number"
-      ) {
-        higherPredictedDriver!.pcPredictedToBeatTeammate = 1;
+      /**If the user is the generated average, ignore their predictions */
+      if (user.id === 0) continue;
+
+      const higherPredictedDriverId = user.predictions["driver"].filter(
+        (driverId) =>
+          driverId === teammatesArr[0] || driverId === teammatesArr[1]
+      )[0];
+      const higherPredictedDriver = drivers[higherPredictedDriverId];
+
+      if (typeof higherPredictedDriver.pcPredictedToBeatTeammate !== "number") {
+        higherPredictedDriver.pcPredictedToBeatTeammate = 1;
       } else {
-        higherPredictedDriver!.pcPredictedToBeatTeammate++;
+        higherPredictedDriver.pcPredictedToBeatTeammate++;
       }
     }
   }
@@ -390,13 +415,15 @@ const generateTeammateHeadToHead = (
       ? Math.round((driver.pcPredictedToBeatTeammate / noOfUsers) * 100)
       : 0;
   }
+
   return drivers;
 };
 
 /**Calculate how far away each user's predictions are from the average predictions */
 export function generateControversyData(users: Users): Users {
   for (const user of Object.values(users)) {
-    if (user.displayName === "Average") continue;
+    /**If the user is the generated average, ignore their predictions */
+    if (user.id === 0) continue;
 
     for (const entrantType of Object.keys(user.predictions)) {
       user.predictionsFromAvg[entrantType] = 0;
@@ -414,8 +441,3 @@ export function generateControversyData(users: Users): Users {
   }
   return users;
 }
-
-const getObjFileSize = (obj: object) => {
-  const size = new TextEncoder().encode(JSON.stringify(obj)).length;
-  console.log(size / 1024 + "kb");
-};

@@ -1,24 +1,13 @@
-export interface PredictionData {
-  entrants: { [key: string]: Entrants };
-  rounds: Round[];
-  lastUpdated: Date;
-  users: Users;
-}
-
 export class User {
-  id: string;
-  displayName: string;
+  id: number;
+  displayName?: string;
   information: string;
-  predictions: { [key: string]: Entrant[] };
+  predictions: { [key: string]: EntrantId[] };
   season: { [key: string]: RoundPerformance[] };
   predictionsFromAvg: { [key: string]: number };
-  constructor(
-    id: string,
-    displayName: string,
-    predictions: { [key: string]: Entrant[] }
-  ) {
+  constructor(id: number, predictions: { [key: string]: EntrantId[] }) {
     this.id = id;
-    this.displayName = displayName;
+    this.displayName = "";
     this.predictions = predictions;
     this.season = {};
     this.information = "";
@@ -27,6 +16,17 @@ export class User {
 }
 export interface Users {
   [key: string]: User;
+}
+
+export interface JsonPrediction {
+  user_id: number;
+  driver_predictions: string[];
+  team_predictions: string[];
+}
+
+export interface UserIdData {
+  id: number;
+  display_name: string;
 }
 
 export class Entrant {
@@ -53,6 +53,7 @@ export class Entrant {
     this.predictionedPositions = [];
   }
 }
+export type EntrantId = string;
 export interface Entrants {
   [key: string]: Entrant;
 }
@@ -60,7 +61,7 @@ export interface Entrants {
 export class Round {
   entrantDiffTotals: { [key: string]: EntrantDiffTotal[] };
   leaderboards: { [key: string]: Leaderboard[] };
-  standings: { [key: string]: Entrant[] };
+  standings: { [key: string]: EntrantId[] };
   trackName;
   constructor(trackName: string, standings: {}) {
     this.trackName = trackName;
@@ -71,19 +72,26 @@ export class Round {
 }
 
 interface EntrantDiffTotal {
-  entrant: Entrant;
+  entrantId: EntrantId;
   diffTotal: number;
 }
 
 export type Leaderboard = {
-  user: User;
-  percentCorrect: Number;
+  userId: number;
+  percentCorrect: number;
   prevRdDiff: number;
 };
 
 interface RoundPerformance {
   diffTotal: number;
-  diffs: { entrant: Entrant; posDiff: number }[];
+  diffs: { entrantId: EntrantId; posDiff: number }[];
   /**No of perfect predictions, then predictions that were off by one, then predictions that were off by two etc) */
   diffCounts: number[];
+}
+
+export interface PredictionData {
+  entrants: { [key: string]: Entrants };
+  rounds: Round[];
+  lastUpdated: Date;
+  users: Users;
 }

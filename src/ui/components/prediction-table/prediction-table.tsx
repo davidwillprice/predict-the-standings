@@ -1,5 +1,5 @@
-import type { User } from "@custom-types/game-types";
-import { calcPredictionsAccuracy } from "@lib/game-functions";
+import type { User, Entrants } from "@custom-types/game-types";
+import { calcPredictionsAccuracy } from "@lib/prediction-data";
 import Icon from "@ui/svgs/icons/sq-icon";
 
 import styles from "@components/prediction-table/prediction-table.module.scss";
@@ -8,6 +8,7 @@ interface Props {
   currentUserId: string | null;
   currentUserDisplayName: string | null;
   entrantType: string;
+  entrants: Entrants;
   selectedRound: number;
   selectedUser: User;
 }
@@ -15,6 +16,7 @@ interface Props {
 export const PredictionTable = ({
   currentUserId,
   currentUserDisplayName,
+  entrants,
   entrantType,
   selectedRound,
   selectedUser,
@@ -24,10 +26,14 @@ export const PredictionTable = ({
     selectedUser.predictions[entrantType].length,
     selectedUser.season[entrantType][selectedRound].diffTotal
   );
+  const entrantTableData = tableData.map((rowData) => ({
+    posDiff: rowData.posDiff,
+    entrant: entrants[rowData.entrantId],
+  }));
   return (
     <div className={styles.prediction_table}>
       <h4 className={styles.heading}>
-        {selectedUser.id === currentUserId
+        {selectedUser.id.toString() === currentUserId
           ? currentUserDisplayName
           : selectedUser.displayName}{" "}
         Predictions
@@ -46,7 +52,7 @@ export const PredictionTable = ({
           </tr>
         </thead>
         <tbody>
-          {tableData.map((rowData, index) => (
+          {entrantTableData.map((rowData, index) => (
             <tr key={rowData.entrant.id} className={styles.table_row}>
               <td className={styles.position_cell}>{index + 1}</td>
               <td>

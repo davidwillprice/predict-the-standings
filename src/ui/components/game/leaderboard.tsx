@@ -3,18 +3,19 @@ import { allSeasonData } from "@data/formula-1/season-data";
 import styles from "@components/game/leaderboard.module.scss";
 import predictStyles from "@components/prediction-table/prediction-table.module.scss";
 
-import { Round } from "@custom-types/game-types";
+import { Round, Users } from "@custom-types/game-types";
 import Icon from "@ui/svgs/icons/sq-icon";
 
 interface Props {
+  changeSelectedUserHandler: Function;
   currentUserId: string | null;
   currentUserDisplayName: string | null;
   entrantType: string;
   lastUpdated: Date | string;
   rounds: Round[];
   roundIndex: number;
-  changeSelectedUserHandler: Function;
   season: string;
+  users: Users;
 }
 
 export const Leaderboard = ({
@@ -26,6 +27,7 @@ export const Leaderboard = ({
   season,
   rounds,
   roundIndex,
+  users,
 }: Props) => {
   const { isSeasonOver } = allSeasonData[season];
 
@@ -46,9 +48,9 @@ export const Leaderboard = ({
         <tbody>
           {rounds[roundIndex].leaderboards[entrantType].map((row, index) => (
             <tr
-              key={row.user.displayName}
+              key={row.userId}
               className={`${predictStyles.table_row} ${styles.table_row}`}
-              onClick={() => changeSelectedUserHandler(row.user.id)}>
+              onClick={() => changeSelectedUserHandler(row.userId)}>
               <td className={styles.position}>
                 {isSeasonOver &&
                 index === 0 &&
@@ -69,15 +71,20 @@ export const Leaderboard = ({
                 <i />
               </td>
               <td className={styles.name_cell}>
-                {row.user.id === currentUserId
+                {users["user" + row.userId].toString() === currentUserId
                   ? currentUserDisplayName
-                  : row.user.displayName}{" "}
-                {row.user.information && <Icon type="star" strokeWidth={1} />}
+                  : users["user" + row.userId].displayName}{" "}
+                {users["user" + row.userId].information && (
+                  <Icon type="star" strokeWidth={1} />
+                )}
                 {/**@todo Add which entrants are causing them the biggest issues? */}
               </td>
               <td>{`${row.percentCorrect}%`}</td>
               <td className={styles.perfect_positions}>
-                {row.user.season[entrantType][roundIndex].diffCounts[0]}
+                {
+                  users["user" + row.userId].season[entrantType][roundIndex]
+                    .diffCounts[0]
+                }
               </td>
             </tr>
           ))}

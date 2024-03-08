@@ -1,10 +1,10 @@
-import { unstable_cache } from "next/cache";
 import { getServerSession } from "next-auth/next";
 import { NextPage } from "next";
 import { notFound } from "next/navigation";
+import { unstable_cache } from "next/cache";
 
 import { authOptions } from "@lib/auth";
-import { getAllPredictionData } from "@lib/game-functions";
+import { getAllPredictionData } from "@lib/prediction-data";
 import { allSeasonData } from "@data/formula-1/season-data";
 
 import { Panel } from "@components/panels/panel";
@@ -37,43 +37,38 @@ const Page: NextPage<PageProps> = async ({ params }) => {
     isSeasonOver,
   } = allSeasonData[season];
 
-  const getCachedPredictionData = unstable_cache(
-    /**@todo URGENT Check data is no longer getting messed up by old cache */
-    async () => {
-      try {
-        return await getAllPredictionData(
-          initialDrivers,
-          initialTeams,
-          rounds,
-          season,
-          "f1"
-        );
-      } catch (_) {
-        console.log("Failed to getAllPredictionData()");
-      }
-    },
-    [season, "f1"]
-  );
-
   let error = "";
   const session = await getServerSession(authOptions);
   const currentUserDisplayName = session?.user.displayName;
-  let predictionData: PredictionData | undefined;
 
-  try {
-    const res = await getCachedPredictionData();
-    if (typeof res === "string") {
-      error = res;
-    } else {
-      predictionData = res;
+  const getPredictionData = unstable_cache(async () => {
+    try {
+      const res = await getAllPredictionData(
+        initialDrivers,
+        initialTeams,
+        rounds,
+        season,
+        "f1"
+      );
+
+      if (typeof res === "string") {
+        throw new Error(res);
+      }
+      console.log("Running getAllPredictionData " + new Date());
+      return res;
+    } catch (e) {
+      if (e instanceof Error) {
+        throw e;
+      } else {
+        throw new Error(
+          "Unable to get local predictionData for unknown reason"
+        );
+      }
     }
-  } catch (e: unknown) {
-    if (e instanceof Error) {
-      error = e.message;
-    } else {
-      error = "Unknown front-end error";
-    }
-  }
+  }, ["predictionData"]);
+
+  const predictionData: PredictionData = await getPredictionData();
+
   return (
     <>
       <PanelHeading>
@@ -105,6 +100,7 @@ const Page: NextPage<PageProps> = async ({ params }) => {
                 predictionData={JSON.parse(JSON.stringify(predictionData))}
               />
               <EntrantAccuracy
+                entrants={JSON.parse(JSON.stringify(predictionData.entrants))}
                 rounds={JSON.parse(JSON.stringify(predictionData.rounds))}
                 isSeasonOver={isSeasonOver}
               />
@@ -112,8 +108,9 @@ const Page: NextPage<PageProps> = async ({ params }) => {
           </Panel>
           <Panel>
             <HeadToHeads
-              drivers={predictionData.rounds[0].standings["driver"]}
-              teams={
+              driverIdArr={predictionData.rounds[0].standings["driver"]}
+              entrants={JSON.parse(JSON.stringify(predictionData.entrants))}
+              teamIdArr={
                 predictionData.rounds[predictionData.rounds.length - 1]
                   .standings["team"]
               }
