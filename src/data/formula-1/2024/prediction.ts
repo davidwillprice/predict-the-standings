@@ -1,7 +1,7 @@
-[
+export const predictions = [
   {
-    "user_id": 14,
-    "team_predictions": [
+    user_id: 14,
+    team_predictions: [
       "red",
       "fer",
       "mer",
@@ -11,9 +11,9 @@
       "alp",
       "rb",
       "sau",
-      "has"
+      "has",
     ],
-    "driver_predictions": [
+    driver_predictions: [
       "ver",
       "sai",
       "lec",
@@ -33,13 +33,13 @@
       "tsu",
       "mag",
       "zho",
-      "hul"
+      "hul",
     ],
-    "last_submission_time": null
+    last_submission_time: null,
   },
   {
-    "user_id": 9,
-    "team_predictions": [
+    user_id: 9,
+    team_predictions: [
       "red",
       "fer",
       "mer",
@@ -49,9 +49,9 @@
       "wil",
       "alp",
       "sau",
-      "has"
+      "has",
     ],
-    "driver_predictions": [
+    driver_predictions: [
       "ver",
       "per",
       "lec",
@@ -71,13 +71,13 @@
       "oco",
       "zho",
       "hul",
-      "mag"
+      "mag",
     ],
-    "last_submission_time": null
+    last_submission_time: null,
   },
   {
-    "user_id": 6,
-    "team_predictions": [
+    user_id: 6,
+    team_predictions: [
       "red",
       "fer",
       "mer",
@@ -87,9 +87,9 @@
       "alp",
       "wil",
       "sau",
-      "has"
+      "has",
     ],
-    "driver_predictions": [
+    driver_predictions: [
       "ver",
       "sai",
       "ham",
@@ -109,13 +109,13 @@
       "tsu",
       "bot",
       "mag",
-      "hul"
+      "hul",
     ],
-    "last_submission_time": null
+    last_submission_time: null,
   },
   {
-    "user_id": 7,
-    "team_predictions": [
+    user_id: 7,
+    team_predictions: [
       "red",
       "mer",
       "fer",
@@ -125,9 +125,9 @@
       "sau",
       "wil",
       "alp",
-      "has"
+      "has",
     ],
-    "driver_predictions": [
+    driver_predictions: [
       "ver",
       "ham",
       "per",
@@ -147,13 +147,13 @@
       "zho",
       "oco",
       "hul",
-      "mag"
+      "mag",
     ],
-    "last_submission_time": null
+    last_submission_time: null,
   },
   {
-    "user_id": 11,
-    "team_predictions": [
+    user_id: 11,
+    team_predictions: [
       "mer",
       "red",
       "fer",
@@ -163,9 +163,9 @@
       "wil",
       "alp",
       "has",
-      "sau"
+      "sau",
     ],
-    "driver_predictions": [
+    driver_predictions: [
       "ver",
       "ham",
       "lec",
@@ -185,13 +185,13 @@
       "sar",
       "hul",
       "mag",
-      "zho"
+      "zho",
     ],
-    "last_submission_time": null
+    last_submission_time: null,
   },
   {
-    "user_id": 12,
-    "team_predictions": [
+    user_id: 12,
+    team_predictions: [
       "fer",
       "red",
       "mer",
@@ -201,9 +201,9 @@
       "wil",
       "alp",
       "has",
-      "sau"
+      "sau",
     ],
-    "driver_predictions": [
+    driver_predictions: [
       "ver",
       "ham",
       "lec",
@@ -223,13 +223,13 @@
       "bot",
       "mag",
       "zho",
-      "sar"
+      "sar",
     ],
-    "last_submission_time": null
+    last_submission_time: null,
   },
   {
-    "user_id": 13,
-    "team_predictions": [
+    user_id: 13,
+    team_predictions: [
       "red",
       "mer",
       "fer",
@@ -239,9 +239,9 @@
       "alp",
       "wil",
       "sau",
-      "has"
+      "has",
     ],
-    "driver_predictions": [
+    driver_predictions: [
       "ver",
       "per",
       "ham",
@@ -261,8 +261,8 @@
       "zho",
       "bot",
       "hul",
-      "mag"
+      "mag",
     ],
-    "last_submission_time": null
-  }
-]
+    last_submission_time: null,
+  },
+];

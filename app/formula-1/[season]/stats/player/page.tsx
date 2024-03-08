@@ -38,7 +38,6 @@ const Page: NextPage<PageProps> = async ({ params }) => {
   const session = await getServerSession(authOptions);
   const currentUserId = session?.user.id;
   /**@todo Add updated current display name to different stats */
-  const currentUserDisplayName = session?.user.displayName;
 
   const getCachedDisplayNames = unstable_cache(async () => {
     try {
@@ -67,27 +66,34 @@ const Page: NextPage<PageProps> = async ({ params }) => {
     }
   }
 
-  let predictionData: PredictionData | undefined;
-  try {
-    const res = await getAllPredictionData(
-      initialDrivers,
-      initialTeams,
-      rounds,
-      season,
-      "f1"
-    );
-    if (typeof res === "string") {
-      error = res;
-    } else {
-      predictionData = res;
+  const getPredictionData = unstable_cache(async () => {
+    try {
+      const res = await getAllPredictionData(
+        initialDrivers,
+        initialTeams,
+        rounds,
+        season,
+        "f1"
+      );
+
+      if (typeof res === "string") {
+        throw new Error(res);
+      }
+      console.log("Running getAllPredictionData " + new Date());
+      return res;
+    } catch (e) {
+      if (e instanceof Error) {
+        throw e;
+      } else {
+        throw new Error(
+          "Unable to get local predictionData for unknown reason"
+        );
+      }
     }
-  } catch (e: unknown) {
-    if (e instanceof Error) {
-      error = e.message;
-    } else {
-      error = "Unable to get local predictionData for unknown reason";
-    }
-  }
+  }, ["predictionData"]);
+
+  const predictionData: PredictionData = await getPredictionData();
+
   if (predictionData && displayNameData) {
     for (const user of Object.values(predictionData.users)) {
       user.displayName =

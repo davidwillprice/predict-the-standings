@@ -1,8 +1,4 @@
-import { promises as fs } from "fs";
-
-import { getAllDisplayNamesQuery } from "./db-functions";
-/**@todo Bring all data into a single file so different seasons and sports can be obtained automatically */
-
+import { predictions } from "@data/formula-1/2024/prediction";
 import { Sport } from "@custom-types/misc";
 import {
   PredictionData,
@@ -67,19 +63,8 @@ const getUserPredictions = async (
   season: string,
   sport: Sport
 ): Promise<Users | string> => {
-  let predictionDataRes: JsonPrediction[];
-  try {
-    const file = await fs.readFile(
-      process.cwd() + `/src/data/formula-1/${season}/prediction.json`,
-      "utf8"
-    );
-    predictionDataRes = JSON.parse(file);
-  } catch (e: unknown) {
-    if (e instanceof Error) {
-      return e.message;
-    }
-    return "Unknown database error";
-  }
+  /**@todo Temporarily manually importing predicitions, need to move to DB */
+  const predictionDataRes = predictions;
   let error = false;
   const users: Users = predictionDataRes.reduce((acc, user) => {
     const dbId: number | null = user["user_id"];

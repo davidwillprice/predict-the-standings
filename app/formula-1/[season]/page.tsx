@@ -1,5 +1,4 @@
 import { NextPage } from "next";
-import { cache } from "react";
 import { unstable_cache } from "next/cache";
 import { getServerSession } from "next-auth/next";
 import { notFound } from "next/navigation";
@@ -8,7 +7,6 @@ import { authOptions } from "@lib/auth";
 import { getAllPredictionData } from "@lib/prediction-data";
 import { allSeasonData } from "@data/formula-1/season-data";
 import { getAllDisplayNamesQuery } from "@lib/db-functions";
-import { getObjFileSize } from "@lib/misc";
 
 import { Panel } from "@components/panels/panel";
 import { PanelHeading } from "@components/panels/panel-heading";
@@ -17,13 +15,8 @@ import { PreSeasonContainer } from "@components/game/pre-season-container";
 import { FeedbackContainer } from "@components/feedback-container/feedback-container";
 import { PromptPredictions } from "@components/submit-predictions/prompt-predictions";
 
-import {
-  PredictionData,
-  UserIdData,
-  Entrants,
-  Round,
-} from "@custom-types/game-types";
-import { PageProps, Sport } from "@custom-types/misc";
+import { PredictionData, UserIdData } from "@custom-types/game-types";
+import { PageProps } from "@custom-types/misc";
 
 export async function generateStaticParams() {
   return Object.keys(allSeasonData).map((season) => ({
@@ -73,48 +66,33 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
     }
   }
 
-  const getPredictionData = unstable_cache(
-    async (
-      initialDrivers: Entrants,
-      initialTeams: Entrants,
-      rounds: Round[],
-      season: string,
-      sport: Sport
-    ) => {
-      try {
-        const res = await getAllPredictionData(
-          initialDrivers,
-          initialTeams,
-          rounds,
-          season,
-          sport
-        );
+  const getPredictionData = unstable_cache(async () => {
+    try {
+      const res = await getAllPredictionData(
+        initialDrivers,
+        initialTeams,
+        rounds,
+        season,
+        "f1"
+      );
 
-        if (typeof res === "string") {
-          throw new Error(res);
-        }
-        console.log("Running getAllPredictionData " + new Date());
-        getObjFileSize(res);
-        return res;
-      } catch (e) {
-        if (e instanceof Error) {
-          throw e;
-        } else {
-          throw new Error(
-            "Unable to get local predictionData for unknown reason"
-          );
-        }
+      if (typeof res === "string") {
+        throw new Error(res);
+      }
+      console.log("Running getAllPredictionData " + new Date());
+      return res;
+    } catch (e) {
+      if (e instanceof Error) {
+        throw e;
+      } else {
+        throw new Error(
+          "Unable to get local predictionData for unknown reason"
+        );
       }
     }
-  );
+  }, ["predictionData"]);
 
-  const predictionData: PredictionData = await getPredictionData(
-    initialDrivers,
-    initialTeams,
-    rounds,
-    season,
-    "f1"
-  );
+  const predictionData: PredictionData = await getPredictionData();
 
   if (predictionData && displayNameData) {
     for (const user of Object.values(predictionData.users)) {
