@@ -64,6 +64,31 @@ let rounds: Round[] = [
     ],
     team: ["red", "fer", "mer", "mcl", "ast", "sau", "has", "rb", "wil", "alp"],
   }),
+  new Round("Saudi GP", {
+    driver: [
+      "ver",
+      "per",
+      "lec",
+      "rus",
+      "pia",
+      "sai",
+      "alo",
+      "nor",
+      "ham",
+      "hul",
+      "str",
+      "alb",
+      "zho",
+      "mag",
+      "ric",
+      "oco",
+      "tsu",
+      "sar",
+      "bot",
+      "gas",
+    ],
+    team: ["red", "fer", "mcl", "mer", "ast", "has", "wil", "sau", "rb", "alp"],
+  }),
 ];
 
 export const seasonData2024 = {
