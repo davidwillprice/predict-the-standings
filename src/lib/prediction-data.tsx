@@ -99,6 +99,9 @@ const generateAveragePredictions = (
     let predictionPosTotal = 0;
     let noOfUsers = 0;
     for (const user of Object.values(users)) {
+      /**If the user is the generated average, ignore their predictions */
+      if (user.id === 0) continue;
+
       predictionPosTotal +=
         user.predictions[entrantType].indexOf(entrant.sName) + 1;
       noOfUsers++;

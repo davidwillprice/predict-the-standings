@@ -46,10 +46,24 @@ export const MainNav = ({ children }: Props) => {
       ) : (
         ""
       )}
-      <HeaderLink href="/formula-1/2024/" icon="driver">
+      <HeaderLink
+        customLinkActiveOptions={{
+          href: "/formula-1/2024",
+          includeQuery: false,
+          query: ["leaderboard", "constructors"],
+        }}
+        href="/formula-1/2024"
+        icon="driver">
         Drivers Leaderboard
       </HeaderLink>
-      <HeaderLink href="/formula-1/2024/?leaderboard=constructors" icon="f1">
+      <HeaderLink
+        customLinkActiveOptions={{
+          href: "/formula-1/2024",
+          includeQuery: true,
+          query: ["leaderboard", "constructors"],
+        }}
+        href="/formula-1/2024/?leaderboard=constructors"
+        icon="f1">
         Constructors Leaderboard
       </HeaderLink>
       <HeaderLink href="/formula-1/2024/stats/driver-and-team" icon="stats">
