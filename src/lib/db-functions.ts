@@ -1,6 +1,8 @@
 "use server";
 import { query } from "@lib/db";
+import clientPromise from "@lib/mongodb";
 
+import { ObjectId } from "mongodb";
 import { Entrant } from "@custom-types/game-types";
 import { Sport } from "@custom-types/misc";
 
@@ -53,18 +55,39 @@ export const getAllDisplayNamesQuery = async () => {
 
 export const submitDisplayNameQuery = async (
   submittedDisplayName: string,
-  userId: number
+  userId: string
 ) => {
-  const res = await query(`UPDATE users
-  SET display_name = '${submittedDisplayName}',
-  last_display_name_submission = ${new Date().getTime()}
-  WHERE id = ${userId}
-    AND NOT EXISTS (
-      SELECT ${userId}
-      FROM users
-      WHERE display_name = '${submittedDisplayName}'
-        AND id <> ${userId}
-    ) RETURNING *;
-    ;`);
-  return res.rows;
+  const client = await clientPromise;
+  try {
+    const db = client.db("pts");
+    const usersCollection = db.collection("users");
+    const userIdObj = new ObjectId(userId);
+
+    // Find the user submitting a display name in DB
+    const existingUser = await usersCollection.findOne({
+      _id: userIdObj,
+    });
+    if (!existingUser) throw new Error("User not found");
+
+    // Check the submitted display name is unique
+    const duplicateUser = await usersCollection.findOne({
+      display_name: submittedDisplayName,
+      _id: { $ne: userIdObj },
+    });
+    if (duplicateUser) throw new Error("Display name already exists");
+
+    // Update the user's display name and the time they submitted it
+    const updatedUser = await usersCollection.findOneAndUpdate(
+      { _id: userIdObj },
+      {
+        $set: {
+          display_name: submittedDisplayName,
+          last_display_name_submission: new Date().getTime(),
+        },
+      }
+    );
+    if (!updatedUser) throw new Error("Failed to update user");
+  } catch (error) {
+    throw error;
+  }
 };
