@@ -10,7 +10,7 @@ declare module "next-auth" {
   }
   interface User {
     id: string;
-    display_name: string;
-    last_display_name_submission: number;
+    displayName: string;
+    lastDisplayNameSubmission: number;
   }
 }

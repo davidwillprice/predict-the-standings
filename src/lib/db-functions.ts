@@ -71,7 +71,7 @@ export const submitDisplayNameQuery = async (
 
     // Check the submitted display name is unique
     const duplicateUser = await usersCollection.findOne({
-      display_name: submittedDisplayName,
+      displayName: submittedDisplayName,
       _id: { $ne: userIdObj },
     });
     if (duplicateUser) throw new Error("Display name already exists");
@@ -81,8 +81,8 @@ export const submitDisplayNameQuery = async (
       { _id: userIdObj },
       {
         $set: {
-          display_name: submittedDisplayName,
-          last_display_name_submission: new Date().getTime(),
+          displayName: submittedDisplayName,
+          lastDisplayNameSubmission: new Date(),
         },
       }
     );

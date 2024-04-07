@@ -26,7 +26,7 @@ export interface JsonPrediction {
 
 export interface UserIdData {
   id: number;
-  display_name: string;
+  displayName: string;
 }
 
 export class Entrant {

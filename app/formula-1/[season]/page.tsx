@@ -97,7 +97,7 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
   if (predictionData && displayNameData) {
     for (const user of Object.values(predictionData.users)) {
       user.displayName =
-        displayNameData.find((dbUser) => dbUser.id === user.id)?.display_name ||
+        displayNameData.find((dbUser) => dbUser.id === user.id)?.displayName ||
         "Average";
     }
   }

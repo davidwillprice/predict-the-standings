@@ -19,8 +19,8 @@ export const authOptions: NextAuthOptions = {
         return {
           ...token,
           id: user.id,
-          displayName: user.display_name,
-          lastDisplayNameSubmissionDate: user.last_display_name_submission,
+          displayName: user.displayName,
+          lastDisplayNameSubmissionDate: user.lastDisplayNameSubmission,
         };
 
       /**useSession().update() has been triggered so merge the token with the new passed data */
@@ -36,7 +36,6 @@ export const authOptions: NextAuthOptions = {
       session.user.displayName = token.displayName;
       session.user.lastDisplayNameSubmissionDate =
         token.lastDisplayNameSubmissionDate;
-      //console.log(session);
       return session;
     },
   },

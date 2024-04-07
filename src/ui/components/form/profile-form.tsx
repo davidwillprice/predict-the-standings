@@ -30,9 +30,11 @@ export const ProfileForm = ({ initialDisplayName }: Props) => {
   /**Stop users from repeatedly submitting display names */
   const hourInMilliseconds = 3600000;
   /**If there isn't a time set when the user last updated their display name, set it to 25hrs so they can submit a new display name */
-  const hoursSinceDisplayNameChange = session?.user
-    .lastDisplayNameSubmissionDate
-    ? (new Date().getTime() - session?.user.lastDisplayNameSubmissionDate) /
+  const lastDisplayNameSubmissionDate = new Date(
+    session?.user.lastDisplayNameSubmissionDate
+  ).getTime();
+  const hoursSinceDisplayNameChange = lastDisplayNameSubmissionDate
+    ? (new Date().getTime() - lastDisplayNameSubmissionDate) /
       hourInMilliseconds
     : 25;
   const hoursUntilDisplayNameSubmittable =
