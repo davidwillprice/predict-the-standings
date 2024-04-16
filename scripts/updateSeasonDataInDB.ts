@@ -1,8 +1,7 @@
 import "dotenv/config";
 import dotenv from "dotenv";
 import { MongoClient } from "mongodb";
-
-const { allSeasonData } = require("../src/data/formula-1/season-data.ts");
+import { allSeasonData } from "@data/formula-1/season-data";
 
 async function connectToMongo() {
   if (process.env.db === "dev")
@@ -12,19 +11,23 @@ async function connectToMongo() {
   return client;
 }
 
-async function insertRecord(client: MongoClient) {
+async function submitF1GameData(client: MongoClient) {
   try {
+    console.log(allSeasonData);
     const db = client.db("pts");
-
-    const collection = db.collection("f12024");
-    const doc = {
-      name: allSeasonData["2024"].drivers.ham.name,
-      number: allSeasonData["2024"].drivers.ham.id,
-    };
-
-    const result = await collection.insertOne(doc);
-
-    console.log(`A document was inserted with the _id: ${result.insertedId}`);
+    //**Loop over each F1 season and update its data within the database */
+    for (const [seasonStr, seasonData] of Object.entries(allSeasonData)) {
+      const collection = db.collection(`f1${seasonStr}`);
+      const gameDataDoc = {
+        type: "gameData",
+        entrants: { drivers: seasonData.drivers, teams: seasonData.teams },
+        rounds: seasonData.rounds,
+      };
+      const result = await collection.insertOne(gameDataDoc);
+      console.log(
+        `An F1${seasonStr} gameData document was inserted with the _id: ${result.insertedId}`
+      );
+    }
   } finally {
     await client.close();
   }
@@ -33,7 +36,7 @@ async function insertRecord(client: MongoClient) {
 async function run() {
   try {
     const client = await connectToMongo();
-    await insertRecord(client);
+    await submitF1GameData(client);
   } catch (err) {
     console.error(err);
   }
