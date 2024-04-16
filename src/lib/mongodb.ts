@@ -1,3 +1,5 @@
+//dovenv allows the updateDevDb and updateProdDb scripts to run this file properly
+import "dotenv/config";
 // This approach is taken from https://github.com/vercel/next.js/tree/canary/examples/with-mongodb
 import { MongoClient } from "mongodb";
 
