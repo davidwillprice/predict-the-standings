@@ -3,42 +3,58 @@ import { query } from "@lib/db";
 import clientPromise from "@lib/mongodb";
 
 import { ObjectId } from "mongodb";
-import { Entrant } from "@custom-types/game-types";
 import { Sport } from "@custom-types/misc";
 
 export const submitPredictionsQuery = async (
-  driverArr: Entrant[],
+  driverArr: string[],
   season: string,
   sport: Sport,
-  teamArr: Entrant[],
-  userId: number
+  teamArr: string[],
+  userId: string
 ) => {
-  await query(`INSERT INTO ${sport}_${season} (prediction_id, user_id, driver_predictions, team_predictions, last_submission_time)
-  VALUES (${userId}, ${userId}, ARRAY[${driverArr.map(
-    (entrant) => `'${entrant.sName}'`
-  )}], ARRAY[${teamArr.map((entrant) => `'${entrant.sName}'`)}])
-  ON CONFLICT (prediction_id)
-  DO UPDATE
-  SET user_id = ${userId}, driver_predictions = ARRAY[${driverArr.map(
-    (entrant) => `'${entrant.sName}'`
-  )}], team_predictions = ARRAY[${teamArr.map(
-    (entrant) =>
-      `'${entrant.sName}', last_submission_time = ${new Date().getTime()}`
-  )}]`);
+  const client = await clientPromise;
+  try {
+    const db = client.db("pts");
+    const collection = db.collection(sport + season);
+    const userPredictionDoc = {
+      lastUpdated: new Date(),
+      predictions: { driver: driverArr, team: teamArr },
+      type: "userData",
+      userId: userId,
+    };
+    const result = await collection.updateOne(
+      { userId: userId },
+      { $set: userPredictionDoc },
+      { upsert: true }
+    );
+
+    if (!result)
+      throw new Error(
+        `Failed to update user prediction data for ${sport + season}`
+      );
+    return result;
+  } catch (error) {
+    throw error;
+  }
 };
 
-export const getF1PredictionTablesQuery = async (
+export const getUserPredictionDataQuery = async (
   season: string,
   sport: Sport,
   userId: number
 ) => {
-  const res = await query(`SELECT driver_predictions, team_predictions
-  FROM ${sport}_${season}
-  WHERE prediction_id = ${userId}`);
+  const client = await clientPromise;
   try {
-    return res.rows[0];
-  } catch (_) {
-    return;
+    const db = client.db("pts");
+    const collection = db.collection(sport + season);
+    const result = await collection.findOne({ userId: userId });
+    if (!result)
+      throw new Error(
+        `Failed to get user prediction data for ${sport + season}`
+      );
+    return result;
+  } catch (error) {
+    throw error;
   }
 };
 
