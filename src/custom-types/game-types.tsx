@@ -4,16 +4,19 @@ export class User {
   _id: ObjectId;
   displayName: string;
   information: string;
+  lastSubmissionTime: Date;
   predictions: { [key: string]: EntrantId[] };
   season: { [key: string]: RoundPerformance[] };
   predictionsFromAvg: { [key: string]: number };
   constructor(
     displayName: string,
     id: ObjectId,
+    lastSubmissionTime: Date,
     predictions: { [key: string]: EntrantId[] }
   ) {
     this._id = id;
     this.displayName = displayName;
+    this.lastSubmissionTime = lastSubmissionTime;
     this.predictions = predictions;
     this.season = {};
     this.information = "";

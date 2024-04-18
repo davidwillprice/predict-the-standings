@@ -23,10 +23,15 @@ async function submitF1GameData(client: MongoClient) {
 
       let users: Users = {};
       for await (const doc of await collection.find({ type: "userData" })) {
-        users[doc._id.toString()] = new User(doc.displayName, doc._id, {
-          driver: doc.predictions.driver,
-          team: doc.predictions.team,
-        });
+        users[doc._id.toString()] = new User(
+          doc.displayName,
+          doc._id,
+          doc.lastSubmissionTime,
+          {
+            driver: doc.predictions.driver,
+            team: doc.predictions.team,
+          }
+        );
       }
       console.log(users);
 

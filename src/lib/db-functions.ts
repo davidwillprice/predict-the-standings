@@ -19,7 +19,7 @@ export const submitPredictionsQuery = async (
     const collection = db.collection(sport + season);
     const userPredictionDoc = {
       displayName: displayName,
-      lastUpdated: new Date(),
+      lastSubmissionTime: new Date(),
       predictions: { driver: driverArr, team: teamArr },
       type: "userData",
       userId: userId,
