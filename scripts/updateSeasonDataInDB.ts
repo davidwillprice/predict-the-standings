@@ -22,7 +22,10 @@ async function submitF1GameData(client: MongoClient) {
       const collection = db.collection(`f1${seasonStr}`);
 
       let users: Users = {};
-      for await (const doc of await collection.find({ type: "userData" })) {
+      for await (const doc of await collection.find({
+        type: "userData",
+        userType: "standard",
+      })) {
         users[doc._id.toString()] = new User(
           doc.displayName,
           doc._id,
@@ -30,7 +33,8 @@ async function submitF1GameData(client: MongoClient) {
           {
             driver: doc.predictions.driver,
             team: doc.predictions.team,
-          }
+          },
+          doc.userType
         );
       }
       console.log(users);

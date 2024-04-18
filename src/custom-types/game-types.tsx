@@ -6,21 +6,24 @@ export class User {
   information: string;
   lastSubmissionTime: Date;
   predictions: { [key: string]: EntrantId[] };
-  season: { [key: string]: RoundPerformance[] };
   predictionsFromAvg: { [key: string]: number };
+  season: { [key: string]: RoundPerformance[] };
+  userType: "standard" | "special";
   constructor(
     displayName: string,
     id: ObjectId,
     lastSubmissionTime: Date,
-    predictions: { [key: string]: EntrantId[] }
+    predictions: { [key: string]: EntrantId[] },
+    userType: "standard" | "special"
   ) {
     this._id = id;
     this.displayName = displayName;
+    this.information = "";
     this.lastSubmissionTime = lastSubmissionTime;
     this.predictions = predictions;
-    this.season = {};
-    this.information = "";
     this.predictionsFromAvg = {};
+    this.season = {};
+    this.userType = userType;
   }
 }
 export interface Users {

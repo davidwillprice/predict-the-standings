@@ -23,6 +23,7 @@ export const submitPredictionsQuery = async (
       predictions: { driver: driverArr, team: teamArr },
       type: "userData",
       userId: userId,
+      userType: "standard",
     };
     const result = await collection.updateOne(
       { userId: userId },
