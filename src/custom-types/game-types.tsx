@@ -1,7 +1,7 @@
 import { ObjectId } from "mongodb";
 
 export class User {
-  _id: ObjectId;
+  id: string;
   displayName: string;
   information: string;
   lastSubmissionTime: Date;
@@ -11,12 +11,12 @@ export class User {
   userType: "standard" | "special";
   constructor(
     displayName: string,
-    id: ObjectId,
+    id: string,
     lastSubmissionTime: Date,
     predictions: { [key: string]: EntrantId[] },
     userType: "standard" | "special"
   ) {
-    this._id = id;
+    this.id = id;
     this.displayName = displayName;
     this.information = "";
     this.lastSubmissionTime = lastSubmissionTime;

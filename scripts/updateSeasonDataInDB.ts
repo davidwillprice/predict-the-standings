@@ -28,7 +28,7 @@ async function submitF1GameData(client: MongoClient) {
       })) {
         users[doc._id.toString()] = new User(
           doc.displayName,
-          doc._id,
+          doc._id.toString(),
           doc.lastSubmissionTime,
           {
             driver: doc.predictions.driver,

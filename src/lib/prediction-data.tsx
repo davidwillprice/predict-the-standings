@@ -6,7 +6,6 @@ import {
   Round,
   User,
   Users,
-  JsonPrediction,
 } from "@custom-types/game-types";
 
 export const getAllPredictionData = async (
@@ -22,8 +21,14 @@ export const getAllPredictionData = async (
   let users = res;
 
   //**Creates an 'average' user */
-  users.user0 = new User(0, {});
-  users.user0.information =
+  users.average = new User(
+    "average",
+    "Average",
+    new Date("2024-04-18T20:38:36.780Z"),
+    {},
+    "special"
+  );
+  users.average.information =
     "This prediction table is an automated average of all other player predictions.";
 
   const entrants = { driver: drivers, team: teams };
@@ -94,20 +99,20 @@ const generateAveragePredictions = (
   entrantType: string,
   users: Users
 ) => {
-  users.user0.predictions[entrantType] = [];
+  users.average.predictions[entrantType] = [];
   for (const entrant of Object.values(entrants)) {
     let predictionPosTotal = 0;
     let noOfUsers = 0;
     for (const user of Object.values(users)) {
       /**If the user is the generated average, ignore their predictions */
-      if (user.id === 0) continue;
+      if (user.id === "average") continue;
 
       predictionPosTotal +=
         user.predictions[entrantType].indexOf(entrant.sName) + 1;
       noOfUsers++;
     }
     entrant.avgPrePos = Math.round((predictionPosTotal / noOfUsers) * 10) / 10;
-    users.user0.predictions[entrantType].push(entrant.sName);
+    users.average.predictions[entrantType].push(entrant.sName);
   }
   return users;
 };
@@ -117,8 +122,8 @@ const orderAveragePredictions = (
   entrants: { [key: string]: Entrants },
   users: Users
 ): Users => {
-  for (const entrantType in users.user0.predictions) {
-    users.user0.predictions[entrantType].sort((entrantIdA, entrantIdB) =>
+  for (const entrantType in users.average.predictions) {
+    users.average.predictions[entrantType].sort((entrantIdA, entrantIdB) =>
       entrants[entrantType][entrantIdA].avgPrePos! >
       entrants[entrantType][entrantIdB].avgPrePos!
         ? 1
@@ -362,7 +367,7 @@ const getEntrantPredictedPositions = (
     /**Loop over users, obtain the position index they predicted the entrant in, then plus one to that index in the entrant position array  */
     for (const user of Object.values(users)) {
       /**If the user is the generated average, ignore their predictions */
-      if (user.id === 0) continue;
+      if (user.id === "average") continue;
 
       const userPredictedPos = user.predictions[entrantType].indexOf(
         entrant.sName
@@ -398,7 +403,7 @@ const generateTeammateHeadToHead = (
 
     for (const user of Object.values(users)) {
       /**If the user is the generated average, ignore their predictions */
-      if (user.id === 0) continue;
+      if (user.id === "average") continue;
 
       const higherPredictedDriverId = user.predictions["driver"].filter(
         (driverId) =>
@@ -426,7 +431,7 @@ const generateTeammateHeadToHead = (
 export function generateControversyData(users: Users): Users {
   for (const user of Object.values(users)) {
     /**If the user is the generated average, ignore their predictions */
-    if (user.id === 0) continue;
+    if (user.id === "average") continue;
 
     for (const entrantType of Object.keys(user.predictions)) {
       user.predictionsFromAvg[entrantType] = 0;
@@ -435,7 +440,7 @@ export function generateControversyData(users: Users): Users {
         user.predictions[entrantType]
       )) {
         const avgPredictedPos =
-          users.user0.predictions[entrantType].indexOf(entrant);
+          users.average.predictions[entrantType].indexOf(entrant);
 
         const posDiffs = Math.abs(+predictedPos - avgPredictedPos);
         user.predictionsFromAvg[entrantType] += posDiffs;
