@@ -6,6 +6,7 @@ import { ObjectId } from "mongodb";
 import { Sport } from "@custom-types/misc";
 
 export const submitPredictionsQuery = async (
+  displayName: string,
   driverArr: string[],
   season: string,
   sport: Sport,
@@ -17,6 +18,7 @@ export const submitPredictionsQuery = async (
     const db = client.db("pts");
     const collection = db.collection(sport + season);
     const userPredictionDoc = {
+      displayName: displayName,
       lastUpdated: new Date(),
       predictions: { driver: driverArr, team: teamArr },
       type: "userData",

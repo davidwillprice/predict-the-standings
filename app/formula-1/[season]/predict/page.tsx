@@ -26,9 +26,10 @@ const Page: NextPage<PageProps> = async ({ params }) => {
   const { season } = params;
   if (allSeasonData[season] === undefined) notFound();
   const session = await getServerSession(authOptions);
+  const displayName = session?.user.displayName;
   if (session == null) {
     return redirect("/login?error=login");
-  } else if (!session?.user.displayName) {
+  } else if (!displayName) {
     return redirect("/get-started");
   }
 
@@ -80,6 +81,7 @@ const Page: NextPage<PageProps> = async ({ params }) => {
     <>
       {predictionFreezeTime.getTime() > new Date().getTime() ? (
         <EditPredictions
+          displayName={displayName}
           initialDrivers={JSON.parse(JSON.stringify(driverArr))}
           initialTeams={JSON.parse(JSON.stringify(teamArr))}
           predictionFreezeTime={predictionFreezeTime}

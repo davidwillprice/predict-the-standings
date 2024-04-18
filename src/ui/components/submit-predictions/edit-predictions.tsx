@@ -15,16 +15,18 @@ import btnStyles from "@components/button/button.module.scss";
 import btnConStyles from "@components/button/button-containers.module.scss";
 
 interface Props {
+  displayName: string;
   predictionFreezeTime: Date;
   children: string | ReactNode;
   initialDrivers: Entrant[];
   initialTeams: Entrant[];
   sport: Sport;
   season: string;
-  userId: number;
+  userId: string;
 }
 
 export const EditPredictions = ({
+  displayName,
   predictionFreezeTime,
   initialDrivers,
   initialTeams,
@@ -51,6 +53,7 @@ export const EditPredictions = ({
 
         {children}
         <SubmitPredictions
+          displayName={displayName}
           driverArr={driverArr}
           sport={sport}
           season={season}

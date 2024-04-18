@@ -2,7 +2,7 @@ import "dotenv/config";
 import dotenv from "dotenv";
 import { MongoClient, ObjectId } from "mongodb";
 import { allSeasonData } from "@data/formula-1/season-data";
-import { DbRound } from "@custom-types/game-types";
+import { DbRound, Users, User } from "@custom-types/game-types";
 
 async function connectToMongo() {
   if (process.env.db === "dev")
@@ -18,6 +18,17 @@ async function submitF1GameData(client: MongoClient) {
     /**Loop over each F1 season and update its data within the database */
     for (const [seasonStr, seasonData] of Object.entries(allSeasonData)) {
       const { drivers, rounds, teams } = seasonData;
+
+      const collection = db.collection(`f1${seasonStr}`);
+
+      let users: Users = {};
+      for await (const doc of await collection.find({ type: "userData" })) {
+        users[doc._id.toString()] = new User(doc.displayName, doc._id, {
+          driver: doc.predictions.driver,
+          team: doc.predictions.team,
+        });
+      }
+      console.log(users);
 
       /**Label entrants with a manual MongoDB so they can be referenced elsewhere */
       Object.keys(drivers).forEach((key) => {
@@ -58,7 +69,7 @@ async function submitF1GameData(client: MongoClient) {
       }
 
       /**Update/Add the data to the DB */
-      const collection = db.collection(`f1${seasonStr}`);
+
       const gameDataDoc = {
         type: "gameData",
         entrants: { drivers: drivers, teams: teams },

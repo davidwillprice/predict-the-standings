@@ -1,15 +1,19 @@
 import { ObjectId } from "mongodb";
 
 export class User {
-  id: number;
-  displayName?: string;
+  _id: ObjectId;
+  displayName: string;
   information: string;
   predictions: { [key: string]: EntrantId[] };
   season: { [key: string]: RoundPerformance[] };
   predictionsFromAvg: { [key: string]: number };
-  constructor(id: number, predictions: { [key: string]: EntrantId[] }) {
-    this.id = id;
-    this.displayName = "";
+  constructor(
+    displayName: string,
+    id: ObjectId,
+    predictions: { [key: string]: EntrantId[] }
+  ) {
+    this._id = id;
+    this.displayName = displayName;
     this.predictions = predictions;
     this.season = {};
     this.information = "";

@@ -16,6 +16,7 @@ import styles from "@components/submit-predictions/submit-predictions.module.scs
 import btnConstyles from "@components/button/button-containers.module.scss";
 
 interface Props {
+  displayName: string;
   driverArr: Entrant[];
   predictionFreezeTime: Date;
   season: string;
@@ -25,6 +26,7 @@ interface Props {
 }
 
 export const SubmitPredictions = ({
+  displayName,
   driverArr,
   predictionFreezeTime,
   season,
@@ -51,6 +53,7 @@ export const SubmitPredictions = ({
 
     try {
       await submitPredictionsQuery(
+        displayName,
         driverArr.map((entrant) => entrant.sName),
         season,
         sport,
