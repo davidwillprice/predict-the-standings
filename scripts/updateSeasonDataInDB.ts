@@ -1,8 +1,10 @@
 import "dotenv/config";
 import dotenv from "dotenv";
 import { MongoClient, ObjectId } from "mongodb";
+
 import { allSeasonData } from "@data/formula-1/season-data";
 import { DbRound, Users, User } from "@custom-types/game-types";
+import { getAllPredictionData } from "@lib/prediction-data";
 
 async function connectToMongo() {
   if (process.env.db === "dev")
@@ -37,7 +39,15 @@ async function submitF1GameData(client: MongoClient) {
           doc.userType
         );
       }
-      console.log(users);
+
+      const predictionData = await getAllPredictionData(
+        drivers,
+        teams,
+        rounds,
+        users
+      );
+      if (typeof predictionData === "string") throw new Error(predictionData);
+      //console.log(predictionData);
 
       /**Label entrants with a manual MongoDB so they can be referenced elsewhere */
       Object.keys(drivers).forEach((key) => {

@@ -96,7 +96,7 @@ interface EntrantDiffTotal {
 }
 
 export type Leaderboard = {
-  userId: number;
+  userId: string;
   percentCorrect: number;
   prevRdDiff: number;
 };

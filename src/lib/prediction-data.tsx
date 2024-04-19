@@ -12,18 +12,12 @@ export const getAllPredictionData = async (
   drivers: Entrants,
   teams: Entrants,
   rounds: Round[],
-  season: string,
-  sport: Sport
+  users: Users
 ): Promise<PredictionData | string> => {
-  let res = await getUserPredictions(season, sport);
-  //**If getUsersData didn't generate valid Users, return error message */
-  if (typeof res === "string") return res;
-  let users = res;
-
   //**Creates an 'average' user */
   users.average = new User(
-    "average",
     "Average",
+    "average",
     new Date("2024-04-18T20:38:36.780Z"),
     {},
     "special"
@@ -64,34 +58,34 @@ export const getAllPredictionData = async (
 };
 
 /**Get users and their predictions from the database and check all the appropriate data is set */
-const getUserPredictions = async (
-  season: string,
-  sport: Sport
-): Promise<Users | string> => {
-  /**@todo Temporarily manually importing predicitions, need to move to DB */
-  const predictionDataRes = predictions;
-  let error = false;
-  const users: Users = predictionDataRes.reduce((acc, user) => {
-    const dbId: number | null = user["user_id"];
-    const dbDriverPredictions: string[] | null = user["driver_predictions"];
-    const dbTeamPredictions: string[] | null = user["team_predictions"];
+// const getUserPredictions = async (
+//   season: string,
+//   sport: Sport
+// ): Promise<Users | string> => {
+//   /**@todo Temporarily manually importing predicitions, need to move to DB */
+//   const predictionDataRes = predictions;
+//   let error = false;
+//   const users: Users = predictionDataRes.reduce((acc, user) => {
+//     const dbId: number | null = user["user_id"];
+//     const dbDriverPredictions: string[] | null = user["driver_predictions"];
+//     const dbTeamPredictions: string[] | null = user["team_predictions"];
 
-    if (dbId && dbDriverPredictions && dbTeamPredictions) {
-      return {
-        ...acc,
-        [`user${dbId}`]: new User(dbId, {
-          driver: dbDriverPredictions,
-          team: dbTeamPredictions,
-        }),
-      };
-    } else {
-      error = true;
-      return {};
-    }
-  }, {} as Record<string, User>);
-  if (error) return "Unable construct users from database data";
-  return users;
-};
+//     if (dbId && dbDriverPredictions && dbTeamPredictions) {
+//       return {
+//         ...acc,
+//         [`user${dbId}`]: new User(dbId, {
+//           driver: dbDriverPredictions,
+//           team: dbTeamPredictions,
+//         }),
+//       };
+//     } else {
+//       error = true;
+//       return {};
+//     }
+//   }, {} as Record<string, User>);
+//   if (error) return "Unable construct users from database data";
+//   return users;
+// };
 
 /**Loop over each entrant finding their index in each user's prediction table, calculating an average and then adding it to each entrant as new avgPrePos property */
 const generateAveragePredictions = (
@@ -244,24 +238,21 @@ const orderLeaderboards = (rounds: Round[], users: Users) => {
         } else {
           for (let i = 0; i < round.standings[entrantType].length; i++) {
             /**If a has bigger diffCount than b return 1*/
+            //console.log(users[leaderboardA.userId]);
             if (
-              users["user" + leaderboardA.userId].season[entrantType][
-                roundIndex
-              ].diffCounts[i] <
-              users["user" + leaderboardB.userId].season[entrantType][
-                roundIndex
-              ].diffCounts[i]
+              users[leaderboardA.userId].season[entrantType][roundIndex]
+                .diffCounts[i] <
+              users[leaderboardB.userId].season[entrantType][roundIndex]
+                .diffCounts[i]
             ) {
               order = 1;
               break;
             } else if (
               /**If b has bigger diffCount than a return -1*/
-              users["user" + leaderboardA.userId].season[entrantType][
-                roundIndex
-              ].diffCounts[i] >
-              users["user" + leaderboardB.userId].season[entrantType][
-                roundIndex
-              ].diffCounts[i]
+              users[leaderboardA.userId].season[entrantType][roundIndex]
+                .diffCounts[i] >
+              users[leaderboardB.userId].season[entrantType][roundIndex]
+                .diffCounts[i]
             ) {
               order = -1;
               break;
