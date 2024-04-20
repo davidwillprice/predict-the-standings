@@ -88,14 +88,17 @@ interface EntrantDiffTotal {
 export type Leaderboard = {
   userId: string;
   percentCorrect: number;
-  prevRdDiff: number;
 };
 
 interface RoundPerformance {
+  /**Total of how off all entrant predictions were in this round */
   diffTotal: number;
+  /**How off each entrant prediction was in this round */
   diffs: { entrantId: EntrantId; posDiff: number }[];
   /**No of perfect predictions, then predictions that were off by one, then predictions that were off by two etc) */
   diffCounts: number[];
+  leaderboardPos: number;
+  prevLeaderboardPosDiff: number;
 }
 
 export interface PredictionData {

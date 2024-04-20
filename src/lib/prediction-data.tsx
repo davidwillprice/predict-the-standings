@@ -38,7 +38,7 @@ export const getAllPredictionData = async (
 
   rounds = orderLeaderboards(rounds, users);
 
-  rounds = calcLeaderboardRdDiffs(rounds);
+  users = addLeaderboardDataToUsers(rounds, users);
 
   rounds = generateEntrantDiffTotals(rounds, users);
 
@@ -46,6 +46,8 @@ export const getAllPredictionData = async (
   teams = getEntrantPredictedPositions(teams, "team", users);
 
   drivers = generateTeammateHeadToHead(drivers, teams, users);
+
+  rounds = deleteLeaderboardDataFromRounds(rounds);
 
   return {
     entrants: entrants,
@@ -111,6 +113,8 @@ const calcUsersPerformance = (
           diffTotal: 0,
           diffs: [],
           diffCounts: [],
+          leaderboardPos: 0,
+          prevLeaderboardPosDiff: 0,
         });
         for (let i = 0; i < user.predictions[entrantType].length; i++) {
           user.season[entrantType][roundIndex].diffCounts.push(0);
@@ -166,8 +170,6 @@ const calcLeaderboards = (
           user.predictions[entrantType].length,
           user.season[entrantType][roundIndex].diffTotal
         ),
-        /**Add 0 previous round performance ready to fill out with data in calcLeaderboardRdDiffs() */
-        prevRdDiff: 0,
       });
     }
   });
@@ -241,7 +243,7 @@ const orderLeaderboards = (rounds: Round[], users: Users) => {
 };
 
 /**Calculate how each user's leaderboard position has changed since the previous round */
-const calcLeaderboardRdDiffs = (rounds: Round[]): Round[] => {
+const addLeaderboardDataToUsers = (rounds: Round[], users: Users): Users => {
   rounds.forEach((round, roundIndex) => {
     for (const entrantType in round.leaderboards) {
       /**Don't calculate the leaderboard changes of the first round */
@@ -249,7 +251,7 @@ const calcLeaderboardRdDiffs = (rounds: Round[]): Round[] => {
         return;
       }
       /**Loop over each user in order of the looped round's leaderboard*/
-      for (const [currentLbPos, currentUserData] of Object.entries(
+      for (const [currentLeaderboardPos, currentUserData] of Object.entries(
         round.leaderboards[entrantType]
       )) {
         /**Find that user's position in the leaderboard of the round previous to the looped round*/
@@ -257,11 +259,17 @@ const calcLeaderboardRdDiffs = (rounds: Round[]): Round[] => {
           entrantType
         ].findIndex((entrant) => entrant.userId === currentUserData.userId);
         /**Attach the user's leaderboard position change from the previous round to their data for the looped round*/
-        currentUserData.prevRdDiff = previousLbPos - +currentLbPos;
+        users[currentUserData.userId].season[entrantType][
+          roundIndex
+        ].prevLeaderboardPosDiff = previousLbPos - +currentLeaderboardPos;
+        /**Attach the user's leaderboard position to their data for the looped round*/
+        users[currentUserData.userId].season[entrantType][
+          roundIndex
+        ].leaderboardPos = +currentLeaderboardPos + 1;
       }
     }
   });
-  return rounds;
+  return users;
 };
 
 /**Calculate how accurately each entrant has been predicted */
@@ -408,3 +416,11 @@ export function generateControversyData(users: Users): Users {
   }
   return users;
 }
+
+/**The leaderboards are unbounded arrays so I don't want to upload them to the DB */
+const deleteLeaderboardDataFromRounds = (rounds: Round[]) => {
+  rounds.forEach((round) => {
+    round.leaderboards = {};
+  });
+  return rounds;
+};
