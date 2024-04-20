@@ -12,8 +12,8 @@
     "lint": "next lint",
     "preview": "npm run build && npm run start",
     "seed": "node -r dotenv/config ./scripts/seed.js",
-    "updateDevDb": "cross-env db=dev ts-node -r tsconfig-paths/register ./scripts/updateSeasonDataInDB.ts ",
-    "updateProdDb": "cross-env db=prod ts-node -r tsconfig-paths/register ./scripts/updateSeasonDataInDB.ts "
+    "updateDevDb": "cross-env db=dev ts-node -r tsconfig-paths/register ./scripts/updateDbGameData.ts ",
+    "updateProdDb": "cross-env db=prod ts-node -r tsconfig-paths/register ./scripts/updateDbGameData.ts "
   },
   "dependencies": {
     "@auth/mongodb-adapter": "^2.5.2",

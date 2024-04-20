@@ -1,5 +1,3 @@
-import { ObjectId } from "mongodb";
-
 export class User {
   id: string;
   displayName: string;
@@ -42,7 +40,6 @@ export interface UserIdData {
 }
 
 export class Entrant {
-  _id?: ObjectId;
   name: string;
   sName: string;
   id: number;
@@ -83,13 +80,6 @@ export class Round {
     this.entrantDiffTotals = {};
   }
 }
-export interface DbRound {
-  entrantDiffTotals?: { [key: string]: EntrantDiffTotal[] };
-  leaderboards?: { [key: string]: Leaderboard[] };
-  standings: { [key: string]: (ObjectId | undefined)[] };
-  trackName: string;
-}
-
 interface EntrantDiffTotal {
   entrantId: EntrantId;
   diffTotal: number;

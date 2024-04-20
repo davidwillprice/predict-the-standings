@@ -1,5 +1,3 @@
-import { predictions } from "@data/formula-1/2024/prediction";
-import { Sport } from "@custom-types/misc";
 import {
   PredictionData,
   Entrants,
@@ -56,36 +54,6 @@ export const getAllPredictionData = async (
     users: users,
   };
 };
-
-/**Get users and their predictions from the database and check all the appropriate data is set */
-// const getUserPredictions = async (
-//   season: string,
-//   sport: Sport
-// ): Promise<Users | string> => {
-//   /**@todo Temporarily manually importing predicitions, need to move to DB */
-//   const predictionDataRes = predictions;
-//   let error = false;
-//   const users: Users = predictionDataRes.reduce((acc, user) => {
-//     const dbId: number | null = user["user_id"];
-//     const dbDriverPredictions: string[] | null = user["driver_predictions"];
-//     const dbTeamPredictions: string[] | null = user["team_predictions"];
-
-//     if (dbId && dbDriverPredictions && dbTeamPredictions) {
-//       return {
-//         ...acc,
-//         [`user${dbId}`]: new User(dbId, {
-//           driver: dbDriverPredictions,
-//           team: dbTeamPredictions,
-//         }),
-//       };
-//     } else {
-//       error = true;
-//       return {};
-//     }
-//   }, {} as Record<string, User>);
-//   if (error) return "Unable construct users from database data";
-//   return users;
-// };
 
 /**Loop over each entrant finding their index in each user's prediction table, calculating an average and then adding it to each entrant as new avgPrePos property */
 const generateAveragePredictions = (
