@@ -26,11 +26,10 @@ export const getUserPredictionDataQuery = async (
   }
 };
 
+/**Gets user prediction data so it can be processed*/
 export const getAllUserPredictionDataQuery = async (
-  collection: Collection,
-  season: string,
-  sport: Sport
-) => {
+  collection: Collection
+): Promise<Users> => {
   try {
     const result = await collection.find({
       type: "userData",
@@ -38,9 +37,7 @@ export const getAllUserPredictionDataQuery = async (
     });
     if (!result)
       throw new Error(
-        `Failed to access DB when getting user prediction data for ${
-          sport + season
-        }`
+        `Failed to access DB when getting user prediction data for ${collection.collectionName}`
       );
 
     let users: Users = {};
@@ -58,7 +55,7 @@ export const getAllUserPredictionDataQuery = async (
     }
     if (Object.keys(users).length === 0)
       throw new Error(
-        `User prediction data obj is empty for ${sport + season}`
+        `User prediction data obj is empty for ${collection.collectionName}`
       );
 
     return users;
@@ -67,6 +64,7 @@ export const getAllUserPredictionDataQuery = async (
   }
 };
 
+/**@todo Update display name in all the user's prediction data for every season/sport they've competed in? */
 export const submitDisplayNameQuery = async (
   submittedDisplayName: string,
   userId: string
@@ -140,4 +138,50 @@ export const submitPredictionsQuery = async (
   } catch (error) {
     throw error;
   }
+};
+
+/**Once new game data has been created, it needs to be attached to the user game data documents in the DB */
+export const updateAllUserDocGameData = async (
+  collection: Collection,
+  users: Users
+) => {
+  let userArr = Object.values(users);
+
+  /**Standard users only need a couple of properties updated as the rest is already in the DB
+   * Special users may not already be in the DB so can't be filtered by their a MongoDB ObjectId and need more data to be added
+   */
+  const operations = userArr.map((user) => {
+    return {
+      updateOne: {
+        filter:
+          user.userType === "standard"
+            ? { _id: new ObjectId(user.id) }
+            : { userId: user.id },
+        update: {
+          $set:
+            user.userType === "standard"
+              ? {
+                  predictionsFromAvg: user.predictionsFromAvg,
+                  season: user.season,
+                }
+              : {
+                  userId: user.id,
+                  displayName: user.displayName,
+                  information: user.information,
+                  predictions: user.predictions,
+                  predictionsFromAvg: user.predictionsFromAvg,
+                  season: user.season,
+                  userType: "special",
+                },
+        },
+        upsert: true,
+      },
+    };
+  });
+
+  const res = await collection.bulkWrite(operations);
+  if (userArr.length !== res.matchedCount + res.upsertedCount)
+    throw new Error(
+      `Expected to find/add ${userArr.length} user(s) to update/add their game data for standard ${collection.collectionName}, but only found/added ${res.matchedCount}`
+    );
 };
