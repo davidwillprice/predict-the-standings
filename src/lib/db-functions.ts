@@ -185,3 +185,23 @@ export const updateAllUserDocGameData = async (
       `Expected to find/add ${userArr.length} user(s) to update/add their game data for standard ${collection.collectionName}, but only found/added ${res.matchedCount}`
     );
 };
+
+/**Add/Update a LastUpdatedTime document to DB to be used on the leaderboard page */
+export const updateLastUpdatedTimeQuery = async (collection: Collection) => {
+  try {
+    const result = await collection.updateOne(
+      {
+        type: "lastUpdatedTime",
+      },
+      { $set: { type: "lastUpdatedTime", lastUpdatedTime: new Date() } },
+      { upsert: true }
+    );
+
+    if (!result)
+      throw new Error(
+        `Failed to update/add last updated document in ${collection.collectionName}`
+      );
+  } catch (error) {
+    throw error;
+  }
+};

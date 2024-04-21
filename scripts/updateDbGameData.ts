@@ -7,6 +7,7 @@ import { getAllPredictionData } from "@lib/prediction-data";
 import {
   getAllUserPredictionDataQuery,
   updateAllUserDocGameData,
+  updateLastUpdatedTimeQuery,
 } from "@lib/db-functions";
 
 async function connectToMongo() {
@@ -50,6 +51,9 @@ async function submitF1GameData(client: MongoClient) {
         { $set: gameDataDoc },
         { upsert: true }
       );
+
+      await updateLastUpdatedTimeQuery(collection);
+
       console.log(
         `An f1${seasonStr} gameData document was ${
           result.upsertedId ? "inserted" : "updated"
