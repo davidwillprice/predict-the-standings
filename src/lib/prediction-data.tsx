@@ -4,6 +4,7 @@ import {
   Round,
   User,
   Users,
+  EntrantStats,
 } from "@custom-types/game-types";
 
 export const createGameData = async (
@@ -49,9 +50,16 @@ export const createGameData = async (
 
   rounds = deleteLeaderboardDataFromRounds(rounds);
 
+  const driverStats = generateEntrantStats(drivers);
+  const teamStats = generateEntrantStats(teams);
+
   return {
-    entrants: entrants,
-    rounds: rounds,
+    entrantStats: { driver: driverStats, team: teamStats },
+    roundStats: rounds.map((round) => {
+      return {
+        entrantDiffTotals: round.entrantDiffTotals,
+      };
+    }),
     lastUpdated: new Date(),
     users: users,
   };
@@ -423,4 +431,17 @@ const deleteLeaderboardDataFromRounds = (rounds: Round[]) => {
     round.leaderboards = {};
   });
   return rounds;
+};
+
+/**Strip down an Entrants Obj to only the data needed for the stats page */
+const generateEntrantStats = (entrants: Entrants): EntrantStats => {
+  const entrantStats: EntrantStats = {};
+  Object.values(entrants).forEach((entrant) => {
+    entrantStats[entrant.sName] = {
+      avgPrePos: entrant.avgPrePos,
+      predictionedPositions: entrant.predictionedPositions,
+      pcPredictedToBeatTeammate: entrant.pcPredictedToBeatTeammate,
+    };
+  });
+  return entrantStats;
 };

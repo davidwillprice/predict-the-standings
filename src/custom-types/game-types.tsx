@@ -102,13 +102,13 @@ interface RoundPerformance {
 }
 
 export interface GameData {
-  entrants: { [key: string]: Entrants };
-  rounds: Round[];
+  entrantStats: { [key: string]: EntrantStats };
+  roundStats: { entrantDiffTotals: { [key: string]: EntrantDiffTotal[] } }[];
   lastUpdated: Date;
   users: Users;
 }
 
-export interface entrantStats {
+export interface EntrantStats {
   [key: string]: {
     avgPrePos?: number;
     predictionedPositions: number[];
