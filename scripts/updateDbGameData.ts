@@ -3,12 +3,14 @@ import dotenv from "dotenv";
 import { MongoClient, ObjectId } from "mongodb";
 
 import { allSeasonData } from "@data/formula-1/season-data";
-import { getAllPredictionData } from "@lib/prediction-data";
+import { createGameData } from "@lib/prediction-data";
 import {
   getAllUserPredictionDataQuery,
   updateAllUserDocGameData,
   updateLastUpdatedTimeQuery,
 } from "@lib/db-functions";
+
+import { entrantStats } from "@custom-types/game-types";
 
 async function connectToMongo() {
   if (process.env.db === "dev")
@@ -29,7 +31,7 @@ async function submitF1GameData(client: MongoClient) {
 
       const users = await getAllUserPredictionDataQuery(collection);
 
-      const predictionData = await getAllPredictionData(
+      const predictionData = await createGameData(
         drivers,
         teams,
         rounds,
@@ -39,16 +41,39 @@ async function submitF1GameData(client: MongoClient) {
 
       await updateAllUserDocGameData(collection, users);
 
-      /**Update/Add the data to the DB */
-      const gameDataDoc = {
-        type: "gameData",
-        entrants: { drivers: drivers, teams: teams },
-        rounds: predictionData.rounds,
-      };
+      const driverStats: entrantStats = {};
+      Object.values(drivers).forEach((entrant) => {
+        driverStats[entrant.sName] = {
+          avgPrePos: entrant.avgPrePos,
+          predictionedPositions: entrant.predictionedPositions,
+          pcPredictedToBeatTeammate: entrant.pcPredictedToBeatTeammate,
+        };
+      });
+      const teamStats: entrantStats = {};
+      Object.values(teams).forEach((entrant) => {
+        teamStats[entrant.sName] = {
+          avgPrePos: entrant.avgPrePos,
+          predictionedPositions: entrant.predictionedPositions,
+          pcPredictedToBeatTeammate: entrant.pcPredictedToBeatTeammate,
+        };
+      });
 
+      const roundStats = predictionData.rounds.map((round) => {
+        return {
+          entrantDiffTotals: round.entrantDiffTotals,
+        };
+      });
+
+      /**Update/Add the stats data to the DB */
       const result = await collection.updateOne(
-        { type: "gameData" },
-        { $set: gameDataDoc },
+        { type: "statsData" },
+        {
+          $set: {
+            type: "statsData",
+            entrants: { drivers: driverStats, teams: teamStats },
+            rounds: roundStats,
+          },
+        },
         { upsert: true }
       );
 

@@ -1,17 +1,17 @@
 import {
-  PredictionData,
+  GameData,
   Entrants,
   Round,
   User,
   Users,
 } from "@custom-types/game-types";
 
-export const getAllPredictionData = async (
+export const createGameData = async (
   drivers: Entrants,
   teams: Entrants,
   rounds: Round[],
   users: Users
-): Promise<PredictionData | string> => {
+): Promise<GameData | string> => {
   //**Creates an 'average' user */
   users.average = new User(
     "Average",

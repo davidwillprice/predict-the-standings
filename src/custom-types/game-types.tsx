@@ -101,9 +101,17 @@ interface RoundPerformance {
   prevLeaderboardPosDiff: number;
 }
 
-export interface PredictionData {
+export interface GameData {
   entrants: { [key: string]: Entrants };
   rounds: Round[];
   lastUpdated: Date;
   users: Users;
+}
+
+export interface entrantStats {
+  [key: string]: {
+    avgPrePos?: number;
+    predictionedPositions: number[];
+    pcPredictedToBeatTeammate?: number;
+  };
 }

@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { unstable_cache } from "next/cache";
 
 import { authOptions } from "@lib/auth";
-import { getAllPredictionData } from "@lib/prediction-data";
+import { createGameData } from "@lib/prediction-data";
 import { allSeasonData } from "@data/formula-1/season-data";
 
 import { Panel } from "@components/panels/panel";
@@ -43,7 +43,7 @@ const Page: NextPage<PageProps> = async ({ params }) => {
 
   const getPredictionData = unstable_cache(async () => {
     try {
-      const res = await getAllPredictionData(
+      const res = await createGameData(
         initialDrivers,
         initialTeams,
         rounds,
@@ -54,7 +54,7 @@ const Page: NextPage<PageProps> = async ({ params }) => {
       if (typeof res === "string") {
         throw new Error(res);
       }
-      console.log("Running getAllPredictionData " + new Date());
+      console.log("Running createGameData " + new Date());
       return res;
     } catch (e) {
       if (e instanceof Error) {
