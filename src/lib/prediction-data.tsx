@@ -122,6 +122,7 @@ const calcUsersPerformance = (
           diffs: [],
           diffCounts: [],
           leaderboardPos: 0,
+          percentCorrect: 0,
           prevLeaderboardPosDiff: 0,
         });
         for (let i = 0; i < user.predictions[entrantType].length; i++) {
@@ -250,30 +251,31 @@ const orderLeaderboards = (rounds: Round[], users: Users) => {
   return rounds;
 };
 
-/**Calculate how each user's leaderboard position has changed since the previous round */
+/**Copy leaderboard data from the round data to the user data, and calculate how each user's leaderboard position has changed since the previous round */
 const addLeaderboardDataToUsers = (rounds: Round[], users: Users): Users => {
   rounds.forEach((round, roundIndex) => {
     for (const entrantType in round.leaderboards) {
-      /**Don't calculate the leaderboard changes of the first round */
-      if (roundIndex === 0) {
-        return;
-      }
       /**Loop over each user in order of the looped round's leaderboard*/
-      for (const [currentLeaderboardPos, currentUserData] of Object.entries(
+      for (const [curLeaderboardPos, curLeaderboardData] of Object.entries(
         round.leaderboards[entrantType]
       )) {
+        const userData =
+          users[curLeaderboardData.userId].season[entrantType][roundIndex];
+
+        /**Attach the user's leaderboard position to their data for the looped round*/
+        userData.leaderboardPos = +curLeaderboardPos + 1;
+
+        /**Attach the user's accuracy to their data for the looped round*/
+        userData.percentCorrect = curLeaderboardData.percentCorrect;
+
+        /**Don't calculate the leaderboard changes of the first round */
+        if (roundIndex === 0) continue;
         /**Find that user's position in the leaderboard of the round previous to the looped round*/
         const previousLbPos = rounds[roundIndex - 1].leaderboards[
           entrantType
-        ].findIndex((entrant) => entrant.userId === currentUserData.userId);
+        ].findIndex((entrant) => entrant.userId === curLeaderboardData.userId);
         /**Attach the user's leaderboard position change from the previous round to their data for the looped round*/
-        users[currentUserData.userId].season[entrantType][
-          roundIndex
-        ].prevLeaderboardPosDiff = previousLbPos - +currentLeaderboardPos;
-        /**Attach the user's leaderboard position to their data for the looped round*/
-        users[currentUserData.userId].season[entrantType][
-          roundIndex
-        ].leaderboardPos = +currentLeaderboardPos + 1;
+        userData.prevLeaderboardPosDiff = previousLbPos - +curLeaderboardPos;
       }
     }
   });

@@ -34,6 +34,7 @@ export interface JsonPrediction {
   team_predictions: string[];
 }
 
+/**@todo Delete */
 export interface UserIdData {
   id: number;
   displayName: string;
@@ -98,6 +99,7 @@ interface RoundPerformance {
   /**No of perfect predictions, then predictions that were off by one, then predictions that were off by two etc) */
   diffCounts: number[];
   leaderboardPos: number;
+  percentCorrect: number;
   prevLeaderboardPosDiff: number;
 }
 
