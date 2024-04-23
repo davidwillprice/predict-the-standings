@@ -4,7 +4,7 @@ import { Collection } from "mongodb";
 
 import { ObjectId } from "mongodb";
 import { Sport } from "@custom-types/misc";
-import { User, Users } from "@custom-types/game-types";
+import { User, Users, StatsData } from "@custom-types/game-types";
 
 export const getSingleUserPredictionDataQuery = async (
   season: string,
@@ -91,6 +91,30 @@ export const getLeaderboardDataQuery = async (season: string, sport: Sport) => {
     console.log("Getting leaderboard data");
 
     return users;
+  } catch (error) {
+    throw error;
+  }
+};
+
+/**Get stats data to display on stats pages */
+export const getStatsDataQuery = async (season: string, sport: Sport) => {
+  const client = await clientPromise;
+  try {
+    const db = client.db("pts");
+    const collection = db.collection(sport + season);
+    const result = await collection.findOne({ type: "statsData" });
+    if (!result)
+      throw new Error(`Failed to get stats data for ${sport + season}`);
+
+    const statsData: StatsData = {
+      entrantStats: result.entrants,
+      noOfPredictions: result.noOfPredictions,
+      roundStats: result.rounds,
+    };
+
+    console.log("Getting stats data");
+
+    return statsData;
   } catch (error) {
     throw error;
   }

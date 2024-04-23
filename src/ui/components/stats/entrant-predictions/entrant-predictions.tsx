@@ -6,25 +6,25 @@ import { sortEntrantsAlphabetically } from "@lib/misc";
 
 import { Chart } from "./chart";
 
-import { PredictionData } from "@custom-types/game-types";
+import { Entrants } from "@custom-types/game-types";
 
 import styles from "@components/stats/stats.module.scss";
 import inputStyles from "@styles/select-input.module.scss";
 
 interface Props {
-  predictionData: PredictionData;
+  entrants: {
+    [key: string]: Entrants;
+  };
 }
 
-export const EntrantPredictions = ({ predictionData }: Props) => {
-  const entrantData = predictionData.entrants;
-
-  const entrantTypeArr = Object.keys(entrantData);
+export const EntrantPredictions = ({ entrants }: Props) => {
+  const entrantTypeArr = Object.keys(entrants);
   const initialEntrantType = entrantTypeArr[0];
 
   const [selectedEntrantType, setSelectedEntrantType] =
     useState(initialEntrantType);
   const selectedEntrants = sortEntrantsAlphabetically(
-    Object.values(entrantData[selectedEntrantType])
+    Object.values(entrants[selectedEntrantType])
   );
   const [selectedEntrant, setSelectedEntrant] = useState(selectedEntrants[0]);
 
@@ -36,7 +36,7 @@ export const EntrantPredictions = ({ predictionData }: Props) => {
       setSelectedEntrantType(event.currentTarget.value);
     setSelectedEntrant(
       sortEntrantsAlphabetically(
-        Object.values(entrantData[event.currentTarget.value])
+        Object.values(entrants[event.currentTarget.value])
       )[0]
     );
   };

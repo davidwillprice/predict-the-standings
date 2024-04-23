@@ -106,8 +106,13 @@ interface RoundPerformance {
 export interface GameData {
   entrantStats: { [key: string]: EntrantStats };
   roundStats: { entrantDiffTotals: { [key: string]: EntrantDiffTotal[] } }[];
-  lastUpdated: Date;
   users: Users;
+}
+
+export interface StatsData {
+  entrantStats: { [key: string]: EntrantStats };
+  noOfPredictions: { [key: string]: number };
+  roundStats: { entrantDiffTotals: { [key: string]: EntrantDiffTotal[] } }[];
 }
 
 export interface EntrantStats {

@@ -5,11 +5,17 @@ import { Round, Entrant, Entrants } from "@custom-types/game-types";
 interface Props {
   entrants: { [key: string]: Entrants };
   isSeasonOver: Boolean;
+  noOfPredictions: { [key: string]: number };
   rounds: Round[];
 }
 
 /**Populates an array with the most and least accurate entrants of all types using a class, then renders bullet points of them */
-export const EntrantAccuracy = ({ entrants, isSeasonOver, rounds }: Props) => {
+export const EntrantAccuracy = ({
+  entrants,
+  isSeasonOver,
+  noOfPredictions,
+  rounds,
+}: Props) => {
   const mostRecentRound = rounds[rounds.length - 1];
   /**@todo Add round slider to see how accuracies changed? */
   class MostOrLeastAccEntrant {
@@ -25,9 +31,7 @@ export const EntrantAccuracy = ({ entrants, isSeasonOver, rounds }: Props) => {
     ) {
       this.entrant = entrant;
       this.avgMisposition =
-        Math.ceil(
-          (diffTotal / mostRecentRound.leaderboards[entrantType].length) * 10
-        ) / 10;
+        Math.ceil((diffTotal / noOfPredictions[entrantType]) * 10) / 10;
       this.accType = accType;
       this.entrantType = entrantType;
     }
@@ -60,6 +64,7 @@ export const EntrantAccuracy = ({ entrants, isSeasonOver, rounds }: Props) => {
       )
     );
   }
+
   return (
     <ul>
       {mostOrLeastAccEntrants.map((entrantData) => {

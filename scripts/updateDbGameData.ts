@@ -44,6 +44,10 @@ async function submitF1GameData(client: MongoClient) {
               drivers: gameData.entrantStats.driver,
               teams: gameData.entrantStats.team,
             },
+            noOfPredictions: {
+              driver: Object.keys(users).length,
+              team: Object.keys(users).length,
+            },
             rounds: gameData.roundStats,
           },
         },

@@ -60,7 +60,6 @@ export const createGameData = async (
         entrantDiffTotals: round.entrantDiffTotals,
       };
     }),
-    lastUpdated: new Date(),
     users: users,
   };
 };
