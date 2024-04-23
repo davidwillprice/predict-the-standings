@@ -5,7 +5,7 @@ import { NextPage } from "next";
 import { notFound } from "next/navigation";
 
 import { sortEntrantsAlphabetically } from "@lib/misc";
-import { getUserPredictionDataQuery } from "@lib/db-functions";
+import { getSingleUserPredictionDataQuery } from "@lib/db-functions";
 import { authOptions } from "@lib/auth";
 import { allSeasonData } from "@data/formula-1/season-data";
 
@@ -51,7 +51,7 @@ const Page: NextPage<PageProps> = async ({ params }) => {
   let driverArr: Entrant[];
   let teamArr: Entrant[];
   try {
-    const userPredictionData = await getUserPredictionDataQuery(
+    const userPredictionData = await getSingleUserPredictionDataQuery(
       season,
       "f1",
       userId

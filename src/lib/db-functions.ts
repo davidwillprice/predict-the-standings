@@ -6,7 +6,7 @@ import { ObjectId } from "mongodb";
 import { Sport } from "@custom-types/misc";
 import { User, Users } from "@custom-types/game-types";
 
-export const getUserPredictionDataQuery = async (
+export const getSingleUserPredictionDataQuery = async (
   season: string,
   sport: Sport,
   userId: number
@@ -57,6 +57,38 @@ export const getAllUserPredictionDataQuery = async (
       throw new Error(
         `User prediction data obj is empty for ${collection.collectionName}`
       );
+
+    return users;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getLeaderboardDataQuery = async (season: string, sport: Sport) => {
+  const client = await clientPromise;
+  try {
+    const db = client.db("pts");
+    const collection = db.collection(sport + season);
+    const result = await collection.find({ type: "userData" }).toArray();
+    if (!result)
+      throw new Error(`Failed to get leaderboard data for ${sport + season}`);
+
+    const users: { [key: string]: User } = {};
+
+    result.forEach((user) => {
+      users[user.userId] = {
+        id: user.userId,
+        displayName: user.displayName,
+        information: user.information,
+        lastSubmissionTime: user.lastSubmissionTime,
+        predictions: user.predictions,
+        predictionsFromAvg: user.predictionsFromAvg,
+        season: user.season,
+        userType: user.userType,
+      };
+    });
+
+    console.log("Getting leaderboard data");
 
     return users;
   } catch (error) {
@@ -171,6 +203,7 @@ export const updateAllUserDocGameData = async (
                   predictions: user.predictions,
                   predictionsFromAvg: user.predictionsFromAvg,
                   season: user.season,
+                  type: "userData",
                   userType: "special",
                 },
         },

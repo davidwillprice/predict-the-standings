@@ -1,12 +1,9 @@
 import { NextPage } from "next";
-import { unstable_cache } from "next/cache";
 import { getServerSession } from "next-auth/next";
 import { notFound } from "next/navigation";
 
 import { authOptions } from "@lib/auth";
-import { createGameData } from "@lib/prediction-data";
 import { allSeasonData } from "@data/formula-1/season-data";
-import { getAllDisplayNamesQuery } from "@lib/db-functions";
 
 import { Panel } from "@components/panels/panel";
 import { PanelHeading } from "@components/panels/panel-heading";
@@ -15,7 +12,7 @@ import { PreSeasonContainer } from "@components/game/pre-season-container";
 import { FeedbackContainer } from "@components/feedback-container/feedback-container";
 import { PromptPredictions } from "@components/submit-predictions/prompt-predictions";
 
-import { PredictionData, UserIdData } from "@custom-types/game-types";
+import { Entrants } from "@custom-types/game-types";
 import { PageProps } from "@custom-types/misc";
 
 export async function generateStaticParams() {
@@ -27,80 +24,18 @@ export async function generateStaticParams() {
 const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
   const { season } = params;
   if (allSeasonData[season] === undefined) notFound();
-  const {
-    drivers: initialDrivers,
-    teams: initialTeams,
-    rounds,
-    predictionFreezeTime,
-  } = allSeasonData[season];
+  const { drivers, rounds, predictionFreezeTime, teams } =
+    allSeasonData[season];
+  const entrants: {
+    [key: string]: Entrants;
+  } = {
+    driver: drivers,
+    team: teams,
+  };
 
-  let error = "";
   const session = await getServerSession(authOptions);
   const currentUserId = session?.user.id;
   const currentUserDisplayName = session?.user.displayName;
-
-  const getCachedDisplayNames = unstable_cache(async () => {
-    try {
-      const test = await getAllDisplayNamesQuery();
-      return test.rows;
-    } catch (_) {
-      console.log("Failed to get display names");
-    }
-  }, ["displayNames"]);
-
-  let displayNameData: UserIdData[] | undefined;
-  try {
-    const res = await getCachedDisplayNames();
-    if (typeof res === "string") {
-      error = res;
-    } else if (res === undefined) {
-      error = "Display name data is undefined";
-    } else {
-      displayNameData = res as UserIdData[];
-    }
-  } catch (e: unknown) {
-    if (e instanceof Error) {
-      error = e.message;
-    } else {
-      error = "Unknown front-end error";
-    }
-  }
-
-  const getPredictionData = unstable_cache(async () => {
-    try {
-      const res = await createGameData(
-        initialDrivers,
-        initialTeams,
-        rounds,
-        season,
-        "f1"
-      );
-
-      if (typeof res === "string") {
-        throw new Error(res);
-      }
-      console.log("Running createGameData " + new Date());
-      return res;
-    } catch (e) {
-      if (e instanceof Error) {
-        throw e;
-      } else {
-        throw new Error(
-          "Unable to get local predictionData for unknown reason"
-        );
-      }
-    }
-  }, ["predictionData"]);
-
-  const predictionData: PredictionData = await getPredictionData();
-
-  if (predictionData && displayNameData) {
-    for (const user of Object.values(predictionData.users)) {
-      user.displayName =
-        displayNameData.find((dbUser) => dbUser.id === user.id)?.displayName ||
-        "Average";
-    }
-  }
 
   const heading = (
     <h1>
@@ -133,19 +68,18 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
           {/**@todo Re-enable preseason container once properly built - Or could have the below text show as a modal and then underneath a placeholder of what the leaderboard will look like?
            * <PreSeasonContainer />*/}
         </>
-      ) : error || !predictionData || !displayNameData ? (
-        <FeedbackContainer iconType={"error"}>
-          <p>{error}</p>
-        </FeedbackContainer>
       ) : (
+        //  error || !predictionData || !displayNameData ? (
+        //   <FeedbackContainer iconType={"error"}>
+        //     <p>{error}</p>
+        //   </FeedbackContainer>
+        // ) :
         <GameContainer
           currentUserDisplayName={currentUserDisplayName}
           currentUserId={currentUserId}
-          entrants={JSON.parse(JSON.stringify(predictionData.entrants))}
-          lastUpdated={predictionData.lastUpdated}
-          rounds={JSON.parse(JSON.stringify(predictionData.rounds))}
           currentSearchParams={searchParams}
-          users={JSON.parse(JSON.stringify(predictionData.users))}
+          entrants={JSON.parse(JSON.stringify(entrants))}
+          rounds={JSON.parse(JSON.stringify(rounds))}
           season={season}>
           <div>
             {heading}
