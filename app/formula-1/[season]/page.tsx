@@ -9,7 +9,6 @@ import { Panel } from "@components/panels/panel";
 import { PanelHeading } from "@components/panels/panel-heading";
 import { GameContainer } from "@components/game/game-container";
 import { PreSeasonContainer } from "@components/game/pre-season-container";
-import { FeedbackContainer } from "@components/feedback-container/feedback-container";
 import { PromptPredictions } from "@components/submit-predictions/prompt-predictions";
 
 import { Entrants } from "@custom-types/game-types";
@@ -69,11 +68,6 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
            * <PreSeasonContainer />*/}
         </>
       ) : (
-        //  error || !predictionData || !displayNameData ? (
-        //   <FeedbackContainer iconType={"error"}>
-        //     <p>{error}</p>
-        //   </FeedbackContainer>
-        // ) :
         <GameContainer
           currentUserDisplayName={currentUserDisplayName}
           currentUserId={currentUserId}
