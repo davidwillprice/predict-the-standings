@@ -9,7 +9,7 @@ import { User, Users, StatsData } from "@custom-types/game-types";
 export const getSingleUserPredictionDataQuery = async (
   season: string,
   sport: Sport,
-  userId: number
+  userId: string
 ) => {
   const client = await clientPromise;
   try {
@@ -21,6 +21,50 @@ export const getSingleUserPredictionDataQuery = async (
         `Failed to get user prediction data for ${sport + season}`
       );
     return result;
+  } catch (error) {
+    throw error;
+  }
+};
+
+/**Get stats data to display on stats pages
+ */
+export const getMultipleUserGameData = async (
+  season: string,
+  sport: Sport,
+  userIdArr: string[]
+): Promise<Users> => {
+  const client = await clientPromise;
+  try {
+    const db = client.db("pts");
+    const collection = db.collection(sport + season);
+    const result = await collection
+      .find({
+        _id: { $in: userIdArr.map((id) => new ObjectId(id)) },
+      })
+      .toArray();
+    if (!result)
+      throw new Error(`Failed to get user game data for ${sport + season}`);
+
+    let users: Users = {};
+    for await (const doc of result) {
+      users[doc._id.toString()] = new User(
+        doc.displayName,
+        doc._id.toString(),
+        doc.lastSubmissionTime,
+        {
+          driver: doc.predictions.driver,
+          team: doc.predictions.team,
+        },
+        doc.userType,
+        doc.predictionsFromAvg
+      );
+    }
+    if (Object.keys(users).length === 0)
+      throw new Error(
+        `User prediction data obj is empty for ${collection.collectionName}`
+      );
+
+    return users;
   } catch (error) {
     throw error;
   }
@@ -79,6 +123,7 @@ export const getLeaderboardDataQuery = async (season: string, sport: Sport) => {
       users[user.userId] = {
         id: user.userId,
         displayName: user.displayName,
+        controversyPercentile: user.controversyPercentile,
         information: user.information,
         lastSubmissionTime: user.lastSubmissionTime,
         predictions: user.predictions,
@@ -96,8 +141,13 @@ export const getLeaderboardDataQuery = async (season: string, sport: Sport) => {
   }
 };
 
-/**Get stats data to display on stats pages */
-export const getStatsDataQuery = async (season: string, sport: Sport) => {
+/**Get stats data to display on stats pages
+ * @todo This should be split into entrant stats and player stats
+ */
+export const getStatsDataQuery = async (
+  season: string,
+  sport: Sport
+): Promise<StatsData> => {
   const client = await clientPromise;
   try {
     const db = client.db("pts");
@@ -107,6 +157,7 @@ export const getStatsDataQuery = async (season: string, sport: Sport) => {
       throw new Error(`Failed to get stats data for ${sport + season}`);
 
     const statsData: StatsData = {
+      controversialUserIds: result.controversialUserIds,
       entrantStats: result.entrants,
       noOfPredictions: result.noOfPredictions,
       roundStats: result.rounds,
@@ -217,11 +268,13 @@ export const updateAllUserDocGameData = async (
           $set:
             user.userType === "standard"
               ? {
+                  controversyPercentile: user.controversyPercentile,
                   predictionsFromAvg: user.predictionsFromAvg,
                   season: user.season,
                 }
               : {
                   userId: user.id,
+                  controversyPercentile: user.controversyPercentile,
                   displayName: user.displayName,
                   information: user.information,
                   predictions: user.predictions,

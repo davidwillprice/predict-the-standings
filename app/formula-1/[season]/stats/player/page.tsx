@@ -1,20 +1,22 @@
-import { unstable_cache } from "next/cache";
 import { getServerSession } from "next-auth/next";
 import { NextPage } from "next";
 import { notFound } from "next/navigation";
 
+import {
+  getSingleUserPredictionDataQuery,
+  getStatsDataQuery,
+  getMultipleUserGameData,
+} from "@lib/db-functions";
+
 import { authOptions } from "@lib/auth";
-import { createGameData } from "@lib/prediction-data";
 import { allSeasonData } from "@data/formula-1/season-data";
-import { getAllDisplayNamesQuery } from "@lib/db-functions";
 
 import { Panel } from "@components/panels/panel";
 import { PanelHeading } from "@components/panels/panel-heading";
-import { FeedbackContainer } from "@components/feedback-container/feedback-container";
 import { PromptPredictions } from "@components/submit-predictions/prompt-predictions";
 import { Controversy } from "@components/stats/player/controversy";
 
-import { PredictionData, UserIdData } from "@custom-types/game-types";
+import { Entrants, User } from "@custom-types/game-types";
 import { PageProps } from "@custom-types/misc";
 
 export async function generateStaticParams() {
@@ -26,83 +28,59 @@ export async function generateStaticParams() {
 const Page: NextPage<PageProps> = async ({ params }) => {
   const { season } = params;
   if (allSeasonData[season] === undefined) notFound();
-  const {
-    drivers: initialDrivers,
-    teams: initialTeams,
-    rounds,
-    predictionFreezeTime,
-    isSeasonOver,
-  } = allSeasonData[season];
+  const { drivers, teams, rounds, predictionFreezeTime, isSeasonOver } =
+    allSeasonData[season];
 
-  let error = "";
+  const entrants: {
+    [key: string]: Entrants;
+  } = {
+    driver: drivers,
+    team: teams,
+  };
+
   const session = await getServerSession(authOptions);
-  const currentUserId = session?.user.id;
-  /**@todo Add updated current display name to different stats */
+  const currUserId = session?.user.id;
 
-  const getCachedDisplayNames = unstable_cache(async () => {
-    try {
-      const test = await getAllDisplayNamesQuery();
-      return test.rows;
-    } catch (_) {
-      console.log("Failed to get display names");
-    }
-  }, ["displayNames"]);
-
-  let displayNameData: UserIdData[] | undefined;
-  try {
-    const res = await getCachedDisplayNames();
-    if (typeof res === "string") {
-      error = res;
-    } else if (res === undefined) {
-      error = "Display name data is undefined";
-    } else {
-      displayNameData = res as UserIdData[];
-    }
-  } catch (e: unknown) {
-    if (e instanceof Error) {
-      error = e.message;
-    } else {
-      error = "Unknown front-end error";
-    }
+  let currUser: User | null;
+  if (currUserId) {
+    const res = await getSingleUserPredictionDataQuery(
+      season,
+      "f1",
+      currUserId
+    );
+    currUser = {
+      id: res.userId,
+      displayName: res.displayName,
+      controversyPercentile: res.controversyPercentile,
+      information: res.information,
+      lastSubmissionTime: res.lastSubmissionTime,
+      predictions: res.predictions,
+      predictionsFromAvg: res.predictionsFromAvg,
+      season: res.season,
+      userType: res.userType,
+    };
+  } else {
+    currUser = null;
   }
 
-  const getPredictionData = unstable_cache(async () => {
-    try {
-      const res = await createGameData(
-        initialDrivers,
-        initialTeams,
-        rounds,
-        season,
-        "f1"
-      );
+  const { controversialUserIds } = await getStatsDataQuery(season, "f1");
 
-      if (typeof res === "string") {
-        throw new Error(res);
-      }
-      console.log("Running createGameData " + new Date());
-      return res;
-    } catch (e) {
-      if (e instanceof Error) {
-        throw e;
-      } else {
-        throw new Error(
-          "Unable to get local predictionData for unknown reason"
-        );
-      }
-    }
-  }, ["predictionData"]);
-
-  const predictionData: PredictionData = await getPredictionData();
-
-  if (predictionData && displayNameData) {
-    for (const user of Object.values(predictionData.users)) {
-      user.displayName =
-        displayNameData.find((dbUser) => dbUser.id === user.id)?.displayName ||
-        "Average";
-    }
+  /**Obtain game data for all the users referenced in the controversy Id obj */
+  const noteworthyUserIds: string[] = [];
+  for (const entrantType of Object.keys(controversialUserIds)) {
+    controversialUserIds[entrantType].most.forEach((userId) =>
+      noteworthyUserIds.push(userId)
+    );
+    controversialUserIds[entrantType].least.forEach((userId) =>
+      noteworthyUserIds.push(userId)
+    );
   }
-  /**@todo Stat for copying last years standings */
+  const users = await getMultipleUserGameData(season, "f1", noteworthyUserIds);
+
+  /**@todo Stat for copying last year's standings */
   /**@todo Record how many times people update their standings for a '"Jack submitted X predictions, Y more than anybody else. Indecisive."' stat */
+  /**@todo "X, Y, and Z were the only players to predict Hamilton would win the WDC" */
+
   return (
     <>
       <PanelHeading>
@@ -116,22 +94,18 @@ const Page: NextPage<PageProps> = async ({ params }) => {
               will show on this page.
             </p>
             <PromptPredictions
-              isSignedIn={Boolean(currentUserId)}
+              isSignedIn={Boolean(currUserId)}
               predictionFreezeTime={predictionFreezeTime}
             />
           </Panel>
         </>
-      ) : error || !predictionData ? (
-        <FeedbackContainer iconType={"error"}>
-          <p>{error}</p>
-        </FeedbackContainer>
       ) : (
         <>
           <Panel>
             <Controversy
-              currentUserId={currentUserId}
-              isSeasonOver={isSeasonOver}
-              users={JSON.parse(JSON.stringify(predictionData.users))}
+              controversialUserIds={controversialUserIds}
+              currUser={currUser}
+              users={JSON.parse(JSON.stringify(users))}
             />
           </Panel>
         </>

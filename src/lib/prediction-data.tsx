@@ -5,7 +5,9 @@ import {
   User,
   Users,
   EntrantStats,
+  ControversialUserIds,
 } from "@custom-types/game-types";
+import { calcPercentile } from "./misc";
 
 export const createGameData = async (
   drivers: Entrants,
@@ -34,6 +36,8 @@ export const createGameData = async (
 
   users = generateControversyData(users);
 
+  const controversialUserIds = getControversialUsers(users);
+
   rounds = calcLeaderboards("driver", rounds, users);
   rounds = calcLeaderboards("team", rounds, users);
 
@@ -54,6 +58,7 @@ export const createGameData = async (
   const teamStats = generateEntrantStats(teams);
 
   return {
+    controversialUserIds: controversialUserIds,
     entrantStats: { driver: driverStats, team: teamStats },
     roundStats: rounds.map((round) => {
       return {
@@ -423,7 +428,78 @@ export function generateControversyData(users: Users): Users {
       }
     }
   }
+
+  /**Now main contro data is created, calculate controversy percentiles*/
+  for (const entrantType of Object.keys(users.average.predictions)) {
+    /**Create an array of every predictionsFromAvg for every user (besides the average) */
+    const predictionsFromAvgArr = Object.values(users)
+      .filter((user) => user.id !== "average")
+      .map((user) => user.predictionsFromAvg[entrantType]);
+
+    /**Use arr to calculate the controversy percentile for a user */
+    for (const user of Object.values(users)) {
+      if (user.id === "average") continue;
+      user.controversyPercentile[entrantType] = calcPercentile(
+        predictionsFromAvgArr,
+        user.predictionsFromAvg[entrantType]
+      );
+    }
+  }
   return users;
+}
+
+/**Get only the userIds of those who were the most/least controversial */
+function getControversialUsers(users: Users): ControversialUserIds {
+  let controversialUsers: ControversialUserIds = {};
+  let mostLeastControUserArrs: { [key: string]: User[] } = {};
+
+  /**Populate controversyArrays with the all users in any order */
+  for (const user of Object.values(users)) {
+    if (user.displayName === "Average") continue;
+    for (const entrantType in user.predictions) {
+      if (!mostLeastControUserArrs[entrantType])
+        mostLeastControUserArrs[entrantType] = [];
+      mostLeastControUserArrs[entrantType].push(user);
+    }
+  }
+
+  /**Order users in mostLeastControUserArrs by how controversial they are */
+  for (const entrantType in mostLeastControUserArrs) {
+    mostLeastControUserArrs[entrantType].sort((a, b) =>
+      a.predictionsFromAvg[entrantType]! > b.predictionsFromAvg[entrantType]!
+        ? 1
+        : -1
+    );
+  }
+
+  /**Get the userIds of the those who were the most/least controversial*/
+  for (const entrantType in mostLeastControUserArrs) {
+    /**Get most/least controversial users*/
+    const mostControUser =
+      mostLeastControUserArrs[entrantType][
+        mostLeastControUserArrs[entrantType].length - 1
+      ];
+    const leastControUser = mostLeastControUserArrs[entrantType][0];
+
+    /**Filter the userArr by those who are as contro as the most/least contro user, then add their Ids to the controversialUsers obj*/
+    controversialUsers[entrantType] = {
+      most: mostLeastControUserArrs[entrantType]
+        .filter(
+          (user) =>
+            user.predictionsFromAvg[entrantType] ===
+            mostControUser.predictionsFromAvg[entrantType]
+        )
+        .map((user) => user.id),
+      least: mostLeastControUserArrs[entrantType]
+        .filter(
+          (user) =>
+            user.predictionsFromAvg[entrantType] ===
+            leastControUser.predictionsFromAvg[entrantType]
+        )
+        .map((user) => user.id),
+    };
+  }
+  return controversialUsers;
 }
 
 /**The leaderboards are unbounded arrays so I don't want to upload them to the DB */

@@ -40,6 +40,7 @@ async function submitF1GameData(client: MongoClient) {
         {
           $set: {
             type: "statsData",
+            controversialUserIds: gameData.controversialUserIds,
             entrants: {
               drivers: gameData.entrantStats.driver,
               teams: gameData.entrantStats.team,
