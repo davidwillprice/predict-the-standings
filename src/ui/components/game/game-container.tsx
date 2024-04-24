@@ -103,22 +103,23 @@ export const GameContainer = ({
     setRoundIndex(setInitialRounds(currentSearchParams));
 
     const updateUserData = async () => {
-      const res = await getLeaderboardDataQuery(season, "f1");
-      setUsersData(res);
+      try {
+        const res = await getLeaderboardDataQuery(season, "f1");
 
-      /**If the searchParams have a valid user query, set it as the selected User*/
-      if (
-        typeof currentSearchParams.user === "string" &&
-        res[currentSearchParams.user]
-      )
-        setSelectedUser(res[currentSearchParams.user]);
+        setUsersData(res);
+
+        /**If the searchParams have a valid user query, set it as the selected User*/
+        if (
+          typeof currentSearchParams.user === "string" &&
+          res[currentSearchParams.user]
+        )
+          setSelectedUser(res[currentSearchParams.user]);
+      } catch (err) {
+        throw err;
+      }
     };
-    try {
-      updateUserData();
-    } catch (err) {
-      /**@todo Add error handling if user leaderboard data can't be obtained */
-      console.log(err);
-    }
+
+    updateUserData();
   }, [currentSearchParams]);
 
   /**Updates round in query string */
@@ -146,7 +147,8 @@ export const GameContainer = ({
 
   return (
     <>
-      {usersData ? (
+      {/**@todo Use Suspense as a loading state instead */}
+      {usersData && (
         <>
           <div
             className={`${styles.con} ${
@@ -184,10 +186,8 @@ export const GameContainer = ({
                     }}>
                     Back
                   </Button>
-                  {selectedUser.information ? (
+                  {selectedUser.information && (
                     <p>Note: {selectedUser.information}</p>
-                  ) : (
-                    ""
                   )}
                   {/**@todo Add report display name feature
               <Button>Report Display Name</Button>*/}
@@ -229,8 +229,6 @@ export const GameContainer = ({
             Leaderboard
           </Button>
         </>
-      ) : (
-        <></>
       )}
     </>
   );
