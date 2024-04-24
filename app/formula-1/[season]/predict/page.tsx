@@ -5,7 +5,7 @@ import { NextPage } from "next";
 import { notFound } from "next/navigation";
 
 import { sortEntrantsAlphabetically } from "@lib/misc";
-import { getF1PredictionTablesQuery } from "@lib/db-functions";
+import { getSingleUserPredictionDataQuery } from "@lib/db-functions";
 import { authOptions } from "@lib/auth";
 import { allSeasonData } from "@data/formula-1/season-data";
 
@@ -26,71 +26,47 @@ const Page: NextPage<PageProps> = async ({ params }) => {
   const { season } = params;
   if (allSeasonData[season] === undefined) notFound();
   const session = await getServerSession(authOptions);
+  const displayName = session?.user.displayName;
   if (session == null) {
     return redirect("/login?error=login");
-  } else if (!session?.user.displayName) {
+  } else if (!displayName) {
     return redirect("/get-started");
   }
 
   const { predictionFreezeTime, drivers, teams } = allSeasonData[season];
   const userId = session.user.id;
 
-  const defaultDriverArr = sortEntrantsAlphabetically([
-    drivers.ham,
-    drivers.bot,
-    drivers.lec,
-    drivers.sai,
-    drivers.ver,
-    drivers.per,
-    drivers.alo,
-    drivers.oco,
-    drivers.hul,
-    drivers.mag,
-    drivers.nor,
-    drivers.pia,
-    drivers.ric,
-    drivers.str,
-    drivers.zho,
-    drivers.alb,
-    drivers.tsu,
-    drivers.gas,
-    drivers.sar,
-    drivers.rus,
-  ]);
-  const defaultTeamArr = sortEntrantsAlphabetically([
-    teams.mer,
-    teams.fer,
-    teams.red,
-    teams.mcl,
-    teams.alp,
-    teams.rb,
-    teams.ast,
-    teams.has,
-    teams.sau,
-    teams.wil,
-  ]);
+  /**Create alphabetically ordered array of entrants to use as defaults if the user hasn't made predictions before */
+  let defaultDriverArr = [];
+  let defaultTeamArr = [];
+  for (const driver of Object.values(drivers)) {
+    defaultDriverArr.push(driver);
+  }
+  for (const team of Object.values(teams)) {
+    defaultTeamArr.push(team);
+  }
+  defaultDriverArr = sortEntrantsAlphabetically(defaultDriverArr);
+  defaultTeamArr = sortEntrantsAlphabetically(defaultTeamArr);
+
   let driverArr: Entrant[];
   let teamArr: Entrant[];
   try {
-    const tablesQueryRow = await getF1PredictionTablesQuery(
+    const userPredictionData = await getSingleUserPredictionDataQuery(
       season,
       "f1",
       userId
     );
-    if (!tablesQueryRow) {
-      throw new Error();
-    }
     /**Check if there is existing drivers predictions, and if not use an alphabetically ordered array of drivers */
-    if (tablesQueryRow["driver_predictions"]) {
-      driverArr = tablesQueryRow["driver_predictions"].map(
+    if (userPredictionData.predictions.driver) {
+      driverArr = userPredictionData.predictions.driver.map(
         (entrantStr: string) => drivers[entrantStr]
       );
     } else {
       driverArr = defaultDriverArr;
     }
     /**Check if there is existing teams predictions, and if not use an alphabetically ordered array of teams */
-    if (tablesQueryRow["team_predictions"] !== null) {
-      teamArr = tablesQueryRow["team_predictions"].map(
+    if (userPredictionData.predictions.team) {
+      teamArr = userPredictionData.predictions.team.map(
         (entrantStr: string) => teams[entrantStr]
       );
     } else {
@@ -105,6 +81,7 @@ const Page: NextPage<PageProps> = async ({ params }) => {
     <>
       {predictionFreezeTime.getTime() > new Date().getTime() ? (
         <EditPredictions
+          displayName={displayName}
           initialDrivers={JSON.parse(JSON.stringify(driverArr))}
           initialTeams={JSON.parse(JSON.stringify(teamArr))}
           predictionFreezeTime={predictionFreezeTime}

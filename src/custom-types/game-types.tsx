@@ -1,19 +1,35 @@
 export class User {
-  id: number;
-  displayName?: string;
+  id: string;
+  displayName: string;
   information: string;
+  lastSubmissionTime: Date;
   predictions: { [key: string]: EntrantId[] };
-  season: { [key: string]: RoundPerformance[] };
   predictionsFromAvg: { [key: string]: number };
-  constructor(id: number, predictions: { [key: string]: EntrantId[] }) {
+  season: { [key: string]: RoundPerformance[] };
+  userType: "standard" | "special";
+  controversyPercentile: { [key: string]: number };
+  constructor(
+    displayName: string,
+    id: string,
+    lastSubmissionTime: Date,
+    predictions: { [key: string]: EntrantId[] },
+    userType: "standard" | "special",
+    predictionsFromAvg?: { [key: string]: number }
+  ) {
     this.id = id;
-    this.displayName = "";
-    this.predictions = predictions;
-    this.season = {};
+    this.controversyPercentile = {};
+    this.displayName = displayName;
     this.information = "";
-    this.predictionsFromAvg = {};
+    this.lastSubmissionTime = lastSubmissionTime;
+    this.predictions = predictions;
+    this.predictionsFromAvg = predictionsFromAvg || {};
+    this.season = {};
+    this.userType = userType;
   }
 }
+
+type userId = string;
+
 export interface Users {
   [key: string]: User;
 }
@@ -24,9 +40,10 @@ export interface JsonPrediction {
   team_predictions: string[];
 }
 
+/**@todo Delete */
 export interface UserIdData {
   id: number;
-  display_name: string;
+  displayName: string;
 }
 
 export class Entrant {
@@ -70,28 +87,53 @@ export class Round {
     this.entrantDiffTotals = {};
   }
 }
-
 interface EntrantDiffTotal {
   entrantId: EntrantId;
   diffTotal: number;
 }
 
 export type Leaderboard = {
-  userId: number;
+  userId: userId;
   percentCorrect: number;
-  prevRdDiff: number;
 };
 
 interface RoundPerformance {
+  /**Total of how off all entrant predictions were in this round */
   diffTotal: number;
+  /**How off each entrant prediction was in this round */
   diffs: { entrantId: EntrantId; posDiff: number }[];
   /**No of perfect predictions, then predictions that were off by one, then predictions that were off by two etc) */
   diffCounts: number[];
+  leaderboardPos: number;
+  percentCorrect: number;
+  prevLeaderboardPosDiff: number;
 }
 
-export interface PredictionData {
-  entrants: { [key: string]: Entrants };
-  rounds: Round[];
-  lastUpdated: Date;
+export interface GameData {
+  controversialUserIds: ControversialUserIds;
+  entrantStats: { [key: string]: EntrantStats };
+  roundStats: { entrantDiffTotals: { [key: string]: EntrantDiffTotal[] } }[];
   users: Users;
+}
+
+export interface StatsData {
+  controversialUserIds: ControversialUserIds;
+  entrantStats: { [key: string]: EntrantStats };
+  noOfPredictions: { [key: string]: number };
+  roundStats: { entrantDiffTotals: { [key: string]: EntrantDiffTotal[] } }[];
+}
+
+export interface EntrantStats {
+  [key: string]: {
+    avgPrePos?: number;
+    predictionedPositions: number[];
+    pcPredictedToBeatTeammate?: number;
+  };
+}
+
+export interface ControversialUserIds {
+  [key: string]: {
+    most: userId[];
+    least: userId[];
+  };
 }

@@ -3,14 +3,16 @@
 import { useState, useEffect, ReactNode, useCallback } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 
+import { getLeaderboardDataQuery } from "@lib/db-functions";
+
 import { Leaderboard } from "./leaderboard";
 import { PredictionTable } from "@components/prediction-table/prediction-table";
 import { StandingsTable } from "@components/prediction-table/standings-table";
 import { RoundSlider } from "@components/round-slider/round-slider";
 import { Button } from "@components/button/button";
 import Icon from "@ui/svgs/icons/sq-icon";
-import btnStyles from "@components/button/button.module.scss";
 
+import btnStyles from "@components/button/button.module.scss";
 import styles from "@components/game/game-container.module.scss";
 
 import { Round, Users, User, Entrants } from "@custom-types/game-types";
@@ -19,23 +21,19 @@ interface Props {
   children: ReactNode;
   currentUserId: string | null;
   currentUserDisplayName: string | null;
-  entrants: { [key: string]: Entrants };
-  lastUpdated: Date;
-  rounds: Round[];
   currentSearchParams: { [key: string]: string | string[] | undefined };
-  users: Users;
+  entrants: { [key: string]: Entrants };
+  rounds: Round[];
   season: string;
 }
 
 export const GameContainer = ({
   children,
-  entrants,
-  rounds,
-  lastUpdated,
-  users,
   currentUserId,
   currentUserDisplayName,
   currentSearchParams,
+  entrants,
+  rounds,
   season,
 }: Props) => {
   const router = useRouter();
@@ -87,20 +85,6 @@ export const GameContainer = ({
     }
   };
 
-  /**If searchParams have a valid user query, return the User - Else default to null*/
-  const setInitialUser = (searchParams: {
-    [key: string]: string | string[] | undefined;
-  }): User | null => {
-    if (
-      typeof searchParams.user === "string" &&
-      users["user" + searchParams.user]
-    ) {
-      return users["user" + searchParams.user];
-    } else {
-      return null;
-    }
-  };
-
   const [roundIndex, setRoundIndex] = useState(
     setInitialRounds(currentSearchParams)
   );
@@ -108,14 +92,34 @@ export const GameContainer = ({
     setInitialEntrantType(currentSearchParams)
   );
   /**@todo Probably need to readd "mode" state to allow for the current user to be automatically navigated to when pagination is added */
-  const [selectedUser, setSelectedUser] = useState(
-    setInitialUser(currentSearchParams)
-  );
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [usersData, setUsersData] = useState<Users | null>(null);
+
+  /**@todo! Get lastUpdated document from DB */
+  const lastUpdated = new Date();
 
   useEffect(() => {
     setEntrantType(setInitialEntrantType(currentSearchParams));
     setRoundIndex(setInitialRounds(currentSearchParams));
-    setSelectedUser(setInitialUser(currentSearchParams));
+
+    const updateUserData = async () => {
+      try {
+        const res = await getLeaderboardDataQuery(season, "f1");
+
+        setUsersData(res);
+
+        /**If the searchParams have a valid user query, set it as the selected User*/
+        if (
+          typeof currentSearchParams.user === "string" &&
+          res[currentSearchParams.user]
+        )
+          setSelectedUser(res[currentSearchParams.user]);
+      } catch (err) {
+        throw err;
+      }
+    };
+
+    updateUserData();
   }, [currentSearchParams]);
 
   /**Updates round in query string */
@@ -143,83 +147,89 @@ export const GameContainer = ({
 
   return (
     <>
-      <div
-        className={`${styles.con} ${
-          selectedUser ? styles.table_mode : styles.leaderboard_mode
-        }`}>
-        {!selectedUser ? (
-          <>
-            <div className={styles.main}>
-              {children}
-              <Leaderboard
-                changeSelectedUserHandler={changeSelectedUserHandler}
-                currentUserDisplayName={currentUserDisplayName}
-                currentUserId={currentUserId}
-                entrantType={entrantType}
-                lastUpdated={lastUpdated}
-                rounds={rounds}
-                roundIndex={roundIndex}
-                season={season}
-                users={users}
-              />
-            </div>
-            <StandingsTable
-              className={styles.standings_table}
-              entrants={entrants[entrantType]}
-              standingsArr={rounds[roundIndex].standings[entrantType]}
-            />
-          </>
-        ) : (
-          <>
-            <div className={styles.options}>
-              <Button
-                onClick={() => {
-                  setSelectedUser(null);
-                  router.back();
-                }}>
-                Back
-              </Button>
-              {selectedUser.information ? (
-                <p>Note: {selectedUser.information}</p>
-              ) : (
-                ""
-              )}
-              {/**@todo Add report display name feature 
+      {/**@todo Use Suspense as a loading state instead */}
+      {usersData && (
+        <>
+          <div
+            className={`${styles.con} ${
+              selectedUser ? styles.table_mode : styles.leaderboard_mode
+            }`}>
+            {!selectedUser ? (
+              <>
+                <div className={styles.main}>
+                  {children}
+                  <Leaderboard
+                    changeSelectedUserHandler={changeSelectedUserHandler}
+                    currentUserDisplayName={currentUserDisplayName}
+                    currentUserId={currentUserId}
+                    entrantType={entrantType}
+                    lastUpdated={lastUpdated}
+                    rounds={rounds}
+                    roundIndex={roundIndex}
+                    season={season}
+                    users={usersData}
+                  />
+                </div>
+                <StandingsTable
+                  className={styles.standings_table}
+                  entrants={entrants[entrantType]}
+                  standingsArr={rounds[roundIndex].standings[entrantType]}
+                />
+              </>
+            ) : (
+              <>
+                <div className={styles.options}>
+                  <Button
+                    onClick={() => {
+                      setSelectedUser(null);
+                      router.back();
+                    }}>
+                    Back
+                  </Button>
+                  {selectedUser.information && (
+                    <p>Note: {selectedUser.information}</p>
+                  )}
+                  {/**@todo Add report display name feature
               <Button>Report Display Name</Button>*/}
-            </div>
-            <div className={styles.tables}>
-              <PredictionTable
-                currentUserDisplayName={currentUserDisplayName}
-                currentUserId={currentUserId}
-                entrants={entrants[entrantType]}
-                entrantType={entrantType}
-                selectedRound={roundIndex}
-                selectedUser={selectedUser}
-              />
-              <StandingsTable
-                className={styles.standings_table}
-                entrants={entrants[entrantType]}
-                standingsArr={rounds[roundIndex].standings[entrantType]}
-              />
-            </div>
-          </>
-        )}
-      </div>
-      {rounds.length > 0 && (
-        <RoundSlider
-          selectedRound={roundIndex}
-          noOfRounds={rounds.length}
-          trackName={rounds[roundIndex].trackName}
-          changeRound={changeRoundHandler}
-        />
+                </div>
+                <div className={styles.tables}>
+                  <PredictionTable
+                    currentUserDisplayName={currentUserDisplayName}
+                    currentUserId={currentUserId}
+                    entrants={entrants[entrantType]}
+                    entrantType={entrantType}
+                    selectedRound={roundIndex}
+                    selectedUser={selectedUser}
+                  />
+                  <StandingsTable
+                    className={styles.standings_table}
+                    entrants={entrants[entrantType]}
+                    standingsArr={rounds[roundIndex].standings[entrantType]}
+                  />
+                </div>
+              </>
+            )}
+          </div>
+          {rounds.length > 0 && (
+            <RoundSlider
+              selectedRound={roundIndex}
+              noOfRounds={rounds.length}
+              trackName={rounds[roundIndex].trackName}
+              changeRound={changeRoundHandler}
+            />
+          )}
+          <Button
+            className={`${btnStyles.button} ${styles.switchEntrantTypeBtn}`}
+            onClick={changeEntrantTypeHandler}>
+            <Icon
+              type={entrantType === "team" ? "driver" : "f1"}
+              strokeWidth={2}
+            />
+            Switch to {entrantType === "team" ? "Drivers" : "Constructors"}{" "}
+            Leaderboard
+          </Button>
+        </>
       )}
-      <Button
-        className={`${btnStyles.button} ${styles.switchEntrantTypeBtn}`}
-        onClick={changeEntrantTypeHandler}>
-        <Icon type={entrantType === "team" ? "driver" : "f1"} strokeWidth={2} />
-        Switch to {entrantType === "team" ? "Drivers" : "Constructors"}{" "}
-        Leaderboard
-      </Button>
     </>
   );
 };

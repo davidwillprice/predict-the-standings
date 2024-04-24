@@ -1,18 +1,18 @@
-import { formatArrayIntoList, calcPercentile } from "@lib/misc";
+import { formatArrayIntoList } from "@lib/misc";
 
-import { Users, User } from "@custom-types/game-types";
+import { ControversialUserIds, Users, User } from "@custom-types/game-types";
 
 interface Props {
-  currentUserId: string | undefined;
-  isSeasonOver: Boolean;
+  controversialUserIds: ControversialUserIds;
+  currUser: User | null;
   users: Users;
 }
 
-export const Controversy = ({ currentUserId, isSeasonOver, users }: Props) => {
-  let controversyArrs: { [key: string]: User[] } = {};
-
-  const currentUser: User | undefined = users["user" + currentUserId];
-
+export const Controversy = ({
+  controversialUserIds,
+  currUser,
+  users,
+}: Props) => {
   class MostOrLeastControData {
     users: User[];
     difFromAvg: number;
@@ -30,101 +30,49 @@ export const Controversy = ({ currentUserId, isSeasonOver, users }: Props) => {
     }
   }
 
-  /**Populate controversyArrs with the users in any order */
-  for (const user of Object.values(users)) {
-    if (user.displayName === "Average") continue;
-    for (const entrantType in user.predictions) {
-      if (!controversyArrs[entrantType]) controversyArrs[entrantType] = [];
-      controversyArrs[entrantType].push(user);
-    }
-  }
-
-  /**Order controversyArrs by how controversial they are */
-  for (const entrantType in controversyArrs) {
-    controversyArrs[entrantType].sort((a, b) =>
-      a.predictionsFromAvg[entrantType]! > b.predictionsFromAvg[entrantType]!
-        ? 1
-        : -1
-    );
-  }
-
+  //**Create an array of controversy stats, one for each entrant type and their most/least contro players */
   let mostOrLeastControPlayers = [];
-  for (const [entrantType, userArr] of Object.entries(controversyArrs)) {
-    const mostControPlayers = userArr.filter(
-      (user) =>
-        user.predictionsFromAvg[entrantType] ===
-        userArr[userArr.length - 1].predictionsFromAvg[entrantType]
+  for (const entrantType of Object.keys(controversialUserIds)) {
+    //**Convert the arr of most contro userIds into user data */
+    const mostControUsers = controversialUserIds[entrantType].most.map(
+      (userId) => users[userId]
     );
-
-    mostOrLeastControPlayers.push(
-      new MostOrLeastControData(mostControPlayers, "most", entrantType)
-    );
-
-    const leastControPlayers = userArr.filter(
-      (user) =>
-        user.predictionsFromAvg[entrantType] ===
-        userArr[0].predictionsFromAvg[entrantType]
+    //**Convert the arr of least contro userIds into user data */
+    const leastControUsers = controversialUserIds[entrantType].least.map(
+      (userId) => users[userId]
     );
     mostOrLeastControPlayers.push(
-      new MostOrLeastControData(leastControPlayers, "least", entrantType)
+      new MostOrLeastControData(mostControUsers, "most", entrantType)
+    );
+    mostOrLeastControPlayers.push(
+      new MostOrLeastControData(leastControUsers, "least", entrantType)
     );
   }
 
-  class UserControData {
-    difFromAvg: number;
-    percentile: number;
-    entrantType: string;
-    constructor(difFromAvg: number, entrantType: string) {
-      this.difFromAvg = difFromAvg;
-      this.percentile = calcPercentile(
-        controversyArrs[entrantType].map(
-          (user) => user.predictionsFromAvg[entrantType]
-        ),
-        difFromAvg
-      );
-      this.entrantType = entrantType;
-    }
-  }
-  const userControArr = [];
-  if (currentUser) {
-    for (const entrantType of Object.keys(currentUser.predictionsFromAvg)) {
-      userControArr.push(
-        new UserControData(
-          currentUser.predictionsFromAvg[entrantType],
-          entrantType
-        )
-      );
-    }
-  }
-
-  {
-    /**@todo "X, Y, and Z were the only players to predict Hamilton would win the WDC" */
-  }
   return (
     <>
       <h2>Controversial Predictions</h2>
-      {currentUser ? (
+      {currUser && (
         <>
           <ul>
-            {userControArr.map((data) => (
-              <li key={data.entrantType}>
+            {Object.keys(currUser.predictions).map((entrantType) => (
+              <li key={entrantType}>
                 You had{" "}
-                {data.percentile < 20
+                {currUser.controversyPercentile[entrantType] < 20
                   ? "very safe"
-                  : data.percentile < 60
+                  : currUser.controversyPercentile[entrantType] < 60
                   ? "pretty safe"
-                  : data.percentile < 80
+                  : currUser.controversyPercentile[entrantType] < 80
                   ? "controversial"
                   : "very controversial"}{" "}
-                {data.entrantType} predictions ({data.difFromAvg} position
-                differences from the average predictions).
+                {entrantType} predictions (
+                {currUser.predictionsFromAvg[entrantType]} position differences
+                from the average predictions).
               </li>
             ))}
           </ul>
           <hr />
         </>
-      ) : (
-        ""
       )}
       <ul>
         {mostOrLeastControPlayers.map((userData) => {

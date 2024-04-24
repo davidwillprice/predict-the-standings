@@ -1,20 +1,16 @@
 import DiscordProvider from "next-auth/providers/discord";
-import FacebookProvider from "next-auth/providers/facebook";
 import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
-import InstagramProvider from "next-auth/providers/instagram";
-import PatreonProvider from "next-auth/providers/patreon";
 import RedditProvider from "next-auth/providers/reddit";
-import SpotifyProvider from "next-auth/providers/spotify";
 import TwitterProvider from "next-auth/providers/twitter";
 import { NextAuthOptions } from "next-auth";
-import PostgresAdapter from "@auth/pg-adapter";
+import { MongoDBAdapter } from "@auth/mongodb-adapter";
+import clientPromise from "@lib/mongodb";
 import type { Adapter } from "next-auth/adapters";
-import { pool } from "@lib/db";
 
 export const authOptions: NextAuthOptions = {
   //debug: true,
-  adapter: PostgresAdapter(pool) as Adapter,
+  adapter: MongoDBAdapter(clientPromise) as Adapter,
   session: { strategy: "jwt" },
   callbacks: {
     async jwt({ token, user, trigger, session }) {
@@ -23,8 +19,8 @@ export const authOptions: NextAuthOptions = {
         return {
           ...token,
           id: user.id,
-          displayName: user.display_name,
-          lastDisplayNameSubmissionDate: user.last_display_name_submission,
+          displayName: user.displayName,
+          lastDisplayNameSubmissionDate: user.lastDisplayNameSubmission,
         };
 
       /**useSession().update() has been triggered so merge the token with the new passed data */
@@ -40,7 +36,6 @@ export const authOptions: NextAuthOptions = {
       session.user.displayName = token.displayName;
       session.user.lastDisplayNameSubmissionDate =
         token.lastDisplayNameSubmissionDate;
-      //console.log(session);
       return session;
     },
   },

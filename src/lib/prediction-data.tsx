@@ -1,29 +1,29 @@
-import { predictions } from "@data/formula-1/2024/prediction";
-import { Sport } from "@custom-types/misc";
 import {
-  PredictionData,
+  GameData,
   Entrants,
   Round,
   User,
   Users,
-  JsonPrediction,
+  EntrantStats,
+  ControversialUserIds,
 } from "@custom-types/game-types";
+import { calcPercentile } from "./misc";
 
-export const getAllPredictionData = async (
+export const createGameData = async (
   drivers: Entrants,
   teams: Entrants,
   rounds: Round[],
-  season: string,
-  sport: Sport
-): Promise<PredictionData | string> => {
-  let res = await getUserPredictions(season, sport);
-  //**If getUsersData didn't generate valid Users, return error message */
-  if (typeof res === "string") return res;
-  let users = res;
-
+  users: Users
+): Promise<GameData | string> => {
   //**Creates an 'average' user */
-  users.user0 = new User(0, {});
-  users.user0.information =
+  users.average = new User(
+    "Average",
+    "average",
+    new Date("2024-04-18T20:38:36.780Z"),
+    {},
+    "special"
+  );
+  users.average.information =
     "This prediction table is an automated average of all other player predictions.";
 
   const entrants = { driver: drivers, team: teams };
@@ -36,12 +36,14 @@ export const getAllPredictionData = async (
 
   users = generateControversyData(users);
 
+  const controversialUserIds = getControversialUsers(users);
+
   rounds = calcLeaderboards("driver", rounds, users);
   rounds = calcLeaderboards("team", rounds, users);
 
   rounds = orderLeaderboards(rounds, users);
 
-  rounds = calcLeaderboardRdDiffs(rounds);
+  users = addLeaderboardDataToUsers(rounds, users);
 
   rounds = generateEntrantDiffTotals(rounds, users);
 
@@ -50,42 +52,21 @@ export const getAllPredictionData = async (
 
   drivers = generateTeammateHeadToHead(drivers, teams, users);
 
+  rounds = deleteLeaderboardDataFromRounds(rounds);
+
+  const driverStats = generateEntrantStats(drivers);
+  const teamStats = generateEntrantStats(teams);
+
   return {
-    entrants: entrants,
-    rounds: rounds,
-    lastUpdated: new Date(),
+    controversialUserIds: controversialUserIds,
+    entrantStats: { driver: driverStats, team: teamStats },
+    roundStats: rounds.map((round) => {
+      return {
+        entrantDiffTotals: round.entrantDiffTotals,
+      };
+    }),
     users: users,
   };
-};
-
-/**Get users and their predictions from the database and check all the appropriate data is set */
-const getUserPredictions = async (
-  season: string,
-  sport: Sport
-): Promise<Users | string> => {
-  /**@todo Temporarily manually importing predicitions, need to move to DB */
-  const predictionDataRes = predictions;
-  let error = false;
-  const users: Users = predictionDataRes.reduce((acc, user) => {
-    const dbId: number | null = user["user_id"];
-    const dbDriverPredictions: string[] | null = user["driver_predictions"];
-    const dbTeamPredictions: string[] | null = user["team_predictions"];
-
-    if (dbId && dbDriverPredictions && dbTeamPredictions) {
-      return {
-        ...acc,
-        [`user${dbId}`]: new User(dbId, {
-          driver: dbDriverPredictions,
-          team: dbTeamPredictions,
-        }),
-      };
-    } else {
-      error = true;
-      return {};
-    }
-  }, {} as Record<string, User>);
-  if (error) return "Unable construct users from database data";
-  return users;
 };
 
 /**Loop over each entrant finding their index in each user's prediction table, calculating an average and then adding it to each entrant as new avgPrePos property */
@@ -94,20 +75,20 @@ const generateAveragePredictions = (
   entrantType: string,
   users: Users
 ) => {
-  users.user0.predictions[entrantType] = [];
+  users.average.predictions[entrantType] = [];
   for (const entrant of Object.values(entrants)) {
     let predictionPosTotal = 0;
     let noOfUsers = 0;
     for (const user of Object.values(users)) {
       /**If the user is the generated average, ignore their predictions */
-      if (user.id === 0) continue;
+      if (user.id === "average") continue;
 
       predictionPosTotal +=
         user.predictions[entrantType].indexOf(entrant.sName) + 1;
       noOfUsers++;
     }
     entrant.avgPrePos = Math.round((predictionPosTotal / noOfUsers) * 10) / 10;
-    users.user0.predictions[entrantType].push(entrant.sName);
+    users.average.predictions[entrantType].push(entrant.sName);
   }
   return users;
 };
@@ -117,8 +98,8 @@ const orderAveragePredictions = (
   entrants: { [key: string]: Entrants },
   users: Users
 ): Users => {
-  for (const entrantType in users.user0.predictions) {
-    users.user0.predictions[entrantType].sort((entrantIdA, entrantIdB) =>
+  for (const entrantType in users.average.predictions) {
+    users.average.predictions[entrantType].sort((entrantIdA, entrantIdB) =>
       entrants[entrantType][entrantIdA].avgPrePos! >
       entrants[entrantType][entrantIdB].avgPrePos!
         ? 1
@@ -144,6 +125,9 @@ const calcUsersPerformance = (
           diffTotal: 0,
           diffs: [],
           diffCounts: [],
+          leaderboardPos: 0,
+          percentCorrect: 0,
+          prevLeaderboardPosDiff: 0,
         });
         for (let i = 0; i < user.predictions[entrantType].length; i++) {
           user.season[entrantType][roundIndex].diffCounts.push(0);
@@ -199,8 +183,6 @@ const calcLeaderboards = (
           user.predictions[entrantType].length,
           user.season[entrantType][roundIndex].diffTotal
         ),
-        /**Add 0 previous round performance ready to fill out with data in calcLeaderboardRdDiffs() */
-        prevRdDiff: 0,
       });
     }
   });
@@ -239,24 +221,21 @@ const orderLeaderboards = (rounds: Round[], users: Users) => {
         } else {
           for (let i = 0; i < round.standings[entrantType].length; i++) {
             /**If a has bigger diffCount than b return 1*/
+            //console.log(users[leaderboardA.userId]);
             if (
-              users["user" + leaderboardA.userId].season[entrantType][
-                roundIndex
-              ].diffCounts[i] <
-              users["user" + leaderboardB.userId].season[entrantType][
-                roundIndex
-              ].diffCounts[i]
+              users[leaderboardA.userId].season[entrantType][roundIndex]
+                .diffCounts[i] <
+              users[leaderboardB.userId].season[entrantType][roundIndex]
+                .diffCounts[i]
             ) {
               order = 1;
               break;
             } else if (
               /**If b has bigger diffCount than a return -1*/
-              users["user" + leaderboardA.userId].season[entrantType][
-                roundIndex
-              ].diffCounts[i] >
-              users["user" + leaderboardB.userId].season[entrantType][
-                roundIndex
-              ].diffCounts[i]
+              users[leaderboardA.userId].season[entrantType][roundIndex]
+                .diffCounts[i] >
+              users[leaderboardB.userId].season[entrantType][roundIndex]
+                .diffCounts[i]
             ) {
               order = -1;
               break;
@@ -276,28 +255,35 @@ const orderLeaderboards = (rounds: Round[], users: Users) => {
   return rounds;
 };
 
-/**Calculate how each user's leaderboard position has changed since the previous round */
-const calcLeaderboardRdDiffs = (rounds: Round[]): Round[] => {
+/**Copy leaderboard data from the round data to the user data, and calculate how each user's leaderboard position has changed since the previous round */
+const addLeaderboardDataToUsers = (rounds: Round[], users: Users): Users => {
   rounds.forEach((round, roundIndex) => {
     for (const entrantType in round.leaderboards) {
-      /**Don't calculate the leaderboard changes of the first round */
-      if (roundIndex === 0) {
-        return;
-      }
       /**Loop over each user in order of the looped round's leaderboard*/
-      for (const [currentLbPos, currentUserData] of Object.entries(
+      for (const [curLeaderboardPos, curLeaderboardData] of Object.entries(
         round.leaderboards[entrantType]
       )) {
+        const userData =
+          users[curLeaderboardData.userId].season[entrantType][roundIndex];
+
+        /**Attach the user's leaderboard position to their data for the looped round*/
+        userData.leaderboardPos = +curLeaderboardPos + 1;
+
+        /**Attach the user's accuracy to their data for the looped round*/
+        userData.percentCorrect = curLeaderboardData.percentCorrect;
+
+        /**Don't calculate the leaderboard changes of the first round */
+        if (roundIndex === 0) continue;
         /**Find that user's position in the leaderboard of the round previous to the looped round*/
         const previousLbPos = rounds[roundIndex - 1].leaderboards[
           entrantType
-        ].findIndex((entrant) => entrant.userId === currentUserData.userId);
+        ].findIndex((entrant) => entrant.userId === curLeaderboardData.userId);
         /**Attach the user's leaderboard position change from the previous round to their data for the looped round*/
-        currentUserData.prevRdDiff = previousLbPos - +currentLbPos;
+        userData.prevLeaderboardPosDiff = previousLbPos - +curLeaderboardPos;
       }
     }
   });
-  return rounds;
+  return users;
 };
 
 /**Calculate how accurately each entrant has been predicted */
@@ -362,7 +348,7 @@ const getEntrantPredictedPositions = (
     /**Loop over users, obtain the position index they predicted the entrant in, then plus one to that index in the entrant position array  */
     for (const user of Object.values(users)) {
       /**If the user is the generated average, ignore their predictions */
-      if (user.id === 0) continue;
+      if (user.id === "average") continue;
 
       const userPredictedPos = user.predictions[entrantType].indexOf(
         entrant.sName
@@ -398,7 +384,7 @@ const generateTeammateHeadToHead = (
 
     for (const user of Object.values(users)) {
       /**If the user is the generated average, ignore their predictions */
-      if (user.id === 0) continue;
+      if (user.id === "average") continue;
 
       const higherPredictedDriverId = user.predictions["driver"].filter(
         (driverId) =>
@@ -426,7 +412,7 @@ const generateTeammateHeadToHead = (
 export function generateControversyData(users: Users): Users {
   for (const user of Object.values(users)) {
     /**If the user is the generated average, ignore their predictions */
-    if (user.id === 0) continue;
+    if (user.id === "average") continue;
 
     for (const entrantType of Object.keys(user.predictions)) {
       user.predictionsFromAvg[entrantType] = 0;
@@ -435,12 +421,104 @@ export function generateControversyData(users: Users): Users {
         user.predictions[entrantType]
       )) {
         const avgPredictedPos =
-          users.user0.predictions[entrantType].indexOf(entrant);
+          users.average.predictions[entrantType].indexOf(entrant);
 
         const posDiffs = Math.abs(+predictedPos - avgPredictedPos);
         user.predictionsFromAvg[entrantType] += posDiffs;
       }
     }
   }
+
+  /**Now main contro data is created, calculate controversy percentiles*/
+  for (const entrantType of Object.keys(users.average.predictions)) {
+    /**Create an array of every predictionsFromAvg for every user (besides the average) */
+    const predictionsFromAvgArr = Object.values(users)
+      .filter((user) => user.id !== "average")
+      .map((user) => user.predictionsFromAvg[entrantType]);
+
+    /**Use arr to calculate the controversy percentile for a user */
+    for (const user of Object.values(users)) {
+      if (user.id === "average") continue;
+      user.controversyPercentile[entrantType] = calcPercentile(
+        predictionsFromAvgArr,
+        user.predictionsFromAvg[entrantType]
+      );
+    }
+  }
   return users;
 }
+
+/**Get only the userIds of those who were the most/least controversial */
+function getControversialUsers(users: Users): ControversialUserIds {
+  let controversialUsers: ControversialUserIds = {};
+  let mostLeastControUserArrs: { [key: string]: User[] } = {};
+
+  /**Populate controversyArrays with the all users in any order */
+  for (const user of Object.values(users)) {
+    if (user.displayName === "Average") continue;
+    for (const entrantType in user.predictions) {
+      if (!mostLeastControUserArrs[entrantType])
+        mostLeastControUserArrs[entrantType] = [];
+      mostLeastControUserArrs[entrantType].push(user);
+    }
+  }
+
+  /**Order users in mostLeastControUserArrs by how controversial they are */
+  for (const entrantType in mostLeastControUserArrs) {
+    mostLeastControUserArrs[entrantType].sort((a, b) =>
+      a.predictionsFromAvg[entrantType]! > b.predictionsFromAvg[entrantType]!
+        ? 1
+        : -1
+    );
+  }
+
+  /**Get the userIds of the those who were the most/least controversial*/
+  for (const entrantType in mostLeastControUserArrs) {
+    /**Get most/least controversial users*/
+    const mostControUser =
+      mostLeastControUserArrs[entrantType][
+        mostLeastControUserArrs[entrantType].length - 1
+      ];
+    const leastControUser = mostLeastControUserArrs[entrantType][0];
+
+    /**Filter the userArr by those who are as contro as the most/least contro user, then add their Ids to the controversialUsers obj*/
+    controversialUsers[entrantType] = {
+      most: mostLeastControUserArrs[entrantType]
+        .filter(
+          (user) =>
+            user.predictionsFromAvg[entrantType] ===
+            mostControUser.predictionsFromAvg[entrantType]
+        )
+        .map((user) => user.id),
+      least: mostLeastControUserArrs[entrantType]
+        .filter(
+          (user) =>
+            user.predictionsFromAvg[entrantType] ===
+            leastControUser.predictionsFromAvg[entrantType]
+        )
+        .map((user) => user.id),
+    };
+  }
+  return controversialUsers;
+}
+
+/**The leaderboards are unbounded arrays so I don't want to upload them to the DB */
+const deleteLeaderboardDataFromRounds = (rounds: Round[]) => {
+  rounds.forEach((round) => {
+    round.leaderboards = {};
+  });
+  return rounds;
+};
+
+/**Strip down an Entrants Obj to only the data needed for the stats page */
+const generateEntrantStats = (entrants: Entrants): EntrantStats => {
+  const entrantStats: EntrantStats = {};
+  Object.values(entrants).forEach((entrant) => {
+    entrantStats[entrant.sName] = {
+      avgPrePos: entrant.avgPrePos,
+      predictionedPositions: entrant.predictionedPositions,
+      pcPredictedToBeatTeammate: entrant.pcPredictedToBeatTeammate,
+    };
+  });
+  return entrantStats;
+};

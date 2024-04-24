@@ -16,15 +16,17 @@ import styles from "@components/submit-predictions/submit-predictions.module.scs
 import btnConstyles from "@components/button/button-containers.module.scss";
 
 interface Props {
+  displayName: string;
   driverArr: Entrant[];
   predictionFreezeTime: Date;
   season: string;
   sport: Sport;
   teamArr: Entrant[];
-  userId: number;
+  userId: string;
 }
 
 export const SubmitPredictions = ({
+  displayName,
   driverArr,
   predictionFreezeTime,
   season,
@@ -50,7 +52,14 @@ export const SubmitPredictions = ({
     }
 
     try {
-      await submitPredictionsQuery(driverArr, season, sport, teamArr, userId);
+      await submitPredictionsQuery(
+        displayName,
+        driverArr.map((entrant) => entrant.sName),
+        season,
+        sport,
+        teamArr.map((entrant) => entrant.sName),
+        userId
+      );
       setSavedDriverArr(driverArr);
       setSavedTeamArr(teamArr);
       submissionSuccessful.current = true;
@@ -89,6 +98,7 @@ export const SubmitPredictions = ({
             <p>
               <span>Submission Successful!</span>
             </p>
+            {/**@todo Update text to be sports and season agnostic */}
             <p>
               Once the first race of the season completes, you&apos;ll be able
               to track how accurate you are compared to everyone else on the{" "}
