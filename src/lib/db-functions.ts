@@ -6,6 +6,26 @@ import { ObjectId } from "mongodb";
 import { Sport } from "@custom-types/misc";
 import { User, Users, StatsData } from "@custom-types/game-types";
 
+export const getlastUpdatedDate = async (
+  season: string,
+  sport: Sport
+): Promise<Date> => {
+  const client = await clientPromise;
+  try {
+    const db = client.db("pts");
+    const collection = db.collection(sport + season);
+    const result = await collection.findOne({ type: "lastUpdatedDate" });
+    if (!result)
+      throw new Error(`Failed to get last updated time for ${sport + season}`);
+
+    let lastUpdatedDate: Date = result.lastUpdatedDate;
+
+    return lastUpdatedDate;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const getSingleUserPredictionDataQuery = async (
   season: string,
   sport: Sport,
@@ -296,14 +316,14 @@ export const updateAllUserDocGameData = async (
     );
 };
 
-/**Add/Update a LastUpdatedTime document to DB to be used on the leaderboard page */
-export const updateLastUpdatedTimeQuery = async (collection: Collection) => {
+/**Add/Update a lastUpdatedDate document to DB to be used on the leaderboard page */
+export const updateLastUpdatedDateQuery = async (collection: Collection) => {
   try {
     const result = await collection.updateOne(
       {
-        type: "lastUpdatedTime",
+        type: "lastUpdatedDate",
       },
-      { $set: { type: "lastUpdatedTime", lastUpdatedTime: new Date() } },
+      { $set: { type: "lastUpdatedDate", lastUpdatedDate: new Date() } },
       { upsert: true }
     );
 

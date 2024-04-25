@@ -2,6 +2,8 @@ import { NextPage } from "next";
 import { getServerSession } from "next-auth/next";
 import { notFound } from "next/navigation";
 
+import { getlastUpdatedDate } from "@lib/db-functions";
+
 import { authOptions } from "@lib/auth";
 import { allSeasonData } from "@data/formula-1/season-data";
 
@@ -35,6 +37,8 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
   const session = await getServerSession(authOptions);
   const currentUserId = session?.user.id;
   const currentUserDisplayName = session?.user.displayName;
+
+  const lastUpdated = await getlastUpdatedDate(season, "f1");
 
   const heading = (
     <h1>
@@ -73,6 +77,7 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
           currentUserId={currentUserId}
           currentSearchParams={searchParams}
           entrants={JSON.parse(JSON.stringify(entrants))}
+          lastUpdated={lastUpdated}
           rounds={JSON.parse(JSON.stringify(rounds))}
           season={season}>
           <div>

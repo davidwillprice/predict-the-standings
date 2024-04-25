@@ -23,6 +23,7 @@ interface Props {
   currentUserDisplayName: string | null;
   currentSearchParams: { [key: string]: string | string[] | undefined };
   entrants: { [key: string]: Entrants };
+  lastUpdated: Date;
   rounds: Round[];
   season: string;
 }
@@ -33,6 +34,7 @@ export const GameContainer = ({
   currentUserDisplayName,
   currentSearchParams,
   entrants,
+  lastUpdated,
   rounds,
   season,
 }: Props) => {
@@ -94,9 +96,6 @@ export const GameContainer = ({
   /**@todo Probably need to readd "mode" state to allow for the current user to be automatically navigated to when pagination is added */
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [usersData, setUsersData] = useState<Users | null>(null);
-
-  /**@todo! Get lastUpdated document from DB */
-  const lastUpdated = new Date();
 
   useEffect(() => {
     setEntrantType(setInitialEntrantType(currentSearchParams));
