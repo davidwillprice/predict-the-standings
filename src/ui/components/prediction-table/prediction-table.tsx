@@ -53,7 +53,7 @@ export const PredictionTable = ({
         </thead>
         <tbody>
           {entrantTableData.map((rowData, index) => (
-            <tr key={rowData.entrant.id} className={styles.table_row}>
+            <tr key={rowData.entrant.sName} className={styles.table_row}>
               <td className={styles.position_cell}>{index + 1}</td>
               <td>
                 <span

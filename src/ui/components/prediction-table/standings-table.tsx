@@ -32,7 +32,7 @@ export const StandingsTable = ({
         </thead>
         <tbody>
           {entrantArr.map((entrant, index) => (
-            <tr key={entrant.id} className={styles.table_row}>
+            <tr key={entrant.sName} className={styles.table_row}>
               <td className={styles.position_cell}>{index + 1}</td>
               <td>
                 <span

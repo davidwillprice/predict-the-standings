@@ -49,7 +49,6 @@ export interface UserIdData {
 export class Entrant {
   name: string;
   sName: string;
-  id: number;
   color: string;
   contrastColor: string;
   avgPrePos?: number;
@@ -58,13 +57,11 @@ export class Entrant {
   constructor(
     name: string,
     sName: string,
-    id: number,
     color: string,
     contrastColor: string
   ) {
     this.name = name;
     this.sName = sName;
-    this.id = id;
     this.color = color;
     this.contrastColor = contrastColor;
     this.predictionedPositions = [];

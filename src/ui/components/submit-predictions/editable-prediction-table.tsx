@@ -53,12 +53,12 @@ export function EditablePredictionTable({
               <tbody {...provided.droppableProps} ref={provided.innerRef}>
                 {entrantArr.map((entrant, index) => (
                   <Draggable
-                    key={entrant.id}
-                    draggableId={`${entrant.id}`}
+                    key={entrant.sName}
+                    draggableId={`${entrant.sName}`}
                     index={index}>
                     {(provided) => (
                       <tr
-                        key={entrant.id}
+                        key={entrant.sName}
                         className={predictiontableStyles.table_row}
                         ref={provided.innerRef}
                         {...provided.draggableProps}
