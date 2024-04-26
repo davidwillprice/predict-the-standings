@@ -204,7 +204,6 @@ export const calcPredictionsAccuracy = (
 
 /** Order leaderboards by percentage correct, then use perfect predictions as tie break, then use predictions that were 1 off as a tie break, then use predictions that were 2 off as a tie break etc */
 const orderLeaderboards = (rounds: Round[], users: Users) => {
-  /** @todo Implement tie break where if people have the same exact prediction order then it goes in order of whose prediction was earliest?*/
   rounds.forEach((round, roundIndex) => {
     for (const entrantType in round.leaderboards) {
       round.leaderboards[entrantType].sort(function (
@@ -212,6 +211,17 @@ const orderLeaderboards = (rounds: Round[], users: Users) => {
         leaderboardB
       ) {
         let order;
+
+        const userA = users[leaderboardA.userId];
+        const userB = users[leaderboardB.userId];
+
+        /**Check if the two users have made the same predictions for this entrant type and if so, order them by who made the prediction first */
+        if (
+          userA.predictions[entrantType].toString() ===
+          userB.predictions[entrantType].toString()
+        ) {
+          order = userA.lastSubmissionTime < userB.lastSubmissionTime ? -1 : 1;
+        }
 
         if (leaderboardA.percentCorrect !== leaderboardB.percentCorrect) {
           /**Sort by percentage correct, highest first*/
@@ -221,21 +231,16 @@ const orderLeaderboards = (rounds: Round[], users: Users) => {
         } else {
           for (let i = 0; i < round.standings[entrantType].length; i++) {
             /**If a has bigger diffCount than b return 1*/
-            //console.log(users[leaderboardA.userId]);
             if (
-              users[leaderboardA.userId].season[entrantType][roundIndex]
-                .diffCounts[i] <
-              users[leaderboardB.userId].season[entrantType][roundIndex]
-                .diffCounts[i]
+              userA.season[entrantType][roundIndex].diffCounts[i] <
+              userB.season[entrantType][roundIndex].diffCounts[i]
             ) {
               order = 1;
               break;
             } else if (
               /**If b has bigger diffCount than a return -1*/
-              users[leaderboardA.userId].season[entrantType][roundIndex]
-                .diffCounts[i] >
-              users[leaderboardB.userId].season[entrantType][roundIndex]
-                .diffCounts[i]
+              userA.season[entrantType][roundIndex].diffCounts[i] >
+              userB.season[entrantType][roundIndex].diffCounts[i]
             ) {
               order = -1;
               break;
