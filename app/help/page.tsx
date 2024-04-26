@@ -38,21 +38,22 @@ const Page = () => {
         <h2>Rules</h2>
         <ol>
           <li>
-            The accuracy rating on the leaderboard and under their prediction
-            table shows how close each player is to the actual standings.
+            The accuracy rating on the leaderboard shows how close each player
+            is to the actual standings.
           </li>
           <li>
-            The player(s) with the most accurate prediction table at the end of
-            the season wins.
+            The player with the most accurate prediction table at the end of the
+            season wins.
           </li>
           <li>
-            When viewing a prediction table, the number shown to the right of
-            each driver/team denotes how many positions that driver/team was
-            predicted away from their position in the actual standings.
+            When viewing someone&apos;s prediction table, the number on the
+            right of each entrant (aka team/driver/country) denotes how many
+            positions that entrant was predicted away from their position in the
+            actual standings.
           </li>
           <li>
-            If the player has perfectly predicted a driver/team, a green tick
-            shows next to the driver/team.
+            If the player has perfectly predicted an entrant, a green tick shows
+            next to the entrant.
           </li>
         </ol>
       </Panel>
@@ -119,7 +120,10 @@ const Page = () => {
           </table>
         </div>
         <Panel>
-          <p>This is a part of an example prediction table.</p>
+          <p>
+            This is a part of an example Premier League prediction table where
+            the entrants are football teams.
+          </p>
           <ol>
             <li>
               They correctly predicted Manchester City would finish 2nd so the
@@ -143,6 +147,10 @@ const Page = () => {
             If players have equal accuracy ratings, perfect predictions will be
             used a tie break, then predictions that were 1 off, then predictions
             that were 2 off etc.
+          </li>
+          <li>
+            If players have made identical predictions, they will be ordered by
+            who made submitted their predictions first.
           </li>
           <li>
             The &apos;Average&apos; prediction tables were worked out by
