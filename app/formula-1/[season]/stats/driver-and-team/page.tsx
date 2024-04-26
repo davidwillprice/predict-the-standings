@@ -1,6 +1,7 @@
 import { getServerSession } from "next-auth/next";
 import { NextPage } from "next";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 
 import { authOptions } from "@lib/auth";
 import { allSeasonData } from "@data/formula-1/season-data";
@@ -12,6 +13,7 @@ import { EntrantPredictions } from "@components/stats/entrant-predictions/entran
 import { PromptPredictions } from "@components/submit-predictions/prompt-predictions";
 import { HeadToHeads } from "@components/stats/entrant-predictions/head-to-heads";
 import { EntrantAccuracy } from "@components/stats/entrant-predictions/entrant-accuracy";
+import { LoadingSpinner } from "@components/loading-spinner/loading-spinner";
 
 import styles from "@components/stats/stats.module.scss";
 
@@ -59,45 +61,52 @@ const Page: NextPage<PageProps> = async ({ params }) => {
 
   return (
     <>
-      <PanelHeading>
-        <h1>Formula 1 {season} - Driver & Team Stats</h1>
-      </PanelHeading>
       {rounds.length < 1 ? (
-        <Panel>
-          <p>
-            Once the first race of the season completes, various stats will show
-            on this page for each of the drivers and teams.
-          </p>
-          <PromptPredictions
-            isSignedIn={Boolean(currentUserDisplayName)}
-            predictionFreezeTime={predictionFreezeTime}
-          />
-        </Panel>
-      ) : (
         <>
+          <PanelHeading>
+            <h1>Formula 1 {season} - Driver & Team Stats</h1>
+          </PanelHeading>
           <Panel>
-            <h2>Prediction Stats</h2>
-            <div className={styles.entrantPredictions}>
-              <EntrantPredictions
-                entrants={JSON.parse(JSON.stringify(entrants))}
-              />
-              <EntrantAccuracy
-                entrants={JSON.parse(JSON.stringify(entrants))}
-                isSeasonOver={isSeasonOver}
-                noOfPredictions={JSON.parse(
-                  JSON.stringify(statsData.noOfPredictions)
-                )}
-                rounds={JSON.parse(JSON.stringify(rounds))}
-              />
-            </div>
-          </Panel>
-          <Panel>
-            <HeadToHeads
-              driverIdArr={rounds[0].standings["driver"]}
-              entrants={JSON.parse(JSON.stringify(entrants))}
-              teamIdArr={rounds[rounds.length - 1].standings["team"]}
+            <p>
+              Once the first race of the season completes, various stats will
+              show on this page for each of the drivers and teams.
+            </p>
+            <PromptPredictions
+              isSignedIn={Boolean(currentUserDisplayName)}
+              predictionFreezeTime={predictionFreezeTime}
             />
           </Panel>
+        </>
+      ) : (
+        <>
+          <Suspense fallback={<LoadingSpinner />}>
+            <PanelHeading>
+              <h1>Formula 1 {season} - Driver & Team Stats</h1>
+            </PanelHeading>
+            <Panel>
+              <h2>Prediction Stats</h2>
+              <div className={styles.entrantPredictions}>
+                <EntrantPredictions
+                  entrants={JSON.parse(JSON.stringify(entrants))}
+                />
+                <EntrantAccuracy
+                  entrants={JSON.parse(JSON.stringify(entrants))}
+                  isSeasonOver={isSeasonOver}
+                  noOfPredictions={JSON.parse(
+                    JSON.stringify(statsData.noOfPredictions)
+                  )}
+                  rounds={JSON.parse(JSON.stringify(rounds))}
+                />
+              </div>
+            </Panel>
+            <Panel>
+              <HeadToHeads
+                driverIdArr={rounds[0].standings["driver"]}
+                entrants={JSON.parse(JSON.stringify(entrants))}
+                teamIdArr={rounds[rounds.length - 1].standings["team"]}
+              />
+            </Panel>
+          </Suspense>
         </>
       )}
     </>

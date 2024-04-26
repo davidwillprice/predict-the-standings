@@ -53,7 +53,10 @@ export const Leaderboard = ({
             <th aria-label="Position change header"></th>
             <th>Name</th>
             <th>Accuracy</th>
-            <th className={styles.perfect_positions}>Perfect Predictions</th>
+            <th className={styles.perfect_positions}>
+              Perfect <br />
+              Predictions
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -70,7 +73,7 @@ export const Leaderboard = ({
                   roundIndex === rounds.length - 1 ? (
                     <Icon type="trophy" strokeWidth={1} />
                   ) : (
-                    index + 1
+                    roundData.leaderboardPos
                   )}
                 </td>
                 <td
@@ -92,7 +95,10 @@ export const Leaderboard = ({
                   )}
                   {/**@todo Add which entrants are causing them the biggest issues? */}
                 </td>
-                <td>{`${roundData.percentCorrect}%`}</td>
+                <td
+                  className={
+                    styles.accuracy
+                  }>{`${roundData.percentCorrect}%`}</td>
                 <td className={styles.perfect_positions}>
                   {roundData.diffCounts[0]}
                 </td>

@@ -1,6 +1,7 @@
 import { getServerSession } from "next-auth/next";
 import { NextPage } from "next";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 
 import {
   getSingleUserPredictionDataQuery,
@@ -15,6 +16,7 @@ import { Panel } from "@components/panels/panel";
 import { PanelHeading } from "@components/panels/panel-heading";
 import { PromptPredictions } from "@components/submit-predictions/prompt-predictions";
 import { Controversy } from "@components/stats/player/controversy";
+import { LoadingSpinner } from "@components/loading-spinner/loading-spinner";
 
 import { Entrants, User } from "@custom-types/game-types";
 import { PageProps } from "@custom-types/misc";
@@ -82,7 +84,7 @@ const Page: NextPage<PageProps> = async ({ params }) => {
   /**@todo "X, Y, and Z were the only players to predict Hamilton would win the WDC" */
 
   return (
-    <>
+    <Suspense fallback={<LoadingSpinner />}>
       <PanelHeading>
         <h1>Formula 1 {season} - Player Stats</h1>
       </PanelHeading>
@@ -110,7 +112,7 @@ const Page: NextPage<PageProps> = async ({ params }) => {
           </Panel>
         </>
       )}
-    </>
+    </Suspense>
   );
 };
 

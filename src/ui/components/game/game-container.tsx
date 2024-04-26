@@ -11,6 +11,7 @@ import { StandingsTable } from "@components/prediction-table/standings-table";
 import { RoundSlider } from "@components/round-slider/round-slider";
 import { Button } from "@components/button/button";
 import Icon from "@ui/svgs/icons/sq-icon";
+import { LeaderboardSkeleton } from "./leaderboard-skeleton";
 
 import btnStyles from "@components/button/button.module.scss";
 import styles from "@components/game/game-container.module.scss";
@@ -147,16 +148,17 @@ export const GameContainer = ({
   return (
     <>
       {/**@todo Use Suspense as a loading state instead */}
-      {usersData && (
-        <>
-          <div
-            className={`${styles.con} ${
-              selectedUser ? styles.table_mode : styles.leaderboard_mode
-            }`}>
-            {!selectedUser ? (
-              <>
-                <div className={styles.main}>
-                  {children}
+
+      <>
+        <div
+          className={`${styles.con} ${
+            selectedUser ? styles.table_mode : styles.leaderboard_mode
+          }`}>
+          {typeof currentSearchParams.user !== "string" ? (
+            <>
+              <div className={styles.main}>
+                {children}
+                {usersData ? (
                   <Leaderboard
                     changeSelectedUserHandler={changeSelectedUserHandler}
                     currentUserDisplayName={currentUserDisplayName}
@@ -168,14 +170,18 @@ export const GameContainer = ({
                     season={season}
                     users={usersData}
                   />
-                </div>
-                <StandingsTable
-                  className={styles.standings_table}
-                  entrants={entrants[entrantType]}
-                  standingsArr={rounds[roundIndex].standings[entrantType]}
-                />
-              </>
-            ) : (
+                ) : (
+                  <LeaderboardSkeleton />
+                )}
+              </div>
+              <StandingsTable
+                className={styles.standings_table}
+                entrants={entrants[entrantType]}
+                standingsArr={rounds[roundIndex].standings[entrantType]}
+              />
+            </>
+          ) : (
+            selectedUser && (
               <>
                 <div className={styles.options}>
                   <Button
@@ -207,28 +213,28 @@ export const GameContainer = ({
                   />
                 </div>
               </>
-            )}
-          </div>
-          {rounds.length > 0 && (
-            <RoundSlider
-              selectedRound={roundIndex}
-              noOfRounds={rounds.length}
-              trackName={rounds[roundIndex].trackName}
-              changeRound={changeRoundHandler}
-            />
+            )
           )}
-          <Button
-            className={`${btnStyles.button} ${styles.switchEntrantTypeBtn}`}
-            onClick={changeEntrantTypeHandler}>
-            <Icon
-              type={entrantType === "team" ? "driver" : "f1"}
-              strokeWidth={2}
-            />
-            Switch to {entrantType === "team" ? "Drivers" : "Constructors"}{" "}
-            Leaderboard
-          </Button>
-        </>
-      )}
+        </div>
+        {rounds.length > 0 && (
+          <RoundSlider
+            selectedRound={roundIndex}
+            noOfRounds={rounds.length}
+            trackName={rounds[roundIndex].trackName}
+            changeRound={changeRoundHandler}
+          />
+        )}
+        <Button
+          className={`${btnStyles.button} ${styles.switchEntrantTypeBtn}`}
+          onClick={changeEntrantTypeHandler}>
+          <Icon
+            type={entrantType === "team" ? "driver" : "f1"}
+            strokeWidth={2}
+          />
+          Switch to {entrantType === "team" ? "Drivers" : "Constructors"}{" "}
+          Leaderboard
+        </Button>
+      </>
     </>
   );
 };
