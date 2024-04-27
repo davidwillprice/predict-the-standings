@@ -10,7 +10,7 @@ import {
 } from "@lib/db-functions";
 
 import { authOptions } from "@lib/auth";
-import { allSeasonData } from "@data/formula-1/season-data";
+import { allF1SeasonData } from "@data/formula-1/season-data";
 
 import { Panel } from "@components/panels/panel";
 import { PanelHeading } from "@components/panels/panel-heading";
@@ -18,27 +18,19 @@ import { PromptPredictions } from "@components/submit-predictions/prompt-predict
 import { Controversy } from "@components/stats/player/controversy";
 import { LoadingSpinner } from "@components/loading-spinner/loading-spinner";
 
-import { Entrants, User } from "@custom-types/game-types";
+import { User } from "@custom-types/game-types";
 import { PageProps } from "@custom-types/misc";
 
 export async function generateStaticParams() {
-  return Object.keys(allSeasonData).map((season) => ({
+  return Object.keys(allF1SeasonData).map((season) => ({
     season: season,
   }));
 }
 
 const Page: NextPage<PageProps> = async ({ params }) => {
   const { season } = params;
-  if (allSeasonData[season] === undefined) notFound();
-  const { drivers, teams, rounds, predictionFreezeTime, isSeasonOver } =
-    allSeasonData[season];
-
-  const entrants: {
-    [key: string]: Entrants;
-  } = {
-    driver: drivers,
-    team: teams,
-  };
+  if (allF1SeasonData[season] === undefined) notFound();
+  const { allEntrants, rounds, predictionFreezeTime } = allF1SeasonData[season];
 
   const session = await getServerSession(authOptions);
   const currUserId = session?.user.id;
@@ -77,7 +69,12 @@ const Page: NextPage<PageProps> = async ({ params }) => {
       noteworthyUserIds.push(userId)
     );
   }
-  const users = await getMultipleUserGameData(season, "f1", noteworthyUserIds);
+  const users = await getMultipleUserGameData(
+    allEntrants,
+    season,
+    "f1",
+    noteworthyUserIds
+  );
 
   /**@todo Stat for copying last year's standings */
   /**@todo Record how many times people update their standings for a '"Jack submitted X predictions, Y more than anybody else. Indecisive."' stat */

@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import { getlastUpdatedDate } from "@lib/db-functions";
 
 import { authOptions } from "@lib/auth";
-import { allSeasonData } from "@data/formula-1/season-data";
+import { allF1SeasonData } from "@data/formula-1/season-data";
 
 import { Panel } from "@components/panels/panel";
 import { PanelHeading } from "@components/panels/panel-heading";
@@ -13,26 +13,18 @@ import { GameContainer } from "@components/game/game-container";
 import { PreSeasonContainer } from "@components/game/pre-season-container";
 import { PromptPredictions } from "@components/submit-predictions/prompt-predictions";
 
-import { Entrants } from "@custom-types/game-types";
 import { PageProps } from "@custom-types/misc";
 
 export async function generateStaticParams() {
-  return Object.keys(allSeasonData).map((season) => ({
+  return Object.keys(allF1SeasonData).map((season) => ({
     season: season,
   }));
 }
 
 const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
   const { season } = params;
-  if (allSeasonData[season] === undefined) notFound();
-  const { drivers, rounds, predictionFreezeTime, teams } =
-    allSeasonData[season];
-  const entrants: {
-    [key: string]: Entrants;
-  } = {
-    driver: drivers,
-    team: teams,
-  };
+  if (allF1SeasonData[season] === undefined) notFound();
+  const { allEntrants, rounds, predictionFreezeTime } = allF1SeasonData[season];
 
   const session = await getServerSession(authOptions);
   const currentUserId = session?.user.id;
@@ -76,7 +68,7 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
           currentUserDisplayName={currentUserDisplayName}
           currentUserId={currentUserId}
           currentSearchParams={searchParams}
-          entrants={JSON.parse(JSON.stringify(entrants))}
+          entrants={JSON.parse(JSON.stringify(allEntrants))}
           lastUpdated={lastUpdated}
           rounds={JSON.parse(JSON.stringify(rounds))}
           season={season}>

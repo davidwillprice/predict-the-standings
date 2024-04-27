@@ -1,4 +1,4 @@
-import { allSeasonData } from "@data/formula-1/season-data";
+import { allF1SeasonData } from "@data/formula-1/season-data";
 
 import styles from "@components/game/leaderboard.module.scss";
 import predictStyles from "@components/prediction-table/prediction-table.module.scss";
@@ -29,7 +29,7 @@ export const Leaderboard = ({
   roundIndex,
   users,
 }: Props) => {
-  const { isSeasonOver } = allSeasonData[season];
+  const { isSeasonOver } = allF1SeasonData[season];
 
   //**Sort the users object into an array ordered by their leaderboard positions */
   const leaderboardArr = [];

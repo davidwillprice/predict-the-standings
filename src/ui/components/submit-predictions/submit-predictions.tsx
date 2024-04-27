@@ -54,10 +54,12 @@ export const SubmitPredictions = ({
     try {
       await submitPredictionsQuery(
         displayName,
-        driverArr.map((entrant) => entrant.sName),
+        {
+          drivers: driverArr.map((entrant) => entrant.sName),
+          teams: teamArr.map((entrant) => entrant.sName),
+        },
         season,
         sport,
-        teamArr.map((entrant) => entrant.sName),
         userId
       );
       setSavedDriverArr(driverArr);
@@ -92,38 +94,36 @@ export const SubmitPredictions = ({
             </Button>
           </div>
         )
-      ) : submissionSuccessful.current ? (
-        <>
-          <FeedbackContainer iconType="success">
-            <p>
-              <span>Submission Successful!</span>
-            </p>
-            {/**@todo Update text to be sports and season agnostic */}
-            <p>
-              Once the first race of the season completes, you&apos;ll be able
-              to track how accurate you are compared to everyone else on the{" "}
-              <Link href="/formula-1/2024">leaderboard page</Link> throughout
-              the season.
-            </p>
-            <p>
-              You can make more changes to your predictions until the opening
-              weekend&apos;s Free Practice 1.
-            </p>
-          </FeedbackContainer>
-        </>
       ) : (
-        ""
+        submissionSuccessful.current && (
+          <>
+            <FeedbackContainer iconType="success">
+              <p>
+                <span>Submission Successful!</span>
+              </p>
+              {/**@todo Update text to be sports and season agnostic */}
+              <p>
+                Once the first race of the season completes, you&apos;ll be able
+                to track how accurate you are compared to everyone else on the{" "}
+                <Link href="/formula-1/2024">leaderboard page</Link> throughout
+                the season.
+              </p>
+              <p>
+                You can make more changes to your predictions until the opening
+                weekend&apos;s Free Practice 1.
+              </p>
+            </FeedbackContainer>
+          </>
+        )
       )}
       {/**@todo Hide error feedback if the predictions change after error started */}
       {/**@todo Need to limit database calls - Add lock for 10 seconds? - Add state to check if the table is the same as it was last submitted */}
-      {error ? (
+      {error && (
         <FeedbackContainer iconType="error">
           <p>
             <span>Error: {error.charAt(0).toUpperCase() + error.slice(1)}</span>
           </p>
         </FeedbackContainer>
-      ) : (
-        ""
       )}
     </div>
   );

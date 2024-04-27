@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
 import { authOptions } from "@lib/auth";
-import { allSeasonData } from "@data/formula-1/season-data";
+import { allF1SeasonData } from "@data/formula-1/season-data";
 import { getStatsDataQuery } from "@lib/db-functions";
 
 import { Panel } from "@components/panels/panel";
@@ -17,46 +17,39 @@ import { LoadingSpinner } from "@components/loading-spinner/loading-spinner";
 
 import styles from "@components/stats/stats.module.scss";
 
-import { Entrants } from "@custom-types/game-types";
 import { PageProps } from "@custom-types/misc";
 
 export async function generateStaticParams() {
-  return Object.keys(allSeasonData).map((season) => ({
+  return Object.keys(allF1SeasonData).map((season) => ({
     season: season,
   }));
 }
 
 const Page: NextPage<PageProps> = async ({ params }) => {
   const { season } = params;
-  if (allSeasonData[season] === undefined) notFound();
-  const { drivers, teams, rounds, predictionFreezeTime, isSeasonOver } =
-    allSeasonData[season];
+  if (allF1SeasonData[season] === undefined) notFound();
+  const { rounds, predictionFreezeTime, isSeasonOver } =
+    allF1SeasonData[season];
+  const { allEntrants } = allF1SeasonData[season];
 
   const session = await getServerSession(authOptions);
   const currentUserDisplayName = session?.user.displayName;
 
-  const entrants: {
-    [key: string]: Entrants;
-  } = {
-    driver: drivers,
-    team: teams,
-  };
-
   const statsData = await getStatsDataQuery(season, "f1");
 
   /**Combine entrant data with their stats */
-  for (const entrantType of Object.keys(entrants)) {
-    for (const entrantSName of Object.keys(entrants[entrantType])) {
-      entrants[entrantType][entrantSName] = {
-        ...entrants[entrantType][entrantSName],
-        ...statsData.entrantStats[`${entrantType}s`][entrantSName],
+  for (const entrantType of Object.keys(allEntrants)) {
+    for (const entrantSName of Object.keys(allEntrants[entrantType])) {
+      allEntrants[entrantType][entrantSName] = {
+        ...allEntrants[entrantType][entrantSName],
+        ...statsData.allEntrants[entrantType][entrantSName],
       };
     }
   }
 
   /**Combine round data with their stats */
   rounds.forEach((round, index) => {
-    rounds[index] = { ...round, ...statsData.roundStats[index] };
+    rounds[index] = { ...round, ...statsData.rounds[index] };
   });
 
   return (
@@ -87,10 +80,10 @@ const Page: NextPage<PageProps> = async ({ params }) => {
               <h2>Prediction Stats</h2>
               <div className={styles.entrantPredictions}>
                 <EntrantPredictions
-                  entrants={JSON.parse(JSON.stringify(entrants))}
+                  entrants={JSON.parse(JSON.stringify(allEntrants))}
                 />
                 <EntrantAccuracy
-                  entrants={JSON.parse(JSON.stringify(entrants))}
+                  entrants={JSON.parse(JSON.stringify(allEntrants))}
                   isSeasonOver={isSeasonOver}
                   noOfPredictions={JSON.parse(
                     JSON.stringify(statsData.noOfPredictions)
@@ -101,9 +94,9 @@ const Page: NextPage<PageProps> = async ({ params }) => {
             </Panel>
             <Panel>
               <HeadToHeads
-                driverIdArr={rounds[0].standings["driver"]}
-                entrants={JSON.parse(JSON.stringify(entrants))}
-                teamIdArr={rounds[rounds.length - 1].standings["team"]}
+                driverIdArr={rounds[0].standings["drivers"]}
+                allEntrants={JSON.parse(JSON.stringify(allEntrants))}
+                teamIdArr={rounds[rounds.length - 1].standings["teams"]}
               />
             </Panel>
           </Suspense>

@@ -82,9 +82,9 @@ export const GameContainer = ({
       typeof searchParams.leaderboard === "string" &&
       searchParams.leaderboard === "constructors"
     )
-      return "team";
+      return "teams";
     else {
-      return "driver";
+      return "drivers";
     }
   };
 
@@ -134,7 +134,7 @@ export const GameContainer = ({
 
   /**Updates entrantType in query string */
   const changeEntrantTypeHandler = () => {
-    const newEntrantType = entrantType === "team" ? "driver" : "constructors";
+    const newEntrantType = entrantType === "teams" ? "drivers" : "constructors";
     router.push(
       pathname + "?" + createQueryString("leaderboard", newEntrantType)
     );
@@ -228,7 +228,7 @@ export const GameContainer = ({
           className={`${btnStyles.button} ${styles.switchEntrantTypeBtn}`}
           onClick={changeEntrantTypeHandler}>
           <Icon
-            type={entrantType === "team" ? "driver" : "f1"}
+            type={entrantType === "teams" ? "driver" : "f1"}
             strokeWidth={2}
           />
           Switch to {entrantType === "team" ? "Drivers" : "Constructors"}{" "}

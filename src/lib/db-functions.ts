@@ -4,7 +4,7 @@ import { Collection } from "mongodb";
 
 import { ObjectId } from "mongodb";
 import { Sport } from "@custom-types/misc";
-import { User, Users, StatsData } from "@custom-types/game-types";
+import { User, Users, StatsData, AllEntrants } from "@custom-types/game-types";
 
 export const getlastUpdatedDate = async (
   season: string,
@@ -49,6 +49,7 @@ export const getSingleUserPredictionDataQuery = async (
 /**Get stats data to display on stats pages
  */
 export const getMultipleUserGameData = async (
+  allEntrants: AllEntrants,
   season: string,
   sport: Sport,
   userIdArr: string[]
@@ -64,19 +65,20 @@ export const getMultipleUserGameData = async (
       .toArray();
     if (!result)
       throw new Error(`Failed to get user game data for ${sport + season}`);
-
+    /**@todo Refactor the process of coverting the docs to users into a new function*/
     let users: Users = {};
     for await (const doc of result) {
+      const predictionsObj: { [entrantType: string]: any } = {};
+      Object.keys(allEntrants).forEach((entrantType) => {
+        predictionsObj[entrantType] = doc.predictions[entrantType];
+      });
+
       users[doc._id.toString()] = new User(
         doc.displayName,
         doc._id.toString(),
         doc.lastSubmissionTime,
-        {
-          driver: doc.predictions.driver,
-          team: doc.predictions.team,
-        },
-        doc.userType,
-        doc.predictionsFromAvg
+        predictionsObj,
+        doc.userType
       );
     }
     if (Object.keys(users).length === 0)
@@ -92,6 +94,7 @@ export const getMultipleUserGameData = async (
 
 /**Gets user prediction data so it can be processed*/
 export const getAllUserPredictionDataQuery = async (
+  allEntrants: AllEntrants,
   collection: Collection
 ): Promise<Users> => {
   try {
@@ -106,14 +109,16 @@ export const getAllUserPredictionDataQuery = async (
 
     let users: Users = {};
     for await (const doc of result) {
+      const predictionsObj: { [entrantType: string]: any } = {};
+      Object.keys(allEntrants).forEach((entrantType) => {
+        predictionsObj[entrantType] = doc.predictions[entrantType];
+      });
+
       users[doc._id.toString()] = new User(
         doc.displayName,
         doc._id.toString(),
         doc.lastSubmissionTime,
-        {
-          driver: doc.predictions.driver,
-          team: doc.predictions.team,
-        },
+        predictionsObj,
         doc.userType
       );
     }
@@ -178,9 +183,9 @@ export const getStatsDataQuery = async (
 
     const statsData: StatsData = {
       controversialUserIds: result.controversialUserIds,
-      entrantStats: result.entrants,
+      allEntrants: result.allEntrants,
       noOfPredictions: result.noOfPredictions,
-      roundStats: result.rounds,
+      rounds: result.rounds,
     };
 
     console.log("Getting stats data");
@@ -233,10 +238,9 @@ export const submitDisplayNameQuery = async (
 
 export const submitPredictionsQuery = async (
   displayName: string,
-  driverArr: string[],
+  entrantArrs: { [entrantType: string]: string[] },
   season: string,
   sport: Sport,
-  teamArr: string[],
   userId: string
 ) => {
   const client = await clientPromise;
@@ -246,7 +250,7 @@ export const submitPredictionsQuery = async (
     const userPredictionDoc = {
       displayName: displayName,
       lastSubmissionTime: new Date(),
-      predictions: { driver: driverArr, team: teamArr },
+      predictions: entrantArrs,
       type: "userData",
       userId: userId,
       userType: "standard",

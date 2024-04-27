@@ -1,14 +1,11 @@
-import { Entrant, Entrants, Round } from "@custom-types/game-types";
+import {
+  Competition,
+  Entrant,
+  Entrants,
+  Round,
+} from "@custom-types/game-types";
 
 const predictionFreezeTime = new Date("2025-02-29T11:30:00");
-
-//Query for updating old data on DB
-// UPDATE "f1_2023"
-// SET
-//   driver_predictions = ARRAY['per', 'ver', 'lec', 'sai', 'ham', 'rus', 'alo', 'gas', 'oco', 'bot', 'nor', 'str', 'zho', 'tsu', 'pia', 'dev', 'mag', 'alb', 'hul', 'sar'],
-//   team_predictions = ARRAY['rbr', 'fer', 'mer', 'alp', 'ast', 'alf', 'mcl', 'alt', 'has', 'wil']
-// WHERE
-//   user_id = 14;
 
 const drivers: Entrants = {
   ham: new Entrant("Hamilton", "ham", "#00d2be", "#010136"),
@@ -73,7 +70,7 @@ const { mer, fer, rbr, alf, wil, ast, alt, mcl, has, alp } = teams;
 
 let rounds: Round[] = [
   new Round("Bahrain GP", {
-    driver: [
+    drivers: [
       ver,
       per,
       alo,
@@ -95,10 +92,10 @@ let rounds: Round[] = [
       lec,
       pia,
     ],
-    team: [rbr, ast, mer, fer, alf, alp, wil, alt, has, mcl],
+    teams: [rbr, ast, mer, fer, alf, alp, wil, alt, has, mcl],
   }),
   new Round("Saudi GP", {
-    driver: [
+    drivers: [
       ver,
       per,
       alo,
@@ -120,10 +117,10 @@ let rounds: Round[] = [
       pia,
       nor,
     ],
-    team: [rbr, ast, mer, fer, alp, alf, has, wil, alt, mcl],
+    teams: [rbr, ast, mer, fer, alp, alf, has, wil, alt, mcl],
   }),
   new Round("Australian GP", {
-    driver: [
+    drivers: [
       ver,
       per,
       alo,
@@ -145,10 +142,10 @@ let rounds: Round[] = [
       sar,
       dev,
     ],
-    team: [rbr, ast, mer, fer, mcl, alp, has, alf, alt, wil],
+    teams: [rbr, ast, mer, fer, mcl, alp, has, alf, alt, wil],
   }),
   new Round("Azerbaijan GP", {
-    driver: [
+    drivers: [
       ver,
       per,
       alo,
@@ -170,10 +167,10 @@ let rounds: Round[] = [
       sar,
       dev,
     ],
-    team: [rbr, ast, mer, fer, mcl, alp, has, alf, alt, wil],
+    teams: [rbr, ast, mer, fer, mcl, alp, has, alf, alt, wil],
   }),
   new Round("Miami GP", {
-    driver: [
+    drivers: [
       ver,
       per,
       alo,
@@ -195,10 +192,10 @@ let rounds: Round[] = [
       sar,
       dev,
     ],
-    team: [rbr, ast, mer, fer, mcl, alp, has, alf, alt, wil],
+    teams: [rbr, ast, mer, fer, mcl, alp, has, alf, alt, wil],
   }),
   new Round("Monaco GP", {
-    driver: [
+    drivers: [
       ver,
       per,
       alo,
@@ -220,10 +217,10 @@ let rounds: Round[] = [
       dev,
       sar,
     ],
-    team: [rbr, ast, mer, fer, alp, mcl, has, alf, alt, wil],
+    teams: [rbr, ast, mer, fer, alp, mcl, has, alf, alt, wil],
   }),
   new Round("Spainish GP", {
-    driver: [
+    drivers: [
       ver,
       per,
       alo,
@@ -245,10 +242,10 @@ let rounds: Round[] = [
       dev,
       sar,
     ],
-    team: [rbr, mer, ast, fer, alp, mcl, has, alf, alt, wil],
+    teams: [rbr, mer, ast, fer, alp, mcl, has, alf, alt, wil],
   }),
   new Round("Candian GP", {
-    driver: [
+    drivers: [
       ver,
       per,
       alo,
@@ -270,10 +267,10 @@ let rounds: Round[] = [
       sar,
       dev,
     ],
-    team: [rbr, mer, ast, fer, alp, mcl, alf, has, wil, alt],
+    teams: [rbr, mer, ast, fer, alp, mcl, alf, has, wil, alt],
   }),
   new Round("Austrian GP", {
-    driver: [
+    drivers: [
       ver,
       per,
       alo,
@@ -295,10 +292,10 @@ let rounds: Round[] = [
       sar,
       dev,
     ],
-    team: [rbr, mer, ast, fer, alp, mcl, has, alf, wil, alt],
+    teams: [rbr, mer, ast, fer, alp, mcl, has, alf, wil, alt],
   }),
   new Round("British GP", {
-    driver: [
+    drivers: [
       ver,
       per,
       alo,
@@ -320,10 +317,10 @@ let rounds: Round[] = [
       sar,
       dev,
     ],
-    team: [rbr, mer, ast, fer, mcl, alp, wil, has, alf, alt],
+    teams: [rbr, mer, ast, fer, mcl, alp, wil, has, alf, alt],
   }),
   new Round("Hungarian GP", {
-    driver: [
+    drivers: [
       ver,
       per,
       alo,
@@ -345,10 +342,10 @@ let rounds: Round[] = [
       sar,
       dev,
     ],
-    team: [rbr, mer, ast, fer, mcl, alp, wil, has, alf, alt],
+    teams: [rbr, mer, ast, fer, mcl, alp, wil, has, alf, alt],
   }),
   new Round("Belgian GP", {
-    driver: [
+    drivers: [
       ver,
       per,
       alo,
@@ -370,10 +367,10 @@ let rounds: Round[] = [
       sar,
       dev,
     ],
-    team: [rbr, mer, ast, fer, mcl, alp, wil, has, alf, alt],
+    teams: [rbr, mer, ast, fer, mcl, alp, wil, has, alf, alt],
   }),
   new Round("Dutch GP", {
-    driver: [
+    drivers: [
       ver,
       per,
       alo,
@@ -395,10 +392,10 @@ let rounds: Round[] = [
       sar,
       dev,
     ],
-    team: [rbr, mer, ast, fer, mcl, alp, wil, has, alf, alt],
+    teams: [rbr, mer, ast, fer, mcl, alp, wil, has, alf, alt],
   }),
   new Round("Italian GP", {
-    driver: [
+    drivers: [
       ver,
       per,
       alo,
@@ -420,10 +417,10 @@ let rounds: Round[] = [
       sar,
       dev,
     ],
-    team: [rbr, mer, fer, ast, mcl, alp, wil, has, alf, alt],
+    teams: [rbr, mer, fer, ast, mcl, alp, wil, has, alf, alt],
   }),
   new Round("Singaporean GP", {
-    driver: [
+    drivers: [
       ver,
       per,
       ham,
@@ -445,10 +442,10 @@ let rounds: Round[] = [
       sar,
       dev,
     ],
-    team: [rbr, mer, fer, ast, mcl, alp, wil, has, alf, alt],
+    teams: [rbr, mer, fer, ast, mcl, alp, wil, has, alf, alt],
   }),
   new Round("Japanese GP", {
-    driver: [
+    drivers: [
       ver,
       per,
       ham,
@@ -470,10 +467,10 @@ let rounds: Round[] = [
       sar,
       dev,
     ],
-    team: [rbr, mer, fer, ast, mcl, alp, wil, has, alf, alt],
+    teams: [rbr, mer, fer, ast, mcl, alp, wil, has, alf, alt],
   }),
   new Round("Qatarian GP", {
-    driver: [
+    drivers: [
       ver,
       per,
       ham,
@@ -495,10 +492,10 @@ let rounds: Round[] = [
       sar,
       dev,
     ],
-    team: [rbr, mer, fer, ast, mcl, alp, wil, alf, has, alt],
+    teams: [rbr, mer, fer, ast, mcl, alp, wil, alf, has, alt],
   }),
   new Round("United States GP", {
-    driver: [
+    drivers: [
       ver,
       per,
       ham,
@@ -520,10 +517,10 @@ let rounds: Round[] = [
       sar,
       dev,
     ],
-    team: [rbr, mer, fer, mcl, ast, alp, wil, alf, has, alt],
+    teams: [rbr, mer, fer, mcl, ast, alp, wil, alf, has, alt],
   }),
   new Round("Mexican GP", {
-    driver: [
+    drivers: [
       ver,
       per,
       ham,
@@ -545,10 +542,10 @@ let rounds: Round[] = [
       sar,
       dev,
     ],
-    team: [rbr, mer, fer, mcl, ast, alp, wil, alt, alf, has],
+    teams: [rbr, mer, fer, mcl, ast, alp, wil, alt, alf, has],
   }),
   new Round("Brazilian GP", {
-    driver: [
+    drivers: [
       ver,
       per,
       ham,
@@ -570,10 +567,10 @@ let rounds: Round[] = [
       sar,
       dev,
     ],
-    team: [rbr, mer, fer, mcl, ast, alp, wil, alt, alf, has],
+    teams: [rbr, mer, fer, mcl, ast, alp, wil, alt, alf, has],
   }),
   new Round("Las Vegas GP", {
-    driver: [
+    drivers: [
       ver,
       per,
       ham,
@@ -595,10 +592,10 @@ let rounds: Round[] = [
       sar,
       dev,
     ],
-    team: [rbr, mer, fer, mcl, ast, alp, wil, alt, alf, has],
+    teams: [rbr, mer, fer, mcl, ast, alp, wil, alt, alf, has],
   }),
   new Round("Abu Dhabi GP", {
-    driver: [
+    drivers: [
       ver,
       per,
       ham,
@@ -620,14 +617,16 @@ let rounds: Round[] = [
       sar,
       dev,
     ],
-    team: [rbr, mer, fer, mcl, ast, alp, wil, alt, alf, has],
+    teams: [rbr, mer, fer, mcl, ast, alp, wil, alt, alf, has],
   }),
 ];
 
+const competition: Competition = "f1";
+
 export const seasonData2023 = {
-  drivers: drivers,
+  allEntrants: { drivers: drivers, teams: teams },
+  competition: competition,
   isSeasonOver: true,
   predictionFreezeTime: predictionFreezeTime,
   rounds: rounds,
-  teams: teams,
 };

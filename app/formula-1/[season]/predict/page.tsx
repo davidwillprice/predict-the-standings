@@ -7,7 +7,7 @@ import { notFound } from "next/navigation";
 import { sortEntrantsAlphabetically } from "@lib/misc";
 import { getSingleUserPredictionDataQuery } from "@lib/db-functions";
 import { authOptions } from "@lib/auth";
-import { allSeasonData } from "@data/formula-1/season-data";
+import { allF1SeasonData } from "@data/formula-1/season-data";
 
 import { Panel } from "@components/panels/panel";
 import { EditPredictions } from "@components/submit-predictions/edit-predictions";
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
 
 const Page: NextPage<PageProps> = async ({ params }) => {
   const { season } = params;
-  if (allSeasonData[season] === undefined) notFound();
+  if (allF1SeasonData[season] === undefined) notFound();
   const session = await getServerSession(authOptions);
   const displayName = session?.user.displayName;
   if (session == null) {
@@ -33,7 +33,8 @@ const Page: NextPage<PageProps> = async ({ params }) => {
     return redirect("/get-started");
   }
 
-  const { predictionFreezeTime, drivers, teams } = allSeasonData[season];
+  const { predictionFreezeTime } = allF1SeasonData[season];
+  const { drivers, teams } = allF1SeasonData[season].allEntrants;
   const userId = session.user.id;
 
   /**Create alphabetically ordered array of entrants to use as defaults if the user hasn't made predictions before */

@@ -1,4 +1,5 @@
 import {
+  AllEntrants,
   GameData,
   Entrants,
   Round,
@@ -6,12 +7,13 @@ import {
   Users,
   EntrantStats,
   ControversialUserIds,
+  Competition,
 } from "@custom-types/game-types";
 import { calcPercentile } from "./misc";
 
 export const createGameData = async (
-  drivers: Entrants,
-  teams: Entrants,
+  allEntrants: AllEntrants,
+  competition: Competition,
   rounds: Round[],
   users: Users
 ): Promise<GameData | string> => {
@@ -26,20 +28,17 @@ export const createGameData = async (
   users.average.information =
     "This prediction table is an automated average of all other player predictions.";
 
-  const entrants = { driver: drivers, team: teams };
-  users = generateAveragePredictions(drivers, "driver", users);
-  users = generateAveragePredictions(teams, "team", users);
+  users = generateAveragePredictions(allEntrants, users);
 
-  users = orderAveragePredictions(entrants, users);
+  users = orderAveragePredictions(allEntrants, users);
 
-  users = calcUsersPerformance(entrants, rounds, users);
+  users = calcUsersPerformance(allEntrants, rounds, users);
 
   users = generateControversyData(users);
 
   const controversialUserIds = getControversialUsers(users);
 
-  rounds = calcLeaderboards("driver", rounds, users);
-  rounds = calcLeaderboards("team", rounds, users);
+  rounds = calcLeaderboards(allEntrants, rounds, users);
 
   rounds = orderLeaderboards(rounds, users);
 
@@ -47,19 +46,19 @@ export const createGameData = async (
 
   rounds = generateEntrantDiffTotals(rounds, users);
 
-  drivers = getEntrantPredictedPositions(drivers, "driver", users);
-  teams = getEntrantPredictedPositions(teams, "team", users);
+  allEntrants = getEntrantPredictedPositions(allEntrants, users);
 
-  drivers = generateTeammateHeadToHead(drivers, teams, users);
+  if (competition === "f1") {
+    allEntrants = generateTeammateHeadToHead(allEntrants, users);
+  }
 
   rounds = deleteLeaderboardDataFromRounds(rounds);
 
-  const driverStats = generateEntrantStats(drivers);
-  const teamStats = generateEntrantStats(teams);
+  const allEntrantStats = generateEntrantStats(allEntrants);
 
   return {
     controversialUserIds: controversialUserIds,
-    entrantStats: { driver: driverStats, team: teamStats },
+    allEntrantStats: allEntrantStats,
     roundStats: rounds.map((round) => {
       return {
         entrantDiffTotals: round.entrantDiffTotals,
@@ -69,39 +68,37 @@ export const createGameData = async (
   };
 };
 
-/**Loop over each entrant finding their index in each user's prediction table, calculating an average and then adding it to each entrant as new avgPrePos property */
-const generateAveragePredictions = (
-  entrants: Entrants,
-  entrantType: string,
-  users: Users
-) => {
-  users.average.predictions[entrantType] = [];
-  for (const entrant of Object.values(entrants)) {
-    let predictionPosTotal = 0;
-    let noOfUsers = 0;
-    for (const user of Object.values(users)) {
-      /**If the user is the generated average, ignore their predictions */
-      if (user.id === "average") continue;
-
-      predictionPosTotal +=
-        user.predictions[entrantType].indexOf(entrant.sName) + 1;
-      noOfUsers++;
+/**Loop over each entrant finding their index in each user's prediction table, calculating an average and then adding it to each entrant as a new avgPrePos property */
+const generateAveragePredictions = (allEntrants: AllEntrants, users: Users) => {
+  for (const entrantType of Object.keys(allEntrants)) {
+    users.average.predictions[entrantType] = [];
+    for (const entrant of Object.values(allEntrants[entrantType])) {
+      let predictionPosTotal = 0;
+      let noOfUsers = 0;
+      for (const user of Object.values(users)) {
+        /**If the user is the generated average, ignore their predictions */
+        if (user.id === "average") continue;
+        predictionPosTotal +=
+          user.predictions[entrantType].indexOf(entrant.sName) + 1;
+        noOfUsers++;
+      }
+      entrant.avgPrePos =
+        Math.round((predictionPosTotal / noOfUsers) * 10) / 10;
+      users.average.predictions[entrantType].push(entrant.sName);
     }
-    entrant.avgPrePos = Math.round((predictionPosTotal / noOfUsers) * 10) / 10;
-    users.average.predictions[entrantType].push(entrant.sName);
   }
   return users;
 };
 
 //**Sort all 'average' user's predictions by how popular each entrant was */
 const orderAveragePredictions = (
-  entrants: { [key: string]: Entrants },
+  allEntrants: AllEntrants,
   users: Users
 ): Users => {
-  for (const entrantType in users.average.predictions) {
+  for (const entrantType in allEntrants) {
     users.average.predictions[entrantType].sort((entrantIdA, entrantIdB) =>
-      entrants[entrantType][entrantIdA].avgPrePos! >
-      entrants[entrantType][entrantIdB].avgPrePos!
+      allEntrants[entrantType][entrantIdA].avgPrePos! >
+      allEntrants[entrantType][entrantIdB].avgPrePos!
         ? 1
         : -1
     );
@@ -111,11 +108,11 @@ const orderAveragePredictions = (
 
 //**Based on the user predictions and round data, calculate the differences in entrant predictions for each user, their diff totals and their count of each difference (perfect predictions, predictions that were one off etc) */
 const calcUsersPerformance = (
-  entrants: { [key: string]: Entrants },
+  allEntrants: { [key: string]: Entrants },
   rounds: Round[],
   users: Users
 ) => {
-  for (const entrantType of Object.keys(entrants)) {
+  for (const entrantType of Object.keys(allEntrants)) {
     rounds.forEach((round, roundIndex) => {
       /**Loop through each user to generate their entrant differences in this particular round*/
       for (let user of Object.values(users)) {
@@ -168,24 +165,26 @@ const calcUserRoundPerformance = (
 
 /**Populate the leaderboard for each user in each round*/
 const calcLeaderboards = (
-  entrantType: string,
+  allEntrants: AllEntrants,
   rounds: Round[],
   users: Users
 ): Round[] => {
-  rounds.forEach((round, roundIndex) => {
-    /**Create blank leaderboard to avoid clashes with previous data */
-    round.leaderboards[entrantType] = [];
+  for (const entrantType in allEntrants) {
+    rounds.forEach((round, roundIndex) => {
+      /**Create blank leaderboard to avoid clashes with previous data */
+      round.leaderboards[entrantType] = [];
 
-    for (let user of Object.values(users)) {
-      round.leaderboards[entrantType].push({
-        userId: user.id,
-        percentCorrect: calcPredictionsAccuracy(
-          user.predictions[entrantType].length,
-          user.season[entrantType][roundIndex].diffTotal
-        ),
-      });
-    }
-  });
+      for (let user of Object.values(users)) {
+        round.leaderboards[entrantType].push({
+          userId: user.id,
+          percentCorrect: calcPredictionsAccuracy(
+            user.predictions[entrantType].length,
+            user.season[entrantType][roundIndex].diffTotal
+          ),
+        });
+      }
+    });
+  }
   return rounds;
 };
 
@@ -337,44 +336,43 @@ const generateEntrantDiffTotals = (rounds: Round[], users: Users): Round[] => {
 
 /**For use on the stats page, generate an array for each entrant with the percentage of people who predicted them in each position */
 const getEntrantPredictedPositions = (
-  entrants: Entrants,
-  entrantType: string,
+  allEntrants: AllEntrants,
   users: Users
-) => {
-  const noOfEntrants = Object.keys(entrants).length;
+): AllEntrants => {
   const noOfUsers = Object.keys(users).length - 1;
 
-  for (const entrant of Object.values(entrants)) {
-    /**Create set up base position array */
-    entrant.predictionedPositions = [];
-    for (let i = 0; i < noOfEntrants; i++) {
-      entrant.predictionedPositions.push(0);
-    }
-    /**Loop over users, obtain the position index they predicted the entrant in, then plus one to that index in the entrant position array  */
-    for (const user of Object.values(users)) {
-      /**If the user is the generated average, ignore their predictions */
-      if (user.id === "average") continue;
+  for (const [entrantType, entrants] of Object.entries(allEntrants)) {
+    const noOfEntrants = Object.keys(entrants).length;
+    for (const entrant of Object.values(entrants)) {
+      /**Create set up base position array */
+      entrant.predictionedPositions = [];
+      for (let i = 0; i < noOfEntrants; i++) {
+        entrant.predictionedPositions.push(0);
+      }
+      /**Loop over users, obtain the position index they predicted the entrant in, then plus one to that index in the entrant position array  */
+      for (const user of Object.values(users)) {
+        /**If the user is the generated average, ignore their predictions */
+        if (user.id === "average") continue;
 
-      const userPredictedPos = user.predictions[entrantType].indexOf(
-        entrant.sName
+        const userPredictedPos = user.predictions[entrantType].indexOf(
+          entrant.sName
+        );
+        entrant.predictionedPositions[userPredictedPos]++;
+      }
+
+      /**Turn predictedPositions into percentage */
+      entrant.predictionedPositions = entrant.predictionedPositions.map((pos) =>
+        Math.round((pos / noOfUsers) * 100)
       );
-      entrant.predictionedPositions[userPredictedPos]++;
     }
-
-    /**Turn predictedPositions into percentage */
-    entrant.predictionedPositions = entrant.predictionedPositions.map((pos) =>
-      Math.round((pos / noOfUsers) * 100)
-    );
   }
-  return entrants;
+  return allEntrants;
 };
 
 /**For every user, find their highest predicted driver for each team, total for all users, then convert that to a percentage and attach it to the driver */
-const generateTeammateHeadToHead = (
-  drivers: Entrants,
-  teams: Entrants,
-  users: Users
-) => {
+const generateTeammateHeadToHead = (allEntrants: AllEntrants, users: Users) => {
+  const drivers = allEntrants.drivers;
+  const teams = allEntrants.teams;
   /**Clear any old values from previous renders*/
   for (const driver of Object.values(drivers)) {
     driver.pcPredictedToBeatTeammate = 0;
@@ -391,7 +389,7 @@ const generateTeammateHeadToHead = (
       /**If the user is the generated average, ignore their predictions */
       if (user.id === "average") continue;
 
-      const higherPredictedDriverId = user.predictions["driver"].filter(
+      const higherPredictedDriverId = user.predictions["drivers"].filter(
         (driverId) =>
           driverId === teammatesArr[0] || driverId === teammatesArr[1]
       )[0];
@@ -410,7 +408,7 @@ const generateTeammateHeadToHead = (
       : 0;
   }
 
-  return drivers;
+  return { drivers: drivers, teams: teams };
 };
 
 /**Calculate how far away each user's predictions are from the average predictions */
@@ -516,14 +514,22 @@ const deleteLeaderboardDataFromRounds = (rounds: Round[]) => {
 };
 
 /**Strip down an Entrants Obj to only the data needed for the stats page */
-const generateEntrantStats = (entrants: Entrants): EntrantStats => {
-  const entrantStats: EntrantStats = {};
-  Object.values(entrants).forEach((entrant) => {
-    entrantStats[entrant.sName] = {
-      avgPrePos: entrant.avgPrePos,
-      predictionedPositions: entrant.predictionedPositions,
-      pcPredictedToBeatTeammate: entrant.pcPredictedToBeatTeammate,
-    };
-  });
-  return entrantStats;
+const generateEntrantStats = (
+  allEntrants: AllEntrants
+): { [entrantType: string]: EntrantStats } => {
+  const allEntrantStats: { [entrantType: string]: EntrantStats } = {};
+
+  for (const [entrantType, entrants] of Object.entries(allEntrants)) {
+    const entrantStats: EntrantStats = {};
+    Object.values(entrants).forEach((entrant) => {
+      entrantStats[entrant.sName] = {
+        avgPrePos: entrant.avgPrePos,
+        predictionedPositions: entrant.predictionedPositions,
+        pcPredictedToBeatTeammate: entrant.pcPredictedToBeatTeammate,
+      };
+    });
+    allEntrantStats[entrantType] = entrantStats;
+  }
+
+  return allEntrantStats;
 };

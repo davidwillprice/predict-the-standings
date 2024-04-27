@@ -1,4 +1,9 @@
-import { Entrant, Entrants, Round } from "@custom-types/game-types";
+import {
+  Competition,
+  Entrant,
+  Entrants,
+  Round,
+} from "@custom-types/game-types";
 
 const predictionFreezeTime = new Date("2024-02-29T11:30:00");
 
@@ -40,7 +45,7 @@ const teams: Entrants = {
 
 let rounds: Round[] = [
   new Round("Bahrain GP", {
-    driver: [
+    drivers: [
       "ver",
       "per",
       "sai",
@@ -62,10 +67,21 @@ let rounds: Round[] = [
       "bot",
       "sar",
     ],
-    team: ["red", "fer", "mer", "mcl", "ast", "sau", "has", "rb", "wil", "alp"],
+    teams: [
+      "red",
+      "fer",
+      "mer",
+      "mcl",
+      "ast",
+      "sau",
+      "has",
+      "rb",
+      "wil",
+      "alp",
+    ],
   }),
   new Round("Saudi GP", {
-    driver: [
+    drivers: [
       "ver",
       "per",
       "lec",
@@ -87,10 +103,21 @@ let rounds: Round[] = [
       "bot",
       "gas",
     ],
-    team: ["red", "fer", "mcl", "mer", "ast", "has", "wil", "sau", "rb", "alp"],
+    teams: [
+      "red",
+      "fer",
+      "mcl",
+      "mer",
+      "ast",
+      "has",
+      "wil",
+      "sau",
+      "rb",
+      "alp",
+    ],
   }),
   new Round("Australian GP", {
-    driver: [
+    drivers: [
       "ver",
       "lec",
       "per",
@@ -112,10 +139,21 @@ let rounds: Round[] = [
       "bot",
       "sar",
     ],
-    team: ["red", "fer", "mcl", "mer", "ast", "rb", "has", "wil", "sau", "alp"],
+    teams: [
+      "red",
+      "fer",
+      "mcl",
+      "mer",
+      "ast",
+      "rb",
+      "has",
+      "wil",
+      "sau",
+      "alp",
+    ],
   }),
   new Round("Japanese GP", {
-    driver: [
+    drivers: [
       "ver",
       "per",
       "lec",
@@ -137,10 +175,21 @@ let rounds: Round[] = [
       "bot",
       "sar",
     ],
-    team: ["red", "fer", "mcl", "mer", "ast", "rb", "has", "wil", "sau", "alp"],
+    teams: [
+      "red",
+      "fer",
+      "mcl",
+      "mer",
+      "ast",
+      "rb",
+      "has",
+      "wil",
+      "sau",
+      "alp",
+    ],
   }),
   new Round("Chinese GP", {
-    driver: [
+    drivers: [
       "ver",
       "per",
       "lec",
@@ -162,14 +211,27 @@ let rounds: Round[] = [
       "bot",
       "sar",
     ],
-    team: ["red", "fer", "mcl", "mer", "ast", "rb", "has", "wil", "alp", "sau"],
+    teams: [
+      "red",
+      "fer",
+      "mcl",
+      "mer",
+      "ast",
+      "rb",
+      "has",
+      "wil",
+      "alp",
+      "sau",
+    ],
   }),
 ];
 
+const competition: Competition = "f1";
+
 export const seasonData2024 = {
-  drivers: drivers,
+  allEntrants: { drivers: drivers, teams: teams },
+  competition: competition,
   isSeasonOver: false,
   predictionFreezeTime: predictionFreezeTime,
   rounds: rounds,
-  teams: teams,
 };

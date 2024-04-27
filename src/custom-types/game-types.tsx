@@ -1,51 +1,24 @@
-export class User {
-  id: string;
-  displayName: string;
-  information: string;
-  lastSubmissionTime: Date;
-  predictions: { [key: string]: EntrantId[] };
-  predictionsFromAvg: { [key: string]: number };
-  season: { [key: string]: RoundPerformance[] };
-  userType: "standard" | "special";
-  controversyPercentile: { [key: string]: number };
-  constructor(
-    displayName: string,
-    id: string,
-    lastSubmissionTime: Date,
-    predictions: { [key: string]: EntrantId[] },
-    userType: "standard" | "special",
-    predictionsFromAvg?: { [key: string]: number }
-  ) {
-    this.id = id;
-    this.controversyPercentile = {};
-    this.displayName = displayName;
-    this.information = "";
-    this.lastSubmissionTime = lastSubmissionTime;
-    this.predictions = predictions;
-    this.predictionsFromAvg = predictionsFromAvg || {};
-    this.season = {};
-    this.userType = userType;
-  }
+export type Competition = "f1" | "eurovision" | "premierLeague";
+
+export interface AllLocalSeasonData {
+  [season: string]: {
+    allEntrants: AllEntrants;
+    competition: Competition;
+    isSeasonOver: boolean;
+    predictionFreezeTime: Date;
+    rounds: Round[];
+  };
 }
 
-type userId = string;
-
-export interface Users {
-  [key: string]: User;
+export interface AllEntrants {
+  [entrantType: string]: Entrants;
 }
 
-export interface JsonPrediction {
-  user_id: number;
-  driver_predictions: string[];
-  team_predictions: string[];
+export interface Entrants {
+  [sName: string]: Entrant;
 }
 
-/**@todo Delete */
-export interface UserIdData {
-  id: number;
-  displayName: string;
-}
-
+export type EntrantId = string;
 export class Entrant {
   name: string;
   sName: string;
@@ -67,15 +40,47 @@ export class Entrant {
     this.predictionedPositions = [];
   }
 }
-export type EntrantId = string;
-export interface Entrants {
-  [key: string]: Entrant;
+
+export class User {
+  id: string;
+  displayName: string;
+  information: string;
+  lastSubmissionTime: Date;
+  predictions: { [entrantType: string]: EntrantId[] };
+  predictionsFromAvg: { [entrantType: string]: number };
+  season: { [entrantType: string]: RoundPerformance[] };
+  userType: "standard" | "special";
+  controversyPercentile: { [entrantType: string]: number };
+  constructor(
+    displayName: string,
+    id: string,
+    lastSubmissionTime: Date,
+    predictions: { [entrantType: string]: EntrantId[] },
+    userType: "standard" | "special",
+    predictionsFromAvg?: { [entrantType: string]: number }
+  ) {
+    this.id = id;
+    this.controversyPercentile = {};
+    this.displayName = displayName;
+    this.information = "";
+    this.lastSubmissionTime = lastSubmissionTime;
+    this.predictions = predictions;
+    this.predictionsFromAvg = predictionsFromAvg || {};
+    this.season = {};
+    this.userType = userType;
+  }
+}
+
+type userId = string;
+
+export interface Users {
+  [userId: string]: User;
 }
 
 export class Round {
-  entrantDiffTotals: { [key: string]: EntrantDiffTotal[] };
-  leaderboards: { [key: string]: Leaderboard[] };
-  standings: { [key: string]: EntrantId[] };
+  entrantDiffTotals: { [entrantType: string]: EntrantDiffTotal[] };
+  leaderboards: { [entrantType: string]: Leaderboard[] };
+  standings: { [entrantType: string]: EntrantId[] };
   trackName;
   constructor(trackName: string, standings: {}) {
     this.trackName = trackName;
@@ -108,20 +113,24 @@ interface RoundPerformance {
 
 export interface GameData {
   controversialUserIds: ControversialUserIds;
-  entrantStats: { [key: string]: EntrantStats };
-  roundStats: { entrantDiffTotals: { [key: string]: EntrantDiffTotal[] } }[];
+  allEntrantStats: { [entrantType: string]: EntrantStats };
+  roundStats: {
+    entrantDiffTotals: { [entrantType: string]: EntrantDiffTotal[] };
+  }[];
   users: Users;
 }
 
 export interface StatsData {
   controversialUserIds: ControversialUserIds;
-  entrantStats: { [key: string]: EntrantStats };
-  noOfPredictions: { [key: string]: number };
-  roundStats: { entrantDiffTotals: { [key: string]: EntrantDiffTotal[] } }[];
+  allEntrants: { [entrantType: string]: EntrantStats };
+  noOfPredictions: { [entrantType: string]: number };
+  rounds: {
+    entrantDiffTotals: { [entrantType: string]: EntrantDiffTotal[] };
+  }[];
 }
 
 export interface EntrantStats {
-  [key: string]: {
+  [entrantType: string]: {
     avgPrePos?: number;
     predictionedPositions: number[];
     pcPredictedToBeatTeammate?: number;
@@ -129,7 +138,7 @@ export interface EntrantStats {
 }
 
 export interface ControversialUserIds {
-  [key: string]: {
+  [entrantType: string]: {
     most: userId[];
     least: userId[];
   };

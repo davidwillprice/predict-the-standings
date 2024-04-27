@@ -9,7 +9,7 @@ interface HeadToHeadProps {
 }
 interface HeadToHeadsProps {
   driverIdArr: EntrantId[];
-  entrants: { [key: string]: Entrants };
+  allEntrants: { [key: string]: Entrants };
   teamIdArr: EntrantId[];
 }
 
@@ -89,11 +89,11 @@ const HeadToHead = ({ teammates }: HeadToHeadProps) => {
 
 export const HeadToHeads = ({
   driverIdArr,
-  entrants,
+  allEntrants,
   teamIdArr,
 }: HeadToHeadsProps) => {
-  const drivers = driverIdArr.map((id) => entrants["driver"][id]);
-  const teams = teamIdArr.map((id) => entrants["team"][id]);
+  const drivers = driverIdArr.map((id) => allEntrants["drivers"][id]);
+  const teams = teamIdArr.map((id) => allEntrants["teams"][id]);
   return (
     <div className={styles.head_to_heads}>
       <h3>% of People Who Favoured Each&nbsp;Teammate</h3>

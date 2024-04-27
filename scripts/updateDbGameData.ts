@@ -1,14 +1,15 @@
 import "dotenv/config";
 import dotenv from "dotenv";
-import { MongoClient, ObjectId } from "mongodb";
+import { MongoClient } from "mongodb";
 
-import { allSeasonData } from "@data/formula-1/season-data";
+import { allF1SeasonData } from "@data/formula-1/season-data";
 import { createGameData } from "@lib/prediction-data";
 import {
   getAllUserPredictionDataQuery,
   updateAllUserDocGameData,
   updateLastUpdatedDateQuery,
 } from "@lib/db-functions";
+import { AllLocalSeasonData } from "@custom-types/game-types";
 
 async function connectToMongo() {
   if (process.env.db === "dev")
@@ -18,21 +19,37 @@ async function connectToMongo() {
   return client;
 }
 
-async function submitF1GameData(client: MongoClient) {
+async function submitCompetitionGameData(
+  allSeasonData: AllLocalSeasonData,
+  client: MongoClient
+) {
   try {
     const db = client.db("pts");
-    /**Loop over each F1 season and update its data within the database */
+    /**Loop over each season and update its data within the database */
     for (const [seasonStr, seasonData] of Object.entries(allSeasonData)) {
-      const { drivers, rounds, teams } = seasonData;
+      const { allEntrants, competition, rounds } = seasonData;
 
-      const collection = db.collection(`f1${seasonStr}`);
+      const collection = db.collection(competition + seasonStr);
 
-      const users = await getAllUserPredictionDataQuery(collection);
+      const users = await getAllUserPredictionDataQuery(
+        allEntrants,
+        collection
+      );
 
-      const gameData = await createGameData(drivers, teams, rounds, users);
+      const gameData = await createGameData(
+        allEntrants,
+        competition,
+        rounds,
+        users
+      );
       if (typeof gameData === "string") throw new Error(gameData);
 
       await updateAllUserDocGameData(collection, users);
+
+      const noOfPredictions: { [entrantType: string]: number } = {};
+      for (const entrantType in allEntrants) {
+        noOfPredictions[entrantType] = Object.keys(users).length;
+      }
 
       /**Update/Add the stats data to the DB */
       const result = await collection.updateOne(
@@ -41,14 +58,8 @@ async function submitF1GameData(client: MongoClient) {
           $set: {
             type: "statsData",
             controversialUserIds: gameData.controversialUserIds,
-            entrants: {
-              drivers: gameData.entrantStats.driver,
-              teams: gameData.entrantStats.team,
-            },
-            noOfPredictions: {
-              driver: Object.keys(users).length,
-              team: Object.keys(users).length,
-            },
+            allEntrants: gameData.allEntrantStats,
+            noOfPredictions: noOfPredictions,
             rounds: gameData.roundStats,
           },
         },
@@ -58,7 +69,7 @@ async function submitF1GameData(client: MongoClient) {
       await updateLastUpdatedDateQuery(collection);
 
       console.log(
-        `An f1${seasonStr} gameData document was ${
+        `An ${collection.collectionName} gameData document was ${
           result.upsertedId ? "inserted" : "updated"
         }`
       );
@@ -71,7 +82,7 @@ async function submitF1GameData(client: MongoClient) {
 async function run() {
   try {
     const client = await connectToMongo();
-    await submitF1GameData(client);
+    await submitCompetitionGameData(allF1SeasonData, client);
     process.exit(0);
   } catch (err) {
     console.error(err);
