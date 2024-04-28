@@ -196,7 +196,7 @@ export const getStatsDataQuery = async (
   }
 };
 
-/**@todo Update display name in all the user's prediction data for every season/sport they've competed in? */
+/**@todo Update display name in all the user's prediction data for every season/sport they've competed in?*/
 export const submitDisplayNameQuery = async (
   submittedDisplayName: string,
   userId: string
@@ -213,9 +213,9 @@ export const submitDisplayNameQuery = async (
     });
     if (!existingUser) throw new Error("User not found");
 
-    // Check the submitted display name is unique
+    // Check the submitted display name is unique regardless of upper and lowercase letters
     const duplicateUser = await usersCollection.findOne({
-      displayName: submittedDisplayName,
+      displayName: { $regex: new RegExp(submittedDisplayName, "i") }, // 'i' for case-insensitive
       _id: { $ne: userIdObj },
     });
     if (duplicateUser) throw new Error("Display name already exists");
