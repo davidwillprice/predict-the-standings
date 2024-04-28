@@ -57,17 +57,18 @@ const Page: NextPage<PageProps> = async ({ params }) => {
       "f1",
       userId
     );
+
     /**Check if there is existing drivers predictions, and if not use an alphabetically ordered array of drivers */
-    if (userPredictionData.predictions.driver) {
-      driverArr = userPredictionData.predictions.driver.map(
+    if (userPredictionData.predictions.drivers) {
+      driverArr = userPredictionData.predictions.drivers.map(
         (entrantStr: string) => drivers[entrantStr]
       );
     } else {
       driverArr = defaultDriverArr;
     }
     /**Check if there is existing teams predictions, and if not use an alphabetically ordered array of teams */
-    if (userPredictionData.predictions.team) {
-      teamArr = userPredictionData.predictions.team.map(
+    if (userPredictionData.predictions.teams) {
+      teamArr = userPredictionData.predictions.teams.map(
         (entrantStr: string) => teams[entrantStr]
       );
     } else {
