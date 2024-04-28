@@ -21,7 +21,7 @@ export const createGameData = async (
   users.average = new User(
     "Average",
     "average",
-    new Date("2024-04-18T20:38:36.780Z"),
+    new Date("3000-04-18T20:38:36.780Z"), //Stupidly high value so other players will always be positioned ahead if they have the same predictions
     {},
     "special"
   );
