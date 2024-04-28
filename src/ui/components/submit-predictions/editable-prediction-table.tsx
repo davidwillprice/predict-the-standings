@@ -7,18 +7,22 @@ import {
   DropResult,
 } from "@hello-pangea/dnd";
 
-import { Entrant } from "@custom-types/game-types";
+import { FlagCell } from "@components/prediction-table/eurovision-flag-cell";
 
-import predictiontableStyles from "@components/prediction-table/prediction-table.module.scss";
+import { Competition, Entrant } from "@custom-types/game-types";
+
+import predictionTableStyles from "@components/prediction-table/prediction-table.module.scss";
 import styles from "@components/submit-predictions/editable-prediction-table.module.scss";
 
 type Props = {
+  competition: Competition;
   entrantArr: Entrant[];
   entrantType: string;
   handleEntrantState: (entrantArr: Entrant[]) => void;
 };
 
 export function EditablePredictionTable({
+  competition,
   entrantArr,
   entrantType,
   handleEntrantState,
@@ -36,7 +40,7 @@ export function EditablePredictionTable({
   return (
     <div
       id="prediction-table"
-      className={`${predictiontableStyles.prediction_table} ${styles.editable_prediction_table}`}>
+      className={`${predictionTableStyles.prediction_table} ${styles.editable_prediction_table}`}>
       <table>
         <thead>
           <tr>
@@ -59,24 +63,28 @@ export function EditablePredictionTable({
                     {(provided) => (
                       <tr
                         key={entrant.sName}
-                        className={predictiontableStyles.table_row}
+                        className={predictionTableStyles.table_row}
                         ref={provided.innerRef}
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}>
-                        <td className={predictiontableStyles.drag_cell}>≡</td>
-                        <td className={predictiontableStyles.position_cell}>
+                        <td className={predictionTableStyles.drag_cell}>≡</td>
+                        <td className={predictionTableStyles.position_cell}>
                           {entrantArr.indexOf(entrant) + 1}
                         </td>
-                        <td className={predictiontableStyles.flair_cell}>
-                          <span
-                            className={`${predictiontableStyles.flair}`}
-                            style={{ backgroundColor: entrant.color }}></span>
-                        </td>
-                        <td className={predictiontableStyles.name_cell}>
-                          <span className={predictiontableStyles.name}>
+                        {competition === "eurovision" ? (
+                          <FlagCell country={entrant} />
+                        ) : (
+                          <td className={predictionTableStyles.flair_cell}>
+                            <span
+                              className={`${predictionTableStyles.flair}`}
+                              style={{ backgroundColor: entrant.color }}></span>
+                          </td>
+                        )}
+                        <td className={predictionTableStyles.name_cell}>
+                          <span className={predictionTableStyles.name}>
                             {entrant.name}
                           </span>
-                          <span className={predictiontableStyles.sName}>
+                          <span className={predictionTableStyles.sName}>
                             {entrant.sName}
                           </span>
                         </td>

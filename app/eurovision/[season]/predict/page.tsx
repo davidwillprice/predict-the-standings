@@ -33,7 +33,8 @@ const Page: NextPage<PageProps> = async ({ params }) => {
     return redirect("/get-started");
   }
 
-  const { predictionFreezeTime } = allEurovisionSeasonData[season];
+  const { predictionFreezeTime, isSeasonOver } =
+    allEurovisionSeasonData[season];
   const { countries } = allEurovisionSeasonData[season].allEntrants;
   const userId = session.user.id;
 
@@ -83,7 +84,7 @@ const Page: NextPage<PageProps> = async ({ params }) => {
           <Panel>
             <p>
               Predictions will lock when the voting results start being
-              annouced. You can edit your predictions up until{" "}
+              announced. You can edit your predictions up until{" "}
               {predictionFreezeTime.toDateString() +
                 " " +
                 predictionFreezeTime.toTimeString()}
@@ -98,7 +99,9 @@ const Page: NextPage<PageProps> = async ({ params }) => {
       ) : (
         <Panel>
           <p className={commonStyles.text_center}>
-            The results are being annouced and so predictions are frozen!
+            {isSeasonOver
+              ? `Eurovision ${season} is over, come back next year!`
+              : "The results are being announced and so predictions are frozen!"}
           </p>
         </Panel>
       )}

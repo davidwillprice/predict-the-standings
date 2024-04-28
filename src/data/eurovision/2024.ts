@@ -40,6 +40,7 @@ const countries: Entrants = {
   san: new Entrant("San Marino", "san", "#f00", "black"),
   ser: new Entrant("Serbia", "ser", "#f00", "black"),
   slo: new Entrant("Slovenia", "slo", "#f00", "black"),
+  spa: new Entrant("Spain", "spa", "#f00", "black"),
   swe: new Entrant("Sweden", "swe", "#f00", "black"),
   swi: new Entrant("Switzerland", "swi", "#f00", "black"),
   ukr: new Entrant("Ukraine", "ukr", "#f00", "black"),

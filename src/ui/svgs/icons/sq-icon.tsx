@@ -15,6 +15,7 @@ export interface Props {
     | "loading"
     | "login"
     | "logout"
+    | "microphone"
     | "moon"
     | "profile"
     | "premierLeague"
@@ -180,6 +181,15 @@ const iconPaths = {
       />
     </>
   ),
+  microphone: (
+    <>
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M12 18.75a6 6 0 0 0 6-6v-1.5m-6 7.5a6 6 0 0 1-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 0 1-3-3V4.5a3 3 0 1 1 6 0v8.25a3 3 0 0 1-3 3Z"
+      />
+    </>
+  ),
   moon: (
     <>
       <path
@@ -336,6 +346,8 @@ export default function Icon({ strokeWidth, type }: Props) {
       ? iconPaths.login
       : type === "logout"
       ? iconPaths.logout
+      : type === "microphone"
+      ? iconPaths.microphone
       : type === "moon"
       ? iconPaths.moon
       : type === "profile"

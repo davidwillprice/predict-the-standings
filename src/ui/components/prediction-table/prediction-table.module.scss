@@ -53,6 +53,13 @@
     padding-right: 10px;
     min-width: 105px;
   }
+  .flag_cell {
+    display: flex;
+    justify-content: center;
+    img {
+      border: 2px solid var(--tertiary-color);
+    }
+  }
   .pos_diff_cell {
     text-align: right;
     height: 30px;
