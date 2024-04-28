@@ -62,6 +62,7 @@ export const EditF1Predictions = ({
       <div className={styles.prediction_tables}>
         <div className={styles.prediction_table_con}>
           <EditablePredictionTable
+            competition={competition}
             entrantArr={driverArr}
             entrantType={"Driver"}
             handleEntrantState={handleDriverState}
@@ -69,6 +70,7 @@ export const EditF1Predictions = ({
         </div>
         <div className={styles.prediction_table_con}>
           <EditablePredictionTable
+            competition={competition}
             entrantArr={teamArr}
             entrantType={"Team"}
             handleEntrantState={handleTeamState}

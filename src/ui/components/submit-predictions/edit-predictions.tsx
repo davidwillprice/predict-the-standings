@@ -62,6 +62,7 @@ export const EditPredictions = ({
       <div className={styles.prediction_tables}>
         <div className={styles.prediction_table_con}>
           <EditablePredictionTable
+            competition={competition}
             entrantArr={entrantArr}
             entrantType={"Country"}
             handleEntrantState={handleEntrantState}
