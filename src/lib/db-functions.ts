@@ -4,7 +4,13 @@ import { Collection } from "mongodb";
 
 import { ObjectId } from "mongodb";
 import { Sport } from "@custom-types/misc";
-import { User, Users, StatsData, AllEntrants } from "@custom-types/game-types";
+import {
+  User,
+  Users,
+  StatsData,
+  AllEntrants,
+  Competition,
+} from "@custom-types/game-types";
 
 export const getlastUpdatedDate = async (
   season: string,
@@ -28,17 +34,17 @@ export const getlastUpdatedDate = async (
 
 export const getSingleUserPredictionDataQuery = async (
   season: string,
-  sport: Sport,
+  competition: Competition,
   userId: string
 ) => {
   const client = await clientPromise;
   try {
     const db = client.db("pts");
-    const collection = db.collection(sport + season);
+    const collection = db.collection(competition + season);
     const result = await collection.findOne({ userId: userId });
     if (!result)
       throw new Error(
-        `Failed to get user prediction data for ${sport + season}`
+        `Failed to get user prediction data for ${competition + season}`
       );
     return result;
   } catch (error) {
@@ -123,9 +129,9 @@ export const getAllUserPredictionDataQuery = async (
       );
     }
     if (Object.keys(users).length === 0)
-      throw new Error(
+      console.log(
         `User prediction data obj is empty for ${collection.collectionName}`
-      );
+      ); // Don't throw error as there may not be user prediction submitted yet
 
     return users;
   } catch (error) {
@@ -237,16 +243,16 @@ export const submitDisplayNameQuery = async (
 };
 
 export const submitPredictionsQuery = async (
+  competition: Competition,
   displayName: string,
   entrantArrs: { [entrantType: string]: string[] },
   season: string,
-  sport: Sport,
   userId: string
 ) => {
   const client = await clientPromise;
   try {
     const db = client.db("pts");
-    const collection = db.collection(sport + season);
+    const collection = db.collection(competition + season);
     const userPredictionDoc = {
       displayName: displayName,
       lastSubmissionTime: new Date(),
@@ -263,7 +269,7 @@ export const submitPredictionsQuery = async (
 
     if (!result)
       throw new Error(
-        `Failed to update user prediction data for ${sport + season}`
+        `Failed to update user prediction data for ${competition + season}`
       );
     return result;
   } catch (error) {

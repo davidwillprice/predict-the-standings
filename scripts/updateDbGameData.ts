@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import { MongoClient } from "mongodb";
 
 import { allF1SeasonData } from "@data/formula-1/season-data";
+import { allEurovisionSeasonData } from "@data/eurovision/season-data";
 import { createGameData } from "@lib/prediction-data";
 import {
   getAllUserPredictionDataQuery,
@@ -83,6 +84,7 @@ async function run() {
   try {
     const client = await connectToMongo();
     await submitCompetitionGameData(allF1SeasonData, client);
+    await submitCompetitionGameData(allEurovisionSeasonData, client);
     process.exit(0);
   } catch (err) {
     console.error(err);

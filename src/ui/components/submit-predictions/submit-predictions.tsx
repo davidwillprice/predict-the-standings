@@ -7,37 +7,32 @@ import { LoadingSpinner } from "@components/loading-spinner/loading-spinner";
 import { FeedbackContainer } from "@components/feedback-container/feedback-container";
 import Icon from "@svgs/icons/sq-icon";
 
-import { Entrant } from "@custom-types/game-types";
+import { Entrant, Competition } from "@custom-types/game-types";
 import { submitPredictionsQuery } from "@lib/db-functions";
-
-import { Sport } from "@custom-types/misc";
 
 import styles from "@components/submit-predictions/submit-predictions.module.scss";
 import btnConstyles from "@components/button/button-containers.module.scss";
 
 interface Props {
+  competition: Competition;
   displayName: string;
-  driverArr: Entrant[];
+  allEntrantArrs: { [entrantType: string]: Entrant[] };
   predictionFreezeTime: Date;
   season: string;
-  sport: Sport;
-  teamArr: Entrant[];
   userId: string;
 }
 
 export const SubmitPredictions = ({
+  competition,
   displayName,
-  driverArr,
+  allEntrantArrs,
   predictionFreezeTime,
   season,
-  sport,
-  teamArr,
   userId,
 }: Props) => {
   const submissionSuccessful = useRef(false);
   const [submitting, isSubmitting] = useState(false);
-  const [savedDriverArr, setSavedDriverArr] = useState(driverArr);
-  const [savedTeamArr, setSavedTeamArr] = useState(teamArr);
+  const [savedEntrantArrs, setSavedEntrantArrs] = useState(allEntrantArrs);
   const [error, isError] = useState<string | null>(null);
 
   const submissionHandler = async () => {
@@ -50,20 +45,21 @@ export const SubmitPredictions = ({
       isSubmitting(false);
       return;
     }
-
+    const predictionObj: { [entrantType: string]: string[] } = {};
+    for (const entrantType of Object.keys(allEntrantArrs)) {
+      predictionObj[entrantType] = allEntrantArrs[entrantType].map(
+        (entrant) => entrant.sName
+      );
+    }
     try {
       await submitPredictionsQuery(
+        competition,
         displayName,
-        {
-          drivers: driverArr.map((entrant) => entrant.sName),
-          teams: teamArr.map((entrant) => entrant.sName),
-        },
+        predictionObj,
         season,
-        sport,
         userId
       );
-      setSavedDriverArr(driverArr);
-      setSavedTeamArr(teamArr);
+      setSavedEntrantArrs(allEntrantArrs);
       submissionSuccessful.current = true;
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -73,7 +69,7 @@ export const SubmitPredictions = ({
     isSubmitting(false);
   };
 
-  if (savedDriverArr !== driverArr || savedTeamArr !== teamArr) {
+  if (savedEntrantArrs !== allEntrantArrs) {
     submissionSuccessful.current = false;
   }
 
@@ -83,7 +79,7 @@ export const SubmitPredictions = ({
    */
   return (
     <div className={styles.submitPredictionsCon}>
-      {savedDriverArr !== driverArr || savedTeamArr !== teamArr ? (
+      {savedEntrantArrs !== allEntrantArrs ? (
         submitting ? (
           <LoadingSpinner />
         ) : (
@@ -101,17 +97,35 @@ export const SubmitPredictions = ({
               <p>
                 <span>Submission Successful!</span>
               </p>
-              {/**@todo Update text to be sports and season agnostic */}
-              <p>
-                Once the first race of the season completes, you&apos;ll be able
-                to track how accurate you are compared to everyone else on the{" "}
-                <Link href="/formula-1/2024">leaderboard page</Link> throughout
-                the season.
-              </p>
-              <p>
-                You can make more changes to your predictions until the opening
-                weekend&apos;s Free Practice 1.
-              </p>
+              {competition === "eurovision" ? (
+                <p>
+                  Once the results are in, you&apos;ll be able to track how
+                  accurate you are compared to everyone else on the{" "}
+                  <Link href={`/${competition}/${season}`}>
+                    leaderboard page
+                  </Link>
+                  .
+                </p>
+              ) : (
+                <p>
+                  Once the first race of the season completes, you&apos;ll be
+                  able to track how accurate you are compared to everyone else
+                  on the{" "}
+                  <Link
+                    href={`/${
+                      competition === "f1" ? "formula-1" : competition
+                    }/${season}`}>
+                    leaderboard page
+                  </Link>{" "}
+                  throughout the season.
+                </p>
+              )}
+              {competition === "f1" && (
+                <p>
+                  You can make more changes to your predictions until the
+                  opening weekend&apos;s Free Practice 1.
+                </p>
+              )}
             </FeedbackContainer>
           </>
         )

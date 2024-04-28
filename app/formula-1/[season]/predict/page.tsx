@@ -10,7 +10,7 @@ import { authOptions } from "@lib/auth";
 import { allF1SeasonData } from "@data/formula-1/season-data";
 
 import { Panel } from "@components/panels/panel";
-import { EditPredictions } from "@components/submit-predictions/edit-predictions";
+import { EditF1Predictions } from "@components/submit-predictions/edit-f1-predictions";
 import { Countdown } from "@components/countdown/countdown";
 
 import commonStyles from "@styles/common.module.scss";
@@ -82,13 +82,13 @@ const Page: NextPage<PageProps> = async ({ params }) => {
   return (
     <>
       {predictionFreezeTime.getTime() > new Date().getTime() ? (
-        <EditPredictions
+        <EditF1Predictions
+          competition={"f1"}
           displayName={displayName}
           initialDrivers={JSON.parse(JSON.stringify(driverArr))}
           initialTeams={JSON.parse(JSON.stringify(teamArr))}
           predictionFreezeTime={predictionFreezeTime}
           season={season}
-          sport={"f1"}
           userId={userId}>
           <Panel>
             <p>
@@ -114,7 +114,7 @@ const Page: NextPage<PageProps> = async ({ params }) => {
           <div
             id="submit-predictions-con"
             className={commonStyles.anchor}></div>
-        </EditPredictions>
+        </EditF1Predictions>
       ) : (
         <Panel>
           <p className={commonStyles.text_center}>

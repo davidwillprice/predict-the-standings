@@ -7,53 +7,53 @@ import { EditablePredictionTable } from "@components/submit-predictions/editable
 import { SubmitPredictions } from "@components/submit-predictions/submit-predictions";
 import Icon from "@svgs/icons/sq-icon";
 
-import { Entrant, Competition } from "@custom-types/game-types";
+import { Competition, Entrant } from "@custom-types/game-types";
 
 import styles from "@components/submit-predictions/submit-predictions.module.scss";
 import btnStyles from "@components/button/button.module.scss";
 import btnConStyles from "@components/button/button-containers.module.scss";
 
 interface Props {
-  children: string | ReactNode;
   competition: Competition;
   displayName: string;
-  initialEntrants: Entrant[];
   predictionFreezeTime: Date;
+  children: string | ReactNode;
+  initialDrivers: Entrant[];
+  initialTeams: Entrant[];
   season: string;
   userId: string;
 }
 
-export const EditPredictions = ({
+export const EditF1Predictions = ({
+  competition,
   displayName,
   predictionFreezeTime,
-  initialEntrants,
+  initialDrivers,
+  initialTeams,
   children,
   season,
-  competition,
   userId,
 }: Props) => {
-  const [entrantArr, setEntrantArr] = useState(initialEntrants);
+  const [driverArr, setDriverArr] = useState(initialDrivers);
+  const [teamArr, setTeamArr] = useState(initialTeams);
 
-  const handleEntrantState = (entrantArr: Entrant[]) => {
-    setEntrantArr(entrantArr);
+  const handleDriverState = (entrantArr: Entrant[]) => {
+    setDriverArr(entrantArr);
+  };
+  const handleTeamState = (entrantArr: Entrant[]) => {
+    setTeamArr(entrantArr);
   };
   return (
     <div className={styles.edit_predictions_con}>
       <div className={styles.infoCon}>
         <PanelHeading align="center">
-          <h1>
-            Predict the{" "}
-            {competition === "eurovision"
-              ? `Eurovision ${season} Results`
-              : `${competition} ${season} Standings`}
-          </h1>
+          <h1>Predict the F1 {season} Standings</h1>
         </PanelHeading>
-
         {children}
         <SubmitPredictions
-          allEntrantArrs={{ countries: entrantArr }}
-          displayName={displayName}
+          allEntrantArrs={{ drivers: driverArr, teams: teamArr }}
           competition={competition}
+          displayName={displayName}
           season={season}
           userId={userId}
           predictionFreezeTime={predictionFreezeTime}
@@ -62,9 +62,16 @@ export const EditPredictions = ({
       <div className={styles.prediction_tables}>
         <div className={styles.prediction_table_con}>
           <EditablePredictionTable
-            entrantArr={entrantArr}
-            entrantType={"Country"}
-            handleEntrantState={handleEntrantState}
+            entrantArr={driverArr}
+            entrantType={"Driver"}
+            handleEntrantState={handleDriverState}
+          />
+        </div>
+        <div className={styles.prediction_table_con}>
+          <EditablePredictionTable
+            entrantArr={teamArr}
+            entrantType={"Team"}
+            handleEntrantState={handleTeamState}
           />
         </div>
       </div>
