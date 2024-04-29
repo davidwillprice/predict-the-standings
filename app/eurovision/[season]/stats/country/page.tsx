@@ -26,8 +26,10 @@ export async function generateStaticParams() {
 
 const Page: NextPage<PageProps> = async ({ params }) => {
   const { season } = params;
+  const competition = "eurovision";
+
   if (allEurovisionSeasonData[season] === undefined) notFound();
-  const { rounds, predictionFreezeTime, isSeasonOver } =
+  const { rounds, predictionFreezeTime, isSeasonOver, predictionsOpen } =
     allEurovisionSeasonData[season];
   const { allEntrants } = allEurovisionSeasonData[season];
 
@@ -50,31 +52,34 @@ const Page: NextPage<PageProps> = async ({ params }) => {
   rounds.forEach((round, index) => {
     rounds[index] = { ...round, ...statsData.rounds[index] };
   });
-
+  const heading = (
+    <PanelHeading>
+      <h1>Eurovision ${season} Grand Final - Country Stats</h1>
+    </PanelHeading>
+  );
   return (
     <>
       {rounds.length < 1 ? (
         <>
-          <PanelHeading>
-            <h1>Eurovision {season} Grand Final - Country Stats</h1>
-          </PanelHeading>
+          {heading}
           <Panel>
             <p>
               Once Eurovision {season} is over, various stats will show on this
               page for each of the countries.
             </p>
             <PromptPredictions
+              competition={competition}
               isSignedIn={Boolean(currentUserDisplayName)}
               predictionFreezeTime={predictionFreezeTime}
+              predictionsOpen={predictionsOpen}
+              season={season}
             />
           </Panel>
         </>
       ) : (
         <>
           <Suspense fallback={<LoadingSpinner />}>
-            <PanelHeading>
-              <h1>Eurovision {season} - Country Stats</h1>
-            </PanelHeading>
+            {heading}
             <Panel>
               <h2>Prediction Stats</h2>
               <div className={styles.entrantPredictions}>

@@ -26,7 +26,7 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
   const competition = "eurovision";
 
   if (allEurovisionSeasonData[season] === undefined) notFound();
-  const { allEntrants, rounds, predictionFreezeTime } =
+  const { allEntrants, rounds, predictionFreezeTime, predictionsOpen } =
     allEurovisionSeasonData[season];
 
   const session = await getServerSession(authOptions);
@@ -49,8 +49,11 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
               results.
             </p>
             <PromptPredictions
+              competition={competition}
               isSignedIn={Boolean(currentUserDisplayName)}
               predictionFreezeTime={predictionFreezeTime}
+              predictionsOpen={predictionsOpen}
+              season={season}
             />
           </Panel>
           {/**@todo Re-enable preseason container once properly built - Or could have the below text show as a modal and then underneath a placeholder of what the leaderboard will look like?

@@ -11,6 +11,8 @@ import Icon from "@svgs/icons/sq-icon";
 import HeaderLink from "@components/header/header-link";
 import { AccessibilityOptions } from "@components/accessibility/accessibility";
 import { Dropdown } from "@components/dropdown/dropdown";
+import { EurovisionNav } from "@components/header/competition-nav/eurovision-nav";
+import { Formula1Nav } from "./competition-nav/formula-1-nav";
 
 import styles from "@components/header/header.module.scss";
 import commonStyles from "@styles/common.module.scss";
@@ -37,84 +39,29 @@ export const MainNav = ({ children }: Props) => {
   }, [pathname, searchParams]);
 
   const latestF1Season = "2024";
-  const latestEurovisionSeason = "2024";
-  const predictionF1FreezeTime =
+  const f1PredictionFreezeTime =
     allF1SeasonData[latestF1Season].predictionFreezeTime;
-  const predictionEurovisionFreezeTime =
-    allEurovisionSeasonData[latestEurovisionSeason].predictionFreezeTime;
   const f1PredictionsOpen = allF1SeasonData[latestF1Season].predictionsOpen;
+
+  const latestEurovisionSeason = "2024";
+  const eurovisionPredictionFreezeTime =
+    allEurovisionSeasonData[latestEurovisionSeason].predictionFreezeTime;
   const eurovisionPredictionsOpen =
     allEurovisionSeasonData[latestEurovisionSeason].predictionsOpen;
 
-  /**@todo These competition specific sections should be refactored into different files*/
-
   const predictionLinks = pathname.startsWith("/formula-1") ? (
-    <>
-      {/**@todo Add year selector*/}
-      {predictionF1FreezeTime.getTime() > new Date().getTime() &&
-        f1PredictionsOpen && (
-          <HeaderLink href="/formula-1/2024/predict" icon="listBullet">
-            Submit Predictions
-          </HeaderLink>
-        )}
-      <HeaderLink
-        customLinkActiveOptions={{
-          href: `/formula-1/${latestF1Season}`,
-          includeQuery: false,
-          query: ["leaderboard", "constructors"],
-        }}
-        href={`/formula-1/${latestF1Season}`}
-        icon="driver">
-        Drivers Leaderboard
-      </HeaderLink>
-      <HeaderLink
-        customLinkActiveOptions={{
-          href: `/formula-1/${latestF1Season}`,
-          includeQuery: true,
-          query: ["leaderboard", "constructors"],
-        }}
-        href={`/formula-1/${latestF1Season}/?leaderboard=constructors`}
-        icon="f1">
-        Constructors Leaderboard
-      </HeaderLink>
-      <HeaderLink
-        href={`/formula-1/${latestF1Season}/stats/driver-and-team`}
-        icon="stats">
-        Driver & Team Stats
-      </HeaderLink>
-      <HeaderLink
-        href={`/formula-1/${latestF1Season}/stats/player`}
-        icon="group">
-        Player Stats
-      </HeaderLink>
-    </>
+    <Formula1Nav
+      latestSeason={latestF1Season}
+      predictionFreezeTime={f1PredictionFreezeTime}
+      predictionsOpen={f1PredictionsOpen}
+    />
   ) : pathname.startsWith("/eurovision") ? (
-    <>
-      {/**@todo Add year selector*/}
-      {predictionEurovisionFreezeTime.getTime() > new Date().getTime() &&
-        eurovisionPredictionsOpen && (
-          <HeaderLink
-            href={`/eurovision/${latestEurovisionSeason}/predict`}
-            icon="listBullet">
-            Submit Predictions
-          </HeaderLink>
-        )}
-      <HeaderLink
-        href={`/eurovision/${latestEurovisionSeason}`}
-        icon="microphone">
-        Leaderboard
-      </HeaderLink>
-      <HeaderLink
-        href={`/eurovision/${latestEurovisionSeason}/stats/country`}
-        icon="stats">
-        Country Stats
-      </HeaderLink>
-      <HeaderLink
-        href={`/eurovision/${latestEurovisionSeason}/stats/player`}
-        icon="group">
-        Player Stats
-      </HeaderLink>
-    </>
+    <EurovisionNav
+      competition={"eurovision"}
+      latestSeason={latestEurovisionSeason}
+      predictionFreezeTime={eurovisionPredictionFreezeTime}
+      predictionsOpen={eurovisionPredictionsOpen}
+    />
   ) : (
     <>
       <HeaderLink href="/eurovision" icon="microphone">

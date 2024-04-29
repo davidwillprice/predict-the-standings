@@ -23,14 +23,16 @@ export async function generateStaticParams() {
 
 const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
   const { season } = params;
+  const competition = "f1";
   if (allF1SeasonData[season] === undefined) notFound();
-  const { allEntrants, rounds, predictionFreezeTime } = allF1SeasonData[season];
+  const { allEntrants, rounds, predictionFreezeTime, predictionsOpen } =
+    allF1SeasonData[season];
 
   const session = await getServerSession(authOptions);
   const currentUserId = session?.user.id;
   const currentUserDisplayName = session?.user.displayName;
 
-  const lastUpdated = await getlastUpdatedDate(season, "f1");
+  const lastUpdated = await getlastUpdatedDate(season, competition);
 
   const heading = (
     <h1>
@@ -56,8 +58,11 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
               performance as the season progresses.
             </p>
             <PromptPredictions
+              competition={competition}
               isSignedIn={Boolean(currentUserDisplayName)}
               predictionFreezeTime={predictionFreezeTime}
+              predictionsOpen={predictionsOpen}
+              season={season}
             />
           </Panel>
           {/**@todo Re-enable preseason container once properly built - Or could have the below text show as a modal and then underneath a placeholder of what the leaderboard will look like?

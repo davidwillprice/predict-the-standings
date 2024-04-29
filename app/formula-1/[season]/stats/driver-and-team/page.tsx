@@ -27,8 +27,9 @@ export async function generateStaticParams() {
 
 const Page: NextPage<PageProps> = async ({ params }) => {
   const { season } = params;
+  const competition = "f1";
   if (allF1SeasonData[season] === undefined) notFound();
-  const { rounds, predictionFreezeTime, isSeasonOver } =
+  const { rounds, predictionFreezeTime, isSeasonOver, predictionsOpen } =
     allF1SeasonData[season];
   const { allEntrants } = allF1SeasonData[season];
 
@@ -51,31 +52,34 @@ const Page: NextPage<PageProps> = async ({ params }) => {
   rounds.forEach((round, index) => {
     rounds[index] = { ...round, ...statsData.rounds[index] };
   });
-
+  const heading = (
+    <PanelHeading>
+      <h1>Formula 1 {season} - Driver & Team Stats</h1>
+    </PanelHeading>
+  );
   return (
     <>
       {rounds.length < 1 ? (
         <>
-          <PanelHeading>
-            <h1>Formula 1 {season} - Driver & Team Stats</h1>
-          </PanelHeading>
+          {heading}
           <Panel>
             <p>
               Once the first race of the season completes, various stats will
               show on this page for each of the drivers and teams.
             </p>
             <PromptPredictions
+              competition={competition}
               isSignedIn={Boolean(currentUserDisplayName)}
               predictionFreezeTime={predictionFreezeTime}
+              predictionsOpen={predictionsOpen}
+              season={season}
             />
           </Panel>
         </>
       ) : (
         <>
           <Suspense fallback={<LoadingSpinner />}>
-            <PanelHeading>
-              <h1>Formula 1 {season} - Driver & Team Stats</h1>
-            </PanelHeading>
+            {heading}
             <Panel>
               <h2>Prediction Stats</h2>
               <div className={styles.entrantPredictions}>

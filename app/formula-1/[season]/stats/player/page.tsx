@@ -29,8 +29,10 @@ export async function generateStaticParams() {
 
 const Page: NextPage<PageProps> = async ({ params }) => {
   const { season } = params;
+  const competition = "f1";
   if (allF1SeasonData[season] === undefined) notFound();
-  const { allEntrants, rounds, predictionFreezeTime } = allF1SeasonData[season];
+  const { allEntrants, rounds, predictionFreezeTime, predictionsOpen } =
+    allF1SeasonData[season];
 
   const session = await getServerSession(authOptions);
   const currUserId = session?.user.id;
@@ -39,7 +41,7 @@ const Page: NextPage<PageProps> = async ({ params }) => {
   if (currUserId) {
     const res = await getSingleUserPredictionDataQuery(
       season,
-      "f1",
+      competition,
       currUserId
     );
     currUser = {
@@ -72,7 +74,7 @@ const Page: NextPage<PageProps> = async ({ params }) => {
   const users = await getMultipleUserGameData(
     allEntrants,
     season,
-    "f1",
+    competition,
     noteworthyUserIds
   );
 
@@ -93,8 +95,11 @@ const Page: NextPage<PageProps> = async ({ params }) => {
               will show on this page.
             </p>
             <PromptPredictions
+              competition={competition}
               isSignedIn={Boolean(currUserId)}
               predictionFreezeTime={predictionFreezeTime}
+              predictionsOpen={predictionsOpen}
+              season={season}
             />
           </Panel>
         </>
