@@ -3,7 +3,6 @@ import clientPromise from "@lib/mongodb";
 import { Collection } from "mongodb";
 
 import { ObjectId } from "mongodb";
-import { Sport } from "@custom-types/misc";
 import {
   User,
   Users,
@@ -14,15 +13,17 @@ import {
 
 export const getlastUpdatedDate = async (
   season: string,
-  sport: Sport
+  competition: Competition
 ): Promise<Date> => {
   const client = await clientPromise;
   try {
     const db = client.db("pts");
-    const collection = db.collection(sport + season);
+    const collection = db.collection(competition + season);
     const result = await collection.findOne({ type: "lastUpdatedDate" });
     if (!result)
-      throw new Error(`Failed to get last updated time for ${sport + season}`);
+      throw new Error(
+        `Failed to get last updated time for ${competition + season}`
+      );
 
     let lastUpdatedDate: Date = result.lastUpdatedDate;
 
@@ -57,20 +58,22 @@ export const getSingleUserPredictionDataQuery = async (
 export const getMultipleUserGameData = async (
   allEntrants: AllEntrants,
   season: string,
-  sport: Sport,
+  competition: Competition,
   userIdArr: string[]
 ): Promise<Users> => {
   const client = await clientPromise;
   try {
     const db = client.db("pts");
-    const collection = db.collection(sport + season);
+    const collection = db.collection(competition + season);
     const result = await collection
       .find({
         _id: { $in: userIdArr.map((id) => new ObjectId(id)) },
       })
       .toArray();
     if (!result)
-      throw new Error(`Failed to get user game data for ${sport + season}`);
+      throw new Error(
+        `Failed to get user game data for ${competition + season}`
+      );
     /**@todo Refactor the process of coverting the docs to users into a new function*/
     let users: Users = {};
     for await (const doc of result) {
@@ -139,14 +142,19 @@ export const getAllUserPredictionDataQuery = async (
   }
 };
 
-export const getLeaderboardDataQuery = async (season: string, sport: Sport) => {
+export const getLeaderboardDataQuery = async (
+  season: string,
+  competition: Competition
+) => {
   const client = await clientPromise;
   try {
     const db = client.db("pts");
-    const collection = db.collection(sport + season);
+    const collection = db.collection(competition + season);
     const result = await collection.find({ type: "userData" }).toArray();
     if (!result)
-      throw new Error(`Failed to get leaderboard data for ${sport + season}`);
+      throw new Error(
+        `Failed to get leaderboard data for ${competition + season}`
+      );
 
     const users: { [key: string]: User } = {};
 
@@ -177,15 +185,15 @@ export const getLeaderboardDataQuery = async (season: string, sport: Sport) => {
  */
 export const getStatsDataQuery = async (
   season: string,
-  sport: Sport
+  competition: Competition
 ): Promise<StatsData> => {
   const client = await clientPromise;
   try {
     const db = client.db("pts");
-    const collection = db.collection(sport + season);
+    const collection = db.collection(competition + season);
     const result = await collection.findOne({ type: "statsData" });
     if (!result)
-      throw new Error(`Failed to get stats data for ${sport + season}`);
+      throw new Error(`Failed to get stats data for ${competition + season}`);
 
     const statsData: StatsData = {
       controversialUserIds: result.controversialUserIds,
@@ -202,7 +210,7 @@ export const getStatsDataQuery = async (
   }
 };
 
-/**@todo Update display name in all the user's prediction data for every season/sport they've competed in?*/
+/**@todo Update display name in all the user's prediction data for every season/competition they've competed in?*/
 export const submitDisplayNameQuery = async (
   submittedDisplayName: string,
   userId: string

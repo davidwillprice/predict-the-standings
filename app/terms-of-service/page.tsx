@@ -44,8 +44,8 @@ export default function Page() {
           </p>
           <p>
             Along with the data necessary for these OAuth systems, users can
-            submit a display name and predictions for various sports across
-            multiple seasons.
+            submit a display name and predictions for various competitions
+            across multiple seasons.
           </p>
           <p>
             Users are encouraged to select a display name that isn&apos;t
@@ -61,6 +61,10 @@ export default function Page() {
             Formula 1 companies. F1, FORMULA ONE, FORMULA 1, FIA FORMULA ONE
             WORLD CHAMPIONSHIP, GRAND PRIX and related marks are trade marks of
             Formula One Licensing B.V.
+          </p>
+          <p>
+            This website is unofficial and is not associated in any way with
+            Eurovision. Eurovision is a registered trademark of the EBU.
           </p>
         </section>
         <hr />

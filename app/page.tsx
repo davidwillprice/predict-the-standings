@@ -16,21 +16,27 @@ export default function Home() {
       <Panel>
         <p>
           Compete against people around the world to Predict The Standings for
-          various sports.
+          various sports and competitions.
         </p>
         <ul>
           <li>
-            The leaderboard will be updated after each round so you can see how
-            your predictions are performing throughout the season.
+            For sports, the leaderboard will be updated after each round so you
+            can see how your predictions are performing throughout the season.
           </li>
           <li>
             View stats and trivia on how controversial your each of predictions
             are, and how accurately players have predicted each
-            driver/team&apos;s standing.
+            driver/team/country&apos;s standing.
           </li>
         </ul>
         <hr />
-        <div className={styles.double}>
+        <div className={styles.triple}>
+          <Link href="/eurovision/">
+            <Button>
+              <Icon strokeWidth={2} type="microphone" />
+              Eurovision
+            </Button>
+          </Link>
           <Link href="/formula-1/">
             <Button>
               <Icon strokeWidth={2} type="f1" />
