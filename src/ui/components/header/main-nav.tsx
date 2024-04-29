@@ -42,17 +42,21 @@ export const MainNav = ({ children }: Props) => {
     allF1SeasonData[latestF1Season].predictionFreezeTime;
   const predictionEurovisionFreezeTime =
     allEurovisionSeasonData[latestEurovisionSeason].predictionFreezeTime;
+  const f1PredictionsOpen = allF1SeasonData[latestF1Season].predictionsOpen;
+  const eurovisionPredictionsOpen =
+    allEurovisionSeasonData[latestEurovisionSeason].predictionsOpen;
 
   /**@todo These competition specific sections should be refactored into different files*/
 
   const predictionLinks = pathname.startsWith("/formula-1") ? (
     <>
       {/**@todo Add year selector*/}
-      {predictionF1FreezeTime.getTime() > new Date().getTime() && (
-        <HeaderLink href="/formula-1/2024/predict" icon="listBullet">
-          Submit Predictions
-        </HeaderLink>
-      )}
+      {predictionF1FreezeTime.getTime() > new Date().getTime() &&
+        f1PredictionsOpen && (
+          <HeaderLink href="/formula-1/2024/predict" icon="listBullet">
+            Submit Predictions
+          </HeaderLink>
+        )}
       <HeaderLink
         customLinkActiveOptions={{
           href: `/formula-1/${latestF1Season}`,
@@ -87,13 +91,14 @@ export const MainNav = ({ children }: Props) => {
   ) : pathname.startsWith("/eurovision") ? (
     <>
       {/**@todo Add year selector*/}
-      {predictionEurovisionFreezeTime.getTime() > new Date().getTime() && (
-        <HeaderLink
-          href={`/eurovision/${latestEurovisionSeason}/predict`}
-          icon="listBullet">
-          Submit Predictions
-        </HeaderLink>
-      )}
+      {predictionEurovisionFreezeTime.getTime() > new Date().getTime() &&
+        eurovisionPredictionsOpen && (
+          <HeaderLink
+            href={`/eurovision/${latestEurovisionSeason}/predict`}
+            icon="listBullet">
+            Submit Predictions
+          </HeaderLink>
+        )}
       <HeaderLink
         href={`/eurovision/${latestEurovisionSeason}`}
         icon="microphone">

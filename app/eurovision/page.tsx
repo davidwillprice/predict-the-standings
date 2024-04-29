@@ -3,9 +3,8 @@ import { Metadata, NextPage } from "next";
 
 import { Panel } from "@components/panels/panel";
 import { PanelHeading } from "@components/panels/panel-heading";
-import { Button } from "@components/button/button";
+import { PredictionPromptCompetitionHp } from "@components/prediction-prompt-comp-hp/prediction-prompt-comp-hp";
 import Icon from "@svgs/icons/sq-icon";
-import { Countdown } from "@components/countdown/countdown";
 
 import { allEurovisionSeasonData } from "@data/eurovision/season-data";
 
@@ -19,17 +18,18 @@ export const metadata: Metadata = {
 const Page: NextPage = async () => {
   const latestSeason = "2024";
   const competition = "eurovision";
-  const { predictionFreezeTime } = allEurovisionSeasonData[latestSeason];
+  const { predictionFreezeTime, predictionsOpen } =
+    allEurovisionSeasonData[latestSeason];
   return (
     <>
       <PanelHeading>
-        <h1>Predict The Eurovision Standings</h1>
+        <h1>Predict The Eurovision Grand Final Standings</h1>
       </PanelHeading>
       <Panel>
         {/**@todo Add text for after the season has started */}
         <p>
           Compete against people around the world to predict the Eurovision
-          results.
+          Grand Final results.
         </p>
         <ul>
           <li>
@@ -41,25 +41,16 @@ const Page: NextPage = async () => {
             standing.
           </li>
         </ul>
-        {predictionFreezeTime.getTime() > new Date().getTime() ? (
-          <>
-            <p>
-              You have until the voting starts being announced to submit (and
-              edit) your predictions.
-            </p>
-            <div className={styles.single}>
-              <Link
-                href={`/${competition}/${latestSeason}/predict`}
-                className={btnStyles.button}>
-                <Icon strokeWidth={2} type="listBullet" />
-                Predict The Standings
-              </Link>
-            </div>
-            <Countdown deadline={predictionFreezeTime} />
-          </>
-        ) : (
-          ""
-        )}
+        <PredictionPromptCompetitionHp
+          competition={competition}
+          latestSeason={latestSeason}
+          predictionFreezeTime={predictionFreezeTime}
+          predictionsOpen={predictionsOpen}>
+          <p>
+            You have until the voting results start being announced to submit
+            (and edit) your predictions.
+          </p>
+        </PredictionPromptCompetitionHp>
         <hr />
         <div className={styles.quadruple}>
           <Link

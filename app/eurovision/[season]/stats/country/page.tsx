@@ -11,7 +11,6 @@ import { Panel } from "@components/panels/panel";
 import { PanelHeading } from "@components/panels/panel-heading";
 import { EntrantPredictions } from "@components/stats/entrant-predictions/entrant-predictions";
 import { PromptPredictions } from "@components/submit-predictions/prompt-predictions";
-import { HeadToHeads } from "@components/stats/entrant-predictions/head-to-heads";
 import { EntrantAccuracy } from "@components/stats/entrant-predictions/entrant-accuracy";
 import { LoadingSpinner } from "@components/loading-spinner/loading-spinner";
 
@@ -57,7 +56,7 @@ const Page: NextPage<PageProps> = async ({ params }) => {
       {rounds.length < 1 ? (
         <>
           <PanelHeading>
-            <h1>Eurovision {season} - Country Stats</h1>
+            <h1>Eurovision {season} Grand Final - Country Stats</h1>
           </PanelHeading>
           <Panel>
             <p>

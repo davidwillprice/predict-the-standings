@@ -87,7 +87,7 @@ const Page: NextPage<PageProps> = async ({ params }) => {
   return (
     <Suspense fallback={<LoadingSpinner />}>
       <PanelHeading>
-        <h1>Eurovision {season} - Player Stats</h1>
+        <h1>Eurovision {season} Grand Final - Player Stats</h1>
       </PanelHeading>
       {rounds.length < 1 ? (
         <>

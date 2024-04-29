@@ -6,6 +6,7 @@ export interface AllLocalSeasonData {
     competition: Competition;
     isSeasonOver: boolean;
     predictionFreezeTime: Date;
+    predictionsOpen: boolean;
     rounds: Round[];
   };
 }

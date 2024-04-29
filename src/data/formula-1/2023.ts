@@ -5,6 +5,7 @@ import {
   Round,
 } from "@custom-types/game-types";
 
+const predictionsOpen = true;
 const predictionFreezeTime = new Date("2025-02-29T11:30:00");
 
 const drivers: Entrants = {
@@ -628,5 +629,6 @@ export const seasonData2023 = {
   competition: competition,
   isSeasonOver: true,
   predictionFreezeTime: predictionFreezeTime,
+  predictionsOpen: predictionsOpen,
   rounds: rounds,
 };

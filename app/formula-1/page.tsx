@@ -3,9 +3,8 @@ import { Metadata } from "next";
 
 import { Panel } from "@components/panels/panel";
 import { PanelHeading } from "@components/panels/panel-heading";
-import { Button } from "@components/button/button";
+import { PredictionPromptCompetitionHp } from "@components/prediction-prompt-comp-hp/prediction-prompt-comp-hp";
 import Icon from "@svgs/icons/sq-icon";
-import { Countdown } from "@components/countdown/countdown";
 
 import { allF1SeasonData } from "@data/formula-1/season-data";
 
@@ -17,7 +16,9 @@ export const metadata: Metadata = {
 };
 
 const Page = () => {
-  const { predictionFreezeTime } = allF1SeasonData["2024"];
+  const latestSeason = "2024";
+  const competition = "f1";
+  const { predictionFreezeTime, predictionsOpen } = allF1SeasonData["2024"];
   return (
     <>
       <PanelHeading>
@@ -27,7 +28,7 @@ const Page = () => {
         {/**@todo Add text for after the season has started */}
         <p>
           Compete against people around the world to predict the driver and
-          constructor standings for the 2024 F1 Season.
+          constructor standings for the {latestSeason} F1 Season.
         </p>
         <ul>
           <li>
@@ -40,44 +41,39 @@ const Page = () => {
             and constructor&apos;s standing.
           </li>
         </ul>
-        {predictionFreezeTime.getTime() > new Date().getTime() ? (
-          <>
-            <p>
-              You have until the start of opening weekend&apos;s Free Practice 1
-              to submit (and edit) your predictions.
-            </p>
-            <div className={styles.single}>
-              <Link href="/formula-1/2024/predict" className={btnStyles.button}>
-                <Icon strokeWidth={2} type="listBullet" />
-                Predict The Standings
-              </Link>
-            </div>
-            <Countdown deadline={predictionFreezeTime} />
-          </>
-        ) : (
-          ""
-        )}
+        <PredictionPromptCompetitionHp
+          competition={competition}
+          latestSeason={latestSeason}
+          predictionFreezeTime={predictionFreezeTime}
+          predictionsOpen={predictionsOpen}>
+          <p>
+            You have until the start of opening weekend&apos;s Free Practice 1
+            to submit (and edit) your predictions.
+          </p>
+        </PredictionPromptCompetitionHp>
         <hr />
         <div className={styles.quadruple}>
-          <Link href="/formula-1/2024" className={btnStyles.button}>
+          <Link
+            href={`/formula-1/${latestSeason}`}
+            className={btnStyles.button}>
             <Icon strokeWidth={2} type="driver" />
             Drivers Leaderboard
           </Link>
           {/**@todo Fix this button looking weird on mobile */}
           <Link
-            href="/formula-1/2024/?leaderboard=constructors"
+            href={`/formula-1/${latestSeason}/?leaderboard=constructors`}
             className={btnStyles.button}>
             <Icon strokeWidth={2} type="f1" />
             Constructors Leaderboard
           </Link>
           <Link
-            href="/formula-1/2024/stats/driver-and-team"
+            href={`/formula-1/${latestSeason}/stats/driver-and-team`}
             className={btnStyles.button}>
             <Icon strokeWidth={2} type="stats" />
             Driver & Team Stats
           </Link>
           <Link
-            href="/formula-1/2024/stats/player"
+            href={`/formula-1/${latestSeason}/stats/player`}
             className={btnStyles.button}>
             <Icon strokeWidth={2} type="group" />
             Player Stats

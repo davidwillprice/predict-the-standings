@@ -10,6 +10,7 @@ import { authOptions } from "@lib/auth";
 import { allEurovisionSeasonData } from "@data/eurovision/season-data";
 
 import { Panel } from "@components/panels/panel";
+import { PanelHeading } from "@components/panels/panel-heading";
 import { EditPredictions } from "@components/submit-predictions/edit-predictions";
 import { Countdown } from "@components/countdown/countdown";
 
@@ -33,7 +34,7 @@ const Page: NextPage<PageProps> = async ({ params }) => {
     return redirect("/get-started");
   }
 
-  const { predictionFreezeTime, isSeasonOver } =
+  const { predictionFreezeTime, predictionsOpen, isSeasonOver } =
     allEurovisionSeasonData[season];
   const { countries } = allEurovisionSeasonData[season].allEntrants;
   const userId = session.user.id;
@@ -67,7 +68,19 @@ const Page: NextPage<PageProps> = async ({ params }) => {
 
   return (
     <>
-      {predictionFreezeTime.getTime() > new Date().getTime() ? (
+      {!predictionsOpen ? (
+        <>
+          <PanelHeading>
+            <h1>Predict The Eurovision {season} Grand Final - Standings</h1>
+          </PanelHeading>
+          <Panel>
+            <p>
+              Please return once the countries competiting in the Eurovision{" "}
+              {season} Grand Final have been confirmed.
+            </p>
+          </Panel>
+        </>
+      ) : predictionFreezeTime.getTime() > new Date().getTime() ? (
         <EditPredictions
           displayName={displayName}
           initialEntrants={JSON.parse(JSON.stringify(countryArr))}
