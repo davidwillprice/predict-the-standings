@@ -25,6 +25,9 @@ export class Entrant {
   name: string;
   sName: string;
   color: string;
+  /**For use on the stats page chart */
+  secondaryColor: string;
+  /**For use in the head to head as text colour on the primary colour chart */
   contrastColor: string;
   avgPrePos?: number;
   predictionedPositions: number[];
@@ -33,11 +36,13 @@ export class Entrant {
     name: string,
     sName: string,
     color: string,
+    secondaryColor: string,
     contrastColor: string
   ) {
     this.name = name;
     this.sName = sName;
     this.color = color;
+    this.secondaryColor = secondaryColor;
     this.contrastColor = contrastColor;
     this.predictionedPositions = [];
   }

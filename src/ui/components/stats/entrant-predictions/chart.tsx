@@ -62,7 +62,7 @@ export const Chart = ({ entrant }: Props) => {
         label: entrant.name,
         data: entrant.predictionedPositions,
         borderColor: entrant.color,
-        backgroundColor: entrant.color + "50",
+        backgroundColor: entrant.secondaryColor,
       },
     ],
   };
