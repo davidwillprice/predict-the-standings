@@ -1,16 +1,17 @@
 export type Competition = "f1" | "eurovision" | "premierLeague";
 
 export interface AllLocalSeasonData {
-  [season: string]: {
-    allEntrants: AllEntrants;
-    competition: Competition;
-    isSeasonOver: boolean;
-    predictionFreezeTime: Date;
-    predictionsOpen: boolean;
-    rounds: Round[];
-  };
+  [season: string]: LocalSeasonData;
 }
 
+export interface LocalSeasonData {
+  allEntrants: AllEntrants;
+  competition: Competition;
+  isSeasonOver: boolean;
+  predictionFreezeTime: Date;
+  predictionsOpen: boolean;
+  rounds: Round[];
+}
 export interface AllEntrants {
   [entrantType: string]: Entrants;
 }

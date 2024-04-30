@@ -15,7 +15,7 @@ import predictionTableStyles from "@components/prediction-table/prediction-table
 import styles from "@components/submit-predictions/editable-prediction-table.module.scss";
 
 type Props = {
-  competition: Competition;
+  competition?: Competition;
   entrantArr: Entrant[];
   entrantType: string;
   handleEntrantState: (entrantArr: Entrant[]) => void;

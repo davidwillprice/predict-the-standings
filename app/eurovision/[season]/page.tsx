@@ -26,7 +26,7 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
   const competition = "eurovision";
 
   if (allEurovisionSeasonData[season] === undefined) notFound();
-  const { allEntrants, rounds, predictionFreezeTime, predictionsOpen } =
+  const { rounds, predictionFreezeTime, predictionsOpen } =
     allEurovisionSeasonData[season];
 
   const session = await getServerSession(authOptions);
@@ -61,11 +61,14 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
         </>
       ) : (
         <GameContainer
+          competition={competition}
           currentUserDisplayName={currentUserDisplayName}
           currentUserId={currentUserId}
           currentSearchParams={searchParams}
-          entrants={JSON.parse(JSON.stringify(allEntrants))}
           lastUpdated={lastUpdated}
+          localSeasonData={JSON.parse(
+            JSON.stringify(allEurovisionSeasonData[season])
+          )}
           rounds={JSON.parse(JSON.stringify(rounds))}
           season={season}>
           <div>

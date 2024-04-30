@@ -1,9 +1,12 @@
-import type { Entrants } from "@custom-types/game-types";
+import type { Competition, Entrants } from "@custom-types/game-types";
+
+import { FlagCell } from "@components/prediction-table/eurovision-flag-cell";
 
 import styles from "@components/prediction-table/prediction-table.module.scss";
 
 interface Props {
   className: string;
+  competition?: Competition;
   entrants: Entrants;
   standingsArr: string[];
 }
@@ -11,6 +14,7 @@ interface Props {
 export const StandingsTable = ({
   entrants,
   className,
+  competition,
   standingsArr,
 }: Props) => {
   const entrantArr = standingsArr.map((entrant) => entrants[entrant]);
@@ -34,11 +38,15 @@ export const StandingsTable = ({
           {entrantArr.map((entrant, index) => (
             <tr key={entrant.sName} className={styles.table_row}>
               <td className={styles.position_cell}>{index + 1}</td>
-              <td>
-                <span
-                  className={`${styles.flair}`}
-                  style={{ backgroundColor: entrant.color }}></span>
-              </td>
+              {competition === "eurovision" ? (
+                <FlagCell country={entrant} />
+              ) : (
+                <td className={styles.flair_cell}>
+                  <span
+                    className={`${styles.flair}`}
+                    style={{ backgroundColor: entrant.color }}></span>
+                </td>
+              )}
               <td className={styles.name_cell}>
                 <span className={styles.name}>{entrant.name}</span>
                 <span className={styles.sName}>{entrant.sName}</span>

@@ -9,7 +9,7 @@ import { allF1SeasonData } from "@data/formula-1/season-data";
 
 import { Panel } from "@components/panels/panel";
 import { PanelHeading } from "@components/panels/panel-heading";
-import { GameContainer } from "@components/game/game-container";
+import { DuoEntrantTypeGameContainer } from "@components/game/game-container-duo-entrantType";
 import { PreSeasonContainer } from "@components/game/pre-season-container";
 import { PromptPredictions } from "@components/submit-predictions/prompt-predictions";
 
@@ -69,7 +69,7 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
            * <PreSeasonContainer />*/}
         </>
       ) : (
-        <GameContainer
+        <DuoEntrantTypeGameContainer
           currentUserDisplayName={currentUserDisplayName}
           currentUserId={currentUserId}
           currentSearchParams={searchParams}
@@ -84,7 +84,7 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
               actual standings.
             </p>
           </div>
-        </GameContainer>
+        </DuoEntrantTypeGameContainer>
       )}
     </>
   );

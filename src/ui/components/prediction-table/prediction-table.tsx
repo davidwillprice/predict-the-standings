@@ -1,10 +1,13 @@
-import type { User, Entrants } from "@custom-types/game-types";
+import type { Competition, Entrants, User } from "@custom-types/game-types";
 import { calcPredictionsAccuracy } from "@lib/prediction-data";
+
 import Icon from "@ui/svgs/icons/sq-icon";
+import { FlagCell } from "@components/prediction-table/eurovision-flag-cell";
 
 import styles from "@components/prediction-table/prediction-table.module.scss";
 
 interface Props {
+  competition?: Competition;
   currentUserId: string | null;
   currentUserDisplayName: string | null;
   entrantType: string;
@@ -14,6 +17,7 @@ interface Props {
 }
 
 export const PredictionTable = ({
+  competition,
   currentUserId,
   currentUserDisplayName,
   entrants,
@@ -55,11 +59,15 @@ export const PredictionTable = ({
           {entrantTableData.map((rowData, index) => (
             <tr key={rowData.entrant.sName} className={styles.table_row}>
               <td className={styles.position_cell}>{index + 1}</td>
-              <td>
-                <span
-                  className={`${styles.flair}`}
-                  style={{ backgroundColor: rowData.entrant.color }}></span>
-              </td>
+              {competition === "eurovision" ? (
+                <FlagCell country={rowData.entrant} />
+              ) : (
+                <td>
+                  <span
+                    className={`${styles.flair}`}
+                    style={{ backgroundColor: rowData.entrant.color }}></span>
+                </td>
+              )}
               <td className={styles.name_cell}>
                 <span className={styles.name}>{rowData.entrant.name}</span>
                 <span className={styles.sName}>{rowData.entrant.sName}</span>

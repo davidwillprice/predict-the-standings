@@ -5,9 +5,6 @@ import {
   Round,
 } from "@custom-types/game-types";
 
-const predictionsOpen = false;
-const predictionFreezeTime = new Date("2024-05-11T22:00:00");
-
 const countries: Entrants = {
   alb: new Entrant("Albania", "alb", "#f00", "black"),
   arm: new Entrant("Armenia", "arm", "#d90012", "#0033a0"),
@@ -49,31 +46,47 @@ const countries: Entrants = {
 };
 
 let rounds: Round[] = [
-  //   new Round("Bahrain GP", {
-  //     driver: [
-  //       "ver",
-  //       "per",
-  //       "sai",
-  //       "lec",
-  //       "rus",
-  //       "nor",
-  //       "ham",
-  //       "pia",
-  //       "alo",
-  //       "str",
-  //       "zho",
-  //       "mag",
-  //       "ric",
-  //       "tsu",
-  //       "alb",
-  //       "hul",
-  //       "oco",
-  //       "gas",
-  //       "bot",
-  //       "sar",
-  //     ],
-  //     team: ["red", "fer", "mer", "mcl", "ast", "sau", "has", "rb", "wil", "alp"],
-  //   }),
+  // new Round("Grand Final", {
+  //   countries: [
+  //     "ice",
+  //     "alb",
+  //     "arm",
+  //     "asl",
+  //     "aus",
+  //     "aze",
+  //     "bel",
+  //     "cro",
+  //     "cyp",
+  //     "cze",
+  //     "den",
+  //     "est",
+  //     "fin",
+  //     "fra",
+  //     "geo",
+  //     "ger",
+  //     "gre",
+  //     "ire",
+  //     "isr",
+  //     "ita",
+  //     "lat",
+  //     "lit",
+  //     "lux",
+  //     "mal",
+  //     "mol",
+  //     "net",
+  //     "nor",
+  //     "pol",
+  //     "por",
+  //     "san",
+  //     "ser",
+  //     "slo",
+  //     "spa",
+  //     "swe",
+  //     "swi",
+  //     "ukr",
+  //     "unk",
+  //   ],
+  // }),
 ];
 
 const competition: Competition = "eurovision";
@@ -82,7 +95,7 @@ export const seasonData2024 = {
   allEntrants: { countries: countries },
   competition: competition,
   isSeasonOver: false,
-  predictionFreezeTime: predictionFreezeTime,
-  predictionsOpen: predictionsOpen,
+  predictionFreezeTime: new Date("2024-05-11T22:00:00"),
+  predictionsOpen: false,
   rounds: rounds,
 };
