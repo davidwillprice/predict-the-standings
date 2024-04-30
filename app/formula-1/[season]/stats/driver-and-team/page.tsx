@@ -84,7 +84,7 @@ const Page: NextPage<PageProps> = async ({ params }) => {
               <h2>Prediction Stats</h2>
               <div className={styles.entrantPredictions}>
                 <EntrantPredictions
-                  entrants={JSON.parse(JSON.stringify(allEntrants))}
+                  allEntrants={JSON.parse(JSON.stringify(allEntrants))}
                 />
                 <EntrantAccuracy
                   entrants={JSON.parse(JSON.stringify(allEntrants))}

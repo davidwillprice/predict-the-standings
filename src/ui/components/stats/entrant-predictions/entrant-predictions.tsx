@@ -6,25 +6,23 @@ import { sortEntrantsAlphabetically } from "@lib/misc";
 
 import { Chart } from "./chart";
 
-import { Entrants } from "@custom-types/game-types";
+import { AllEntrants } from "@custom-types/game-types";
 
 import styles from "@components/stats/stats.module.scss";
 import inputStyles from "@styles/select-input.module.scss";
 
 interface Props {
-  entrants: {
-    [key: string]: Entrants;
-  };
+  allEntrants: AllEntrants;
 }
 
-export const EntrantPredictions = ({ entrants }: Props) => {
-  const entrantTypeArr = Object.keys(entrants);
+export const EntrantPredictions = ({ allEntrants }: Props) => {
+  const entrantTypeArr = Object.keys(allEntrants);
   const initialEntrantType = entrantTypeArr[0];
 
   const [selectedEntrantType, setSelectedEntrantType] =
     useState(initialEntrantType);
   const selectedEntrants = sortEntrantsAlphabetically(
-    Object.values(entrants[selectedEntrantType])
+    Object.values(allEntrants[selectedEntrantType])
   );
   const [selectedEntrant, setSelectedEntrant] = useState(selectedEntrants[0]);
 
@@ -36,7 +34,7 @@ export const EntrantPredictions = ({ entrants }: Props) => {
       setSelectedEntrantType(event.currentTarget.value);
     setSelectedEntrant(
       sortEntrantsAlphabetically(
-        Object.values(entrants[event.currentTarget.value])
+        Object.values(allEntrants[event.currentTarget.value])
       )[0]
     );
   };
@@ -53,24 +51,28 @@ export const EntrantPredictions = ({ entrants }: Props) => {
   return (
     <div>
       <div className={styles.inputs}>
-        <label htmlFor="entrant-type">
-          <small>Championship Type</small>
-        </label>
-        <select
-          className={inputStyles.select_input}
-          name="entrant-type"
-          id="entrant-type"
-          onChange={changeEntrantTypeHandler}>
-          {entrantTypeArr.map((entrantType) => (
-            <option key={entrantType} value={entrantType}>
-              {entrantType.charAt(0).toUpperCase() + entrantType.slice(1)}
-            </option>
-          ))}
-        </select>
+        {entrantTypeArr.length !== 1 && (
+          <>
+            <label htmlFor="entrant-type">
+              <small>Entrant Type</small>
+            </label>
+            <select
+              className={inputStyles.select_input}
+              name="entrant-type"
+              id="entrant-type"
+              onChange={changeEntrantTypeHandler}>
+              {entrantTypeArr.map((entrantType) => (
+                <option key={entrantType} value={entrantType}>
+                  {entrantType.charAt(0).toUpperCase() + entrantType.slice(1)}
+                </option>
+              ))}
+            </select>
+          </>
+        )}
         <label htmlFor="entrant">
           <small>
             {selectedEntrantType.charAt(0).toUpperCase() +
-              selectedEntrantType.slice(1, selectedEntrantType.length - 1)}
+              selectedEntrantType.slice(1, selectedEntrantType.length)}
           </small>
         </label>
         <select

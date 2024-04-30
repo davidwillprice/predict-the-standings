@@ -30,6 +30,8 @@ export const Controversy = ({
     }
   }
 
+  const isMultiEntrantTypes = Object.keys(controversialUserIds).length > 1;
+
   //**Create an array of controversy stats, one for each entrant type and their most/least contro players */
   let mostOrLeastControPlayers = [];
   for (const entrantType of Object.keys(controversialUserIds)) {
@@ -65,7 +67,7 @@ export const Controversy = ({
                   : currUser.controversyPercentile[entrantType] < 80
                   ? "controversial"
                   : "very controversial"}{" "}
-                {entrantType} predictions (
+                {isMultiEntrantTypes ? entrantType : ""} predictions (
                 {currUser.predictionsFromAvg[entrantType]} position differences
                 from the average predictions).
               </li>
@@ -77,6 +79,7 @@ export const Controversy = ({
       <ul>
         {mostOrLeastControPlayers.map((userData) => {
           const { users, difFromAvg, controType, entrantType } = userData;
+          console.log(userData);
           return (
             <li key={controType + entrantType}>
               {`${formatArrayIntoList(
@@ -85,7 +88,9 @@ export const Controversy = ({
                   return user.displayName;
                 })
               )} had the ${controType} 
-            'controversial' ${entrantType} predictions (${difFromAvg} position differences from the average predictions).`}
+            'controversial' ${
+              isMultiEntrantTypes ? entrantType : ""
+            } predictions (${difFromAvg} position differences from the average predictions).`}
             </li>
           );
         })}

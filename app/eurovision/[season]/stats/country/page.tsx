@@ -54,7 +54,7 @@ const Page: NextPage<PageProps> = async ({ params }) => {
   });
   const heading = (
     <PanelHeading>
-      <h1>Eurovision ${season} Grand Final - Country Stats</h1>
+      <h1>Eurovision {season} Grand Final - Country Stats</h1>
     </PanelHeading>
   );
   return (
@@ -84,7 +84,7 @@ const Page: NextPage<PageProps> = async ({ params }) => {
               <h2>Prediction Stats</h2>
               <div className={styles.entrantPredictions}>
                 <EntrantPredictions
-                  entrants={JSON.parse(JSON.stringify(allEntrants))}
+                  allEntrants={JSON.parse(JSON.stringify(allEntrants))}
                 />
                 <EntrantAccuracy
                   entrants={JSON.parse(JSON.stringify(allEntrants))}

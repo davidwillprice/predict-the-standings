@@ -89,6 +89,7 @@ export const getMultipleUserGameData = async (
         predictionsObj,
         doc.userType
       );
+      users[doc._id.toString()].predictionsFromAvg = doc.predictionsFromAvg;
     }
     if (Object.keys(users).length === 0)
       throw new Error(
