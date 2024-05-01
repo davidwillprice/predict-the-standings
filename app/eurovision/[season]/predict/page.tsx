@@ -34,17 +34,23 @@ const Page: NextPage<PageProps> = async ({ params }) => {
     return redirect("/get-started");
   }
 
-  const { predictionFreezeTime, predictionsOpen, isSeasonOver } =
-    allEurovisionSeasonData[season];
+  const {
+    predictionFreezeTime,
+    predictionsOpen,
+    isSeasonOver,
+    startingEntrantOrders,
+  } = allEurovisionSeasonData[season];
   const { countries } = allEurovisionSeasonData[season].allEntrants;
   const userId = session.user.id;
 
-  /**Create alphabetically ordered array of entrants to use as defaults if the user hasn't made predictions before */
-  let defaultCountryArr = [];
-  for (const country of Object.values(countries)) {
-    defaultCountryArr.push(country);
+  let defaultCountryArr;
+  if (startingEntrantOrders) {
+    defaultCountryArr = startingEntrantOrders.countries.map(
+      (countrySName) => countries[countrySName]
+    );
+  } else {
+    throw new Error("Can't find performance order of countries");
   }
-  defaultCountryArr = sortEntrantsAlphabetically(defaultCountryArr);
 
   let countryArr: Entrant[];
   try {
@@ -54,7 +60,7 @@ const Page: NextPage<PageProps> = async ({ params }) => {
       userId
     );
 
-    /**Check if user has made predictions previously, and if not use an alphabetically ordered array of entrants */
+    /**Check if user has made predictions previously, and if not use the performance order of the countries */
     if (userPredictionData.predictions.countries) {
       countryArr = userPredictionData.predictions.countries.map(
         (entrantStr: string) => countries[entrantStr]
@@ -82,11 +88,11 @@ const Page: NextPage<PageProps> = async ({ params }) => {
         </>
       ) : predictionFreezeTime.getTime() > new Date().getTime() ? (
         <EditPredictions
+          competition={"eurovision"}
           displayName={displayName}
           initialEntrants={JSON.parse(JSON.stringify(countryArr))}
           predictionFreezeTime={predictionFreezeTime}
           season={season}
-          competition={"eurovision"}
           userId={userId}>
           <Panel>
             <p>

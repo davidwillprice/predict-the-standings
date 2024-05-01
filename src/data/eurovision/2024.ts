@@ -3,6 +3,7 @@ import {
   Entrant,
   Entrants,
   Round,
+  StartingEntrantOrders,
 } from "@custom-types/game-types";
 
 const countries: Entrants = {
@@ -43,6 +44,49 @@ const countries: Entrants = {
   swi: new Entrant("Switzerland", "swi", "#da291c", "white", "black"),
   ukr: new Entrant("Ukraine", "ukr", "#0057b7", "#ffd700", "white"),
   unk: new Entrant("United Kingdom", "unk", "#012169", "#c8102e", "white"),
+};
+
+/**Order the countries are performing in */
+const startingEntrantOrders: StartingEntrantOrders = {
+  countries: [
+    "unk",
+    "ice",
+    "alb",
+    "arm",
+    "asl",
+    "aus",
+    "aze",
+    "bel",
+    "cro",
+    "cyp",
+    "cze",
+    "den",
+    "est",
+    "fin",
+    "fra",
+    "geo",
+    "ger",
+    "gre",
+    "ire",
+    "isr",
+    "ita",
+    "lat",
+    "lit",
+    "lux",
+    "mal",
+    "mol",
+    "net",
+    "nor",
+    "pol",
+    "por",
+    "san",
+    "ser",
+    "slo",
+    "spa",
+    "swe",
+    "swi",
+    "ukr",
+  ],
 };
 
 let rounds: Round[] = [
@@ -93,6 +137,7 @@ const competition: Competition = "eurovision";
 
 export const seasonData2024 = {
   allEntrants: { countries: countries },
+  startingEntrantOrders: startingEntrantOrders,
   competition: competition,
   isSeasonOver: false,
   predictionFreezeTime: new Date("2024-05-11T22:00:00"),

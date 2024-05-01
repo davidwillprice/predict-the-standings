@@ -11,6 +11,12 @@ export interface LocalSeasonData {
   predictionFreezeTime: Date;
   predictionsOpen: boolean;
   rounds: Round[];
+  startingEntrantOrders?: StartingEntrantOrders;
+}
+
+/**Order that the entrants should first be ordered in when a user makes predictions */
+export interface StartingEntrantOrders {
+  [entrantType: string]: EntrantId[];
 }
 export interface AllEntrants {
   [entrantType: string]: Entrants;
