@@ -16,10 +16,9 @@ export const metadata: Metadata = {
 };
 
 const Page: NextPage = async () => {
-  const latestSeason = "2024";
   const competition = "eurovision";
-  const { predictionFreezeTime, predictionsOpen } =
-    allEurovisionSeasonData[latestSeason];
+  const seasonData = allEurovisionSeasonData[0];
+  const { id: seasonStr, predictionFreezeTime, predictionsOpen } = seasonData;
   return (
     <>
       <PanelHeading>
@@ -43,7 +42,7 @@ const Page: NextPage = async () => {
         </ul>
         <PredictionPromptCompetitionHp
           competition={competition}
-          latestSeason={latestSeason}
+          latestSeason={seasonStr}
           predictionFreezeTime={predictionFreezeTime}
           predictionsOpen={predictionsOpen}>
           <p>
@@ -54,19 +53,19 @@ const Page: NextPage = async () => {
         <hr />
         <div className={styles.quadruple}>
           <Link
-            href={`/${competition}/${latestSeason}`}
+            href={`/${competition}/${seasonStr}`}
             className={btnStyles.button}>
             <Icon strokeWidth={2} type="microphone" />
             Leaderboard
           </Link>
           <Link
-            href={`/${competition}/${latestSeason}/stats/country`}
+            href={`/${competition}/${seasonStr}/stats/country`}
             className={btnStyles.button}>
             <Icon strokeWidth={2} type="stats" />
             Country Stats
           </Link>
           <Link
-            href={`/${competition}/${latestSeason}/stats/player`}
+            href={`/${competition}/${seasonStr}/stats/player`}
             className={btnStyles.button}>
             <Icon strokeWidth={2} type="group" />
             Player Stats

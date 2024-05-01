@@ -31,9 +31,12 @@ const Page: NextPage<PageProps> = async ({ params }) => {
   const { season } = params;
   const competition = "eurovision";
 
-  if (allEurovisionSeasonData[season] === undefined) notFound();
+  const seasonData = allEurovisionSeasonData.find(
+    (seasonData) => seasonData.id === season
+  );
+  if (seasonData === undefined) notFound();
   const { allEntrants, rounds, predictionFreezeTime, predictionsOpen } =
-    allEurovisionSeasonData[season];
+    seasonData;
 
   const session = await getServerSession(authOptions);
   const currUserId = session?.user.id;

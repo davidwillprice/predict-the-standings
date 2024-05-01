@@ -38,29 +38,16 @@ export const MainNav = ({ children }: Props) => {
     toggleMobMenu(false);
   }, [pathname, searchParams]);
 
-  const latestF1Season = "2024";
-  const f1PredictionFreezeTime =
-    allF1SeasonData[latestF1Season].predictionFreezeTime;
-  const f1PredictionsOpen = allF1SeasonData[latestF1Season].predictionsOpen;
+  const latestF1Season = allF1SeasonData[0];
 
-  const latestEurovisionSeason = "2024";
-  const eurovisionPredictionFreezeTime =
-    allEurovisionSeasonData[latestEurovisionSeason].predictionFreezeTime;
-  const eurovisionPredictionsOpen =
-    allEurovisionSeasonData[latestEurovisionSeason].predictionsOpen;
+  const latestEurovisionSeason = allEurovisionSeasonData[0];
 
   const predictionLinks = pathname.startsWith("/formula-1") ? (
-    <Formula1Nav
-      latestSeason={latestF1Season}
-      predictionFreezeTime={f1PredictionFreezeTime}
-      predictionsOpen={f1PredictionsOpen}
-    />
+    <Formula1Nav seasonData={latestF1Season} />
   ) : pathname.startsWith("/eurovision") ? (
     <EurovisionNav
       competition={"eurovision"}
-      latestSeason={latestEurovisionSeason}
-      predictionFreezeTime={eurovisionPredictionFreezeTime}
-      predictionsOpen={eurovisionPredictionsOpen}
+      seasonData={latestEurovisionSeason}
     />
   ) : (
     <>

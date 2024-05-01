@@ -25,7 +25,10 @@ export const metadata: Metadata = {
 
 const Page: NextPage<PageProps> = async ({ params }) => {
   const { season } = params;
-  if (allEurovisionSeasonData[season] === undefined) notFound();
+  const seasonData = allEurovisionSeasonData.find(
+    (seasonData) => seasonData.id === season
+  );
+  if (seasonData === undefined) notFound();
   const session = await getServerSession(authOptions);
   const displayName = session?.user.displayName;
   if (session == null) {
@@ -39,8 +42,8 @@ const Page: NextPage<PageProps> = async ({ params }) => {
     predictionsOpen,
     isSeasonOver,
     startingEntrantOrders,
-  } = allEurovisionSeasonData[season];
-  const { countries } = allEurovisionSeasonData[season].allEntrants;
+  } = seasonData;
+  const { countries } = seasonData.allEntrants;
   const userId = session.user.id;
 
   let defaultCountryArr;

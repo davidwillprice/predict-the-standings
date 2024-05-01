@@ -24,7 +24,11 @@ export const metadata: Metadata = {
 
 const Page: NextPage<PageProps> = async ({ params }) => {
   const { season } = params;
-  if (allF1SeasonData[season] === undefined) notFound();
+  const seasonData = allF1SeasonData.find(
+    (seasonData) => seasonData.id === season
+  );
+  if (seasonData === undefined) notFound();
+
   const session = await getServerSession(authOptions);
   const displayName = session?.user.displayName;
   if (session == null) {
@@ -33,8 +37,8 @@ const Page: NextPage<PageProps> = async ({ params }) => {
     return redirect("/get-started");
   }
 
-  const { predictionFreezeTime } = allF1SeasonData[season];
-  const { drivers, teams } = allF1SeasonData[season].allEntrants;
+  const { predictionFreezeTime } = seasonData;
+  const { drivers, teams } = seasonData.allEntrants;
   const userId = session.user.id;
 
   /**Create alphabetically ordered array of entrants to use as defaults if the user hasn't made predictions before */

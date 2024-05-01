@@ -27,11 +27,14 @@ export async function generateStaticParams() {
 const Page: NextPage<PageProps> = async ({ params }) => {
   const { season } = params;
   const competition = "eurovision";
+  const seasonData = allEurovisionSeasonData.find(
+    (seasonData) => seasonData.id === season
+  );
+  if (seasonData === undefined) notFound();
 
-  if (allEurovisionSeasonData[season] === undefined) notFound();
   const { rounds, predictionFreezeTime, isSeasonOver, predictionsOpen } =
-    allEurovisionSeasonData[season];
-  const { allEntrants } = allEurovisionSeasonData[season];
+    seasonData;
+  const { allEntrants } = seasonData;
 
   const session = await getServerSession(authOptions);
   const currentUserDisplayName = session?.user.displayName;

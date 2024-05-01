@@ -16,9 +16,12 @@ export const metadata: Metadata = {
 };
 
 const Page = () => {
-  const latestSeason = "2024";
   const competition = "f1";
-  const { predictionFreezeTime, predictionsOpen } = allF1SeasonData["2024"];
+  const {
+    id: seasonStr,
+    predictionFreezeTime,
+    predictionsOpen,
+  } = allF1SeasonData[0];
   return (
     <>
       <PanelHeading>
@@ -28,7 +31,7 @@ const Page = () => {
         {/**@todo Add text for after the season has started */}
         <p>
           Compete against people around the world to predict the driver and
-          constructor standings for the {latestSeason} F1 Season.
+          constructor standings for the Formula 1.
         </p>
         <ul>
           <li>
@@ -43,7 +46,7 @@ const Page = () => {
         </ul>
         <PredictionPromptCompetitionHp
           competition={competition}
-          latestSeason={latestSeason}
+          latestSeason={seasonStr}
           predictionFreezeTime={predictionFreezeTime}
           predictionsOpen={predictionsOpen}>
           <p>
@@ -53,27 +56,25 @@ const Page = () => {
         </PredictionPromptCompetitionHp>
         <hr />
         <div className={styles.quadruple}>
-          <Link
-            href={`/formula-1/${latestSeason}`}
-            className={btnStyles.button}>
+          <Link href={`/formula-1/${seasonStr}`} className={btnStyles.button}>
             <Icon strokeWidth={2} type="driver" />
             Drivers Leaderboard
           </Link>
           {/**@todo Fix this button looking weird on mobile */}
           <Link
-            href={`/formula-1/${latestSeason}/?leaderboard=constructors`}
+            href={`/formula-1/${seasonStr}/?leaderboard=constructors`}
             className={btnStyles.button}>
             <Icon strokeWidth={2} type="f1" />
             Constructors Leaderboard
           </Link>
           <Link
-            href={`/formula-1/${latestSeason}/stats/driver-and-team`}
+            href={`/formula-1/${seasonStr}/stats/driver-and-team`}
             className={btnStyles.button}>
             <Icon strokeWidth={2} type="stats" />
             Driver & Team Stats
           </Link>
           <Link
-            href={`/formula-1/${latestSeason}/stats/player`}
+            href={`/formula-1/${seasonStr}/stats/player`}
             className={btnStyles.button}>
             <Icon strokeWidth={2} type="group" />
             Player Stats

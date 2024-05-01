@@ -139,6 +139,7 @@ export const seasonData2024 = {
   allEntrants: { countries: countries },
   startingEntrantOrders: startingEntrantOrders,
   competition: competition,
+  id: "2024",
   isSeasonOver: false,
   predictionFreezeTime: new Date("2024-05-11T22:00:00"),
   predictionsOpen: false,

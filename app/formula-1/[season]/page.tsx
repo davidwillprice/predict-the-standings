@@ -24,9 +24,12 @@ export async function generateStaticParams() {
 const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
   const { season } = params;
   const competition = "f1";
-  if (allF1SeasonData[season] === undefined) notFound();
-  const { allEntrants, rounds, predictionFreezeTime, predictionsOpen } =
-    allF1SeasonData[season];
+  const seasonData = allF1SeasonData.find(
+    (seasonData) => seasonData.id === season
+  );
+  if (seasonData === undefined) notFound();
+
+  const { rounds, predictionFreezeTime, predictionsOpen } = seasonData;
 
   const session = await getServerSession(authOptions);
   const currentUserId = session?.user.id;
@@ -73,9 +76,8 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
           currentUserDisplayName={currentUserDisplayName}
           currentUserId={currentUserId}
           currentSearchParams={searchParams}
-          entrants={JSON.parse(JSON.stringify(allEntrants))}
           lastUpdated={lastUpdated}
-          rounds={JSON.parse(JSON.stringify(rounds))}
+          localSeasonData={JSON.parse(JSON.stringify(seasonData))}
           season={season}>
           <div>
             {heading}

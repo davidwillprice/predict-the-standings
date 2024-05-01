@@ -1,5 +1,3 @@
-import { allF1SeasonData } from "@data/formula-1/season-data";
-
 import styles from "@components/game/leaderboard.module.scss";
 import predictStyles from "@components/prediction-table/prediction-table.module.scss";
 
@@ -11,10 +9,10 @@ interface Props {
   currentUserId: string | null;
   currentUserDisplayName: string | null;
   entrantType: string;
+  isSeasonOver: boolean;
   lastUpdated: Date | string;
   rounds: Round[];
   roundIndex: number;
-  season: string;
   users: Users;
 }
 
@@ -23,14 +21,12 @@ export const Leaderboard = ({
   currentUserId,
   currentUserDisplayName,
   entrantType,
+  isSeasonOver,
   lastUpdated,
-  season,
   rounds,
   roundIndex,
   users,
 }: Props) => {
-  const { isSeasonOver } = allF1SeasonData[season];
-
   //**Sort the users object into an array ordered by their leaderboard positions */
   const leaderboardArr = [];
   for (const user of Object.values(users)) {

@@ -16,16 +16,15 @@ import { LeaderboardSkeleton } from "./leaderboard-skeleton";
 import btnStyles from "@components/button/button.module.scss";
 import styles from "@components/game/game-container.module.scss";
 
-import { Round, Users, User, Entrants } from "@custom-types/game-types";
+import { LocalSeasonData, Users, User } from "@custom-types/game-types";
 
 interface Props {
   children: ReactNode;
   currentUserId: string | null;
   currentUserDisplayName: string | null;
   currentSearchParams: { [key: string]: string | string[] | undefined };
-  entrants: { [key: string]: Entrants };
   lastUpdated: Date;
-  rounds: Round[];
+  localSeasonData: LocalSeasonData;
   season: string;
 }
 
@@ -34,14 +33,15 @@ export const DuoEntrantTypeGameContainer = ({
   currentUserId,
   currentUserDisplayName,
   currentSearchParams,
-  entrants,
+  localSeasonData,
   lastUpdated,
-  rounds,
   season,
 }: Props) => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+
+  const { allEntrants, isSeasonOver, rounds } = localSeasonData;
 
   const createQueryString = useCallback(
     (name: string, value: string) => {
@@ -162,10 +162,10 @@ export const DuoEntrantTypeGameContainer = ({
                     currentUserDisplayName={currentUserDisplayName}
                     currentUserId={currentUserId}
                     entrantType={entrantType}
+                    isSeasonOver={isSeasonOver}
                     lastUpdated={lastUpdated}
                     rounds={rounds}
                     roundIndex={roundIndex}
-                    season={season}
                     users={usersData}
                   />
                 ) : (
@@ -174,7 +174,7 @@ export const DuoEntrantTypeGameContainer = ({
               </div>
               <StandingsTable
                 className={styles.standings_table}
-                entrants={entrants[entrantType]}
+                entrants={allEntrants[entrantType]}
                 standingsArr={rounds[roundIndex].standings[entrantType]}
               />
             </>
@@ -199,14 +199,14 @@ export const DuoEntrantTypeGameContainer = ({
                   <PredictionTable
                     currentUserDisplayName={currentUserDisplayName}
                     currentUserId={currentUserId}
-                    entrants={entrants[entrantType]}
+                    entrants={allEntrants[entrantType]}
                     entrantType={entrantType}
                     selectedRound={roundIndex}
                     selectedUser={selectedUser}
                   />
                   <StandingsTable
                     className={styles.standings_table}
-                    entrants={entrants[entrantType]}
+                    entrants={allEntrants[entrantType]}
                     standingsArr={rounds[roundIndex].standings[entrantType]}
                   />
                 </div>

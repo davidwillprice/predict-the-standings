@@ -143,10 +143,10 @@ export const GameContainer = ({
                   currentUserDisplayName={currentUserDisplayName}
                   currentUserId={currentUserId}
                   entrantType={entrantType}
+                  isSeasonOver={isSeasonOver}
                   lastUpdated={lastUpdated}
                   rounds={rounds}
                   roundIndex={roundIndex}
-                  season={season}
                   users={usersData}
                 />
               ) : (

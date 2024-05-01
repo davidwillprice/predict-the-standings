@@ -624,6 +624,7 @@ const competition: Competition = "f1";
 export const seasonData2023 = {
   allEntrants: { drivers: drivers, teams: teams },
   competition: competition,
+  id: "2023",
   isSeasonOver: true,
   predictionFreezeTime: new Date("2025-02-29T11:30:00"),
   predictionsOpen: true,
