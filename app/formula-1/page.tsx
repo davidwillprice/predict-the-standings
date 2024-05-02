@@ -3,7 +3,7 @@ import { Metadata } from "next";
 
 import { Panel } from "@components/panels/panel";
 import { PanelHeading } from "@components/panels/panel-heading";
-import { PredictionPromptCompetitionHp } from "@components/prediction-prompt-comp-hp/prediction-prompt-comp-hp";
+import { LatestSeasonShowcase } from "@components/latest-season-showcase/latest-season-showcase";
 import Icon from "@svgs/icons/sq-icon";
 
 import { allF1SeasonData } from "@data/formula-1/season-data";
@@ -11,17 +11,14 @@ import { allF1SeasonData } from "@data/formula-1/season-data";
 import styles from "@components/button/button-containers.module.scss";
 import btnStyles from "@components/button/button.module.scss";
 
+import { CompetitionLink } from "@custom-types/misc";
+
 export const metadata: Metadata = {
   title: "Predict The Formula 1 Standings",
 };
 
 const Page = () => {
-  const competition = "f1";
-  const {
-    id: seasonStr,
-    predictionFreezeTime,
-    predictionsOpen,
-  } = allF1SeasonData[0];
+  const { id: seasonStr } = allF1SeasonData[0];
   return (
     <>
       <PanelHeading>
@@ -47,48 +44,28 @@ const Page = () => {
       </Panel>
       <Panel>
         <h2>Formula 1 {seasonStr}</h2>
-        <PredictionPromptCompetitionHp
-          competition={competition}
-          latestSeason={seasonStr}
-          predictionFreezeTime={predictionFreezeTime}
-          predictionsOpen={predictionsOpen}>
+        <LatestSeasonShowcase
+          linkArr={[
+            new CompetitionLink("", "driver", "Drivers Leaderboard"),
+            new CompetitionLink(
+              "?leaderboard=constructors",
+              "f1",
+              "Constructors Leaderboard"
+            ),
+            new CompetitionLink(
+              "stats/driver-and-team",
+              "stats",
+              "Driver & Team Stats"
+            ),
+            new CompetitionLink("stats/player", "group", "Player Stats"),
+          ]}
+          localSeasonData={allF1SeasonData[0]}>
           <p>
-            You have until the start of opening weekend&apos;s Free Practice 1
-            to submit (and edit) your predictions.
+            Predictions are now open! You have until the start of opening
+            weekend&apos;s Free Practice 1 to submit (and edit) your
+            predictions.
           </p>
-        </PredictionPromptCompetitionHp>
-
-        <div className={styles.quadruple}>
-          <Link href={`/formula-1/${seasonStr}`} className={btnStyles.button}>
-            <Icon strokeWidth={2} type="driver" />
-            Drivers Leaderboard
-          </Link>
-          {/**@todo Fix this button looking weird on mobile */}
-          <Link
-            href={`/formula-1/${seasonStr}/?leaderboard=constructors`}
-            className={btnStyles.button}>
-            <Icon strokeWidth={2} type="f1" />
-            Constructors Leaderboard
-          </Link>
-          <Link
-            href={`/formula-1/${seasonStr}/stats/driver-and-team`}
-            className={btnStyles.button}>
-            <Icon strokeWidth={2} type="stats" />
-            Driver & Team Stats
-          </Link>
-          <Link
-            href={`/formula-1/${seasonStr}/stats/player`}
-            className={btnStyles.button}>
-            <Icon strokeWidth={2} type="group" />
-            Player Stats
-          </Link>
-        </div>
-        <div className={styles.single}>
-          <Link href="/help" className={btnStyles.button}>
-            <Icon strokeWidth={2} type="help" />
-            Help
-          </Link>
-        </div>
+        </LatestSeasonShowcase>
       </Panel>
       <PanelHeading>
         <p>

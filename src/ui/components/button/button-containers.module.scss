@@ -4,8 +4,8 @@
   max-width: 250px;
   margin: 0 auto;
 }
-.double,
-.triple {
+.doubleCol,
+.tripleCol {
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
@@ -14,35 +14,30 @@
     width: 100%;
   }
 }
-.quadruple {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
+.doubleCol {
+  flex-wrap: wrap;
   gap: 0 20px;
   align-items: center;
-}
-.double {
-  max-width: 500px;
+  justify-content: center;
+  > a {
+    width: calc(50% - 10px);
+  }
 }
 @media (max-width: 800px) {
-  .triple {
+  .tripleCol {
     flex-direction: column;
     gap: 0;
     a {
       width: auto;
     }
   }
-  .quadruple {
-    display: block;
-    max-width: 300px;
-    margin: 0 auto;
-  }
 }
 @media (max-width: $mobile-menu-breakpoint) {
-  .double {
+  .doubleCol {
     flex-direction: column;
     gap: 0;
-    a {
-      width: auto;
+    > a {
+      width: 100%;
     }
   }
 }

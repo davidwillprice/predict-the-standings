@@ -30,7 +30,7 @@ export default function Home() {
           </li>
         </ul>
         <hr />
-        <div className={styles.triple}>
+        <div className={styles.tripleCol}>
           <Link href="/eurovision/">
             <Button>
               <Icon strokeWidth={2} type="microphone" />

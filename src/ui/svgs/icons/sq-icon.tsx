@@ -1,35 +1,37 @@
 export interface Props {
   strokeWidth: number;
-  type:
-    | "accessibility"
-    | "discord"
-    | "driver"
-    | "edit"
-    | "error"
-    | "f1"
-    | "github"
-    | "google"
-    | "group"
-    | "help"
-    | "listBullet"
-    | "loading"
-    | "login"
-    | "logout"
-    | "microphone"
-    | "moon"
-    | "profile"
-    | "premierLeague"
-    | "reddit"
-    | "star"
-    | "stats"
-    | "submit"
-    | "sun"
-    | "success"
-    | "trophy"
-    | "twitter"
-    | "up"
-    | "wrenchScrewdriver";
+  type: IconType;
 }
+
+export type IconType =
+  | "accessibility"
+  | "discord"
+  | "driver"
+  | "edit"
+  | "error"
+  | "f1"
+  | "github"
+  | "google"
+  | "group"
+  | "help"
+  | "listBullet"
+  | "loading"
+  | "login"
+  | "logout"
+  | "microphone"
+  | "moon"
+  | "profile"
+  | "premierLeague"
+  | "reddit"
+  | "star"
+  | "stats"
+  | "submit"
+  | "sun"
+  | "success"
+  | "trophy"
+  | "twitter"
+  | "up"
+  | "wrenchScrewdriver";
 
 const iconPaths = {
   accessibility: (

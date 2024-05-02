@@ -3,13 +3,15 @@ import { Metadata, NextPage } from "next";
 
 import { Panel } from "@components/panels/panel";
 import { PanelHeading } from "@components/panels/panel-heading";
-import { PredictionPromptCompetitionHp } from "@components/prediction-prompt-comp-hp/prediction-prompt-comp-hp";
+import { LatestSeasonShowcase } from "@components/latest-season-showcase/latest-season-showcase";
 import Icon from "@svgs/icons/sq-icon";
 
 import { allEurovisionSeasonData } from "@data/eurovision/season-data";
 
 import styles from "@components/button/button-containers.module.scss";
 import btnStyles from "@components/button/button.module.scss";
+
+import { CompetitionLink } from "@custom-types/misc";
 
 export const metadata: Metadata = {
   title: "Predict The Eurovision Standings",
@@ -18,7 +20,8 @@ export const metadata: Metadata = {
 const Page: NextPage = async () => {
   const competition = "eurovision";
   const seasonData = allEurovisionSeasonData[0];
-  const { id: seasonStr, predictionFreezeTime, predictionsOpen } = seasonData;
+  const { id: seasonStr } = seasonData;
+
   return (
     <>
       <PanelHeading>
@@ -36,48 +39,25 @@ const Page: NextPage = async () => {
           </li>
           <li>
             View stats and trivia on how controversial your each of predictions
-            are, and how accurately players have predicted each country&apos;
+            are, and how accurately players have predicted each country&apos;s
             standing.
           </li>
         </ul>
       </Panel>
       <Panel>
         <h2>Eurovision Grand Finals {seasonStr}</h2>
-        <PredictionPromptCompetitionHp
-          competition={competition}
-          latestSeason={seasonStr}
-          predictionFreezeTime={predictionFreezeTime}
-          predictionsOpen={predictionsOpen}>
+        <LatestSeasonShowcase
+          linkArr={[
+            new CompetitionLink("", "microphone", "Leaderboard"),
+            new CompetitionLink("stats/country", "stats", "Country Stats"),
+            new CompetitionLink("stats/player", "group", "Player Stats"),
+          ]}
+          localSeasonData={allEurovisionSeasonData[0]}>
           <p>
-            You have until the voting results start being announced to submit
-            (and edit) your predictions.
+            Predictions are now open! You have until the voting results start
+            being announced to submit (and edit) your predictions.
           </p>
-        </PredictionPromptCompetitionHp>
-
-        <div className={styles.quadruple}>
-          <Link
-            href={`/${competition}/${seasonStr}`}
-            className={btnStyles.button}>
-            <Icon strokeWidth={2} type="microphone" />
-            Leaderboard
-          </Link>
-          <Link
-            href={`/${competition}/${seasonStr}/stats/country`}
-            className={btnStyles.button}>
-            <Icon strokeWidth={2} type="stats" />
-            Country Stats
-          </Link>
-          <Link
-            href={`/${competition}/${seasonStr}/stats/player`}
-            className={btnStyles.button}>
-            <Icon strokeWidth={2} type="group" />
-            Player Stats
-          </Link>
-          <Link href="/help" className={btnStyles.button}>
-            <Icon strokeWidth={2} type="help" />
-            Help
-          </Link>
-        </div>
+        </LatestSeasonShowcase>
       </Panel>
       <PanelHeading>
         <p>
