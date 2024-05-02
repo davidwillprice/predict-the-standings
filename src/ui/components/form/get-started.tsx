@@ -38,7 +38,7 @@ export const GetStartedForm = ({ initialDisplayName }: Props) => {
 
   const redirect = () => {
     setTimeout(() => {
-      router.push("/formula-1/2024/predict");
+      router.push("/competitions");
     }, 3000);
   };
 
@@ -143,7 +143,7 @@ export const GetStartedForm = ({ initialDisplayName }: Props) => {
               </p>
               <p id="displayNameSuccess">
                 If you aren&apos;t automatically redirected, please{" "}
-                <Link href="/formula-1/2024/predict">
+                <Link href="/competitions">
                   follow this link to submit your predictions
                 </Link>
                 .

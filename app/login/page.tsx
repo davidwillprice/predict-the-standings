@@ -19,10 +19,7 @@ const Page = async ({ searchParams }: Props) => {
     if (!session?.user.displayName) {
       return redirect("/get-started");
     } else {
-      {
-        /**@todo Update redirect to a more general location where they can see multiple sports */
-      }
-      return redirect("/formula-1/");
+      return redirect("/competitions/");
     }
   }
   const gatedPageError = searchParams["error"];
