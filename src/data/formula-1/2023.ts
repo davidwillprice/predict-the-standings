@@ -2,6 +2,7 @@ import {
   Competition,
   Entrant,
   Entrants,
+  LocalSeasonData,
   Round,
 } from "@custom-types/game-types";
 
@@ -619,14 +620,19 @@ let rounds: Round[] = [
   }),
 ];
 
+const allEntrants = { drivers: drivers, teams: teams };
 const competition: Competition = "f1";
+const id = "2023";
+const isSeasonOver = true;
+const predictionFreezeTime = new Date("2025-02-29T11:30:00");
+const predictionsOpen = true;
 
-export const seasonData2023 = {
-  allEntrants: { drivers: drivers, teams: teams },
-  competition: competition,
-  id: "2023",
-  isSeasonOver: true,
-  predictionFreezeTime: new Date("2025-02-29T11:30:00"),
-  predictionsOpen: true,
-  rounds: rounds,
-};
+export const seasonData2023 = new LocalSeasonData(
+  allEntrants,
+  competition,
+  id,
+  isSeasonOver,
+  predictionFreezeTime,
+  predictionsOpen,
+  rounds
+);

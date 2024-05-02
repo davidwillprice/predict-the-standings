@@ -2,6 +2,7 @@ import {
   Competition,
   Entrant,
   Entrants,
+  LocalSeasonData,
   Round,
   StartingEntrantOrders,
 } from "@custom-types/game-types";
@@ -133,15 +134,20 @@ let rounds: Round[] = [
   // }),
 ];
 
+const allEntrants = { countries: countries };
 const competition: Competition = "eurovision";
+const id = "2024";
+const isSeasonOver = false;
+const predictionFreezeTime = new Date("2024-05-11T22:00:00");
+const predictionsOpen = true;
 
-export const seasonData2024 = {
-  allEntrants: { countries: countries },
-  startingEntrantOrders: startingEntrantOrders,
-  competition: competition,
-  id: "2024",
-  isSeasonOver: false,
-  predictionFreezeTime: new Date("2024-05-11T22:00:00"),
-  predictionsOpen: false,
-  rounds: rounds,
-};
+export const seasonData2024 = new LocalSeasonData(
+  allEntrants,
+  competition,
+  id,
+  isSeasonOver,
+  predictionFreezeTime,
+  predictionsOpen,
+  rounds,
+  startingEntrantOrders
+);

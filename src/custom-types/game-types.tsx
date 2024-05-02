@@ -2,15 +2,45 @@ export type Competition = "f1" | "eurovision" | "premierLeague";
 
 export type AllLocalSeasonData = LocalSeasonData[];
 
-export interface LocalSeasonData {
+export class LocalSeasonData {
   allEntrants: AllEntrants;
   competition: Competition;
   id: string;
   isSeasonOver: boolean;
+  arePredictionsFrozen: boolean;
   predictionFreezeTime: Date;
   predictionsOpen: boolean;
   rounds: Round[];
   startingEntrantOrders?: StartingEntrantOrders;
+  status: "preseason" | "predictionsOpen" | "midSeason" | "completed";
+  constructor(
+    allEntrants: AllEntrants,
+    competition: Competition,
+    id: string,
+    isSeasonOver: boolean,
+    predictionFreezeTime: Date,
+    predictionsOpen: boolean,
+    rounds: Round[],
+    startingEntrantOrders?: StartingEntrantOrders
+  ) {
+    this.allEntrants = allEntrants;
+    this.competition = competition;
+    this.id = id;
+    this.isSeasonOver = isSeasonOver;
+    this.arePredictionsFrozen =
+      predictionFreezeTime.getTime() < new Date().getTime();
+    this.predictionFreezeTime = predictionFreezeTime;
+    this.predictionsOpen = predictionsOpen;
+    this.rounds = rounds;
+    this.startingEntrantOrders = startingEntrantOrders;
+    this.status = !predictionsOpen
+      ? "preseason"
+      : predictionFreezeTime.getTime() > new Date().getTime()
+      ? "predictionsOpen"
+      : !isSeasonOver
+      ? "midSeason"
+      : "completed";
+  }
 }
 
 /**Order that the entrants should first be ordered in when a user makes predictions */
