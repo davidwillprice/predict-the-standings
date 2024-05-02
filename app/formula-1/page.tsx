@@ -44,6 +44,9 @@ const Page = () => {
             and constructor&apos;s standing.
           </li>
         </ul>
+      </Panel>
+      <Panel>
+        <h2>Formula 1 {seasonStr}</h2>
         <PredictionPromptCompetitionHp
           competition={competition}
           latestSeason={seasonStr}
@@ -54,7 +57,7 @@ const Page = () => {
             to submit (and edit) your predictions.
           </p>
         </PredictionPromptCompetitionHp>
-        <hr />
+
         <div className={styles.quadruple}>
           <Link href={`/formula-1/${seasonStr}`} className={btnStyles.button}>
             <Icon strokeWidth={2} type="driver" />
@@ -86,7 +89,8 @@ const Page = () => {
             Help
           </Link>
         </div>
-        <hr />
+      </Panel>
+      <PanelHeading>
         <p>
           <small>
             This website is unofficial and is not associated in any way with the
@@ -95,7 +99,7 @@ const Page = () => {
             Formula One Licensing B.V.
           </small>
         </p>
-      </Panel>
+      </PanelHeading>
     </>
   );
 };

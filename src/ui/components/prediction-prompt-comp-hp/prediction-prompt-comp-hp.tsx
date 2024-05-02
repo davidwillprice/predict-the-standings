@@ -33,6 +33,7 @@ export const PredictionPromptCompetitionHp = ({
         predictionFreezeTime.getTime() > new Date().getTime() && (
           <>
             {children}
+            <Countdown deadline={predictionFreezeTime} />
             <div className={styles.single}>
               <Link
                 href={`/${competition}/${latestSeason}/predict`}
@@ -41,7 +42,7 @@ export const PredictionPromptCompetitionHp = ({
                 Predict The Standings
               </Link>
             </div>
-            <Countdown deadline={predictionFreezeTime} />
+            <hr />
           </>
         )
       )}

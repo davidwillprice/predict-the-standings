@@ -22,7 +22,7 @@ const Page: NextPage = async () => {
   return (
     <>
       <PanelHeading>
-        <h1>Predict The Eurovision Grand Final Standings</h1>
+        <h1>Predict The Eurovision Standings</h1>
       </PanelHeading>
       <Panel>
         {/**@todo Add text for after the season has started */}
@@ -40,6 +40,9 @@ const Page: NextPage = async () => {
             standing.
           </li>
         </ul>
+      </Panel>
+      <Panel>
+        <h2>Eurovision Grand Finals {seasonStr}</h2>
         <PredictionPromptCompetitionHp
           competition={competition}
           latestSeason={seasonStr}
@@ -50,7 +53,7 @@ const Page: NextPage = async () => {
             (and edit) your predictions.
           </p>
         </PredictionPromptCompetitionHp>
-        <hr />
+
         <div className={styles.quadruple}>
           <Link
             href={`/${competition}/${seasonStr}`}
@@ -75,14 +78,15 @@ const Page: NextPage = async () => {
             Help
           </Link>
         </div>
-        <hr />
+      </Panel>
+      <PanelHeading>
         <p>
           <small>
             This website is unofficial and is not associated in any way with
             Eurovision. Eurovision is a registered trademark of the EBU.
           </small>
         </p>
-      </Panel>
+      </PanelHeading>
     </>
   );
 };
