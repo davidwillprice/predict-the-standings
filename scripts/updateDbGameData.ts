@@ -26,8 +26,8 @@ async function submitCompetitionGameData(
 ) {
   const db = client.db("pts");
   /**Loop over each season and update its data within the database */
-  for (const [seasonStr, seasonData] of Object.entries(allSeasonData)) {
-    const { allEntrants, competition, rounds } = seasonData;
+  for (const seasonData of Object.values(allSeasonData)) {
+    const { allEntrants, competition, id: seasonStr, rounds } = seasonData;
 
     const collection = db.collection(competition + seasonStr);
 
