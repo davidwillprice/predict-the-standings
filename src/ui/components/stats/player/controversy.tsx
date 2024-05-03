@@ -79,7 +79,7 @@ export const Controversy = ({
       <ul>
         {mostOrLeastControPlayers.map((userData) => {
           const { users, difFromAvg, controType, entrantType } = userData;
-          console.log(userData);
+
           return (
             <li key={controType + entrantType}>
               {`${formatArrayIntoList(
