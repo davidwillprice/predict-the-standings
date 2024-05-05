@@ -30,15 +30,20 @@ async function submitCompetitionGameData(
   for (const seasonData of Object.values(allSeasonData)) {
     const {
       allEntrants,
+      arePredictionsFrozen,
       competition,
       id: seasonStr,
-      predictionFreezeTime,
+      predictionFreezeDate,
       rounds,
     } = seasonData;
 
+    if (!arePredictionsFrozen && rounds.length > 0) {
+      throw new Error("Freeze predictions before adding round data");
+    }
+
     const collection = db.collection(competition + seasonStr);
 
-    await updatePredictionFreezeDateQuery(collection, predictionFreezeTime);
+    await updatePredictionFreezeDateQuery(collection, predictionFreezeDate);
 
     /**Get all existing user game data from the DB */
     const users = await getAllUserPredictionDataQuery(allEntrants, collection);

@@ -11,7 +11,6 @@ import { allEurovisionSeasonData } from "@data/eurovision/season-data";
 import { Panel } from "@components/panels/panel";
 import { PanelHeading } from "@components/panels/panel-heading";
 import { EditPredictions } from "@components/submit-predictions/edit-predictions";
-import { Countdown } from "@components/countdown/countdown";
 
 import commonStyles from "@styles/common.module.scss";
 
@@ -37,7 +36,7 @@ const Page: NextPage<PageProps> = async ({ params }) => {
   }
 
   const {
-    predictionFreezeTime,
+    arePredictionsFrozen,
     predictionsOpen,
     isSeasonOver,
     startingEntrantOrders,
@@ -88,12 +87,12 @@ const Page: NextPage<PageProps> = async ({ params }) => {
             </p>
           </Panel>
         </>
-      ) : predictionFreezeTime.getTime() > new Date().getTime() ? (
+      ) : !arePredictionsFrozen ? (
         <EditPredictions
+          arePredictionsFrozen={arePredictionsFrozen}
           competition={"eurovision"}
           displayName={displayName}
           initialEntrants={JSON.parse(JSON.stringify(countryArr))}
-          predictionFreezeTime={predictionFreezeTime}
           season={season}
           userId={userId}>
           <Panel>

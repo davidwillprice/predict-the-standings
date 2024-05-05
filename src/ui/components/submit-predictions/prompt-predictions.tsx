@@ -8,22 +8,22 @@ import btnStyles from "@components/button/button.module.scss";
 import { Competition } from "@custom-types/game-types";
 
 interface Props {
+  arePredictionsFrozen: boolean;
   competition: Competition;
   isSignedIn: boolean;
-  predictionFreezeTime: Date;
   predictionsOpen: boolean;
   season: string;
 }
 
 export const PromptPredictions = ({
+  arePredictionsFrozen,
   competition,
   isSignedIn,
-  predictionFreezeTime,
   predictionsOpen,
   season,
 }: Props) => {
   return (
-    predictionFreezeTime.getTime() > new Date().getTime() &&
+    !arePredictionsFrozen &&
     predictionsOpen && (
       <>
         <hr />

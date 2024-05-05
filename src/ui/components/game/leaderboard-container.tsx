@@ -24,9 +24,9 @@ export const LeaderboardContainer = async ({
   seasonData,
 }: Props) => {
   const {
+    arePredictionsFrozen,
     competition,
     id: seasonStr,
-    predictionFreezeTime,
     predictionsOpen,
     rounds,
   } = seasonData;
@@ -88,9 +88,9 @@ export const LeaderboardContainer = async ({
           <Panel>
             <p>{preseasonText}</p>
             <PromptPredictions
+              arePredictionsFrozen={arePredictionsFrozen}
               competition={competition}
               isSignedIn={Boolean(currUserDisplayName)}
-              predictionFreezeTime={predictionFreezeTime}
               predictionsOpen={predictionsOpen}
               season={seasonStr}
             />

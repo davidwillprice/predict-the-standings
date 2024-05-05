@@ -8,7 +8,7 @@ export class LocalSeasonData {
   id: string;
   isSeasonOver: boolean;
   arePredictionsFrozen: boolean;
-  predictionFreezeTime: Date;
+  predictionFreezeDate: Date;
   predictionsOpen: boolean;
   rounds: Round[];
   startingEntrantOrders?: StartingEntrantOrders;
@@ -18,7 +18,7 @@ export class LocalSeasonData {
     competition: Competition,
     id: string,
     isSeasonOver: boolean,
-    predictionFreezeTime: Date,
+    predictionFreezeDate: Date,
     predictionsOpen: boolean,
     rounds: Round[],
     startingEntrantOrders?: StartingEntrantOrders
@@ -28,14 +28,14 @@ export class LocalSeasonData {
     this.id = id;
     this.isSeasonOver = isSeasonOver;
     this.arePredictionsFrozen =
-      predictionFreezeTime.getTime() < new Date().getTime();
-    this.predictionFreezeTime = predictionFreezeTime;
+      predictionFreezeDate.getTime() < new Date().getTime();
+    this.predictionFreezeDate = predictionFreezeDate;
     this.predictionsOpen = predictionsOpen;
     this.rounds = rounds;
     this.startingEntrantOrders = startingEntrantOrders;
     this.status = !predictionsOpen
       ? "preseason"
-      : predictionFreezeTime.getTime() > new Date().getTime()
+      : predictionFreezeDate.getTime() > new Date().getTime()
       ? "predictionsOpen"
       : !isSeasonOver
       ? "midSeason"

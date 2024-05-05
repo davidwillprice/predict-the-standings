@@ -37,7 +37,7 @@ const Page: NextPage<PageProps> = async ({ params }) => {
     return redirect("/get-started");
   }
 
-  const { predictionFreezeTime } = seasonData;
+  const { arePredictionsFrozen, predictionFreezeDate } = seasonData;
   const { drivers, teams } = seasonData.allEntrants;
   const userId = session.user.id;
 
@@ -85,13 +85,13 @@ const Page: NextPage<PageProps> = async ({ params }) => {
 
   return (
     <>
-      {predictionFreezeTime.getTime() > new Date().getTime() ? (
+      {!arePredictionsFrozen ? (
         <EditF1Predictions
+          arePredictionsFrozen={arePredictionsFrozen}
           competition={"f1"}
           displayName={displayName}
           initialDrivers={JSON.parse(JSON.stringify(driverArr))}
           initialTeams={JSON.parse(JSON.stringify(teamArr))}
-          predictionFreezeTime={predictionFreezeTime}
           season={season}
           userId={userId}>
           <Panel>
@@ -108,12 +108,12 @@ const Page: NextPage<PageProps> = async ({ params }) => {
             <p>
               Predictions will lock at the start of opening weekend&apos;s Free
               Practice 1. You can edit your predictions up until{" "}
-              {predictionFreezeTime.toDateString() +
+              {predictionFreezeDate.toDateString() +
                 " " +
-                predictionFreezeTime.toTimeString()}
+                predictionFreezeDate.toTimeString()}
               .
             </p>
-            <Countdown deadline={predictionFreezeTime} />
+            <Countdown deadline={predictionFreezeDate} />
           </Panel>
           <div
             id="submit-predictions-con"

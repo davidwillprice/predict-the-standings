@@ -14,10 +14,10 @@ import styles from "@components/submit-predictions/submit-predictions.module.scs
 import btnConstyles from "@components/button/button-containers.module.scss";
 
 interface Props {
+  arePredictionsFrozen: boolean;
   competition: Competition;
   displayName: string;
   allEntrantArrs: { [entrantType: string]: Entrant[] };
-  predictionFreezeTime: Date;
   season: string;
   userId: string;
 }
@@ -26,7 +26,7 @@ export const SubmitPredictions = ({
   competition,
   displayName,
   allEntrantArrs,
-  predictionFreezeTime,
+  arePredictionsFrozen,
   season,
   userId,
 }: Props) => {
@@ -40,7 +40,7 @@ export const SubmitPredictions = ({
     isSubmitting(true);
 
     /**If passed the freeze time, show error */
-    if (predictionFreezeTime.getTime() < new Date().getTime()) {
+    if (arePredictionsFrozen) {
       isError("The season has started and predictions are frozen");
       isSubmitting(false);
       return;

@@ -14,9 +14,9 @@ import btnStyles from "@components/button/button.module.scss";
 import btnConStyles from "@components/button/button-containers.module.scss";
 
 interface Props {
+  arePredictionsFrozen: boolean;
   competition: Competition;
   displayName: string;
-  predictionFreezeTime: Date;
   children: string | ReactNode;
   initialDrivers: Entrant[];
   initialTeams: Entrant[];
@@ -25,9 +25,9 @@ interface Props {
 }
 
 export const EditF1Predictions = ({
+  arePredictionsFrozen,
   competition,
   displayName,
-  predictionFreezeTime,
   initialDrivers,
   initialTeams,
   children,
@@ -52,11 +52,11 @@ export const EditF1Predictions = ({
         {children}
         <SubmitPredictions
           allEntrantArrs={{ drivers: driverArr, teams: teamArr }}
+          arePredictionsFrozen={arePredictionsFrozen}
           competition={competition}
           displayName={displayName}
           season={season}
           userId={userId}
-          predictionFreezeTime={predictionFreezeTime}
         />
       </div>
       <div className={styles.prediction_tables}>

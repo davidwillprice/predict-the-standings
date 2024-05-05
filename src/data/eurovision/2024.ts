@@ -138,7 +138,7 @@ const allEntrants = { countries: countries };
 const competition: Competition = "eurovision";
 const id = "2024";
 const isSeasonOver = false;
-const predictionFreezeTime = new Date("2024-05-11T22:00:00");
+const predictionFreezeDate = new Date("2024-05-11T22:00:00");
 const predictionsOpen = true;
 
 export const seasonData2024 = new LocalSeasonData(
@@ -146,7 +146,7 @@ export const seasonData2024 = new LocalSeasonData(
   competition,
   id,
   isSeasonOver,
-  predictionFreezeTime,
+  predictionFreezeDate,
   predictionsOpen,
   rounds,
   startingEntrantOrders

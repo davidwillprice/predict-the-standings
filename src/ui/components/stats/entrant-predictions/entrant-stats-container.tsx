@@ -25,11 +25,11 @@ export const EntrantStats = async ({
   seasonData,
 }: Props) => {
   const {
+    arePredictionsFrozen,
     allEntrants,
     competition,
     id: seasonStr,
     isSeasonOver,
-    predictionFreezeTime,
     predictionsOpen,
     rounds,
   } = seasonData;
@@ -90,7 +90,7 @@ export const EntrantStats = async ({
           <PromptPredictions
             competition={competition}
             isSignedIn={isSignedIn}
-            predictionFreezeTime={predictionFreezeTime}
+            arePredictionsFrozen={arePredictionsFrozen}
             predictionsOpen={predictionsOpen}
             season={seasonStr}
           />

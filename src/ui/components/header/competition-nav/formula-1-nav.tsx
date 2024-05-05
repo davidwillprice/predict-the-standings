@@ -7,16 +7,15 @@ type Props = {
 };
 
 export const Formula1Nav = ({ seasonData }: Props) => {
-  const { id: seasonStr, predictionFreezeTime, predictionsOpen } = seasonData;
+  const { arePredictionsFrozen, id: seasonStr, predictionsOpen } = seasonData;
   return (
     <>
       {/**@todo Add year selector*/}
-      {predictionFreezeTime.getTime() > new Date().getTime() &&
-        predictionsOpen && (
-          <HeaderLink href="/formula-1/2024/predict" icon="listBullet">
-            Submit Predictions
-          </HeaderLink>
-        )}
+      {!arePredictionsFrozen && predictionsOpen && (
+        <HeaderLink href="/formula-1/2024/predict" icon="listBullet">
+          Submit Predictions
+        </HeaderLink>
+      )}
       <HeaderLink
         customLinkActiveOptions={{
           href: `/formula-1/${seasonStr}`,

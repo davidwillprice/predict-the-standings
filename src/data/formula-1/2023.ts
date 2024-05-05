@@ -624,7 +624,7 @@ const allEntrants = { drivers: drivers, teams: teams };
 const competition: Competition = "f1";
 const id = "2023";
 const isSeasonOver = true;
-const predictionFreezeTime = new Date("2025-02-29T11:30:00");
+const predictionFreezeDate = new Date("2025-02-29T11:30:00");
 const predictionsOpen = true;
 
 export const seasonData2023 = new LocalSeasonData(
@@ -632,7 +632,7 @@ export const seasonData2023 = new LocalSeasonData(
   competition,
   id,
   isSeasonOver,
-  predictionFreezeTime,
+  predictionFreezeDate,
   predictionsOpen,
   rounds
 );

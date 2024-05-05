@@ -26,7 +26,7 @@ export const LatestSeasonShowcase = ({
     arePredictionsFrozen,
     competition,
     id: seasonStr,
-    predictionFreezeTime,
+    predictionFreezeDate,
     predictionsOpen,
     rounds,
   } = localSeasonData;
@@ -43,7 +43,7 @@ export const LatestSeasonShowcase = ({
             {
               /**Hide the countdown for Eurovision as it doesn't have a set time when the voting will start being annouced */
               competition !== "eurovision" && (
-                <Countdown deadline={predictionFreezeTime} />
+                <Countdown deadline={predictionFreezeDate} />
               )
             }
 

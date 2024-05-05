@@ -23,8 +23,7 @@ const Page = () => {
 
         {competitionData.some(
           (competition) =>
-            competition.predictionsOpen &&
-            competition.predictionFreezeTime.getTime() > new Date().getTime()
+            competition.predictionsOpen && !competition.arePredictionsFrozen
         ) ? (
           <p>
             Choose a competition to make predictions for, or view the
@@ -51,11 +50,11 @@ const Page = () => {
         </thead>
         {competitionData.map((competition) => {
           const {
+            arePredictionsFrozen,
             id: seasonStr,
             isSeasonOver,
             competition: name,
             predictionsOpen,
-            predictionFreezeTime,
           } = competition;
           return (
             <tr key={name} className={styles.competition}>
@@ -85,15 +84,14 @@ const Page = () => {
               <td className={styles.status}>
                 {isSeasonOver
                   ? "Season Over"
-                  : predictionFreezeTime.getTime() < new Date().getTime()
+                  : arePredictionsFrozen
                   ? "In Progress"
                   : predictionsOpen
                   ? "Predictions Open"
                   : "Predictions Upcoming"}
               </td>
               <td>
-                {predictionsOpen &&
-                predictionFreezeTime.getTime() > new Date().getTime() ? (
+                {predictionsOpen && !arePredictionsFrozen ? (
                   <Link
                     href={`/${
                       name === "f1" ? "formula-1" : name

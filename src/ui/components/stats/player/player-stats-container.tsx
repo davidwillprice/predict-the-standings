@@ -25,10 +25,10 @@ export const PlayerStats = async ({
   seasonData,
 }: Props) => {
   const {
+    arePredictionsFrozen,
     allEntrants,
     competition,
     id: seasonStr,
-    predictionFreezeTime,
     predictionsOpen,
     rounds,
   } = seasonData;
@@ -100,9 +100,9 @@ export const PlayerStats = async ({
         <Panel>
           <p>{preseasonText}</p>
           <PromptPredictions
+            arePredictionsFrozen={arePredictionsFrozen}
             competition={competition}
             isSignedIn={Boolean(currUserId)}
-            predictionFreezeTime={predictionFreezeTime}
             predictionsOpen={predictionsOpen}
             season={seasonStr}
           />

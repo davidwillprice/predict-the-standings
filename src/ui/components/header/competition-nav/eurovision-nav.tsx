@@ -8,18 +8,17 @@ type Props = {
 };
 
 export const EurovisionNav = ({ competition, seasonData }: Props) => {
-  const { id: seasonStr, predictionFreezeTime, predictionsOpen } = seasonData;
+  const { arePredictionsFrozen, id: seasonStr, predictionsOpen } = seasonData;
   return (
     <>
       {/**@todo Add year selector*/}
-      {predictionFreezeTime.getTime() > new Date().getTime() &&
-        predictionsOpen && (
-          <HeaderLink
-            href={`/${competition}/${seasonStr}/predict`}
-            icon="listBullet">
-            Submit Predictions
-          </HeaderLink>
-        )}
+      {!arePredictionsFrozen && predictionsOpen && (
+        <HeaderLink
+          href={`/${competition}/${seasonStr}/predict`}
+          icon="listBullet">
+          Submit Predictions
+        </HeaderLink>
+      )}
       <HeaderLink href={`/${competition}/${seasonStr}`} icon="microphone">
         Leaderboard
       </HeaderLink>
