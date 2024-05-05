@@ -9,6 +9,7 @@ import {
   getAllUserPredictionDataQuery,
   updateAllUserDocGameData,
   updateLastUpdatedDateQuery,
+  updatePredictionFreezeDateQuery,
 } from "@lib/db-functions";
 import { AllLocalSeasonData } from "@custom-types/game-types";
 
@@ -27,12 +28,22 @@ async function submitCompetitionGameData(
   const db = client.db("pts");
   /**Loop over each season and update its data within the database */
   for (const seasonData of Object.values(allSeasonData)) {
-    const { allEntrants, competition, id: seasonStr, rounds } = seasonData;
+    const {
+      allEntrants,
+      competition,
+      id: seasonStr,
+      predictionFreezeTime,
+      rounds,
+    } = seasonData;
 
     const collection = db.collection(competition + seasonStr);
 
+    await updatePredictionFreezeDateQuery(collection, predictionFreezeTime);
+
+    /**Get all existing user game data from the DB */
     const users = await getAllUserPredictionDataQuery(allEntrants, collection);
 
+    /**Combine local season data with existing user game data*/
     const gameData = await createGameData(
       allEntrants,
       competition,
@@ -41,6 +52,7 @@ async function submitCompetitionGameData(
     );
     if (typeof gameData === "string") throw new Error(gameData);
 
+    /**Update/Add user game data to the DB */
     await updateAllUserDocGameData(collection, users);
 
     const noOfPredictions: { [entrantType: string]: number } = {};
@@ -63,6 +75,7 @@ async function submitCompetitionGameData(
       { upsert: true }
     );
 
+    /**If everything has updated okay up to this point, log when this update happened in the DB */
     await updateLastUpdatedDateQuery(collection);
 
     console.log(

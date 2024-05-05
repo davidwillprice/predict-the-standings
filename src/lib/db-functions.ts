@@ -262,25 +262,41 @@ export const submitPredictionsQuery = async (
   try {
     const db = client.db("pts");
     const collection = db.collection(competition + season);
-    const userPredictionDoc = {
-      displayName: displayName,
-      lastSubmissionTime: new Date(),
-      predictions: entrantArrs,
-      type: "userData",
-      userId: userId,
-      userType: "standard",
-    };
-    const result = await collection.updateOne(
-      { userId: userId },
-      { $set: userPredictionDoc },
-      { upsert: true }
-    );
 
-    if (!result)
+    const predictionFreezeDateDoc = await collection.findOne({
+      type: "predictionFreezeDate",
+    });
+
+    const predictionFreezeDate = predictionFreezeDateDoc?.predictionFreezeDate;
+
+    if (predictionFreezeDate === undefined)
       throw new Error(
         `Failed to update user prediction data for ${competition + season}`
       );
-    return result;
+
+    if (predictionFreezeDate.getTime() < new Date().getTime()) {
+      throw new Error(`Predictions for ${competition + season} are frozen`);
+    } else {
+      const userPredictionDoc = {
+        displayName: displayName,
+        lastSubmissionTime: new Date(),
+        predictions: entrantArrs,
+        type: "userData",
+        userId: userId,
+        userType: "standard",
+      };
+      const result = await collection.updateOne(
+        { userId: userId },
+        { $set: userPredictionDoc },
+        { upsert: true }
+      );
+
+      if (!result)
+        throw new Error(
+          `Failed to update user prediction data for ${competition + season}`
+        );
+      return result;
+    }
   } catch (error) {
     throw error;
   }
@@ -349,6 +365,36 @@ export const updateLastUpdatedDateQuery = async (collection: Collection) => {
     if (!result)
       throw new Error(
         `Failed to update/add last updated document in ${collection.collectionName}`
+      );
+  } catch (error) {
+    throw error;
+  }
+};
+
+/**Add/Update a predictionFreezeDate document in the DB
+ * This can be checked when predictions are submitted to the DB to block any that are late
+ */
+export const updatePredictionFreezeDateQuery = async (
+  collection: Collection,
+  predictionFreezeDate: Date
+) => {
+  try {
+    const result = await collection.updateOne(
+      {
+        type: "predictionFreezeDate",
+      },
+      {
+        $set: {
+          type: "predictionFreezeDate",
+          predictionFreezeDate: predictionFreezeDate,
+        },
+      },
+      { upsert: true }
+    );
+
+    if (!result)
+      throw new Error(
+        `Failed to update/add prediction freeze date document in ${collection.collectionName}`
       );
   } catch (error) {
     throw error;
