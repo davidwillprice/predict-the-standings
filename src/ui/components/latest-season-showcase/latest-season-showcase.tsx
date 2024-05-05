@@ -40,7 +40,13 @@ export const LatestSeasonShowcase = ({
         !arePredictionsFrozen && (
           <>
             {children}
-            <Countdown deadline={predictionFreezeTime} />
+            {
+              /**Hide the countdown for Eurovision as it doesn't have a set time when the voting will start being annouced */
+              competition !== "eurovision" && (
+                <Countdown deadline={predictionFreezeTime} />
+              )
+            }
+
             <div className={styles.single}>
               <Link
                 href={`/${competitionDir}/${seasonStr}/predict`}

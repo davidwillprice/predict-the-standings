@@ -4,7 +4,6 @@ import { redirect } from "next/navigation";
 import { NextPage } from "next";
 import { notFound } from "next/navigation";
 
-import { sortEntrantsAlphabetically } from "@lib/misc";
 import { getSingleUserPredictionDataQuery } from "@lib/db-functions";
 import { authOptions } from "@lib/auth";
 import { allEurovisionSeasonData } from "@data/eurovision/season-data";
@@ -102,17 +101,10 @@ const Page: NextPage<PageProps> = async ({ params }) => {
               Drag the countries into the order which you think they will finish
               in.
             </p>
-          </Panel>
-          <Panel>
             <p>
               Predictions will lock when the voting results start being
-              announced. You can edit your predictions up until{" "}
-              {predictionFreezeTime.toDateString() +
-                " " +
-                predictionFreezeTime.toTimeString()}
-              .
+              announced.
             </p>
-            <Countdown deadline={predictionFreezeTime} />
           </Panel>
           <div
             id="submit-predictions-con"
