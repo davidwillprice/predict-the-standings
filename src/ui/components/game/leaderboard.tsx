@@ -46,7 +46,11 @@ export const Leaderboard = ({
         <thead>
           <tr>
             <th className={styles.position}>Pos</th>
-            <th aria-label="Position change header"></th>
+            {rounds.length === 1 && isSeasonOver ? (
+              ""
+            ) : (
+              <th aria-label="Position change header"></th>
+            )}
             <th>Name</th>
             <th>Accuracy</th>
             <th className={styles.perfect_positions}>
@@ -72,16 +76,20 @@ export const Leaderboard = ({
                     roundData.leaderboardPos
                   )}
                 </td>
-                <td
-                  className={`${styles.position_diff} ${
-                    roundData.prevLeaderboardPosDiff > 0
-                      ? styles.pos_change
-                      : roundData.prevLeaderboardPosDiff < 0
-                      ? styles.neg_change
-                      : styles.no_change
-                  }`}>
-                  <i />
-                </td>
+                {rounds.length === 1 && isSeasonOver ? (
+                  ""
+                ) : (
+                  <td
+                    className={`${styles.position_diff} ${
+                      roundData.prevLeaderboardPosDiff > 0
+                        ? styles.pos_change
+                        : roundData.prevLeaderboardPosDiff < 0
+                        ? styles.neg_change
+                        : styles.no_change
+                    }`}>
+                    <i />
+                  </td>
+                )}
                 <td className={styles.name_cell}>
                   {row.id === currentUserId
                     ? currentUserDisplayName

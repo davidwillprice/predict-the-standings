@@ -29,7 +29,7 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
     <LeaderboardContainer
       currUser={currUser}
       headingText={`Eurovision ${season} - Leaderboard`}
-      preseasonText={`Once Eurovision ${season} is over, the leaderboard will show hereand you&apos;ll be able to compare how well everyone predicted the results.`}
+      preseasonText={`Once Eurovision ${season} is over, the leaderboard will show here and you'll be able to compare how well everyone predicted the results.`}
       searchParams={searchParams}
       seasonData={seasonData}
     />

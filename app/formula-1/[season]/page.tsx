@@ -30,7 +30,7 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
   return (
     <LeaderboardContainer
       currUser={currUser}
-      headingText={`Formula 1 ${season} - ${entrantTypeStr} entrantTypeStr`}
+      headingText={`Formula 1 ${season} - ${entrantTypeStr} Leaderboard`}
       preseasonText={`Once the first race of the season completes, the ${entrantTypeStr} leaderboard will show here and you'll be able to track everyone's performance as the season progresses.`}
       searchParams={searchParams}
       seasonData={seasonData}

@@ -40,7 +40,9 @@ export const LeaderboardContainer = async ({
     lastUpdated = await getlastUpdatedDate(seasonStr, competition);
   }
 
-  const noOfEntrantTypes = Object.keys(rounds[0].standings).length;
+  /**If there is no round data, assign this to null to prevent an error occurring */
+  const noOfEntrantTypes =
+    rounds.length > 0 ? Object.keys(rounds[0].standings).length : null;
 
   return (
     <>
