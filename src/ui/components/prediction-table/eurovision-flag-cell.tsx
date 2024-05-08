@@ -13,6 +13,7 @@ export const FlagCell = ({ country }: Props) => {
     <td>
       <div className={predictionTableStyles.flag_cell}>
         <Image
+          draggable="false"
           src={require(`../../../images/flags/${country.sName}-flag.png`)}
           height={17}
           alt={`${country.name} flag`}

@@ -7,7 +7,11 @@ import { EditablePredictionTable } from "@components/submit-predictions/editable
 import { SubmitPredictions } from "@components/submit-predictions/submit-predictions";
 import Icon from "@svgs/icons/sq-icon";
 
-import { Entrant, Competition } from "@custom-types/game-types";
+import {
+  Entrant,
+  Competition,
+  LocalSeasonData,
+} from "@custom-types/game-types";
 
 import styles from "@components/submit-predictions/submit-predictions.module.scss";
 import btnStyles from "@components/button/button.module.scss";
@@ -20,6 +24,7 @@ interface Props {
   displayName: string;
   initialEntrants: Entrant[];
   season: string;
+  seasonData: LocalSeasonData;
   userId: string;
 }
 
@@ -29,10 +34,12 @@ export const EditPredictions = ({
   initialEntrants,
   children,
   season,
+  seasonData,
   competition,
   userId,
 }: Props) => {
   const [entrantArr, setEntrantArr] = useState(initialEntrants);
+  const { allEntrants } = seasonData;
 
   const handleEntrantState = (entrantArr: Entrant[]) => {
     setEntrantArr(entrantArr);
@@ -62,9 +69,10 @@ export const EditPredictions = ({
       <div className={styles.prediction_tables}>
         <div className={styles.prediction_table_con}>
           <EditablePredictionTable
+            allEntrants={allEntrants}
             competition={competition}
             entrantArr={entrantArr}
-            entrantType={"Country"}
+            entrantType={"countries"}
             handleEntrantState={handleEntrantState}
           />
         </div>

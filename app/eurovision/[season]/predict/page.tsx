@@ -94,6 +94,7 @@ const Page: NextPage<PageProps> = async ({ params }) => {
           displayName={displayName}
           initialEntrants={JSON.parse(JSON.stringify(countryArr))}
           season={season}
+          seasonData={JSON.parse(JSON.stringify(seasonData))}
           userId={userId}>
           <Panel>
             <p>
