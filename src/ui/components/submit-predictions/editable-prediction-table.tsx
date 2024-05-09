@@ -5,7 +5,6 @@ import {
   DndContext,
   closestCenter,
   KeyboardSensor,
-  PointerSensor,
   MouseSensor,
   TouchSensor,
   useSensor,
@@ -49,7 +48,6 @@ export function EditablePredictionTable({
     entrantArr.map((entrant) => entrant.sName)
   );
   const sensors = useSensors(
-    // useSensor(PointerSensor),
     useSensor(MouseSensor),
     useSensor(TouchSensor),
     useSensor(KeyboardSensor, {
@@ -81,7 +79,13 @@ export function EditablePredictionTable({
 
   return (
     <div
-      className={`${predictionTableStyles.prediction_table} ${styles.editable_prediction_table}`}>
+      className={`${predictionTableStyles.prediction_table} ${
+        styles.editable_prediction_table
+      } ${
+        Object.keys(allEntrants).length === 1
+          ? styles.single_entrant_type_table
+          : ""
+      }`}>
       <table>
         <DndContext
           sensors={sensors}
@@ -90,12 +94,7 @@ export function EditablePredictionTable({
           onDragStart={handleDragStart}>
           <tbody
             style={{
-              width: "100%",
-              display: "grid",
-              gridTemplateColumns: `repeat(2, 1fr)`,
               gridTemplateRows: `repeat(${Math.ceil(items.length / 2)}, auto)`,
-              gridAutoFlow: "column",
-              gap: "5px",
             }}>
             <SortableContext items={items} strategy={rectSortingStrategy}>
               {items.map((id, index) => (
@@ -120,18 +119,6 @@ export function EditablePredictionTable({
                   />
                 ) : null}
               </DragOverlay>
-              {/* <DragOverlay adjustScale={true}>
-                {activeId ? (
-                  <SortableItem
-                    key={activeId}
-                    id={activeId}
-                    index={"1"}
-                    value={activeId}
-                    competition={competition}
-                    entrant={allEntrants[entrantType][activeId]}
-                  />
-                ) : null}
-              </DragOverlay> */}
             </SortableContext>
           </tbody>
         </DndContext>
@@ -166,42 +153,21 @@ const Item = forwardRef<HTMLTableRowElement, ItemProps>(
     ref
   ) => {
     const inlineStyles: CSSProperties = {
-      opacity: withOpacity ? "0.5" : "1",
-      transformOrigin: "50% 50%",
-      touchAction: "none",
-      borderRadius: "10px",
+      opacity: withOpacity ? "0.2" : "1",
       cursor: isDragging ? "grabbing" : "grab",
-      // display: "flex",
-      // justifyContent: "center",
-      // alignItems: "center",
-      userSelect: "none",
-      // boxShadow: isDragging
-      //   ? "rgb(63 63 68 / 5%) 0px 2px 0px 2px, rgb(34 33 81 / 15%) 0px 2px 3px 2px"
-      //   : "rgb(63 63 68 / 5%) 0px 0px 0px 1px, rgb(34 33 81 / 15%) 0px 1px 3px 0px",
-      transform: isDragging ? "scale(1.05)" : "scale(1)",
+      transform: isDragging ? "scale(1.02)" : "scale(1)",
       ...style,
     };
 
     return (
       <tr
-        className={predictionTableStyles.table_row}
+        className={`${predictionTableStyles.table_row} ${styles.table_row}`}
         ref={ref}
         style={inlineStyles}
         {...props}>
-        {/* {index !== null ? index + 1 : items.indexOf(id) + 1}-{" "}
-        {competition === "eurovision" ? (
-          <FlagCell country={entrant} />
-        ) : (
-          <td className={predictionTableStyles.flair_cell}>
-            <span
-              className={`${predictionTableStyles.flair}`}
-              style={{ backgroundColor: entrant.color }}></span>
-          </td>
-        )}{" "}
-        - {id} */}
         <td className={predictionTableStyles.drag_cell}>≡</td>
         <td className={predictionTableStyles.position_cell}>
-          {index !== null ? index + 1 : "x"}
+          {index !== null ? index + 1 : " "}
         </td>
         {competition === "eurovision" ? (
           <FlagCell country={entrant} />
@@ -212,7 +178,10 @@ const Item = forwardRef<HTMLTableRowElement, ItemProps>(
               style={{ backgroundColor: entrant.color }}></span>
           </td>
         )}
-        <td className={predictionTableStyles.name_cell}>
+        <td
+          className={`${predictionTableStyles.name_cell} ${
+            entrant.name.length > 11 && predictionTableStyles.large_name
+          }`}>
           <span className={predictionTableStyles.name}>{entrant.name}</span>
           <span className={predictionTableStyles.sName}>{entrant.sName}</span>
         </td>

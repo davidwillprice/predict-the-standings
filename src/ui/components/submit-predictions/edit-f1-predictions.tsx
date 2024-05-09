@@ -7,7 +7,11 @@ import { EditablePredictionTable } from "@components/submit-predictions/editable
 import { SubmitPredictions } from "@components/submit-predictions/submit-predictions";
 import Icon from "@svgs/icons/sq-icon";
 
-import { Competition, Entrant } from "@custom-types/game-types";
+import {
+  Competition,
+  Entrant,
+  LocalSeasonData,
+} from "@custom-types/game-types";
 
 import styles from "@components/submit-predictions/submit-predictions.module.scss";
 import btnStyles from "@components/button/button.module.scss";
@@ -21,6 +25,7 @@ interface Props {
   initialDrivers: Entrant[];
   initialTeams: Entrant[];
   season: string;
+  seasonData: LocalSeasonData;
   userId: string;
 }
 
@@ -31,6 +36,7 @@ export const EditF1Predictions = ({
   initialDrivers,
   initialTeams,
   children,
+  seasonData,
   season,
   userId,
 }: Props) => {
@@ -43,6 +49,8 @@ export const EditF1Predictions = ({
   const handleTeamState = (entrantArr: Entrant[]) => {
     setTeamArr(entrantArr);
   };
+
+  const { allEntrants } = seasonData;
   return (
     <div className={styles.edit_predictions_con}>
       <div className={styles.infoCon}>
@@ -62,17 +70,19 @@ export const EditF1Predictions = ({
       <div className={styles.prediction_tables}>
         <div className={styles.prediction_table_con}>
           <EditablePredictionTable
+            allEntrants={allEntrants}
             competition={competition}
             entrantArr={driverArr}
-            entrantType={"Driver"}
+            entrantType={"drivers"}
             handleEntrantState={handleDriverState}
           />
         </div>
         <div className={styles.prediction_table_con}>
           <EditablePredictionTable
+            allEntrants={allEntrants}
             competition={competition}
             entrantArr={teamArr}
-            entrantType={"Team"}
+            entrantType={"teams"}
             handleEntrantState={handleTeamState}
           />
         </div>

@@ -32,6 +32,7 @@
 
 .table_row {
   position: relative;
+  height: 30px;
   td {
     padding: 5px 5px;
     border: none;
@@ -52,11 +53,18 @@
   .name_cell {
     padding-right: 10px;
     min-width: 105px;
+    width: 100%;
   }
   .flag_cell {
+    width: 34px;
+  }
+
+  .flag_con {
+    width: 34px;
+    height: 100%;
     display: flex;
     justify-content: center;
-    width: 44px;
+    align-items: center;
     img {
       border: 2px solid var(--tertiary-color);
     }
@@ -102,7 +110,22 @@
   display: none;
 }
 
-@media (max-width: 380px) {
+@media (max-width: 750px) and (min-width: 600px) {
+  .prediction_table {
+    .name {
+      display: none;
+    }
+    .sName {
+      display: inline;
+      text-transform: uppercase;
+    }
+    .name_cell {
+      min-width: auto;
+    }
+  }
+}
+
+@media (max-width: 475px) {
   .prediction_table {
     width: 100%;
     table {
@@ -126,13 +149,24 @@
         padding-right: 7px;
       }
       .drag_cell {
-        max-width: 20px;
+        display: none;
       }
       .position_cell {
         max-width: 25px;
+        border-radius: 5px 0 0 5px;
+        padding-left: 10px;
       }
       .name_cell {
         min-width: auto;
+      }
+      .large_name {
+        .name {
+          display: none;
+        }
+        .sName {
+          display: inline;
+          text-transform: uppercase;
+        }
       }
     }
   }
@@ -146,9 +180,6 @@
     .sName {
       display: inline;
       text-transform: uppercase;
-    }
-    .name_cell {
-      min-width: auto;
     }
   }
 }
