@@ -20,7 +20,6 @@
     "@dnd-kit/core": "^3.0.3",
     "@dnd-kit/sortable": "^3.0.1",
     "@dnd-kit/utilities": "^2.0.0",
-    "@hello-pangea/dnd": "^16.5.0",
     "chart.js": "^4.4.2",
     "cross-env": "^7.0.3",
     "dotenv": "^16.4.5",
