@@ -3,18 +3,24 @@
     margin: 0 auto;
     width: 100%;
   }
-  [data-drop-target] {
-    height: 30px;
-  }
-  [data-dragging] {
-    opacity: 0.3;
-  }
-  tr {
-    cursor: grab;
-  }
-  tr {
-    td:last-child {
-      text-align: left;
+  tr.table_row {
+    height: 33px;
+    td {
+      height: 33px;
     }
+  }
+  td {
+    transform-origin: 50% 50%;
+    touch-action: none;
+    user-select: none;
+  }
+}
+.single_entrant_type_table {
+  border-spacing: 0px;
+  tbody {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-flow: column;
+    gap: 5px;
   }
 }

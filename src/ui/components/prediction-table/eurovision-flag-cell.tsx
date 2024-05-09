@@ -10,9 +10,10 @@ type Props = {
 
 export const FlagCell = ({ country }: Props) => {
   return (
-    <td>
-      <div className={predictionTableStyles.flag_cell}>
+    <td className={predictionTableStyles.flag_cell}>
+      <div className={predictionTableStyles.flag_con}>
         <Image
+          draggable="false"
           src={require(`../../../images/flags/${country.sName}-flag.png`)}
           height={17}
           alt={`${country.name} flag`}

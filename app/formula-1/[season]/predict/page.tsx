@@ -93,6 +93,7 @@ const Page: NextPage<PageProps> = async ({ params }) => {
           initialDrivers={JSON.parse(JSON.stringify(driverArr))}
           initialTeams={JSON.parse(JSON.stringify(teamArr))}
           season={season}
+          seasonData={JSON.parse(JSON.stringify(seasonData))}
           userId={userId}>
           <Panel>
             <p>
