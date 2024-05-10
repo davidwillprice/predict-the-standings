@@ -17,19 +17,19 @@ export const EurovisionNav = ({ competition, seasonData }: Props) => {
     rounds,
   } = seasonData;
   const { data: session } = useSession();
-  const hasMadePredictions =
-    session?.user.predictionsMadeFor[competition].includes(seasonStr);
+  // const hasMadePredictions =
+  //   session?.user?.predictionsMadeFor[competition].includes(seasonStr);
 
   return (
     <>
       {/**@todo Add year selector*/}
-      {rounds.length === 0 && arePredictionsFrozen && hasMadePredictions && (
+      {/* {rounds.length === 0 && arePredictionsFrozen && hasMadePredictions && (
         <HeaderLink
           href={`/${competition}/${seasonStr}/your-predictions`}
           icon="listBullet">
           View Your Predictions
         </HeaderLink>
-      )}
+      )} */}
       {!arePredictionsFrozen && predictionsOpen && (
         <HeaderLink
           href={`/${competition}/${seasonStr}/predict`}
