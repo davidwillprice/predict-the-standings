@@ -60,7 +60,10 @@ export const PredictionTable = ({
             <tr key={rowData.entrant.sName} className={styles.table_row}>
               <td className={styles.position_cell}>{index + 1}</td>
               {competition === "eurovision" ? (
-                <FlagCell country={rowData.entrant} />
+                <FlagCell
+                  name={rowData.entrant.name}
+                  sName={rowData.entrant.sName}
+                />
               ) : (
                 <td>
                   <span

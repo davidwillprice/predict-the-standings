@@ -79,12 +79,11 @@ const Page: NextPage<PageProps> = async ({ params }) => {
               <tr
                 key={entrant.sName}
                 className={`${predictionTableStyles.table_row} ${styles.table_row}`}>
-                <td className={predictionTableStyles.drag_cell}>≡</td>
                 <td className={predictionTableStyles.position_cell}>
                   {index !== null ? index + 1 : " "}
                 </td>
                 {competition === "eurovision" ? (
-                  <FlagCell country={entrant} />
+                  <FlagCell name={entrant.name} sName={entrant.sName} />
                 ) : (
                   <td className={predictionTableStyles.flair_cell}>
                     <span
