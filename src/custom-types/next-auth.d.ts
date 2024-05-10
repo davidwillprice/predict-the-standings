@@ -12,5 +12,6 @@ declare module "next-auth" {
     id: string;
     displayName: string;
     lastDisplayNameSubmission: number;
+    predictionsMadeFor: { [competition: string]: Set<string> };
   }
 }

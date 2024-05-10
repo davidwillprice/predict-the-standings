@@ -290,12 +290,37 @@ export const submitPredictionsQuery = async (
         { $set: userPredictionDoc },
         { upsert: true }
       );
+      addPredictionToUserDataQuery(competition, season, userId);
 
       if (!result)
         throw new Error(
           `Failed to update user prediction data for ${competition + season}`
         );
     }
+  } catch (error) {
+    throw error;
+  }
+};
+
+/**Adds the latest competition/season the user has made predictions for to their user data */
+export const addPredictionToUserDataQuery = async (
+  competition: Competition,
+  seasonStr: string,
+  userId: string
+): Promise<string | void> => {
+  const client = await clientPromise;
+  try {
+    const db = client.db("pts");
+    const collection = db.collection("users");
+
+    await collection.updateOne(
+      { _id: new ObjectId(userId) },
+      {
+        $addToSet: {
+          [`predictionsMadeFor.${competition}`]: seasonStr, // Add seasonStr to competition set
+        },
+      }
+    );
   } catch (error) {
     throw error;
   }
