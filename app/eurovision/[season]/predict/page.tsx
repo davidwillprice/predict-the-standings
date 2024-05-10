@@ -111,6 +111,7 @@ const Page: NextPage<PageProps> = async ({ params }) => {
             className={commonStyles.anchor}></div>
         </EditPredictions>
       ) : (
+        /**@todo Show people's predictions if they have any saved */
         <Panel>
           <p className={commonStyles.text_center}>
             {isSeasonOver

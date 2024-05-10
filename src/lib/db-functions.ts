@@ -257,7 +257,7 @@ export const submitPredictionsQuery = async (
   entrantArrs: { [entrantType: string]: string[] },
   season: string,
   userId: string
-) => {
+): Promise<string | void> => {
   const client = await clientPromise;
   try {
     const db = client.db("pts");
@@ -275,7 +275,7 @@ export const submitPredictionsQuery = async (
       );
 
     if (predictionFreezeDate.getTime() < new Date().getTime()) {
-      throw new Error(`Predictions for ${competition + season} are frozen`);
+      return `Predictions for ${competition + season} are frozen`;
     } else {
       const userPredictionDoc = {
         displayName: displayName,
@@ -295,7 +295,6 @@ export const submitPredictionsQuery = async (
         throw new Error(
           `Failed to update user prediction data for ${competition + season}`
         );
-      return result;
     }
   } catch (error) {
     throw error;

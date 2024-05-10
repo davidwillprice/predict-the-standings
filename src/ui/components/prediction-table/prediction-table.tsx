@@ -68,7 +68,10 @@ export const PredictionTable = ({
                     style={{ backgroundColor: rowData.entrant.color }}></span>
                 </td>
               )}
-              <td className={styles.name_cell}>
+              <td
+                className={`${styles.name_cell} ${
+                  rowData.entrant.name.length > 11 && styles.large_name
+                }`}>
                 <span className={styles.name}>{rowData.entrant.name}</span>
                 <span className={styles.sName}>{rowData.entrant.sName}</span>
               </td>

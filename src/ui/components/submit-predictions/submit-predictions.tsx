@@ -52,18 +52,26 @@ export const SubmitPredictions = ({
       );
     }
     try {
-      await submitPredictionsQuery(
+      const dbErrorMessage = await submitPredictionsQuery(
         competition,
         displayName,
         predictionObj,
         season,
         userId
       );
-      setSavedEntrantArrs(allEntrantArrs);
-      submissionSuccessful.current = true;
+      /**If the DB has provided a user safe error message, add it to the UI, else show success message */
+      if (typeof dbErrorMessage === "string") {
+        isError(dbErrorMessage);
+      } else {
+        setSavedEntrantArrs(allEntrantArrs);
+        submissionSuccessful.current = true;
+      }
     } catch (error: unknown) {
       if (error instanceof Error) {
-        isError(error.message);
+        console.log(error.message);
+        isError(
+          "An error occured, please try and submit your predictions again"
+        );
       }
     }
     isSubmitting(false);
