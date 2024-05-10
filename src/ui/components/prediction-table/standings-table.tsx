@@ -39,7 +39,7 @@ export const StandingsTable = ({
             <tr key={entrant.sName} className={styles.table_row}>
               <td className={styles.position_cell}>{index + 1}</td>
               {competition === "eurovision" ? (
-                <FlagCell country={entrant} />
+                <FlagCell name={entrant.name} sName={entrant.sName} />
               ) : (
                 <td className={styles.flair_cell}>
                   <span

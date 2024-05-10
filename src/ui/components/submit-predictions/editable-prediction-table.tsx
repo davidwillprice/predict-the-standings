@@ -170,7 +170,7 @@ const Item = forwardRef<HTMLTableRowElement, ItemProps>(
           {index !== null ? index + 1 : " "}
         </td>
         {competition === "eurovision" ? (
-          <FlagCell country={entrant} />
+          <FlagCell name={entrant.name} sName={entrant.sName} />
         ) : (
           <td className={predictionTableStyles.flair_cell}>
             <span

@@ -38,7 +38,11 @@ async function submitCompetitionGameData(
     } = seasonData;
 
     if (!arePredictionsFrozen && rounds.length > 0) {
-      throw new Error("Freeze predictions before adding round data");
+      throw new Error(
+        `Freeze predictions before adding round data for ${
+          competition + seasonStr
+        }`
+      );
     }
 
     const collection = db.collection(competition + seasonStr);

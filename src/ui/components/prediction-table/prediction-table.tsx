@@ -60,7 +60,10 @@ export const PredictionTable = ({
             <tr key={rowData.entrant.sName} className={styles.table_row}>
               <td className={styles.position_cell}>{index + 1}</td>
               {competition === "eurovision" ? (
-                <FlagCell country={rowData.entrant} />
+                <FlagCell
+                  name={rowData.entrant.name}
+                  sName={rowData.entrant.sName}
+                />
               ) : (
                 <td>
                   <span
@@ -68,7 +71,10 @@ export const PredictionTable = ({
                     style={{ backgroundColor: rowData.entrant.color }}></span>
                 </td>
               )}
-              <td className={styles.name_cell}>
+              <td
+                className={`${styles.name_cell} ${
+                  rowData.entrant.name.length > 11 && styles.large_name
+                }`}>
                 <span className={styles.name}>{rowData.entrant.name}</span>
                 <span className={styles.sName}>{rowData.entrant.sName}</span>
               </td>

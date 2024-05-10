@@ -21,6 +21,7 @@ export const authOptions: NextAuthOptions = {
           id: user.id,
           displayName: user.displayName,
           lastDisplayNameSubmissionDate: user.lastDisplayNameSubmission,
+          predictionsMadeFor: user.predictionsMadeFor,
         };
 
       /**useSession().update() has been triggered so merge the token with the new passed data */
@@ -36,6 +37,7 @@ export const authOptions: NextAuthOptions = {
       session.user.displayName = token.displayName;
       session.user.lastDisplayNameSubmissionDate =
         token.lastDisplayNameSubmissionDate;
+      session.user.predictionsMadeFor = token.predictionsMadeFor;
       return session;
     },
   },

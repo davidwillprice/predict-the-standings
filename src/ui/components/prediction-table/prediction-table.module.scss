@@ -110,6 +110,20 @@
   display: none;
 }
 
+@media (max-width: 1000px) and (min-width: 600px) {
+  .large_name {
+    .name {
+      display: none;
+    }
+    .sName {
+      display: inline;
+      text-transform: uppercase;
+    }
+    .name_cell {
+      min-width: auto;
+    }
+  }
+}
 @media (max-width: 750px) and (min-width: 600px) {
   .prediction_table {
     .name {
@@ -125,7 +139,7 @@
   }
 }
 
-@media (max-width: 475px) {
+@media (max-width: 500px) {
   .prediction_table {
     width: 100%;
     table {

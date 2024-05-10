@@ -257,7 +257,7 @@ export const submitPredictionsQuery = async (
   entrantArrs: { [entrantType: string]: string[] },
   season: string,
   userId: string
-) => {
+): Promise<string | void> => {
   const client = await clientPromise;
   try {
     const db = client.db("pts");
@@ -275,7 +275,7 @@ export const submitPredictionsQuery = async (
       );
 
     if (predictionFreezeDate.getTime() < new Date().getTime()) {
-      throw new Error(`Predictions for ${competition + season} are frozen`);
+      return `Predictions for ${competition + season} are frozen`;
     } else {
       const userPredictionDoc = {
         displayName: displayName,
@@ -290,13 +290,37 @@ export const submitPredictionsQuery = async (
         { $set: userPredictionDoc },
         { upsert: true }
       );
+      addPredictionToUserDataQuery(competition, season, userId);
 
       if (!result)
         throw new Error(
           `Failed to update user prediction data for ${competition + season}`
         );
-      return result;
     }
+  } catch (error) {
+    throw error;
+  }
+};
+
+/**Adds the latest competition/season the user has made predictions for to their user data */
+export const addPredictionToUserDataQuery = async (
+  competition: Competition,
+  seasonStr: string,
+  userId: string
+): Promise<string | void> => {
+  const client = await clientPromise;
+  try {
+    const db = client.db("pts");
+    const collection = db.collection("users");
+
+    await collection.updateOne(
+      { _id: new ObjectId(userId) },
+      {
+        $addToSet: {
+          [`predictionsMadeFor.${competition}`]: seasonStr, // Add seasonStr to competition set
+        },
+      }
+    );
   } catch (error) {
     throw error;
   }

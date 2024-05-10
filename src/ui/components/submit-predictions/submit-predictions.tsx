@@ -1,6 +1,7 @@
 "use client";
 import { useState, useRef } from "react";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 
 import { Button } from "@components/button/button";
 import { LoadingSpinner } from "@components/loading-spinner/loading-spinner";
@@ -35,6 +36,8 @@ export const SubmitPredictions = ({
   const [savedEntrantArrs, setSavedEntrantArrs] = useState(allEntrantArrs);
   const [error, isError] = useState<string | null>(null);
 
+  const { data: session, update } = useSession();
+
   const submissionHandler = async () => {
     isError(null);
     isSubmitting(true);
@@ -52,18 +55,38 @@ export const SubmitPredictions = ({
       );
     }
     try {
-      await submitPredictionsQuery(
+      const dbErrorMessage = await submitPredictionsQuery(
         competition,
         displayName,
         predictionObj,
         season,
         userId
       );
-      setSavedEntrantArrs(allEntrantArrs);
-      submissionSuccessful.current = true;
+      /**If the DB has provided a user safe error message, add it to the UI, else show success message, save new entrant array, and add a note of the prediction to the user's session */
+      if (typeof dbErrorMessage === "string") {
+        isError(dbErrorMessage);
+      } else {
+        setSavedEntrantArrs(allEntrantArrs);
+        submissionSuccessful.current = true;
+
+        if (!session?.user.predictionsMadeFor[competition].includes(season)) {
+          const predictionsMadeFor = session?.user.predictionsMadeFor;
+          predictionsMadeFor[competition].push(season);
+          await update({
+            ...session,
+            user: {
+              ...session?.user,
+              predictionsMadeFor: predictionsMadeFor,
+            },
+          });
+        }
+      }
     } catch (error: unknown) {
       if (error instanceof Error) {
-        isError(error.message);
+        console.log(error.message);
+        isError(
+          "An error occured, please try and submit your predictions again"
+        );
       }
     }
     isSubmitting(false);

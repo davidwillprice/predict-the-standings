@@ -8,13 +8,14 @@ import { getSingleUserPredictionDataQuery } from "@lib/db-functions";
 import { authOptions } from "@lib/auth";
 import { allEurovisionSeasonData } from "@data/eurovision/season-data";
 
+import { CompetitionNavLinks } from "@components/latest-season-showcase/comp-nav-links";
 import { Panel } from "@components/panels/panel";
 import { PanelHeading } from "@components/panels/panel-heading";
 import { EditPredictions } from "@components/submit-predictions/edit-predictions";
 
 import commonStyles from "@styles/common.module.scss";
 
-import { PageProps } from "@custom-types/misc";
+import { PageProps, CompetitionLink } from "@custom-types/misc";
 import { Entrant } from "@custom-types/game-types";
 
 export const metadata: Metadata = {
@@ -82,7 +83,7 @@ const Page: NextPage<PageProps> = async ({ params }) => {
           </PanelHeading>
           <Panel>
             <p>
-              Please return once the countries competiting in the Eurovision{" "}
+              Please return once the countries competing in the Eurovision{" "}
               {season} Grand Final have been confirmed.
             </p>
           </Panel>
@@ -111,12 +112,33 @@ const Page: NextPage<PageProps> = async ({ params }) => {
             className={commonStyles.anchor}></div>
         </EditPredictions>
       ) : (
+        /**@todo Show people's predictions if they have any saved */
         <Panel>
-          <p className={commonStyles.text_center}>
-            {isSeasonOver
-              ? `Eurovision ${season} is over, come back next year!`
-              : "The results are being announced and so predictions are frozen!"}
-          </p>
+          {isSeasonOver ? (
+            <>
+              <p className={commonStyles.text_center}>
+                Eurovision {season} is over, but you can view its leaderboard
+                and stats.
+              </p>
+              <CompetitionNavLinks
+                linkArr={[
+                  new CompetitionLink("", "microphone", "Leaderboard"),
+                  new CompetitionLink(
+                    "stats/country",
+                    "stats",
+                    "Country Stats"
+                  ),
+                  new CompetitionLink("stats/player", "group", "Player Stats"),
+                ]}
+                localSeasonData={seasonData}
+                showHelp={false}
+              />
+            </>
+          ) : (
+            <p className={commonStyles.text_center}>
+              The results are being announced and so predictions are frozen!
+            </p>
+          )}
         </Panel>
       )}
     </>

@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { Countdown } from "@components/countdown/countdown";
 import Icon from "@svgs/icons/sq-icon";
+import { CompetitionNavLinks } from "./comp-nav-links";
 
 import styles from "@components/button/button-containers.module.scss";
 import btnStyles from "@components/button/button.module.scss";
@@ -28,7 +29,6 @@ export const LatestSeasonShowcase = ({
     id: seasonStr,
     predictionFreezeDate,
     predictionsOpen,
-    rounds,
   } = localSeasonData;
   const competitionDir = competition === "f1" ? "formula-1" : competition;
   /**@todo Add additional data like how many rounds have been completed, or how many people have submitted predictions */
@@ -59,22 +59,11 @@ export const LatestSeasonShowcase = ({
           </>
         )
       )}
-      <div className={styles.doubleCol}>
-        {rounds.length > 0 &&
-          linkArr.map((link) => (
-            <Link
-              key={link.icon}
-              href={`/${competitionDir}/${seasonStr}/${link.href}`}
-              className={btnStyles.button}>
-              <Icon strokeWidth={2} type={link.icon} />
-              {link.text}
-            </Link>
-          ))}
-        <Link href="/help" className={btnStyles.button}>
-          <Icon strokeWidth={2} type="help" />
-          Help
-        </Link>
-      </div>
+      <CompetitionNavLinks
+        linkArr={linkArr}
+        localSeasonData={localSeasonData}
+        showHelp={true}
+      />
     </>
   );
 };
