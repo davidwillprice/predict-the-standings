@@ -12,10 +12,11 @@ import { allF1SeasonData } from "@data/formula-1/season-data";
 import { Panel } from "@components/panels/panel";
 import { EditF1Predictions } from "@components/submit-predictions/edit-f1-predictions";
 import { Countdown } from "@components/countdown/countdown";
+import { CompetitionNavLinks } from "@components/latest-season-showcase/comp-nav-links";
 
 import commonStyles from "@styles/common.module.scss";
 
-import { PageProps } from "@custom-types/misc";
+import { PageProps, CompetitionLink } from "@custom-types/misc";
 import { Entrant } from "@custom-types/game-types";
 
 export const metadata: Metadata = {
@@ -37,7 +38,8 @@ const Page: NextPage<PageProps> = async ({ params }) => {
     return redirect("/get-started");
   }
 
-  const { arePredictionsFrozen, predictionFreezeDate } = seasonData;
+  const { arePredictionsFrozen, isSeasonOver, predictionFreezeDate } =
+    seasonData;
   const { drivers, teams } = seasonData.allEntrants;
   const userId = session.user.id;
 
@@ -122,9 +124,36 @@ const Page: NextPage<PageProps> = async ({ params }) => {
         </EditF1Predictions>
       ) : (
         <Panel>
-          <p className={commonStyles.text_center}>
-            The {season} season has started and predictions are frozen!
-          </p>
+          {isSeasonOver ? (
+            <>
+              <p className={commonStyles.text_center}>
+                The Formula 1 {season} season is over, but you can view its
+                leaderboard and stats.
+              </p>
+              <CompetitionNavLinks
+                linkArr={[
+                  new CompetitionLink("", "driver", "Drivers Leaderboard"),
+                  new CompetitionLink(
+                    "?leaderboard=constructors",
+                    "f1",
+                    "Constructors Leaderboard"
+                  ),
+                  new CompetitionLink(
+                    "stats/driver-and-team",
+                    "stats",
+                    "Driver & Team Stats"
+                  ),
+                  new CompetitionLink("stats/player", "group", "Player Stats"),
+                ]}
+                localSeasonData={seasonData}
+                showHelp={false}
+              />
+            </>
+          ) : (
+            <p className={commonStyles.text_center}>
+              The {season} season has started and predictions are frozen!
+            </p>
+          )}
         </Panel>
       )}
     </>
