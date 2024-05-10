@@ -6,6 +6,7 @@ declare module "next-auth" {
       id: string;
       displayName: string;
       lastDisplayNameSubmissionDate: number;
+      predictionsMadeFor: { [competition: string]: Set<string> };
     } & DefaultSession["user"];
   }
   interface User {

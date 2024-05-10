@@ -21,7 +21,7 @@ const Header = async () => {
   );
   return (
     <header className={styles.header}>
-      <MainNav>{profileLink}</MainNav>
+      <MainNav session={session}>{profileLink}</MainNav>
       <SecondaryMenu type={"header"} />
     </header>
   );

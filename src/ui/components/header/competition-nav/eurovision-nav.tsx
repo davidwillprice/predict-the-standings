@@ -1,4 +1,4 @@
-import { useSession } from "next-auth/react";
+import { Session } from "next-auth";
 
 import HeaderLink from "@components/header/header-link";
 
@@ -7,29 +7,29 @@ import { Competition, LocalSeasonData } from "@custom-types/game-types";
 type Props = {
   competition: Competition;
   seasonData: LocalSeasonData;
+  session: Session | null;
 };
 
-export const EurovisionNav = ({ competition, seasonData }: Props) => {
+export const EurovisionNav = ({ competition, seasonData, session }: Props) => {
   const {
     arePredictionsFrozen,
     id: seasonStr,
     predictionsOpen,
     rounds,
   } = seasonData;
-  const { data: session } = useSession();
-  // const hasMadePredictions =
-  //   session?.user?.predictionsMadeFor[competition].includes(seasonStr);
+  const hasMadePredictions =
+    session?.user?.predictionsMadeFor?.[competition].includes(seasonStr);
 
   return (
     <>
       {/**@todo Add year selector*/}
-      {/* {rounds.length === 0 && arePredictionsFrozen && hasMadePredictions && (
+      {rounds.length === 0 && arePredictionsFrozen && hasMadePredictions && (
         <HeaderLink
           href={`/${competition}/${seasonStr}/your-predictions`}
           icon="listBullet">
           View Your Predictions
         </HeaderLink>
-      )} */}
+      )}
       {!arePredictionsFrozen && predictionsOpen && (
         <HeaderLink
           href={`/${competition}/${seasonStr}/predict`}

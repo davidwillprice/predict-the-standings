@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { ReactNode } from "react";
 import Link from "next/link";
+import { Session } from "next-auth";
 
 import { allF1SeasonData } from "@data/formula-1/season-data";
 import { allEurovisionSeasonData } from "@data/eurovision/season-data";
@@ -19,9 +20,10 @@ import commonStyles from "@styles/common.module.scss";
 
 interface Props {
   children: ReactNode;
+  session: Session | null;
 }
 
-export const MainNav = ({ children }: Props) => {
+export const MainNav = ({ children, session }: Props) => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
@@ -48,6 +50,7 @@ export const MainNav = ({ children }: Props) => {
     <EurovisionNav
       competition={"eurovision"}
       seasonData={latestEurovisionSeason}
+      session={session}
     />
   ) : (
     <>

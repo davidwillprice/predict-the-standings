@@ -31,12 +31,11 @@ export const SubmitPredictions = ({
   season,
   userId,
 }: Props) => {
+  const { data: session, update } = useSession();
   const submissionSuccessful = useRef(false);
   const [submitting, isSubmitting] = useState(false);
   const [savedEntrantArrs, setSavedEntrantArrs] = useState(allEntrantArrs);
   const [error, isError] = useState<string | null>(null);
-
-  const { data: session, update } = useSession();
 
   const submissionHandler = async () => {
     isError(null);
@@ -69,8 +68,15 @@ export const SubmitPredictions = ({
         setSavedEntrantArrs(allEntrantArrs);
         submissionSuccessful.current = true;
 
-        if (!session?.user.predictionsMadeFor[competition].includes(season)) {
-          const predictionsMadeFor = session?.user.predictionsMadeFor;
+        /**If it's the users first prediction in this comp/season */
+        if (
+          !session?.user?.predictionsMadeFor?.[competition].includes(season)
+        ) {
+          //**Get all predictionMadeFor data or start a new object if there is none  */
+          const predictionsMadeFor = session?.user.predictionsMadeFor || {};
+          if (!predictionsMadeFor[competition]) {
+            predictionsMadeFor[competition] = [];
+          }
           predictionsMadeFor[competition].push(season);
           await update({
             ...session,
