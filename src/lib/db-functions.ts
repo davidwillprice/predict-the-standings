@@ -90,6 +90,8 @@ export const getMultipleUserGameData = async (
         doc.userType
       );
       users[doc._id.toString()].predictionsFromAvg = doc.predictionsFromAvg;
+      users[doc._id.toString()].timesPredictionsUpdated =
+        doc.timesPredictionsUpdated;
     }
     if (Object.keys(users).length === 0)
       throw new Error(
@@ -131,6 +133,8 @@ export const getAllUserPredictionDataQuery = async (
         predictionsObj,
         doc.userType
       );
+      users[doc._id.toString()].timesPredictionsUpdated =
+        doc.timesPredictionsUpdated;
     }
     if (Object.keys(users).length === 0)
       console.log(
@@ -199,6 +203,7 @@ export const getStatsDataQuery = async (
     const statsData: StatsData = {
       controversialUserIds: result.controversialUserIds,
       allEntrants: result.allEntrants,
+      mostUpdatedPredictionUserIds: result.mostUpdatedPredictionUserIds,
       noOfPredictions: result.noOfPredictions,
       rounds: result.rounds,
     };
@@ -277,10 +282,17 @@ export const submitPredictionsQuery = async (
     if (predictionFreezeDate.getTime() < new Date().getTime()) {
       return `Predictions for ${competition + season} are frozen`;
     } else {
+      const olduserPredictionDoc = await collection.findOne({ userId: userId });
+      const prevTimesPredictionsUpdated =
+        olduserPredictionDoc?.timesPredictionsUpdated;
+
       const userPredictionDoc = {
         displayName: displayName,
         lastSubmissionTime: new Date(),
         predictions: entrantArrs,
+        timesPredictionsUpdated: prevTimesPredictionsUpdated
+          ? prevTimesPredictionsUpdated + 1
+          : 1,
         type: "userData",
         userId: userId,
         userType: "standard",

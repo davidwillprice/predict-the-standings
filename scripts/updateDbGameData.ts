@@ -75,8 +75,9 @@ async function submitCompetitionGameData(
       {
         $set: {
           type: "statsData",
-          controversialUserIds: gameData.controversialUserIds,
           allEntrants: gameData.allEntrantStats,
+          controversialUserIds: gameData.controversialUserIds,
+          mostUpdatedPredictionUserIds: gameData.mostUpdatedPredictionUserIds,
           noOfPredictions: noOfPredictions,
           rounds: gameData.roundStats,
         },

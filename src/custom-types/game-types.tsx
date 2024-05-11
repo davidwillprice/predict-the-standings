@@ -93,6 +93,7 @@ export class User {
   season: { [entrantType: string]: RoundPerformance[] };
   userType: "standard" | "special";
   controversyPercentile: { [entrantType: string]: number };
+  timesPredictionsUpdated?: number;
   constructor(
     displayName: string,
     id: string,
@@ -154,8 +155,9 @@ interface RoundPerformance {
 }
 
 export interface GameData {
-  controversialUserIds: ControversialUserIds;
   allEntrantStats: { [entrantType: string]: EntrantStats };
+  controversialUserIds: ControversialUserIds;
+  mostUpdatedPredictionUserIds: MostUpdatedPredictionUserIds;
   roundStats: {
     entrantDiffTotals: { [entrantType: string]: EntrantDiffTotal[] };
   }[];
@@ -166,6 +168,7 @@ export interface StatsData {
   controversialUserIds: ControversialUserIds;
   allEntrants: { [entrantType: string]: EntrantStats };
   noOfPredictions: { [entrantType: string]: number };
+  mostUpdatedPredictionUserIds: MostUpdatedPredictionUserIds;
   rounds: {
     entrantDiffTotals: { [entrantType: string]: EntrantDiffTotal[] };
   }[];
@@ -185,3 +188,4 @@ export interface ControversialUserIds {
     least: userId[];
   };
 }
+export type MostUpdatedPredictionUserIds = userId[];

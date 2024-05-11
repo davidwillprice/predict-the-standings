@@ -1,13 +1,14 @@
 import {
   AllEntrants,
-  GameData,
+  ControversialUserIds,
+  Competition,
   Entrants,
+  EntrantStats,
+  GameData,
+  MostUpdatedPredictionUserIds,
   Round,
   User,
   Users,
-  EntrantStats,
-  ControversialUserIds,
-  Competition,
 } from "@custom-types/game-types";
 import { calcPercentile } from "./misc";
 
@@ -38,6 +39,8 @@ export const createGameData = async (
 
   const controversialUserIds = getControversialUsers(users);
 
+  const mostUpdatedPredictionUserIds = getUpdatedPredictionUsers(users);
+
   rounds = calcLeaderboards(allEntrants, rounds, users);
 
   rounds = orderLeaderboards(rounds, users);
@@ -58,6 +61,7 @@ export const createGameData = async (
 
   return {
     controversialUserIds: controversialUserIds,
+    mostUpdatedPredictionUserIds: mostUpdatedPredictionUserIds,
     allEntrantStats: allEntrantStats,
     roundStats: rounds.map((round) => {
       return {
@@ -503,6 +507,33 @@ function getControversialUsers(users: Users): ControversialUserIds {
     };
   }
   return controversialUsers;
+}
+
+/**Get only the userIds of those who updated their predictions the most */
+function getUpdatedPredictionUsers(users: Users): MostUpdatedPredictionUserIds {
+  let mostUpdatedPredictionUserArr: User[] = [];
+
+  /**Populate arrays with the all users with a 'timesPredictionsUpdated' value in any order */
+  for (const user of Object.values(users)) {
+    if (!user.timesPredictionsUpdated) continue;
+    mostUpdatedPredictionUserArr.push(user);
+  }
+
+  if (mostUpdatedPredictionUserArr.length === 0) return [];
+
+  /**Order users by how many times they updated their predictions */
+  mostUpdatedPredictionUserArr.sort((a, b) =>
+    a.timesPredictionsUpdated! > b.timesPredictionsUpdated! ? -1 : 1
+  );
+
+  const mostTimesAUserUpdatedPredictions =
+    mostUpdatedPredictionUserArr[0].timesPredictionsUpdated;
+
+  mostUpdatedPredictionUserArr = mostUpdatedPredictionUserArr.filter(
+    (user) => user.timesPredictionsUpdated === mostTimesAUserUpdatedPredictions
+  );
+
+  return mostUpdatedPredictionUserArr.map((user) => user.id);
 }
 
 /**The leaderboards are unbounded arrays so I don't want to upload them to the DB */

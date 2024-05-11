@@ -1,0 +1,50 @@
+import { formatArrayIntoList } from "@lib/misc";
+
+import {
+  MostUpdatedPredictionUserIds,
+  Users,
+  User,
+} from "@custom-types/game-types";
+
+interface Props {
+  mostUpdatedPredictionUserIds: MostUpdatedPredictionUserIds;
+  currUser: User | null;
+  users: Users;
+}
+
+export const MostUpdated = ({
+  mostUpdatedPredictionUserIds,
+  currUser,
+  users,
+}: Props) => {
+  const mostUpdatedPredictionUsers = mostUpdatedPredictionUserIds.map(
+    (userId) => users[userId]
+  );
+
+  return (
+    <>
+      <h2>Most Updated Predictions</h2>
+      {currUser && currUser.timesPredictionsUpdated && (
+        <>
+          <p>
+            {currUser.timesPredictionsUpdated > 1
+              ? `You updated your predictions ${currUser.timesPredictionsUpdated} times`
+              : "You only submitted your predictions once"}
+            .
+          </p>
+          <hr />
+        </>
+      )}
+      <p>
+        {`${formatArrayIntoList(
+          mostUpdatedPredictionUsers.map((user) => {
+            if (!user.displayName) throw new Error();
+            return user.displayName;
+          })
+        )} updated their predictions more than anyone else at ${
+          mostUpdatedPredictionUsers[0].timesPredictionsUpdated
+        } times.`}
+      </p>
+    </>
+  );
+};
