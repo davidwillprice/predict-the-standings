@@ -79,42 +79,42 @@ const startingEntrantOrders: StartingEntrantOrders = {
 };
 
 let rounds: Round[] = [
-  // new Round("Grand Final", {
-  //   countries: [
-  //     "swe",
-  //     "ukr",
-  //     "ger",
-  //     "lux",
-  //     "isr",
-  //     "lit",
-  //     "spa",
-  //     "est",
-  //     "ire",
-  //     "lat",
-  //     "gre",
-  //     "unk",
-  //     "nor",
-  //     "ita",
-  //     "ser",
-  //     "fin",
-  //     "por",
-  //     "arm",
-  //     "cyp",
-  //     "swi",
-  //     "slo",
-  //     "cro",
-  //     "geo",
-  //     "fra",
-  //     "aus",
-  //   ],
-  // }),
+  new Round("Grand Final", {
+    countries: [
+      "swi",
+      "cro",
+      "ukr",
+      "fra",
+      "isr",
+      "ire",
+      "ita",
+      "arm",
+      "swe",
+      "por",
+      "gre",
+      "ger",
+      "lux",
+      "lit",
+      "cyp",
+      "lat",
+      "ser",
+      "unk",
+      "fin",
+      "est",
+      "geo",
+      "spa",
+      "slo",
+      "aus",
+      "nor",
+    ],
+  }),
 ];
 
 const allEntrants = { countries: countries };
 const competition: Competition = "eurovision";
 const id = "2024";
-const isSeasonOver = false;
-const predictionFreezeDate = new Date("2024-05-11T23:30:00");
+const isSeasonOver = true;
+const predictionFreezeDate = new Date("2024-05-11T22:30:00");
 const predictionsOpen = true;
 
 export const seasonData2024 = new LocalSeasonData(
