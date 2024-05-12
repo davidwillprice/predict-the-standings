@@ -26,6 +26,7 @@ export const createGameData = async (
     {},
     "special"
   );
+  users.average.userId = "average";
   users.average.information =
     "This prediction table is an automated average of all other player predictions.";
 
@@ -184,7 +185,7 @@ const calcLeaderboards = (
 
       for (let user of Object.values(users)) {
         round.leaderboards[entrantType].push({
-          userId: user.id,
+          userId: user.userId,
           percentCorrect: calcPredictionsAccuracy(
             user.predictions[entrantType].length,
             user.season[entrantType][roundIndex].diffTotal
@@ -515,14 +516,14 @@ function getControversialUserGameDataMap(
             user.predictionsFromAvg[entrantType] ===
             mostControUser.predictionsFromAvg[entrantType]
         )
-        .map((user) => user.id),
+        .map((user) => user.userId),
       least: mostLeastControUserArrs[entrantType]
         .filter(
           (user) =>
             user.predictionsFromAvg[entrantType] ===
             leastControUser.predictionsFromAvg[entrantType]
         )
-        .map((user) => user.id),
+        .map((user) => user.userId),
     };
   }
   return controversialUserGameDataMap;
@@ -554,7 +555,7 @@ function getUpdatedPredictionUserGameDataMap(
     (user) => user.timesPredictionsUpdated === mostTimesAUserUpdatedPredictions
   );
 
-  return mostUpdatedPredictionUserArr.map((user) => user.id);
+  return mostUpdatedPredictionUserArr.map((user) => user.userId);
 }
 
 /**The leaderboards are unbounded arrays so I don't want to upload them to the DB */

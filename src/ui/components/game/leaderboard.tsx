@@ -66,7 +66,7 @@ export const Leaderboard = ({
               <tr
                 key={row.id}
                 className={`${predictStyles.table_row} ${styles.table_row}`}
-                onClick={() => changeSelectedUserHandler(row.id)}>
+                onClick={() => changeSelectedUserHandler(row.userId)}>
                 <td className={styles.position}>
                   {isSeasonOver &&
                   index === 0 &&
@@ -91,7 +91,7 @@ export const Leaderboard = ({
                   </td>
                 )}
                 <td className={styles.name_cell}>
-                  {row.id === currentUserId
+                  {row.userId === currentUserId
                     ? currentUserDisplayName
                     : row.displayName}{" "}
                   {row.userType === "special" && (

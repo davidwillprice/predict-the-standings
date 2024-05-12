@@ -94,6 +94,7 @@ export class UserGameData {
   userType: "standard" | "special";
   controversyPercentile: { [entrantType: string]: number };
   timesPredictionsUpdated?: number;
+  userId: string;
   constructor(
     displayName: string,
     id: string,
@@ -110,6 +111,7 @@ export class UserGameData {
     this.predictions = predictions;
     this.predictionsFromAvg = predictionsFromAvg || {};
     this.season = {};
+    this.userId = "";
     this.userType = userType;
   }
 }

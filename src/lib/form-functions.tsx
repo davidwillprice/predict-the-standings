@@ -8,7 +8,7 @@ export const validateDisplayName = (
     validationErrors.push("Unknown error");
   }
 
-  const bannedDisplayNames = ["average"];
+  const bannedDisplayNames = ["average", "you"];
   if (bannedDisplayNames.includes(displayName.toLocaleLowerCase())) {
     validationErrors.push(`Display name '${displayName}' already exists`);
   }

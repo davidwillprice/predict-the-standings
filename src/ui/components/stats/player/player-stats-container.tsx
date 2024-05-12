@@ -43,7 +43,7 @@ export const PlayerStats = async ({
       currUserId
     );
     currUser = {
-      id: res.userId,
+      id: res.id,
       displayName: res.displayName,
       controversyPercentile: res.controversyPercentile,
       information: res.information,
@@ -52,6 +52,7 @@ export const PlayerStats = async ({
       predictionsFromAvg: res.predictionsFromAvg,
       season: res.season,
       timesPredictionsUpdated: res.timesPredictionsUpdated,
+      userId: res.userId,
       userType: res.userType,
     };
   } else {

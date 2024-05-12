@@ -67,7 +67,7 @@ export const getMultipleUserGameData = async (
     const collection = db.collection(competition + season);
     const result = await collection
       .find({
-        _id: { $in: userIdArr.map((id) => new ObjectId(id)) },
+        userId: { $in: userIdArr },
       })
       .toArray();
     if (!result)
@@ -82,16 +82,16 @@ export const getMultipleUserGameData = async (
         predictionsObj[entrantType] = doc.predictions[entrantType];
       });
 
-      users[doc._id.toString()] = new UserGameData(
+      users[doc.userId] = new UserGameData(
         doc.displayName,
-        doc._id.toString(),
+        doc.userId,
         doc.lastSubmissionTime,
         predictionsObj,
         doc.userType
       );
-      users[doc._id.toString()].predictionsFromAvg = doc.predictionsFromAvg;
-      users[doc._id.toString()].timesPredictionsUpdated =
-        doc.timesPredictionsUpdated;
+      users[doc.userId].userId = doc.userId;
+      users[doc.userId].predictionsFromAvg = doc.predictionsFromAvg;
+      users[doc.userId].timesPredictionsUpdated = doc.timesPredictionsUpdated;
     }
     if (Object.keys(users).length === 0)
       throw new Error(
@@ -126,15 +126,15 @@ export const getAllUserPredictionDataQuery = async (
         predictionsObj[entrantType] = doc.predictions[entrantType];
       });
 
-      users[doc._id.toString()] = new UserGameData(
+      users[doc.userId] = new UserGameData(
         doc.displayName,
-        doc._id.toString(),
+        doc.userId,
         doc.lastSubmissionTime,
         predictionsObj,
         doc.userType
       );
-      users[doc._id.toString()].timesPredictionsUpdated =
-        doc.timesPredictionsUpdated;
+      users[doc.userId].userId = doc.userId;
+      users[doc.userId].timesPredictionsUpdated = doc.timesPredictionsUpdated;
     }
     if (Object.keys(users).length === 0)
       console.log(
@@ -165,7 +165,8 @@ export const getLeaderboardDataQuery = async (
 
     result.forEach((user) => {
       users[user.userId] = {
-        id: user.userId,
+        id: user._id.toString(),
+        userId: user.userId,
         displayName: user.displayName,
         controversyPercentile: user.controversyPercentile,
         information: user.information,
