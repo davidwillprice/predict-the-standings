@@ -378,10 +378,7 @@ export const updateAllUserDocGameData = async (
   const operations = userArr.map((user) => {
     return {
       updateOne: {
-        filter:
-          user.userType === "standard"
-            ? { _id: new ObjectId(user.id) }
-            : { userId: user.id },
+        filter: { userId: user.userId },
         update: {
           $set:
             user.userType === "standard"
@@ -391,7 +388,7 @@ export const updateAllUserDocGameData = async (
                   season: user.season,
                 }
               : {
-                  userId: user.id,
+                  userId: user.userId,
                   controversyPercentile: user.controversyPercentile,
                   displayName: user.displayName,
                   information: user.information,
