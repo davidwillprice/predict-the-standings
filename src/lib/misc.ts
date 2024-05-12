@@ -1,4 +1,4 @@
-import type { Entrant } from "@custom-types/game-types";
+import type { Entrant, UserGameData } from "@custom-types/game-types";
 
 export const sortEntrantsAlphabetically = (entrantArr: Entrant[]) => {
   return entrantArr.sort((a, b) =>
@@ -50,6 +50,23 @@ export const numberToOrdinalNumber = (number: number): string => {
 export const getObjFileSize = (obj: object) => {
   const size = new TextEncoder().encode(JSON.stringify(obj)).length;
   console.log(size / 1024 + "kb");
+};
+
+/**If they are in the arr, brings the current user to the front of a UserGameData arr */
+export const bringCurrUserToFrontOfArr = (
+  currUser: UserGameData | null,
+  userArr: UserGameData[]
+): UserGameData[] => {
+  /**If there is no current user, return the arr as is */
+  if (currUser === null) return userArr;
+  const indexOfCurrUser = userArr.findIndex(
+    (user) => user.userId === currUser.userId
+  );
+  /**If the current user is in the arr, bring them to the front of the arr */
+  if (indexOfCurrUser !== -1) {
+    userArr.unshift(userArr.splice(indexOfCurrUser, 1)[0]);
+  }
+  return userArr;
 };
 
 //3 as e

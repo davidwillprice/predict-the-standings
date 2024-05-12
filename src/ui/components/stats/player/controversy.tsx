@@ -1,4 +1,4 @@
-import { formatArrayIntoList } from "@lib/misc";
+import { formatArrayIntoList, bringCurrUserToFrontOfArr } from "@lib/misc";
 
 import {
   ControversialUserIds,
@@ -87,8 +87,11 @@ export const Controversy = ({
           return (
             <li key={controType + entrantType}>
               {`${formatArrayIntoList(
-                users.map((user) => {
+                bringCurrUserToFrontOfArr(currUser, users).map((user) => {
                   if (!user.displayName) throw new Error();
+                  if (user.userId === currUser?.userId) {
+                    return "You";
+                  }
                   return user.displayName;
                 })
               )} had the ${controType} 
