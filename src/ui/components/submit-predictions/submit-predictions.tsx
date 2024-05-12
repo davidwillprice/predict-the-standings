@@ -115,7 +115,7 @@ export const SubmitPredictions = ({
           <div className={btnConstyles.single}>
             <Button onClick={submissionHandler}>
               <Icon strokeWidth={2} type="submit" />
-              Submit Predictions
+              Save Predictions
             </Button>
           </div>
         )
@@ -124,12 +124,13 @@ export const SubmitPredictions = ({
           <>
             <FeedbackContainer iconType="success">
               <p>
-                <span>Submission Successful!</span>
+                <span>Predictions Saved!</span>
               </p>
               {competition === "eurovision" ? (
                 <p>
-                  Once the results are in, you&apos;ll be able to track how
-                  accurate you are compared to everyone else on the{" "}
+                  You can make additional changes until the votes start being
+                  annouced. Once all the results are in, you&apos;ll be able to
+                  track how accurate you are compared to everyone else on the{" "}
                   <Link href={`/${competition}/${season}`}>
                     leaderboard page
                   </Link>
@@ -137,9 +138,10 @@ export const SubmitPredictions = ({
                 </p>
               ) : (
                 <p>
-                  Once the first race of the season completes, you&apos;ll be
-                  able to track how accurate you are compared to everyone else
-                  on the{" "}
+                  You can make more changes to your predictions until the
+                  opening weekend&apos;s Free Practice 1.Once the first race of
+                  the season completes, you&apos;ll be able to track how
+                  accurate you are compared to everyone else on the{" "}
                   <Link
                     href={`/${
                       competition === "f1" ? "formula-1" : competition
@@ -147,12 +149,6 @@ export const SubmitPredictions = ({
                     leaderboard page
                   </Link>{" "}
                   throughout the season.
-                </p>
-              )}
-              {competition === "f1" && (
-                <p>
-                  You can make more changes to your predictions until the
-                  opening weekend&apos;s Free Practice 1.
                 </p>
               )}
             </FeedbackContainer>
