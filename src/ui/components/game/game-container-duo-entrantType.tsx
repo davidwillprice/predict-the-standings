@@ -16,7 +16,11 @@ import { LeaderboardSkeleton } from "./leaderboard-skeleton";
 import btnStyles from "@components/button/button.module.scss";
 import styles from "@components/game/game-container.module.scss";
 
-import { LocalSeasonData, Users, User } from "@custom-types/game-types";
+import {
+  LocalSeasonData,
+  UserGameDataMap,
+  UserGameData,
+} from "@custom-types/game-types";
 
 interface Props {
   children: ReactNode;
@@ -95,8 +99,8 @@ export const DuoEntrantTypeGameContainer = ({
     setInitialEntrantType(currentSearchParams)
   );
   /**@todo Probably need to readd "mode" state to allow for the current user to be automatically navigated to when pagination is added */
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const [usersData, setUsersData] = useState<Users | null>(null);
+  const [selectedUser, setSelectedUser] = useState<UserGameData | null>(null);
+  const [usersData, setUsersData] = useState<UserGameDataMap | null>(null);
 
   useEffect(() => {
     setEntrantType(setInitialEntrantType(currentSearchParams));

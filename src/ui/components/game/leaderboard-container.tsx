@@ -6,10 +6,10 @@ import { DuoEntrantTypeGameContainer } from "@components/game/game-container-duo
 import { Panel } from "@components/panels/panel";
 import { PromptPredictions } from "@components/submit-predictions/prompt-predictions";
 
-import { LocalSeasonData, User } from "@custom-types/game-types";
+import { LocalSeasonData, UserGameData } from "@custom-types/game-types";
 
 type Props = {
-  currUser: User | null;
+  currUser: UserGameData | null;
   headingText: string;
   preseasonText: string;
   searchParams: { [key: string]: string | string[] | undefined };

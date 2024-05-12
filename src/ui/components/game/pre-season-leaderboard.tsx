@@ -1,5 +1,3 @@
-import { Users } from "@custom-types/game-types";
-
 import styles from "@components/game/leaderboard.module.scss";
 import predictStyles from "@components/prediction-table/prediction-table.module.scss";
 

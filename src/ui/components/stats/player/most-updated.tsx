@@ -2,14 +2,14 @@ import { formatArrayIntoList } from "@lib/misc";
 
 import {
   MostUpdatedPredictionUserIds,
-  Users,
-  User,
+  UserGameDataMap,
+  UserGameData,
 } from "@custom-types/game-types";
 
 interface Props {
   mostUpdatedPredictionUserIds: MostUpdatedPredictionUserIds;
-  currUser: User | null;
-  users: Users;
+  currUser: UserGameData | null;
+  users: UserGameDataMap;
 }
 
 export const MostUpdated = ({

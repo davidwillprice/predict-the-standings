@@ -4,8 +4,8 @@ import { Collection } from "mongodb";
 
 import { ObjectId } from "mongodb";
 import {
-  User,
-  Users,
+  UserGameData,
+  UserGameDataMap,
   StatsData,
   AllEntrants,
   Competition,
@@ -60,7 +60,7 @@ export const getMultipleUserGameData = async (
   season: string,
   competition: Competition,
   userIdArr: string[]
-): Promise<Users> => {
+): Promise<UserGameDataMap> => {
   const client = await clientPromise;
   try {
     const db = client.db("pts");
@@ -75,14 +75,14 @@ export const getMultipleUserGameData = async (
         `Failed to get user game data for ${competition + season}`
       );
     /**@todo Refactor the process of coverting the docs to users into a new function*/
-    let users: Users = {};
+    let users: UserGameDataMap = {};
     for await (const doc of result) {
       const predictionsObj: { [entrantType: string]: any } = {};
       Object.keys(allEntrants).forEach((entrantType) => {
         predictionsObj[entrantType] = doc.predictions[entrantType];
       });
 
-      users[doc._id.toString()] = new User(
+      users[doc._id.toString()] = new UserGameData(
         doc.displayName,
         doc._id.toString(),
         doc.lastSubmissionTime,
@@ -108,7 +108,7 @@ export const getMultipleUserGameData = async (
 export const getAllUserPredictionDataQuery = async (
   allEntrants: AllEntrants,
   collection: Collection
-): Promise<Users> => {
+): Promise<UserGameDataMap> => {
   try {
     const result = await collection.find({
       type: "userData",
@@ -119,14 +119,14 @@ export const getAllUserPredictionDataQuery = async (
         `Failed to access DB when getting user prediction data for ${collection.collectionName}`
       );
 
-    let users: Users = {};
+    let users: UserGameDataMap = {};
     for await (const doc of result) {
       const predictionsObj: { [entrantType: string]: any } = {};
       Object.keys(allEntrants).forEach((entrantType) => {
         predictionsObj[entrantType] = doc.predictions[entrantType];
       });
 
-      users[doc._id.toString()] = new User(
+      users[doc._id.toString()] = new UserGameData(
         doc.displayName,
         doc._id.toString(),
         doc.lastSubmissionTime,
@@ -161,7 +161,7 @@ export const getLeaderboardDataQuery = async (
         `Failed to get leaderboard data for ${competition + season}`
       );
 
-    const users: { [key: string]: User } = {};
+    const users: UserGameDataMap = {};
 
     result.forEach((user) => {
       users[user.userId] = {
@@ -341,7 +341,7 @@ export const addPredictionToUserDataQuery = async (
 /**Once new game data has been created, it needs to be attached to the user game data documents in the DB */
 export const updateAllUserDocGameData = async (
   collection: Collection,
-  users: Users
+  users: UserGameDataMap
 ) => {
   let userArr = Object.values(users);
 

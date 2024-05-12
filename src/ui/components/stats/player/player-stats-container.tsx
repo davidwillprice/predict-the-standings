@@ -12,7 +12,7 @@ import { Controversy } from "@components/stats/player/controversy";
 import { MostUpdated } from "./most-updated";
 import { LoadingSpinner } from "@components/loading-spinner/loading-spinner";
 
-import { LocalSeasonData, User } from "@custom-types/game-types";
+import { LocalSeasonData, UserGameData } from "@custom-types/game-types";
 
 type Props = {
   currUserId: string | undefined;
@@ -35,7 +35,7 @@ export const PlayerStats = async ({
   } = seasonData;
 
   /**If the user is logged in and there is round data, get the user's competition data*/
-  let currUser: User | null;
+  let currUser: UserGameData | null;
   if (currUserId && rounds.length > 0) {
     const res = await getSingleUserPredictionDataQuery(
       seasonStr,

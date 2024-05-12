@@ -83,7 +83,7 @@ export class Entrant {
   }
 }
 
-export class User {
+export class UserGameData {
   id: string;
   displayName: string;
   information: string;
@@ -116,8 +116,8 @@ export class User {
 
 type userId = string;
 
-export interface Users {
-  [userId: string]: User;
+export interface UserGameDataMap {
+  [userId: string]: UserGameData;
 }
 
 export class Round {
@@ -161,7 +161,7 @@ export interface GameData {
   roundStats: {
     entrantDiffTotals: { [entrantType: string]: EntrantDiffTotal[] };
   }[];
-  users: Users;
+  users: UserGameDataMap;
 }
 
 export interface StatsData {

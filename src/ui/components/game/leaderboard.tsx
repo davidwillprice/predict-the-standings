@@ -1,7 +1,7 @@
 import styles from "@components/game/leaderboard.module.scss";
 import predictStyles from "@components/prediction-table/prediction-table.module.scss";
 
-import { Round, Users } from "@custom-types/game-types";
+import { Round, UserGameDataMap } from "@custom-types/game-types";
 import Icon from "@ui/svgs/icons/sq-icon";
 
 interface Props {
@@ -13,7 +13,7 @@ interface Props {
   lastUpdated: Date | string;
   rounds: Round[];
   roundIndex: number;
-  users: Users;
+  users: UserGameDataMap;
 }
 
 export const Leaderboard = ({

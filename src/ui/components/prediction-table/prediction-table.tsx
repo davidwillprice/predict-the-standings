@@ -1,4 +1,8 @@
-import type { Competition, Entrants, User } from "@custom-types/game-types";
+import type {
+  Competition,
+  Entrants,
+  UserGameData,
+} from "@custom-types/game-types";
 import { calcPredictionsAccuracy } from "@lib/prediction-data";
 
 import Icon from "@ui/svgs/icons/sq-icon";
@@ -13,7 +17,7 @@ interface Props {
   entrantType: string;
   entrants: Entrants;
   selectedRound: number;
-  selectedUser: User;
+  selectedUser: UserGameData;
 }
 
 export const PredictionTable = ({

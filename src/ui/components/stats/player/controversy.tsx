@@ -1,11 +1,15 @@
 import { formatArrayIntoList } from "@lib/misc";
 
-import { ControversialUserIds, Users, User } from "@custom-types/game-types";
+import {
+  ControversialUserIds,
+  UserGameDataMap,
+  UserGameData,
+} from "@custom-types/game-types";
 
 interface Props {
   controversialUserIds: ControversialUserIds;
-  currUser: User | null;
-  users: Users;
+  currUser: UserGameData | null;
+  users: UserGameDataMap;
 }
 
 export const Controversy = ({
@@ -14,12 +18,12 @@ export const Controversy = ({
   users,
 }: Props) => {
   class MostOrLeastControData {
-    users: User[];
+    users: UserGameData[];
     difFromAvg: number;
     controType: "most" | "least";
     entrantType: string;
     constructor(
-      users: User[],
+      users: UserGameData[],
       controType: "most" | "least",
       entrantType: string
     ) {
