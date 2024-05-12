@@ -62,7 +62,7 @@ export const PlayerStats = async ({
   let controversialUserIds;
   let mostUpdatedPredictionUserIds;
   /**@todo Make this a set to avoid getting the same user data from the DB multiple times */
-  const noteworthyUserIds: string[] = [];
+  let noteworthyUserIds: string[] = [];
   let users;
   if (rounds.length > 0) {
     const StatsData = await getStatsDataQuery(seasonStr, competition);
@@ -78,7 +78,8 @@ export const PlayerStats = async ({
         noteworthyUserIds.push(userId)
       );
     }
-    noteworthyUserIds.concat(mostUpdatedPredictionUserIds);
+
+    noteworthyUserIds = noteworthyUserIds.concat(mostUpdatedPredictionUserIds);
 
     users = await getMultipleUserGameData(
       allEntrants,
