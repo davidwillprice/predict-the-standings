@@ -116,7 +116,7 @@ export class UserGameData {
   }
 }
 
-type userId = string;
+export type UserId = string;
 
 export interface UserGameDataMap {
   [userId: string]: UserGameData;
@@ -140,7 +140,7 @@ interface EntrantDiffTotal {
 }
 
 export type Leaderboard = {
-  userId: userId;
+  userId: UserId;
   percentCorrect: number;
 };
 
@@ -159,6 +159,7 @@ interface RoundPerformance {
 export interface GameData {
   allEntrantStats: { [entrantType: string]: EntrantStats };
   controversialUserIds: ControversialUserIds;
+  latestSubmissionUserId: UserId;
   mostUpdatedPredictionUserIds: MostUpdatedPredictionUserIds;
   roundStats: {
     entrantDiffTotals: { [entrantType: string]: EntrantDiffTotal[] };
@@ -169,6 +170,7 @@ export interface GameData {
 export interface StatsData {
   controversialUserIds: ControversialUserIds;
   allEntrants: { [entrantType: string]: EntrantStats };
+  latestSubmissionUserId: UserId;
   noOfPredictions: { [entrantType: string]: number };
   mostUpdatedPredictionUserIds: MostUpdatedPredictionUserIds;
   rounds: {
@@ -186,8 +188,8 @@ export interface EntrantStats {
 
 export interface ControversialUserIds {
   [entrantType: string]: {
-    most: userId[];
-    least: userId[];
+    most: UserId[];
+    least: UserId[];
   };
 }
-export type MostUpdatedPredictionUserIds = userId[];
+export type MostUpdatedPredictionUserIds = UserId[];

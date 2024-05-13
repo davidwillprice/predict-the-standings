@@ -9,6 +9,7 @@ import {
   Round,
   UserGameData,
   UserGameDataMap,
+  UserId,
 } from "@custom-types/game-types";
 import { calcPercentile } from "./misc";
 
@@ -38,10 +39,11 @@ export const createGameData = async (
 
   users = generateControversyData(users);
 
+  /**Obtaining data for player stats */
   const controversialUserIds = getControversialUserGameDataMap(users);
-
   const mostUpdatedPredictionUserIds =
     getUpdatedPredictionUserGameDataMap(users);
+  const latestSubmissionUserId = getlatestSubmissionUserId(users);
 
   rounds = calcLeaderboards(allEntrants, rounds, users);
 
@@ -63,6 +65,7 @@ export const createGameData = async (
 
   return {
     controversialUserIds: controversialUserIds,
+    latestSubmissionUserId: latestSubmissionUserId,
     mostUpdatedPredictionUserIds: mostUpdatedPredictionUserIds,
     allEntrantStats: allEntrantStats,
     roundStats: rounds.map((round) => {
@@ -557,6 +560,24 @@ function getUpdatedPredictionUserGameDataMap(
 
   return mostUpdatedPredictionUserArr.map((user) => user.userId);
 }
+
+/**Get the userId of the user who submitted their last predictions the latest */
+const getlatestSubmissionUserId = (users: UserGameDataMap): UserId => {
+  /**Add standard users to an array */
+  const userGameDataArr: UserGameData[] = [];
+  Object.values(users).map((user) => {
+    if (user.userType === "standard") {
+      userGameDataArr.push(user);
+    }
+  });
+
+  /**Order standard users by how late they last updated their predictions */
+  userGameDataArr.sort((a, b) =>
+    a.lastSubmissionTime.getTime() > b.lastSubmissionTime.getTime() ? -1 : 1
+  );
+
+  return userGameDataArr[0].userId;
+};
 
 /**The leaderboards are unbounded arrays so I don't want to upload them to the DB */
 const deleteLeaderboardDataFromRounds = (rounds: Round[]) => {

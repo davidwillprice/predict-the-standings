@@ -38,7 +38,7 @@ export const MostUpdated = ({
 
   return (
     <>
-      <h2>Most Updated Predictions</h2>
+      <h2>Indecisive</h2>
       {currUser !== null &&
         typeof currUser.timesPredictionsUpdated === "number" &&
         !currUserMostUpdated && (
@@ -63,11 +63,9 @@ export const MostUpdated = ({
               return user.displayName;
             }
           )
-        )} updated ${
-          currUserMostUpdated ? "your" : "their"
-        } predictions more than anyone else at ${
+        )} updated ${currUserMostUpdated ? "your" : "their"} predictions ${
           mostUpdatedPredictionUsers[0].timesPredictionsUpdated
-        } times.`}
+        } times, more than anyone else.`}
       </p>
     </>
   );

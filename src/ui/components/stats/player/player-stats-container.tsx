@@ -9,6 +9,7 @@ import {
 import { Panel } from "@components/panels/panel";
 import { PromptPredictions } from "@components/submit-predictions/prompt-predictions";
 import { Controversy } from "@components/stats/player/controversy";
+import { LastestSubmission } from "./latest-submission";
 import { MostUpdated } from "./most-updated";
 import { LoadingSpinner } from "@components/loading-spinner/loading-spinner";
 
@@ -61,6 +62,7 @@ export const PlayerStats = async ({
 
   /**If there is round data, get the stats for this competition/season, and then get the users referenced in those stats*/
   let controversialUserIds;
+  let latestSubmissionUserId;
   let mostUpdatedPredictionUserIds;
   /**@todo Make this a set to avoid getting the same user data from the DB multiple times */
   let noteworthyUserIds: string[] = [];
@@ -68,6 +70,7 @@ export const PlayerStats = async ({
   if (rounds.length > 0) {
     const StatsData = await getStatsDataQuery(seasonStr, competition);
     controversialUserIds = StatsData.controversialUserIds;
+    latestSubmissionUserId = StatsData.latestSubmissionUserId;
     mostUpdatedPredictionUserIds = StatsData.mostUpdatedPredictionUserIds;
 
     /**Obtain game data for all the users referenced in the controversy Id obj anmd mostUpdatedPredictionUserIds */
@@ -80,7 +83,10 @@ export const PlayerStats = async ({
       );
     }
 
-    noteworthyUserIds = noteworthyUserIds.concat(mostUpdatedPredictionUserIds);
+    noteworthyUserIds = noteworthyUserIds.concat(
+      mostUpdatedPredictionUserIds,
+      latestSubmissionUserId
+    );
 
     users = await getMultipleUserGameData(
       allEntrants,
@@ -113,6 +119,14 @@ export const PlayerStats = async ({
                 />
               </Panel>
             )}
+          {latestSubmissionUserId && (
+            <LastestSubmission
+              currUser={currUser}
+              predictionFreezeDate={seasonData.predictionFreezeDate}
+              userId={latestSubmissionUserId}
+              users={JSON.parse(JSON.stringify(users))}
+            />
+          )}
         </Suspense>
       ) : (
         <Panel>

@@ -77,6 +77,7 @@ async function submitCompetitionGameData(
           type: "statsData",
           allEntrants: gameData.allEntrantStats,
           controversialUserIds: gameData.controversialUserIds,
+          latestSubmissionUserId: gameData.latestSubmissionUserId,
           mostUpdatedPredictionUserIds: gameData.mostUpdatedPredictionUserIds,
           noOfPredictions: noOfPredictions,
           rounds: gameData.roundStats,

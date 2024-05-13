@@ -204,6 +204,7 @@ export const getStatsDataQuery = async (
     const statsData: StatsData = {
       controversialUserIds: result.controversialUserIds,
       allEntrants: result.allEntrants,
+      latestSubmissionUserId: result.latestSubmissionUserId,
       mostUpdatedPredictionUserIds: result.mostUpdatedPredictionUserIds,
       noOfPredictions: result.noOfPredictions,
       rounds: result.rounds,

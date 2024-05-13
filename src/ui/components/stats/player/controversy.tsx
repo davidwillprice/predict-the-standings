@@ -57,7 +57,7 @@ export const Controversy = ({
 
   return (
     <>
-      <h2>Controversial Predictions</h2>
+      <h2>Controversy</h2>
       {currUser && (
         <>
           <ul>
