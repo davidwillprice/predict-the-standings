@@ -10,6 +10,7 @@ import { PredictionTable } from "@components/prediction-table/prediction-table";
 import { StandingsTable } from "@components/prediction-table/standings-table";
 import { RoundSlider } from "@components/round-slider/round-slider";
 import { Button } from "@components/button/button";
+import ReportContainer from "@components/report-display-name/report-container";
 import Icon from "@ui/svgs/icons/sq-icon";
 import { LeaderboardSkeleton } from "./leaderboard-skeleton";
 
@@ -196,8 +197,11 @@ export const DuoEntrantTypeGameContainer = ({
                   {selectedUser.information && (
                     <p>Note: {selectedUser.information}</p>
                   )}
-                  {/**@todo Add report display name feature
-              <Button>Report Display Name</Button>*/}
+                  <ReportContainer
+                    reportedUser={selectedUser}
+                    currentUserId={currentUserId}
+                    currentUserDisplayName={currentUserDisplayName}
+                  />
                 </div>
                 <div className={styles.tables}>
                   <PredictionTable
