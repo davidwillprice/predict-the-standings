@@ -7,7 +7,7 @@
   align-items: center;
   gap: 20px;
   &.table_mode {
-    max-width: 640px;
+    max-width: 800px;
     align-items: flex-start;
   }
 }
@@ -15,7 +15,7 @@
   width: 100%;
 }
 .options {
-  max-width: 150px;
+  max-width: 310px;
   width: 100%;
 }
 .tables {
@@ -25,7 +25,7 @@
   gap: 20px;
 }
 
-@media (max-width: 870px) {
+@media (max-width: 900px) {
   .leaderboard_mode {
     .standings_table {
       display: none;
@@ -39,6 +39,11 @@
   .tables {
     width: 100%;
     justify-content: center;
+  }
+  .options {
+    order: 1;
+    margin-left: auto;
+    margin-right: auto;
   }
 }
 @media (min-width: 600px) {

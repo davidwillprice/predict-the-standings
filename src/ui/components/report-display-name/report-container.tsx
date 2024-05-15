@@ -33,7 +33,7 @@ export default function ReportContainer({
     <>
       <Button onClick={() => openModal()}>Report Display Name</Button>
       <Modal
-        heading={`Report Display Name - ${reportedUser.displayName}`}
+        heading={`Report Display Name - '${reportedUser.displayName}'`}
         isOpen={isModalOpen}
         onClose={closeModal}>
         {currentUserId ? (

@@ -83,10 +83,22 @@
 @media (max-width: $mobile-menu-breakpoint) {
   .round_footer {
     position: sticky;
-    width: calc(100% - 20px);
+    width: 100%;
     margin: 10px auto 0;
+    padding: 10px;
     left: 10px;
     right: 10px;
     bottom: 10px;
+  }
+  .con h2 {
+    font-size: 16px;
+  }
+  .slider {
+    height: 5px;
+    margin-top: 5px;
+  }
+  .notch_con .notch {
+    width: 2px;
+    height: 7px;
   }
 }
