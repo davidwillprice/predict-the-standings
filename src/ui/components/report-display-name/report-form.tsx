@@ -46,6 +46,7 @@ const ReportForm = ({
       if (response.ok) {
         submissionSuccessful.current = true;
       } else {
+        submissionSuccessful.current = false;
         console.error("Failed to submit form");
       }
     } catch (error) {

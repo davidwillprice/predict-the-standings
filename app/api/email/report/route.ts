@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const { data, error } = await resend.emails.send({
-      from: "Acme <onboarding@resend.dev>",
+      from: "PTS <hello@predictthestandings.com>",
       to: ["predictthestandings@protonmail.com"],
       subject: `Display Name Reported - ${reportedDisplayName}`,
       text: "Display name reported",
