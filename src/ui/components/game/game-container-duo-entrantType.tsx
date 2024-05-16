@@ -10,7 +10,6 @@ import { PredictionTable } from "@components/prediction-table/prediction-table";
 import { StandingsTable } from "@components/prediction-table/standings-table";
 import { RoundSlider } from "@components/round-slider/round-slider";
 import { Button } from "@components/button/button";
-import ReportContainer from "@components/report-display-name/report-container";
 import Icon from "@ui/svgs/icons/sq-icon";
 import { LeaderboardSkeleton } from "./leaderboard-skeleton";
 
@@ -22,6 +21,7 @@ import {
   UserGameDataMap,
   UserGameData,
 } from "@custom-types/game-types";
+import { UserData } from "./user-data";
 
 interface Props {
   children: ReactNode;
@@ -102,6 +102,10 @@ export const DuoEntrantTypeGameContainer = ({
   /**@todo Probably need to readd "mode" state to allow for the current user to be automatically navigated to when pagination is added */
   const [selectedUser, setSelectedUser] = useState<UserGameData | null>(null);
   const [usersData, setUsersData] = useState<UserGameDataMap | null>(null);
+
+  const handleBackBtn = () => {
+    setSelectedUser(null);
+  };
 
   useEffect(() => {
     setEntrantType(setInitialEntrantType(currentSearchParams));
@@ -186,23 +190,14 @@ export const DuoEntrantTypeGameContainer = ({
           ) : (
             selectedUser && (
               <>
-                <div className={styles.options}>
-                  <Button
-                    onClick={() => {
-                      setSelectedUser(null);
-                      router.back();
-                    }}>
-                    Back
-                  </Button>
-                  {selectedUser.information && (
-                    <p>Note: {selectedUser.information}</p>
-                  )}
-                  <ReportContainer
-                    reportedUser={selectedUser}
-                    currentUserId={currentUserId}
-                    currentUserDisplayName={currentUserDisplayName}
-                  />
-                </div>
+                <UserData
+                  currentUserDisplayName={currentUserDisplayName}
+                  currentUserId={currentUserId}
+                  entrantType={entrantType}
+                  selectedUser={selectedUser}
+                  handleBackBtn={handleBackBtn}
+                  roundIndex={roundIndex}
+                />
                 <div className={styles.tables}>
                   <PredictionTable
                     currentUserDisplayName={currentUserDisplayName}

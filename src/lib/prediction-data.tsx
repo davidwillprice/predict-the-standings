@@ -467,10 +467,13 @@ export function generateControversyData(
     /**Use arr to calculate the controversy percentile for a user */
     for (const user of Object.values(users)) {
       if (user.id === "average") continue;
-      user.controversyPercentile[entrantType] = calcPercentile(
-        predictionsFromAvgArr,
-        user.predictionsFromAvg[entrantType]
-      );
+      user.controversyPercentile[entrantType] =
+        Math.trunc(
+          calcPercentile(
+            predictionsFromAvgArr,
+            user.predictionsFromAvg[entrantType]
+          ) * 10
+        ) / 10;
     }
   }
   return users;

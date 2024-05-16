@@ -9,9 +9,8 @@ import { Leaderboard } from "./leaderboard";
 import { PredictionTable } from "@components/prediction-table/prediction-table";
 import { StandingsTable } from "@components/prediction-table/standings-table";
 import { RoundSlider } from "@components/round-slider/round-slider";
-import { Button } from "@components/button/button";
 import { LeaderboardSkeleton } from "./leaderboard-skeleton";
-import ReportContainer from "@components/report-display-name/report-container";
+import { UserData } from "./user-data";
 
 import styles from "@components/game/game-container.module.scss";
 
@@ -90,6 +89,10 @@ export const GameContainer = ({
   const [selectedUser, setSelectedUser] = useState<UserGameData | null>(null);
   const [usersData, setUsersData] = useState<UserGameDataMap | null>(null);
 
+  const handleBackBtn = () => {
+    setSelectedUser(null);
+  };
+
   useEffect(() => {
     setRoundIndex(setInitialRounds(currentSearchParams));
 
@@ -164,23 +167,14 @@ export const GameContainer = ({
         ) : (
           selectedUser && (
             <>
-              <div className={styles.options}>
-                <Button
-                  onClick={() => {
-                    setSelectedUser(null);
-                    router.back();
-                  }}>
-                  Back
-                </Button>
-                {selectedUser.information && (
-                  <p>Note: {selectedUser.information}</p>
-                )}
-                <ReportContainer
-                  reportedUser={selectedUser}
-                  currentUserId={currentUserId}
-                  currentUserDisplayName={currentUserDisplayName}
-                />
-              </div>
+              <UserData
+                currentUserDisplayName={currentUserDisplayName}
+                currentUserId={currentUserId}
+                entrantType={entrantType}
+                roundIndex={roundIndex}
+                selectedUser={selectedUser}
+                handleBackBtn={handleBackBtn}
+              />
               <div className={styles.tables}>
                 <PredictionTable
                   competition={competition}
