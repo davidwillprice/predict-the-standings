@@ -34,12 +34,12 @@ export const UserData = ({
         }}>
         Back
       </Button>
-      {selectedUser.information && <p>Note: {selectedUser.information}</p>}
       <ReportContainer
         reportedUser={selectedUser}
         currentUserId={currentUserId}
         currentUserDisplayName={currentUserDisplayName}
       />
+      {selectedUser.information && <p>Note: {selectedUser.information}</p>}
       <p>
         Leaderboard Position:{" "}
         {selectedUser.season[entrantType][roundIndex].leaderboardPos}
@@ -48,10 +48,12 @@ export const UserData = ({
         Perfect Predictions:{" "}
         {selectedUser.season[entrantType][roundIndex].diffCounts[0]}
       </p>
-      <p>
-        Controversy Percentile:{" "}
-        {selectedUser.controversyPercentile[entrantType]}%
-      </p>
+      {selectedUser.displayName !== "Average" && (
+        <p>
+          Controversy Percentile:{" "}
+          {selectedUser.controversyPercentile[entrantType]}%
+        </p>
+      )}
     </div>
   );
 };
