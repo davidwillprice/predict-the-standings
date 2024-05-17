@@ -4,6 +4,7 @@ export interface Props {
 }
 
 export type IconType =
+  | "arrowLeft"
   | "accessibility"
   | "discord"
   | "driver"
@@ -58,6 +59,13 @@ const iconPaths = {
         />
       </g>
     </>
+  ),
+  arrowLeft: (
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M15.75 19.5 8.25 12l7.5-7.5"
+    />
   ),
   discord: (
     <>
@@ -322,6 +330,8 @@ export default function Icon({ strokeWidth, type }: Props) {
   const content =
     type === "accessibility"
       ? iconPaths.accessibility
+      : type === "arrowLeft"
+      ? iconPaths.arrowLeft
       : type === "discord"
       ? iconPaths.discord
       : type === "driver"

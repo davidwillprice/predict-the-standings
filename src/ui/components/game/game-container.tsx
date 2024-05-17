@@ -119,6 +119,7 @@ export const GameContainer = ({
   /**Updates round in query string */
   const changeRoundHandler = (newRoundIndex: number) => {
     /**Uses router.replace() rather than router.push() as I don't want round chnages clogging up the user history */
+    /**@todo Consider shallow routing? */
     router.replace(
       pathname +
         "?" +
@@ -137,7 +138,7 @@ export const GameContainer = ({
         className={`${styles.con} ${
           selectedUser ? styles.table_mode : styles.leaderboard_mode
         }`}>
-        {typeof currentSearchParams.user !== "string" ? (
+        {!selectedUser ? (
           <>
             <div className={styles.main}>
               {children}
@@ -165,35 +166,33 @@ export const GameContainer = ({
             />
           </>
         ) : (
-          selectedUser && (
-            <>
-              <UserData
+          <>
+            <UserData
+              currentUserDisplayName={currentUserDisplayName}
+              currentUserId={currentUserId}
+              entrantType={entrantType}
+              roundIndex={roundIndex}
+              selectedUser={selectedUser}
+              handleBackBtn={handleBackBtn}
+            />
+            <div className={styles.tables}>
+              <PredictionTable
+                competition={competition}
                 currentUserDisplayName={currentUserDisplayName}
                 currentUserId={currentUserId}
+                entrants={allEntrants[entrantType]}
                 entrantType={entrantType}
-                roundIndex={roundIndex}
+                selectedRound={roundIndex}
                 selectedUser={selectedUser}
-                handleBackBtn={handleBackBtn}
               />
-              <div className={styles.tables}>
-                <PredictionTable
-                  competition={competition}
-                  currentUserDisplayName={currentUserDisplayName}
-                  currentUserId={currentUserId}
-                  entrants={allEntrants[entrantType]}
-                  entrantType={entrantType}
-                  selectedRound={roundIndex}
-                  selectedUser={selectedUser}
-                />
-                <StandingsTable
-                  className={styles.standings_table}
-                  competition={competition}
-                  entrants={allEntrants[entrantType]}
-                  standingsArr={rounds[roundIndex].standings[entrantType]}
-                />
-              </div>
-            </>
-          )
+              <StandingsTable
+                className={styles.standings_table}
+                competition={competition}
+                entrants={allEntrants[entrantType]}
+                standingsArr={rounds[roundIndex].standings[entrantType]}
+              />
+            </div>
+          </>
         )}
       </div>
       {

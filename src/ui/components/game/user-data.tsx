@@ -1,4 +1,4 @@
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
 import ReportContainer from "@components/report-display-name/report-container";
 import { Button } from "@components/button/button";
@@ -25,14 +25,18 @@ export const UserData = ({
   selectedUser,
 }: Props) => {
   const router = useRouter();
+  const pathname = usePathname();
+  const params = new URLSearchParams(useSearchParams());
+
   return (
     <div className={styles.options}>
       <Button
         onClick={() => {
           handleBackBtn();
-          router.back();
+          params.delete("user");
+          router.replace(`${pathname}?${params.toString()}`);
         }}>
-        Back
+        ← Leaderboard
       </Button>
       <ReportContainer
         reportedUser={selectedUser}

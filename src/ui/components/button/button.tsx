@@ -4,10 +4,15 @@ import styles from "@components/button/button.module.scss";
 
 interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode;
+  smallIcon?: boolean;
 }
 
-export const Button = ({ children, className, ...rest }: Props) => (
-  <button {...rest} className={`${styles.button} ${className}`}>
+export const Button = ({ children, className, smallIcon, ...rest }: Props) => (
+  <button
+    {...rest}
+    className={`${styles.button} ${
+      smallIcon && styles.smallIcon
+    } ${className}`}>
     {children}
   </button>
 );
