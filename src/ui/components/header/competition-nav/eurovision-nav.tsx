@@ -1,28 +1,39 @@
 import { Session } from "next-auth";
 
 import HeaderLink from "@components/header/header-link";
+import { SeasonSelector } from "../season-selector";
 
-import { Competition, LocalSeasonData } from "@custom-types/game-types";
+import { allEurovisionSeasonData } from "@data/eurovision/season-data";
+
+import { Competition } from "@custom-types/game-types";
 
 type Props = {
   competition: Competition;
-  seasonData: LocalSeasonData;
+  params: { season: string };
   session: Session | null;
 };
 
-export const EurovisionNav = ({ competition, seasonData, session }: Props) => {
+export const EurovisionNav = ({ competition, params, session }: Props) => {
+  /**If there is data for the season param then use that, otherwise use the latest season */
   const {
     arePredictionsFrozen,
     id: seasonStr,
     predictionsOpen,
     rounds,
-  } = seasonData;
+  } = allEurovisionSeasonData.find(
+    (seasonData) => seasonData.id === params.season
+  ) || allEurovisionSeasonData[0];
+
   const hasMadePredictions =
     session?.user?.predictionsMadeFor?.[competition].includes(seasonStr);
 
   return (
     <>
-      {/**@todo Add year selector*/}
+      <SeasonSelector
+        allLocalSeasonData={allEurovisionSeasonData}
+        competitionStr={"Eurovision"}
+        currentSeasonStr={seasonStr}
+      />
       {rounds.length === 0 && arePredictionsFrozen && hasMadePredictions && (
         <HeaderLink
           href={`/${competition}/${seasonStr}/your-predictions`}

@@ -161,7 +161,7 @@ export const DuoEntrantTypeGameContainer = ({
           className={`${styles.con} ${
             selectedUser ? styles.table_mode : styles.leaderboard_mode
           }`}>
-          {typeof currentSearchParams.user !== "string" ? (
+          {!selectedUser ? (
             <>
               <div className={styles.main}>
                 {children}
@@ -188,33 +188,31 @@ export const DuoEntrantTypeGameContainer = ({
               />
             </>
           ) : (
-            selectedUser && (
-              <>
-                <UserData
+            <>
+              <UserData
+                currentUserDisplayName={currentUserDisplayName}
+                currentUserId={currentUserId}
+                entrantType={entrantType}
+                selectedUser={selectedUser}
+                handleBackBtn={handleBackBtn}
+                roundIndex={roundIndex}
+              />
+              <div className={styles.tables}>
+                <PredictionTable
                   currentUserDisplayName={currentUserDisplayName}
                   currentUserId={currentUserId}
+                  entrants={allEntrants[entrantType]}
                   entrantType={entrantType}
+                  selectedRound={roundIndex}
                   selectedUser={selectedUser}
-                  handleBackBtn={handleBackBtn}
-                  roundIndex={roundIndex}
                 />
-                <div className={styles.tables}>
-                  <PredictionTable
-                    currentUserDisplayName={currentUserDisplayName}
-                    currentUserId={currentUserId}
-                    entrants={allEntrants[entrantType]}
-                    entrantType={entrantType}
-                    selectedRound={roundIndex}
-                    selectedUser={selectedUser}
-                  />
-                  <StandingsTable
-                    className={styles.standings_table}
-                    entrants={allEntrants[entrantType]}
-                    standingsArr={rounds[roundIndex].standings[entrantType]}
-                  />
-                </div>
-              </>
-            )
+                <StandingsTable
+                  className={styles.standings_table}
+                  entrants={allEntrants[entrantType]}
+                  standingsArr={rounds[roundIndex].standings[entrantType]}
+                />
+              </div>
+            </>
           )}
         </div>
         {rounds.length > 0 && (

@@ -2,6 +2,7 @@ import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
 import ReportContainer from "@components/report-display-name/report-container";
 import { Button } from "@components/button/button";
+import Icon from "@ui/svgs/icons/sq-icon";
 
 import styles from "@components/game/game-container.module.scss";
 
@@ -35,8 +36,10 @@ export const UserData = ({
           handleBackBtn();
           params.delete("user");
           router.replace(`${pathname}?${params.toString()}`);
-        }}>
-        ← Leaderboard
+        }}
+        smallIcon={true}>
+        <Icon strokeWidth={2} type="arrowLeft" />
+        Leaderboard
       </Button>
       <ReportContainer
         reportedUser={selectedUser}

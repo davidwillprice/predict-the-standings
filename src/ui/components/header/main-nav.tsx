@@ -1,12 +1,9 @@
 "use client";
 import { useState, useEffect } from "react";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams, useParams } from "next/navigation";
 import { ReactNode } from "react";
 import Link from "next/link";
 import { Session } from "next-auth";
-
-import { allF1SeasonData } from "@data/formula-1/season-data";
-import { allEurovisionSeasonData } from "@data/eurovision/season-data";
 
 import Icon from "@svgs/icons/sq-icon";
 import HeaderLink from "@components/header/header-link";
@@ -26,6 +23,7 @@ interface Props {
 export const MainNav = ({ children, session }: Props) => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const params = useParams<{ season: string }>();
 
   const [mobMenuOpen, toggleMobMenu] = useState(false);
 
@@ -40,16 +38,12 @@ export const MainNav = ({ children, session }: Props) => {
     toggleMobMenu(false);
   }, [pathname, searchParams]);
 
-  const latestF1Season = allF1SeasonData[0];
-
-  const latestEurovisionSeason = allEurovisionSeasonData[0];
-
   const predictionLinks = pathname.startsWith("/formula-1") ? (
-    <Formula1Nav seasonData={latestF1Season} />
+    <Formula1Nav params={params} session={session} />
   ) : pathname.startsWith("/eurovision") ? (
     <EurovisionNav
       competition={"eurovision"}
-      seasonData={latestEurovisionSeason}
+      params={params}
       session={session}
     />
   ) : (

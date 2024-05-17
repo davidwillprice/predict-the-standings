@@ -1,16 +1,42 @@
-import HeaderLink from "@components/header/header-link";
+import { Session } from "next-auth";
 
-import { LocalSeasonData } from "@custom-types/game-types";
+import HeaderLink from "@components/header/header-link";
+import { SeasonSelector } from "../season-selector";
+
+import { allF1SeasonData } from "@data/formula-1/season-data";
 
 type Props = {
-  seasonData: LocalSeasonData;
+  params: { season: string };
+  session: Session | null;
 };
 
-export const Formula1Nav = ({ seasonData }: Props) => {
-  const { arePredictionsFrozen, id: seasonStr, predictionsOpen } = seasonData;
+export const Formula1Nav = ({ params, session }: Props) => {
+  /**If there is data for the season param then use that, otherwise use the latest season */
+  const {
+    arePredictionsFrozen,
+    id: seasonStr,
+    predictionsOpen,
+    rounds,
+  } = allF1SeasonData.find((seasonData) => seasonData.id === params.season) ||
+  allF1SeasonData[0];
+
+  const hasMadePredictions =
+    session?.user?.predictionsMadeFor?.["f1"].includes(seasonStr);
+
   return (
     <>
-      {/**@todo Add year selector*/}
+      <SeasonSelector
+        allLocalSeasonData={allF1SeasonData}
+        competitionStr={"Formula 1"}
+        currentSeasonStr={seasonStr}
+      />
+      {rounds.length === 0 && arePredictionsFrozen && hasMadePredictions && (
+        <HeaderLink
+          href={`/formula-1/${seasonStr}/your-predictions`}
+          icon="listBullet">
+          View Your Predictions
+        </HeaderLink>
+      )}
       {!arePredictionsFrozen && predictionsOpen && (
         <HeaderLink href="/formula-1/2024/predict" icon="listBullet">
           Submit Predictions

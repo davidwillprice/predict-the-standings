@@ -1,0 +1,18 @@
+@import "@styles/sass-variables.scss";
+
+.select {
+  background-color: var(--primary-color);
+  border-radius: 3px;
+  border: 2px solid var(--secondary-color);
+  padding: 10px;
+  font-size: 15px;
+  option:hover {
+    background-color: var(--tertiary-color);
+  }
+}
+@media (max-width: $mobile-menu-breakpoint) {
+  .select {
+    margin-bottom: 10px;
+    margin-top: 10px;
+  }
+}
