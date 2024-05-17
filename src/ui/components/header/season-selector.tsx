@@ -26,11 +26,22 @@ export const SeasonSelector = ({
     const currentSearchParams = new URLSearchParams(
       Array.from(searchParams.entries())
     );
-    /**Navigate to the same URL (searchParams included) but with the season changed */
+
+    const newSeasonStr = e.target.value;
+    /**@todo This juggling of 'f1', 'formula-1' and 'Formula 1' is tiresome - Maybe I can make competition objects and then use whatever type of string I need at the time */
+    const competitionHomepage = `/${
+      competitionStr === "Formula 1"
+        ? "formula-1"
+        : competitionStr.toLowerCase()
+    }/`;
+    const seasonalPages = `${competitionHomepage}${currentSeasonStr}`;
+    /**If not on a seasonal page like a 404 or the competition homepage, navigate to the new season's leaderboard, else navigate to the same URL but with the season changed - searchParams included either way */
+    const newPathname = pathname.startsWith(seasonalPages)
+      ? pathname.replace(currentSeasonStr, newSeasonStr)
+      : `${competitionHomepage}/${newSeasonStr}`;
+
     router.push(
-      `${pathname.replace(currentSeasonStr, e.target.value)}${
-        currentSearchParams ? "?" + currentSearchParams : ""
-      }`
+      `${newPathname}${currentSearchParams ? "?" + currentSearchParams : ""}`
     );
   };
   return (
