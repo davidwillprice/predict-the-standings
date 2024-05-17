@@ -62,7 +62,7 @@ const HeadToHead = ({ teammates }: HeadToHeadProps) => {
           style={{ width: no2Driver.pcPredictedToBeatTeammate + "%" }}
         />
       </div>
-      {avgPosDifBetweenNo1AndNo2 ? (
+      {typeof avgPosDifBetweenNo1AndNo2 === "number" && (
         <p className={styles.avgPos}>
           {avgPosDifBetweenNo1AndNo2 > 0
             ? `On average, people predicted ${
@@ -78,10 +78,8 @@ const HeadToHead = ({ teammates }: HeadToHeadProps) => {
               )} position${
                 Math.abs(avgPosDifBetweenNo1AndNo2) !== 1 ? "s" : ""
               } higher than ${no1Driver.name}.`
-            : `However, both ${no1Driver.name} and ${no2Driver.name} had the same average predicted finish position (${no1Driver.avgPrePos}).`}
+            : `${no1Driver.name} and ${no2Driver.name} had the same average predicted finish position (${no1Driver.avgPrePos}).`}
         </p>
-      ) : (
-        ""
       )}
     </div>
   );
