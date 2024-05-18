@@ -1,12 +1,12 @@
 import {
   AllEntrants,
   ControversialUserIds,
-  Competition,
   Entrants,
   EntrantStats,
   GameData,
   MostUpdatedPredictionUserIds,
   Round,
+  ShortHandCompStr,
   UserGameData,
   UserGameDataMap,
   UserId,
@@ -15,7 +15,7 @@ import { calcPercentile } from "./misc";
 
 export const createGameData = async (
   allEntrants: AllEntrants,
-  competition: Competition,
+  competition: ShortHandCompStr,
   rounds: Round[],
   users: UserGameDataMap
 ): Promise<GameData | string> => {

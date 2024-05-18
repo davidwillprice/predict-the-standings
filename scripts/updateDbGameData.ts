@@ -31,7 +31,7 @@ async function submitCompetitionGameData(
     const {
       allEntrants,
       arePredictionsFrozen,
-      competition,
+      competitionStrs,
       id: seasonStr,
       predictionFreezeDate,
       rounds,
@@ -40,12 +40,12 @@ async function submitCompetitionGameData(
     if (!arePredictionsFrozen && rounds.length > 0) {
       throw new Error(
         `Freeze predictions before adding round data for ${
-          competition + seasonStr
+          competitionStrs.shortHand + seasonStr
         }`
       );
     }
 
-    const collection = db.collection(competition + seasonStr);
+    const collection = db.collection(competitionStrs.shortHand + seasonStr);
 
     await updatePredictionFreezeDateQuery(collection, predictionFreezeDate);
 
@@ -55,7 +55,7 @@ async function submitCompetitionGameData(
     /**Combine local season data with existing user game data*/
     const gameData = await createGameData(
       allEntrants,
-      competition,
+      competitionStrs.shortHand,
       rounds,
       users
     );
@@ -100,6 +100,7 @@ async function submitCompetitionGameData(
 async function run() {
   const client = await connectToMongo();
   try {
+    /**@todo I could do with an extra localSeasonData property like 'seasonClosed' so the script doesn't waste time recalculating years old seasons */
     await submitCompetitionGameData(allF1SeasonData, client);
     await submitCompetitionGameData(allEurovisionSeasonData, client);
     process.exit(0);

@@ -14,6 +14,7 @@ export const Formula1Nav = ({ params, session }: Props) => {
   /**If there is data for the season param then use that, otherwise use the latest season */
   const {
     arePredictionsFrozen,
+    competitionStrs,
     id: seasonStr,
     predictionsOpen,
     rounds,
@@ -21,53 +22,59 @@ export const Formula1Nav = ({ params, session }: Props) => {
   allF1SeasonData[0];
 
   const hasMadePredictions =
-    session?.user?.predictionsMadeFor?.["f1"].includes(seasonStr);
+    session?.user?.predictionsMadeFor?.[competitionStrs.shortHand].includes(
+      seasonStr
+    );
 
   return (
     <>
       <SeasonSelector
         allLocalSeasonData={allF1SeasonData}
-        competitionStr={"Formula 1"}
+        competitionStrs={competitionStrs}
         currentSeasonStr={seasonStr}
       />
       {rounds.length === 0 && arePredictionsFrozen && hasMadePredictions && (
         <HeaderLink
-          href={`/formula-1/${seasonStr}/your-predictions`}
+          href={`/${competitionStrs.hyphenated}/${seasonStr}/your-predictions`}
           icon="listBullet">
           View Your Predictions
         </HeaderLink>
       )}
       {!arePredictionsFrozen && predictionsOpen && (
-        <HeaderLink href="/formula-1/2024/predict" icon="listBullet">
+        <HeaderLink
+          href={`/${competitionStrs.hyphenated}/2024/predict`}
+          icon="listBullet">
           Submit Predictions
         </HeaderLink>
       )}
       <HeaderLink
         customLinkActiveOptions={{
-          href: `/formula-1/${seasonStr}`,
+          href: `/${competitionStrs.hyphenated}/${seasonStr}`,
           includeQuery: false,
           query: ["leaderboard", "constructors"],
         }}
-        href={`/formula-1/${seasonStr}`}
+        href={`/${competitionStrs.hyphenated}/${seasonStr}`}
         icon="driver">
         Drivers Leaderboard
       </HeaderLink>
       <HeaderLink
         customLinkActiveOptions={{
-          href: `/formula-1/${seasonStr}`,
+          href: `/${competitionStrs.hyphenated}/${seasonStr}`,
           includeQuery: true,
           query: ["leaderboard", "constructors"],
         }}
-        href={`/formula-1/${seasonStr}/?leaderboard=constructors`}
+        href={`/${competitionStrs.hyphenated}/${seasonStr}/?leaderboard=constructors`}
         icon="f1">
         Constructors Leaderboard
       </HeaderLink>
       <HeaderLink
-        href={`/formula-1/${seasonStr}/stats/driver-and-team`}
+        href={`/${competitionStrs.hyphenated}/${seasonStr}/stats/driver-and-team`}
         icon="stats">
         Driver & Team Stats
       </HeaderLink>
-      <HeaderLink href={`/formula-1/${seasonStr}/stats/player`} icon="group">
+      <HeaderLink
+        href={`/${competitionStrs.hyphenated}/${seasonStr}/stats/player`}
+        icon="group">
         Player Stats
       </HeaderLink>
     </>

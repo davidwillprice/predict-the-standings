@@ -5,18 +5,16 @@ import { SeasonSelector } from "../season-selector";
 
 import { allEurovisionSeasonData } from "@data/eurovision/season-data";
 
-import { Competition } from "@custom-types/game-types";
-
 type Props = {
-  competition: Competition;
   params: { season: string };
   session: Session | null;
 };
 
-export const EurovisionNav = ({ competition, params, session }: Props) => {
+export const EurovisionNav = ({ params, session }: Props) => {
   /**If there is data for the season param then use that, otherwise use the latest season */
   const {
     arePredictionsFrozen,
+    competitionStrs,
     id: seasonStr,
     predictionsOpen,
     rounds,
@@ -25,39 +23,43 @@ export const EurovisionNav = ({ competition, params, session }: Props) => {
   ) || allEurovisionSeasonData[0];
 
   const hasMadePredictions =
-    session?.user?.predictionsMadeFor?.[competition].includes(seasonStr);
+    session?.user?.predictionsMadeFor?.[competitionStrs.shortHand].includes(
+      seasonStr
+    );
 
   return (
     <>
       <SeasonSelector
         allLocalSeasonData={allEurovisionSeasonData}
-        competitionStr={"Eurovision"}
+        competitionStrs={competitionStrs}
         currentSeasonStr={seasonStr}
       />
       {rounds.length === 0 && arePredictionsFrozen && hasMadePredictions && (
         <HeaderLink
-          href={`/${competition}/${seasonStr}/your-predictions`}
+          href={`/${competitionStrs.hyphenated}/${seasonStr}/your-predictions`}
           icon="listBullet">
           View Your Predictions
         </HeaderLink>
       )}
       {!arePredictionsFrozen && predictionsOpen && (
         <HeaderLink
-          href={`/${competition}/${seasonStr}/predict`}
+          href={`/${competitionStrs.hyphenated}/${seasonStr}/predict`}
           icon="listBullet">
           Submit Predictions
         </HeaderLink>
       )}
-      <HeaderLink href={`/${competition}/${seasonStr}`} icon="microphone">
+      <HeaderLink
+        href={`/${competitionStrs.hyphenated}/${seasonStr}`}
+        icon="microphone">
         Leaderboard
       </HeaderLink>
       <HeaderLink
-        href={`/${competition}/${seasonStr}/stats/country`}
+        href={`/${competitionStrs.hyphenated}/${seasonStr}/stats/country`}
         icon="stats">
         Country Stats
       </HeaderLink>
       <HeaderLink
-        href={`/${competition}/${seasonStr}/stats/player`}
+        href={`/${competitionStrs.hyphenated}/${seasonStr}/stats/player`}
         icon="group">
         Player Stats
       </HeaderLink>

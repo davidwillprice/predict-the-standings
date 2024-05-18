@@ -23,14 +23,18 @@ import { CSS } from "@dnd-kit/utilities";
 
 import { FlagCell } from "@components/prediction-table/eurovision-flag-cell";
 
-import { AllEntrants, Competition, Entrant } from "@custom-types/game-types";
+import {
+  AllEntrants,
+  Entrant,
+  ShortHandCompStr,
+} from "@custom-types/game-types";
 
 import predictionTableStyles from "@components/prediction-table/prediction-table.module.scss";
 import styles from "@components/submit-predictions/editable-prediction-table.module.scss";
 
 type Props = {
   allEntrants: AllEntrants;
-  competition?: Competition;
+  competition?: ShortHandCompStr;
   entrantArr: Entrant[];
   entrantType: string;
   handleEntrantState: (entrantArr: Entrant[]) => void;

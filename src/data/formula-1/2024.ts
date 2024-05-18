@@ -1,5 +1,4 @@
 import {
-  Competition,
   Entrant,
   Entrants,
   LocalSeasonData,
@@ -262,7 +261,6 @@ let rounds: Round[] = [
 ];
 
 const allEntrants = { drivers: drivers, teams: teams };
-const competition: Competition = "f1";
 const id = "2024";
 const isSeasonOver = false;
 const predictionFreezeDate = new Date("2024-02-29T11:30:00");
@@ -270,7 +268,6 @@ const predictionsOpen = true;
 
 export const seasonData2024 = new LocalSeasonData(
   allEntrants,
-  competition,
   id,
   isSeasonOver,
   predictionFreezeDate,

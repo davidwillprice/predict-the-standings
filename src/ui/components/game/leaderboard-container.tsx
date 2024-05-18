@@ -25,7 +25,7 @@ export const LeaderboardContainer = async ({
 }: Props) => {
   const {
     arePredictionsFrozen,
-    competition,
+    competitionStrs,
     id: seasonStr,
     predictionsOpen,
     rounds,
@@ -37,7 +37,10 @@ export const LeaderboardContainer = async ({
   //**Only bother getting the last updated date if there is leaderboard data to show */
   let lastUpdated;
   if (rounds.length > 0) {
-    lastUpdated = await getlastUpdatedDate(seasonStr, competition);
+    lastUpdated = await getlastUpdatedDate(
+      seasonStr,
+      competitionStrs.shortHand
+    );
   }
 
   /**If there is no round data, assign this to null to prevent an error occurring */
@@ -65,7 +68,7 @@ export const LeaderboardContainer = async ({
           </DuoEntrantTypeGameContainer>
         ) : (
           <GameContainer
-            competition={competition}
+            competition={competitionStrs.shortHand}
             currentUserDisplayName={currUserDisplayName}
             currentUserId={currUserId}
             currentSearchParams={searchParams}
@@ -91,7 +94,7 @@ export const LeaderboardContainer = async ({
             <p>{preseasonText}</p>
             <PromptPredictions
               arePredictionsFrozen={arePredictionsFrozen}
-              competition={competition}
+              competition={competitionStrs.hyphenated}
               isSignedIn={Boolean(currUserDisplayName)}
               predictionsOpen={predictionsOpen}
               season={seasonStr}

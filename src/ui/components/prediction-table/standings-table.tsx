@@ -1,4 +1,4 @@
-import type { Competition, Entrants } from "@custom-types/game-types";
+import type { Entrants, ShortHandCompStr } from "@custom-types/game-types";
 
 import { FlagCell } from "@components/prediction-table/eurovision-flag-cell";
 
@@ -6,7 +6,7 @@ import styles from "@components/prediction-table/prediction-table.module.scss";
 
 interface Props {
   className: string;
-  competition?: Competition;
+  competition?: ShortHandCompStr;
   entrants: Entrants;
   standingsArr: string[];
 }

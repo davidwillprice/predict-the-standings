@@ -1,6 +1,6 @@
 import type {
-  Competition,
   Entrants,
+  ShortHandCompStr,
   UserGameData,
 } from "@custom-types/game-types";
 import { calcPredictionsAccuracy } from "@lib/prediction-data";
@@ -11,7 +11,7 @@ import { FlagCell } from "@components/prediction-table/eurovision-flag-cell";
 import styles from "@components/prediction-table/prediction-table.module.scss";
 
 interface Props {
-  competition?: Competition;
+  competition?: ShortHandCompStr;
   currentUserId: string | null;
   currentUserDisplayName: string | null;
   entrantType: string;

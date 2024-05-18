@@ -15,16 +15,16 @@ import { UserData } from "./user-data";
 import styles from "@components/game/game-container.module.scss";
 
 import {
-  Competition,
   LocalSeasonData,
   Round,
+  ShortHandCompStr,
   UserGameDataMap,
   UserGameData,
 } from "@custom-types/game-types";
 
 interface Props {
   children: ReactNode;
-  competition: Competition;
+  competition: ShortHandCompStr;
   currentUserId: string | null;
   currentUserDisplayName: string | null;
   currentSearchParams: { [key: string]: string | string[] | undefined };

@@ -29,7 +29,7 @@ export const PlayerStats = async ({
   const {
     arePredictionsFrozen,
     allEntrants,
-    competition,
+    competitionStrs,
     id: seasonStr,
     predictionsOpen,
     rounds,
@@ -40,7 +40,7 @@ export const PlayerStats = async ({
   if (currUserId && rounds.length > 0) {
     const res = await getSingleUserPredictionDataQuery(
       seasonStr,
-      competition,
+      competitionStrs.shortHand,
       currUserId
     );
     currUser = {
@@ -68,7 +68,10 @@ export const PlayerStats = async ({
   let noteworthyUserIds: string[] = [];
   let users;
   if (rounds.length > 0) {
-    const StatsData = await getStatsDataQuery(seasonStr, competition);
+    const StatsData = await getStatsDataQuery(
+      seasonStr,
+      competitionStrs.shortHand
+    );
     controversialUserIds = StatsData.controversialUserIds;
     latestSubmissionUserId = StatsData.latestSubmissionUserId;
     mostUpdatedPredictionUserIds = StatsData.mostUpdatedPredictionUserIds;
@@ -91,7 +94,7 @@ export const PlayerStats = async ({
     users = await getMultipleUserGameData(
       allEntrants,
       seasonStr,
-      competition,
+      competitionStrs.shortHand,
       noteworthyUserIds
     );
   }
@@ -133,7 +136,7 @@ export const PlayerStats = async ({
           <p>{preseasonText}</p>
           <PromptPredictions
             arePredictionsFrozen={arePredictionsFrozen}
-            competition={competition}
+            competition={competitionStrs.hyphenated}
             isSignedIn={Boolean(currUserId)}
             predictionsOpen={predictionsOpen}
             season={seasonStr}

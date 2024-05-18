@@ -41,11 +41,7 @@ export const MainNav = ({ children, session }: Props) => {
   const predictionLinks = pathname.startsWith("/formula-1") ? (
     <Formula1Nav params={params} session={session} />
   ) : pathname.startsWith("/eurovision") ? (
-    <EurovisionNav
-      competition={"eurovision"}
-      params={params}
-      session={session}
-    />
+    <EurovisionNav params={params} session={session} />
   ) : (
     <>
       <HeaderLink href="/eurovision" icon="microphone">

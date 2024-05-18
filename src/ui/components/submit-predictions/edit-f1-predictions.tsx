@@ -7,11 +7,7 @@ import { EditablePredictionTable } from "@components/submit-predictions/editable
 import { SubmitPredictions } from "@components/submit-predictions/submit-predictions";
 import Icon from "@svgs/icons/sq-icon";
 
-import {
-  Competition,
-  Entrant,
-  LocalSeasonData,
-} from "@custom-types/game-types";
+import { Entrant, LocalSeasonData } from "@custom-types/game-types";
 
 import styles from "@components/submit-predictions/submit-predictions.module.scss";
 import btnStyles from "@components/button/button.module.scss";
@@ -19,7 +15,6 @@ import btnConStyles from "@components/button/button-containers.module.scss";
 
 interface Props {
   arePredictionsFrozen: boolean;
-  competition: Competition;
   displayName: string;
   children: string | ReactNode;
   initialDrivers: Entrant[];
@@ -31,7 +26,6 @@ interface Props {
 
 export const EditF1Predictions = ({
   arePredictionsFrozen,
-  competition,
   displayName,
   initialDrivers,
   initialTeams,
@@ -50,7 +44,7 @@ export const EditF1Predictions = ({
     setTeamArr(entrantArr);
   };
 
-  const { allEntrants } = seasonData;
+  const { allEntrants, competitionStrs } = seasonData;
   return (
     <div className={styles.edit_predictions_con}>
       <div className={styles.infoCon}>
@@ -61,7 +55,7 @@ export const EditF1Predictions = ({
         <SubmitPredictions
           allEntrantArrs={{ drivers: driverArr, teams: teamArr }}
           arePredictionsFrozen={arePredictionsFrozen}
-          competition={competition}
+          competitionStrs={competitionStrs}
           displayName={displayName}
           season={season}
           userId={userId}
@@ -71,7 +65,7 @@ export const EditF1Predictions = ({
         <div className={styles.prediction_table_con}>
           <EditablePredictionTable
             allEntrants={allEntrants}
-            competition={competition}
+            competition={competitionStrs.shortHand}
             entrantArr={driverArr}
             entrantType={"drivers"}
             handleEntrantState={handleDriverState}
@@ -80,7 +74,7 @@ export const EditF1Predictions = ({
         <div className={styles.prediction_table_con}>
           <EditablePredictionTable
             allEntrants={allEntrants}
-            competition={competition}
+            competition={competitionStrs.shortHand}
             entrantArr={teamArr}
             entrantType={"teams"}
             handleEntrantState={handleTeamState}

@@ -48,35 +48,31 @@ const Page = () => {
             <th>Link</th>
           </tr>
         </thead>
+        {/**@todo Need to add tbody element */}
         {competitionData.map((competition) => {
           const {
             arePredictionsFrozen,
             id: seasonStr,
             isSeasonOver,
-            competition: name,
+            competitionStrs,
             predictionsOpen,
           } = competition;
           return (
-            <tr key={name} className={styles.competition}>
+            <tr key={competitionStrs.shortHand} className={styles.competition}>
               <td>
                 <div className={styles.name}>
                   <Icon
                     type={
-                      name === "eurovision"
+                      competitionStrs.shortHand === "eurovision"
                         ? "microphone"
-                        : name === "f1"
+                        : competitionStrs.shortHand === "f1"
                         ? "f1"
                         : "group"
                     }
                     strokeWidth={2}
                   />
                   <p>
-                    {name === "eurovision"
-                      ? "Eurovision"
-                      : name === "f1"
-                      ? "Formula 1"
-                      : ""}
-                    <span> - {seasonStr}</span>
+                    {competitionStrs.display} <span> - {seasonStr}</span>
                   </p>
                 </div>
               </td>
@@ -93,17 +89,13 @@ const Page = () => {
               <td>
                 {predictionsOpen && !arePredictionsFrozen ? (
                   <Link
-                    href={`/${
-                      name === "f1" ? "formula-1" : name
-                    }/${seasonStr}/predict`}
+                    href={`/${competitionStrs.hyphenated}/${seasonStr}/predict`}
                     className={btnStyles.button}>
                     Submit Predictions
                   </Link>
                 ) : (
                   <Link
-                    href={`/${
-                      name === "f1" ? "formula-1" : name
-                    }/${seasonStr}/`}
+                    href={`/${competitionStrs.hyphenated}/${seasonStr}/`}
                     className={btnStyles.button}>
                     View Leaderboard
                   </Link>

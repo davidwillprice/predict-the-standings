@@ -25,12 +25,11 @@ export const LatestSeasonShowcase = ({
 }: Props) => {
   const {
     arePredictionsFrozen,
-    competition,
+    competitionStrs,
     id: seasonStr,
     predictionFreezeDate,
     predictionsOpen,
   } = localSeasonData;
-  const competitionDir = competition === "f1" ? "formula-1" : competition;
   /**@todo Add additional data like how many rounds have been completed, or how many people have submitted predictions */
   return (
     <>
@@ -42,14 +41,14 @@ export const LatestSeasonShowcase = ({
             {children}
             {
               /**Hide the countdown for Eurovision as it doesn't have a set time when the voting will start being annouced */
-              competition !== "eurovision" && (
+              competitionStrs.shortHand !== "eurovision" && (
                 <Countdown deadline={predictionFreezeDate} />
               )
             }
 
             <div className={styles.single}>
               <Link
-                href={`/${competitionDir}/${seasonStr}/predict`}
+                href={`/${competitionStrs.hyphenated}/${seasonStr}/predict`}
                 className={btnStyles.button}>
                 <Icon strokeWidth={2} type="listBullet" />
                 Predict The Standings

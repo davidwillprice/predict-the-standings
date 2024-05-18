@@ -19,15 +19,14 @@ export const CompetitionNavLinks = ({
   showHelp,
   localSeasonData,
 }: Props) => {
-  const { competition, id: seasonStr, rounds } = localSeasonData;
-  const competitionDir = competition === "f1" ? "formula-1" : competition;
+  const { competitionStrs, id: seasonStr, rounds } = localSeasonData;
   return (
     <div className={styles.doubleCol}>
       {rounds.length > 0 &&
         linkArr.map((link) => (
           <Link
             key={link.icon}
-            href={`/${competitionDir}/${seasonStr}/${link.href}`}
+            href={`/${competitionStrs.hyphenated}/${seasonStr}/${link.href}`}
             className={btnStyles.button}>
             <Icon strokeWidth={2} type={link.icon} />
             {link.text}

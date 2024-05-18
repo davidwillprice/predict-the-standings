@@ -4,16 +4,16 @@ import { Collection } from "mongodb";
 
 import { ObjectId } from "mongodb";
 import {
+  AllEntrants,
+  ShortHandCompStr,
+  StatsData,
   UserGameData,
   UserGameDataMap,
-  StatsData,
-  AllEntrants,
-  Competition,
 } from "@custom-types/game-types";
 
 export const getlastUpdatedDate = async (
   season: string,
-  competition: Competition
+  competition: ShortHandCompStr
 ): Promise<Date> => {
   const client = await clientPromise;
   try {
@@ -35,7 +35,7 @@ export const getlastUpdatedDate = async (
 
 export const getSingleUserPredictionDataQuery = async (
   season: string,
-  competition: Competition,
+  competition: ShortHandCompStr,
   userId: string
 ) => {
   const client = await clientPromise;
@@ -58,7 +58,7 @@ export const getSingleUserPredictionDataQuery = async (
 export const getMultipleUserGameData = async (
   allEntrants: AllEntrants,
   season: string,
-  competition: Competition,
+  competition: ShortHandCompStr,
   userIdArr: string[]
 ): Promise<UserGameDataMap> => {
   const client = await clientPromise;
@@ -149,7 +149,7 @@ export const getAllUserPredictionDataQuery = async (
 
 export const getLeaderboardDataQuery = async (
   season: string,
-  competition: Competition
+  competition: ShortHandCompStr
 ) => {
   const client = await clientPromise;
   try {
@@ -191,7 +191,7 @@ export const getLeaderboardDataQuery = async (
  */
 export const getStatsDataQuery = async (
   season: string,
-  competition: Competition
+  competition: ShortHandCompStr
 ): Promise<StatsData> => {
   const client = await clientPromise;
   try {
@@ -258,7 +258,7 @@ export const submitDisplayNameQuery = async (
     ////Update their display name in all their game data
     //Create an array with all the collections which will need to be updated
     let gameDataCollections: string[] = [];
-    const predictionsMadeFor: { [competition: string]: string[] } =
+    const predictionsMadeFor: { [competition: ShortHandCompStr]: string[] } =
       existingUser.predictionsMadeFor;
     for (const [competition, seasonArr] of Object.entries(predictionsMadeFor)) {
       seasonArr.forEach((seasonStr) =>
@@ -285,7 +285,7 @@ export const submitDisplayNameQuery = async (
 };
 
 export const submitPredictionsQuery = async (
-  competition: Competition,
+  competition: ShortHandCompStr,
   displayName: string,
   entrantArrs: { [entrantType: string]: string[] },
   season: string,
@@ -344,7 +344,7 @@ export const submitPredictionsQuery = async (
 
 /**Adds the latest competition/season the user has made predictions for to their user data */
 export const addPredictionToUserDataQuery = async (
-  competition: Competition,
+  competition: ShortHandCompStr,
   seasonStr: string,
   userId: string
 ): Promise<string | void> => {

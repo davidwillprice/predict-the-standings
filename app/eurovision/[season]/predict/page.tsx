@@ -38,6 +38,7 @@ const Page: NextPage<PageProps> = async ({ params }) => {
 
   const {
     arePredictionsFrozen,
+    competitionStrs,
     predictionsOpen,
     isSeasonOver,
     startingEntrantOrders,
@@ -58,7 +59,7 @@ const Page: NextPage<PageProps> = async ({ params }) => {
   try {
     const userPredictionData = await getSingleUserPredictionDataQuery(
       season,
-      "eurovision",
+      competitionStrs.shortHand,
       userId
     );
 
@@ -79,19 +80,22 @@ const Page: NextPage<PageProps> = async ({ params }) => {
       {!predictionsOpen ? (
         <>
           <PanelHeading>
-            <h1>Predict The Eurovision {season} Grand Final - Standings</h1>
+            <h1>
+              Predict The {competitionStrs.display} {season} Grand Final -
+              Standings
+            </h1>
           </PanelHeading>
           <Panel>
             <p>
-              Please return once the countries competing in the Eurovision{" "}
-              {season} Grand Final have been confirmed.
+              Please return once the countries competing in the{" "}
+              {competitionStrs.display} {season} Grand Final have been
+              confirmed.
             </p>
           </Panel>
         </>
       ) : !arePredictionsFrozen ? (
         <EditPredictions
           arePredictionsFrozen={arePredictionsFrozen}
-          competition={"eurovision"}
           displayName={displayName}
           initialEntrants={JSON.parse(JSON.stringify(countryArr))}
           season={season}
@@ -117,8 +121,8 @@ const Page: NextPage<PageProps> = async ({ params }) => {
           {isSeasonOver ? (
             <>
               <p className={commonStyles.text_center}>
-                Eurovision {season} is over, but you can view its leaderboard
-                and stats.
+                {competitionStrs.display} {season} is over, but you can view its
+                leaderboard and stats.
               </p>
               <CompetitionNavLinks
                 linkArr={[

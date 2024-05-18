@@ -90,7 +90,6 @@ const Page: NextPage<PageProps> = async ({ params }) => {
       {!arePredictionsFrozen ? (
         <EditF1Predictions
           arePredictionsFrozen={arePredictionsFrozen}
-          competition={"f1"}
           displayName={displayName}
           initialDrivers={JSON.parse(JSON.stringify(driverArr))}
           initialTeams={JSON.parse(JSON.stringify(teamArr))}

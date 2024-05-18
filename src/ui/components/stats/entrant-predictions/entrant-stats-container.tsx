@@ -27,7 +27,7 @@ export const EntrantStats = async ({
   const {
     arePredictionsFrozen,
     allEntrants,
-    competition,
+    competitionStrs,
     id: seasonStr,
     isSeasonOver,
     predictionsOpen,
@@ -37,7 +37,7 @@ export const EntrantStats = async ({
   /**If there is round data, get the stats for competition/season*/
   let statsData: StatsData | undefined;
   if (rounds.length > 0) {
-    statsData = await getStatsDataQuery(seasonStr, competition);
+    statsData = await getStatsDataQuery(seasonStr, competitionStrs.shortHand);
 
     /**Combine entrant data with their stats */
     for (const entrantType of Object.keys(allEntrants)) {
@@ -74,7 +74,7 @@ export const EntrantStats = async ({
               />
             </div>
           </Panel>
-          {competition === "f1" && (
+          {competitionStrs.shortHand === "f1" && (
             <Panel>
               <HeadToHeads
                 driverIdArr={rounds[0].standings["drivers"]}
@@ -88,7 +88,7 @@ export const EntrantStats = async ({
         <Panel>
           <p>{preseasonText}</p>
           <PromptPredictions
-            competition={competition}
+            competition={competitionStrs.hyphenated}
             isSignedIn={isSignedIn}
             arePredictionsFrozen={arePredictionsFrozen}
             predictionsOpen={predictionsOpen}

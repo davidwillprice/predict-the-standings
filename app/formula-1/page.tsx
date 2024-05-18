@@ -1,15 +1,10 @@
-import Link from "next/link";
 import { Metadata } from "next";
 
 import { Panel } from "@components/panels/panel";
 import { PanelHeading } from "@components/panels/panel-heading";
 import { LatestSeasonShowcase } from "@components/latest-season-showcase/latest-season-showcase";
-import Icon from "@svgs/icons/sq-icon";
 
 import { allF1SeasonData } from "@data/formula-1/season-data";
-
-import styles from "@components/button/button-containers.module.scss";
-import btnStyles from "@components/button/button.module.scss";
 
 import { CompetitionLink } from "@custom-types/misc";
 

@@ -8,7 +8,7 @@ import { LoadingSpinner } from "@components/loading-spinner/loading-spinner";
 import { FeedbackContainer } from "@components/feedback-container/feedback-container";
 import Icon from "@svgs/icons/sq-icon";
 
-import { Entrant, Competition } from "@custom-types/game-types";
+import { Entrant, CompetitionStrings } from "@custom-types/game-types";
 import { submitPredictionsQuery } from "@lib/db-functions";
 
 import styles from "@components/submit-predictions/submit-predictions.module.scss";
@@ -16,7 +16,7 @@ import btnConstyles from "@components/button/button-containers.module.scss";
 
 interface Props {
   arePredictionsFrozen: boolean;
-  competition: Competition;
+  competitionStrs: CompetitionStrings;
   displayName: string;
   allEntrantArrs: { [entrantType: string]: Entrant[] };
   season: string;
@@ -24,7 +24,7 @@ interface Props {
 }
 
 export const SubmitPredictions = ({
-  competition,
+  competitionStrs,
   displayName,
   allEntrantArrs,
   arePredictionsFrozen,
@@ -55,7 +55,7 @@ export const SubmitPredictions = ({
     }
     try {
       const dbErrorMessage = await submitPredictionsQuery(
-        competition,
+        competitionStrs.shortHand,
         displayName,
         predictionObj,
         season,
@@ -70,14 +70,16 @@ export const SubmitPredictions = ({
 
         /**If it's the users first prediction in this comp/season */
         if (
-          !session?.user?.predictionsMadeFor?.[competition].includes(season)
+          !session?.user?.predictionsMadeFor?.[
+            competitionStrs.shortHand
+          ].includes(season)
         ) {
           //**Get all predictionMadeFor data or start a new object if there is none  */
           const predictionsMadeFor = session?.user.predictionsMadeFor || {};
-          if (!predictionsMadeFor[competition]) {
-            predictionsMadeFor[competition] = [];
+          if (!predictionsMadeFor[competitionStrs.shortHand]) {
+            predictionsMadeFor[competitionStrs.shortHand] = [];
           }
-          predictionsMadeFor[competition].push(season);
+          predictionsMadeFor[competitionStrs.shortHand].push(season);
           await update({
             ...session,
             user: {
@@ -126,12 +128,12 @@ export const SubmitPredictions = ({
               <p>
                 <span>Predictions Saved!</span>
               </p>
-              {competition === "eurovision" ? (
+              {competitionStrs.shortHand === "eurovision" ? (
                 <p>
                   You can make additional changes until the votes start being
                   annouced. Once all the results are in, you&apos;ll be able to
                   track how accurate you are compared to everyone else on the{" "}
-                  <Link href={`/${competition}/${season}`}>
+                  <Link href={`/${competitionStrs.hyphenated}/${season}`}>
                     leaderboard page
                   </Link>
                   .
@@ -142,10 +144,7 @@ export const SubmitPredictions = ({
                   opening weekend&apos;s Free Practice 1.Once the first race of
                   the season completes, you&apos;ll be able to track how
                   accurate you are compared to everyone else on the{" "}
-                  <Link
-                    href={`/${
-                      competition === "f1" ? "formula-1" : competition
-                    }/${season}`}>
+                  <Link href={`/${competitionStrs.hyphenated}/${season}`}>
                     leaderboard page
                   </Link>{" "}
                   throughout the season.

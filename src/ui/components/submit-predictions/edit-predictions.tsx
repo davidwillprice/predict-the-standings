@@ -7,11 +7,7 @@ import { EditablePredictionTable } from "@components/submit-predictions/editable
 import { SubmitPredictions } from "@components/submit-predictions/submit-predictions";
 import Icon from "@svgs/icons/sq-icon";
 
-import {
-  Entrant,
-  Competition,
-  LocalSeasonData,
-} from "@custom-types/game-types";
+import { Entrant, LocalSeasonData } from "@custom-types/game-types";
 
 import styles from "@components/submit-predictions/submit-predictions.module.scss";
 import btnStyles from "@components/button/button.module.scss";
@@ -20,7 +16,6 @@ import btnConStyles from "@components/button/button-containers.module.scss";
 interface Props {
   arePredictionsFrozen: boolean;
   children: string | ReactNode;
-  competition: Competition;
   displayName: string;
   initialEntrants: Entrant[];
   season: string;
@@ -35,11 +30,10 @@ export const EditPredictions = ({
   children,
   season,
   seasonData,
-  competition,
   userId,
 }: Props) => {
   const [entrantArr, setEntrantArr] = useState(initialEntrants);
-  const { allEntrants } = seasonData;
+  const { allEntrants, competitionStrs } = seasonData;
 
   const handleEntrantState = (entrantArr: Entrant[]) => {
     setEntrantArr(entrantArr);
@@ -50,9 +44,9 @@ export const EditPredictions = ({
         <PanelHeading align="center">
           <h1>
             Predict the{" "}
-            {competition === "eurovision"
+            {competitionStrs.shortHand === "eurovision"
               ? `Eurovision ${season} Results`
-              : `${competition} ${season} Standings`}
+              : `${competitionStrs.display} ${season} Standings`}
           </h1>
         </PanelHeading>
 
@@ -61,7 +55,7 @@ export const EditPredictions = ({
           allEntrantArrs={{ countries: entrantArr }}
           arePredictionsFrozen={arePredictionsFrozen}
           displayName={displayName}
-          competition={competition}
+          competitionStrs={competitionStrs}
           season={season}
           userId={userId}
         />
@@ -70,7 +64,7 @@ export const EditPredictions = ({
         <div className={styles.prediction_table_con}>
           <EditablePredictionTable
             allEntrants={allEntrants}
-            competition={competition}
+            competition={competitionStrs.shortHand}
             entrantArr={entrantArr}
             entrantType={"countries"}
             handleEntrantState={handleEntrantState}

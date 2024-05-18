@@ -1,10 +1,12 @@
-export type Competition = "f1" | "eurovision" | "premierLeague";
-
 export type AllLocalSeasonData = LocalSeasonData[];
 
 export class LocalSeasonData {
   allEntrants: AllEntrants;
-  competition: Competition;
+  competitionStrs: CompetitionStrings = {
+    display: "",
+    hyphenated: "",
+    shortHand: "",
+  };
   id: string;
   isSeasonOver: boolean;
   arePredictionsFrozen: boolean;
@@ -15,7 +17,6 @@ export class LocalSeasonData {
   status: "preseason" | "predictionsOpen" | "midSeason" | "completed";
   constructor(
     allEntrants: AllEntrants,
-    competition: Competition,
     id: string,
     isSeasonOver: boolean,
     predictionFreezeDate: Date,
@@ -24,7 +25,6 @@ export class LocalSeasonData {
     startingEntrantOrders?: StartingEntrantOrders
   ) {
     this.allEntrants = allEntrants;
-    this.competition = competition;
     this.id = id;
     this.isSeasonOver = isSeasonOver;
     this.arePredictionsFrozen =
@@ -42,6 +42,15 @@ export class LocalSeasonData {
       : "completed";
   }
 }
+
+export type CompetitionStrings = {
+  display: DisplayCompStr;
+  hyphenated: HyphenatedCompStr;
+  shortHand: ShortHandCompStr;
+};
+export type DisplayCompStr = string;
+export type HyphenatedCompStr = string;
+export type ShortHandCompStr = string;
 
 /**Order that the entrants should first be ordered in when a user makes predictions */
 export interface StartingEntrantOrders {
