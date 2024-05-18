@@ -31,11 +31,19 @@ async function submitCompetitionGameData(
     const {
       allEntrants,
       arePredictionsFrozen,
+      isGameDataLocked,
       competitionStrs,
       id: seasonStr,
       predictionFreezeDate,
       rounds,
     } = seasonData;
+
+    if (isGameDataLocked) {
+      console.log(
+        `${competitionStrs.shortHand}${seasonStr} is complete and its database collection is locked`
+      );
+      continue;
+    }
 
     if (!arePredictionsFrozen && rounds.length > 0) {
       throw new Error(
@@ -100,7 +108,6 @@ async function submitCompetitionGameData(
 async function run() {
   const client = await connectToMongo();
   try {
-    /**@todo I could do with an extra localSeasonData property like 'seasonClosed' so the script doesn't waste time recalculating years old seasons */
     await submitCompetitionGameData(allF1SeasonData, client);
     await submitCompetitionGameData(allEurovisionSeasonData, client);
     process.exit(0);

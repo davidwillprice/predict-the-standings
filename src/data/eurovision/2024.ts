@@ -111,6 +111,7 @@ let rounds: Round[] = [
 
 const allEntrants = { countries: countries };
 const id = "2024";
+const isGameDataLocked = true;
 const isSeasonOver = true;
 const predictionFreezeDate = new Date("2024-05-11T22:30:00");
 const predictionsOpen = true;
@@ -118,6 +119,7 @@ const predictionsOpen = true;
 export const seasonData2024 = new LocalSeasonData(
   allEntrants,
   id,
+  isGameDataLocked,
   isSeasonOver,
   predictionFreezeDate,
   predictionsOpen,

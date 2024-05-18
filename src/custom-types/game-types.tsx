@@ -7,17 +7,25 @@ export class LocalSeasonData {
     hyphenated: "",
     shortHand: "",
   };
+  /**Season string like '2023' */
   id: string;
+  /**True when the final round of data has come in */
   isSeasonOver: boolean;
+  /**Automatically calculated via the freeze date */
   arePredictionsFrozen: boolean;
+  /**Date/time that prediction submissions get rejected by the DB */
   predictionFreezeDate: Date;
+  /**True when predictions start being allowed and then starts true after that */
   predictionsOpen: boolean;
   rounds: Round[];
   startingEntrantOrders?: StartingEntrantOrders;
   status: "preseason" | "predictionsOpen" | "midSeason" | "completed";
+  /**Once a season is over no more game data updates need to be made to the collection, lock the gamedata */
+  isGameDataLocked: boolean;
   constructor(
     allEntrants: AllEntrants,
     id: string,
+    isGameDataLocked: boolean,
     isSeasonOver: boolean,
     predictionFreezeDate: Date,
     predictionsOpen: boolean,
@@ -40,6 +48,7 @@ export class LocalSeasonData {
       : !isSeasonOver
       ? "midSeason"
       : "completed";
+    this.isGameDataLocked = isGameDataLocked;
   }
 }
 

@@ -262,6 +262,7 @@ let rounds: Round[] = [
 
 const allEntrants = { drivers: drivers, teams: teams };
 const id = "2024";
+const isGameDataLocked = false;
 const isSeasonOver = false;
 const predictionFreezeDate = new Date("2024-02-29T11:30:00");
 const predictionsOpen = true;
@@ -269,6 +270,7 @@ const predictionsOpen = true;
 export const seasonData2024 = new LocalSeasonData(
   allEntrants,
   id,
+  isGameDataLocked,
   isSeasonOver,
   predictionFreezeDate,
   predictionsOpen,
