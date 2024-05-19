@@ -11,6 +11,7 @@ interface Props {
   entrantType: string;
   isSeasonOver: boolean;
   lastUpdated: Date | string;
+  noOfPredictions: number | null;
   rounds: Round[];
   roundIndex: number;
   users: UserGameDataMap;
@@ -23,6 +24,7 @@ export const Leaderboard = ({
   entrantType,
   isSeasonOver,
   lastUpdated,
+  noOfPredictions,
   rounds,
   roundIndex,
   users,
@@ -113,11 +115,26 @@ export const Leaderboard = ({
           })}
         </tbody>
       </table>
-      {lastUpdated && (
-        <p>
-          <small>Last updated: {lastUpdated.toLocaleString()}</small>
-        </p>
-      )}
+      <div className={styles.small_print}>
+        {noOfPredictions && (
+          <p>
+            <small>
+              {`Showing ${
+                leaderboardArr[0].season[entrantType][roundIndex].leaderboardPos
+              } - ${
+                leaderboardArr[leaderboardArr.length - 1].season[entrantType][
+                  roundIndex
+                ].leaderboardPos
+              } of ${noOfPredictions} players`}
+            </small>
+          </p>
+        )}
+        {lastUpdated && (
+          <p>
+            <small>Last updated: {lastUpdated.toLocaleString()}</small>
+          </p>
+        )}
+      </div>
     </div>
   );
 };

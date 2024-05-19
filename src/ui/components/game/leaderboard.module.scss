@@ -58,6 +58,10 @@
   transform: translateY(-4px);
   opacity: 0.2;
 }
+.small_print {
+  display: flex;
+  justify-content: space-between;
+}
 .skeleton_table {
   padding: 51px 0 48px;
   display: flex;
@@ -96,6 +100,12 @@
   }
 }
 
+@media (max-width: $tablet-menu-breakpoint) {
+  .small_print {
+    flex-direction: column;
+    text-align: center;
+  }
+}
 @media (max-width: $small-mobile-menu-breakpoint) {
   .leaderboard {
     td,

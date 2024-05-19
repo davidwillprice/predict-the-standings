@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect, ReactNode, useCallback } from "react";
+import { useState, useEffect, ReactNode, useRef, useCallback } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 
-import { getLeaderboardDataQuery } from "@lib/db-functions";
+import { getLeaderboardDataQuery, getStatsDataQuery } from "@lib/db-functions";
 
 import { Leaderboard } from "./leaderboard";
 import { PredictionTable } from "@components/prediction-table/prediction-table";
@@ -20,14 +20,12 @@ import styles from "@components/game/game-container.module.scss";
 import {
   LocalSeasonData,
   Round,
-  ShortHandCompStr,
   UserGameDataMap,
   UserGameData,
 } from "@custom-types/game-types";
 
 interface Props {
   children: ReactNode;
-  competition: ShortHandCompStr;
   currentUserId: string | null;
   currentUserDisplayName: string | null;
   currentSearchParams: { [key: string]: string | string[] | undefined };
@@ -38,7 +36,6 @@ interface Props {
 }
 
 export const GameContainer = ({
-  competition,
   children,
   currentUserId,
   currentUserDisplayName,
@@ -112,6 +109,7 @@ export const GameContainer = ({
   /**@todo Probably need to readd "mode" state to allow for the current user to be automatically navigated to when pagination is added */
   const [selectedUser, setSelectedUser] = useState<UserGameData | null>(null);
   const [usersData, setUsersData] = useState<UserGameDataMap | null>(null);
+  const noOfPredictions = useRef<null | number>(null);
 
   const handleBackBtn = () => {
     setSelectedUser(null);
@@ -121,10 +119,20 @@ export const GameContainer = ({
     setEntrantType(setInitialEntrantType(currentSearchParams));
     setRoundIndex(setInitialRounds(currentSearchParams));
 
+    const getNoOfPredictions = async () => {
+      try {
+        const res = await getStatsDataQuery(season, competitionStrs.shortHand);
+        noOfPredictions.current = res.noOfPredictions[entrantType];
+      } catch (err) {
+        throw err;
+      }
+    };
+    getNoOfPredictions();
+
     const updateUserData = async () => {
       try {
         const res = await getLeaderboardDataQuery(
-          competition,
+          competitionStrs.shortHand,
           entrantType,
           roundIndex,
           season
@@ -188,6 +196,7 @@ export const GameContainer = ({
                   entrantType={entrantType}
                   isSeasonOver={isSeasonOver}
                   lastUpdated={lastUpdated}
+                  noOfPredictions={noOfPredictions.current}
                   rounds={rounds}
                   roundIndex={roundIndex}
                   users={usersData}
@@ -198,7 +207,7 @@ export const GameContainer = ({
             </div>
             <StandingsTable
               className={styles.standings_table}
-              competition={competition}
+              competition={competitionStrs.shortHand}
               entrants={allEntrants[entrantType]}
               standingsArr={rounds[roundIndex].standings[entrantType]}
             />
@@ -215,7 +224,7 @@ export const GameContainer = ({
             />
             <div className={styles.tables}>
               <PredictionTable
-                competition={competition}
+                competition={competitionStrs.shortHand}
                 currentUserDisplayName={currentUserDisplayName}
                 currentUserId={currentUserId}
                 entrants={allEntrants[entrantType]}
@@ -225,7 +234,7 @@ export const GameContainer = ({
               />
               <StandingsTable
                 className={styles.standings_table}
-                competition={competition}
+                competition={competitionStrs.shortHand}
                 entrants={allEntrants[entrantType]}
                 standingsArr={rounds[roundIndex].standings[entrantType]}
               />

@@ -45,7 +45,6 @@ export const LeaderboardContainer = async ({
     <>
       {rounds.length > 0 && lastUpdated ? (
         <GameContainer
-          competition={competitionStrs.shortHand}
           currentUserDisplayName={currUserDisplayName}
           currentUserId={currUserId}
           currentSearchParams={searchParams}
