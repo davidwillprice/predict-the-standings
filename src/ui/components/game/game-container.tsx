@@ -98,7 +98,12 @@ export const GameContainer = ({
 
     const updateUserData = async () => {
       try {
-        const res = await getLeaderboardDataQuery(season, competition);
+        const res = await getLeaderboardDataQuery(
+          entrantType,
+          competition,
+          roundIndex,
+          season
+        );
 
         setUsersData(res);
 

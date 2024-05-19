@@ -113,7 +113,12 @@ export const DuoEntrantTypeGameContainer = ({
 
     const updateUserData = async () => {
       try {
-        const res = await getLeaderboardDataQuery(season, "f1");
+        const res = await getLeaderboardDataQuery(
+          "f1",
+          entrantType,
+          roundIndex,
+          season
+        );
 
         setUsersData(res);
 

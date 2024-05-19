@@ -148,14 +148,24 @@ export const getAllUserPredictionDataQuery = async (
 };
 
 export const getLeaderboardDataQuery = async (
-  season: string,
-  competition: ShortHandCompStr
+  competition: ShortHandCompStr,
+  entrantType: string,
+  roundIndex: number,
+  season: string
 ) => {
   const client = await clientPromise;
   try {
     const db = client.db("pts");
     const collection = db.collection(competition + season);
-    const result = await collection.find({ type: "userData" }).toArray();
+    const result = await collection
+      .find({
+        type: "userData",
+        [`season.${entrantType}.${roundIndex}.leaderboardPos`]: {
+          $gte: 1,
+          $lte: 15,
+        },
+      })
+      .toArray();
     if (!result)
       throw new Error(
         `Failed to get leaderboard data for ${competition + season}`
