@@ -11,7 +11,10 @@ import { StandingsTable } from "@components/prediction-table/standings-table";
 import { RoundSlider } from "@components/round-slider/round-slider";
 import { LeaderboardSkeleton } from "./leaderboard-skeleton";
 import { UserData } from "./user-data";
+import { Button } from "@components/button/button";
+import Icon from "@ui/svgs/icons/sq-icon";
 
+import btnStyles from "@components/button/button.module.scss";
 import styles from "@components/game/game-container.module.scss";
 
 import {
@@ -49,9 +52,7 @@ export const GameContainer = ({
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const { allEntrants, isSeasonOver } = localSeasonData;
-
-  const entrantType = Object.keys(allEntrants)[0];
+  const { allEntrants, competitionStrs, isSeasonOver } = localSeasonData;
 
   const createQueryString = useCallback(
     (name: string, value: string) => {
@@ -85,6 +86,29 @@ export const GameContainer = ({
   const [roundIndex, setRoundIndex] = useState(
     setInitialRounds(currentSearchParams)
   );
+
+  /**If searchParams have a valid entrantType query, return it - Else default to driver
+   * @returns entrantType string
+   */
+  const setInitialEntrantType = (searchParams: {
+    [key: string]: string | string[] | undefined;
+  }): string => {
+    const entrantTypeArr = Object.keys(allEntrants);
+    /**If there is only one entrant type, just use that */
+    if (entrantTypeArr.length === 1) return entrantTypeArr[0];
+
+    if (
+      typeof searchParams.leaderboard === "string" &&
+      searchParams.leaderboard === "constructors"
+    )
+      return competitionStrs.shortHand === "f1" ? "teams" : entrantTypeArr[0];
+    else {
+      return competitionStrs.shortHand === "f1" ? "drivers" : entrantTypeArr[0];
+    }
+  };
+  const [entrantType, setEntrantType] = useState(
+    setInitialEntrantType(currentSearchParams)
+  );
   /**@todo Probably need to readd "mode" state to allow for the current user to be automatically navigated to when pagination is added */
   const [selectedUser, setSelectedUser] = useState<UserGameData | null>(null);
   const [usersData, setUsersData] = useState<UserGameDataMap | null>(null);
@@ -94,13 +118,14 @@ export const GameContainer = ({
   };
 
   useEffect(() => {
+    setEntrantType(setInitialEntrantType(currentSearchParams));
     setRoundIndex(setInitialRounds(currentSearchParams));
 
     const updateUserData = async () => {
       try {
         const res = await getLeaderboardDataQuery(
-          entrantType,
           competition,
+          entrantType,
           roundIndex,
           season
         );
@@ -129,6 +154,14 @@ export const GameContainer = ({
       pathname +
         "?" +
         createQueryString("round", (newRoundIndex + 1).toString())
+    );
+  };
+
+  /**Updates entrantType in query string - F1 only currently */
+  const changeEntrantTypeHandler = () => {
+    const newEntrantType = entrantType === "teams" ? "drivers" : "constructors";
+    router.push(
+      pathname + "?" + createQueryString("leaderboard", newEntrantType)
     );
   };
 
@@ -176,9 +209,9 @@ export const GameContainer = ({
               currentUserDisplayName={currentUserDisplayName}
               currentUserId={currentUserId}
               entrantType={entrantType}
+              handleBackBtn={handleBackBtn}
               roundIndex={roundIndex}
               selectedUser={selectedUser}
-              handleBackBtn={handleBackBtn}
             />
             <div className={styles.tables}>
               <PredictionTable
@@ -213,6 +246,18 @@ export const GameContainer = ({
           />
         )
       }
+      {competitionStrs.shortHand === "f1" && (
+        <Button
+          className={`${btnStyles.button} ${styles.switchEntrantTypeBtn}`}
+          onClick={changeEntrantTypeHandler}>
+          <Icon
+            type={entrantType === "teams" ? "driver" : "f1"}
+            strokeWidth={2}
+          />
+          Switch to {entrantType === "team" ? "Drivers" : "Constructors"}{" "}
+          Leaderboard
+        </Button>
+      )}
     </>
   );
 };
