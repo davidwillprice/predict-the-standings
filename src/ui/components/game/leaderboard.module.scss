@@ -18,6 +18,10 @@
     background-color: var(--secondary-color);
     color: var(--primary-color);
   }
+  &__currentUser {
+    /**@todo I want to add a border around this row too but it will require better organisation of the prediction table styles and the leaderboard styles*/
+    font-weight: 500;
+  }
 }
 .position {
   text-align: center;

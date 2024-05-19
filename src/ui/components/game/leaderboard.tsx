@@ -65,7 +65,9 @@ export const Leaderboard = ({
             return (
               <tr
                 key={row.id}
-                className={`${predictStyles.table_row} ${styles.table_row}`}
+                className={`${predictStyles.table_row} ${styles.table_row} ${
+                  row.userId === currentUserId && styles.table_row__currentUser
+                }`}
                 onClick={() => changeSelectedUserHandler(row.userId)}>
                 <td className={styles.position}>
                   {isSeasonOver &&
