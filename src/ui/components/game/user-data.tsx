@@ -38,7 +38,7 @@ export const UserData = ({
           router.replace(`${pathname}?${params.toString()}`);
         }}
         smallIcon={true}>
-        <Icon strokeWidth={2} type="arrowLeft" />
+        <Icon strokeWidth={2} type="chevronLeft" />
         Leaderboard
       </Button>
       <ReportContainer

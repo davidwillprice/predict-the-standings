@@ -4,11 +4,13 @@ export interface Props {
 }
 
 export type IconType =
-  | "arrowLeft"
+  | "chevronLeft"
+  | "chevronRight"
   | "accessibility"
   | "discord"
   | "driver"
   | "edit"
+  | "end"
   | "error"
   | "f1"
   | "github"
@@ -25,6 +27,7 @@ export type IconType =
   | "premierLeague"
   | "reddit"
   | "star"
+  | "start"
   | "stats"
   | "submit"
   | "sun"
@@ -60,11 +63,18 @@ const iconPaths = {
       </g>
     </>
   ),
-  arrowLeft: (
+  chevronLeft: (
     <path
       strokeLinecap="round"
       strokeLinejoin="round"
       d="M15.75 19.5 8.25 12l7.5-7.5"
+    />
+  ),
+  chevronRight: (
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="m8.25 4.5 7.5 7.5-7.5 7.5"
     />
   ),
   discord: (
@@ -91,6 +101,16 @@ const iconPaths = {
         strokeLinejoin="round"
         d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"
       />
+    </>
+  ),
+  end: (
+    <>
+      <g transform="matrix(-1,-1.22465e-16,1.22465e-16,-1,21.7134,24)">
+        <path d="M15.75,19.5L8.25,12L15.75,4.5" />
+      </g>
+      <g transform="matrix(-1,-1.22465e-16,1.22465e-16,-1,33.7866,24)">
+        <path d="M15.75,19.5L15.75,4.5" />
+      </g>
     </>
   ),
   error: (
@@ -254,6 +274,16 @@ const iconPaths = {
       />
     </>
   ),
+  start: (
+    <>
+      <g transform="matrix(1,0,0,1,2.28662,0)">
+        <path d="M15.75,19.5L8.25,12L15.75,4.5" />
+      </g>
+      <g transform="matrix(1,0,0,1,-9.78662,0)">
+        <path d="M15.75,19.5L15.75,4.5" />
+      </g>
+    </>
+  ),
   stats: (
     <>
       <path
@@ -330,14 +360,18 @@ export default function Icon({ strokeWidth, type }: Props) {
   const content =
     type === "accessibility"
       ? iconPaths.accessibility
-      : type === "arrowLeft"
-      ? iconPaths.arrowLeft
+      : type === "chevronLeft"
+      ? iconPaths.chevronLeft
+      : type === "chevronRight"
+      ? iconPaths.chevronRight
       : type === "discord"
       ? iconPaths.discord
       : type === "driver"
       ? iconPaths.driver
       : type === "edit"
       ? iconPaths.edit
+      : type === "end"
+      ? iconPaths.end
       : type === "error"
       ? iconPaths.error
       : type === "f1"
