@@ -50,6 +50,7 @@ export const GameContainer = ({
   const searchParams = useSearchParams();
 
   const { allEntrants, competitionStrs, isSeasonOver } = localSeasonData;
+  const usersPerPage = 15;
 
   const createQueryString = useCallback(
     (name: string, value: string) => {
@@ -64,7 +65,7 @@ export const GameContainer = ({
   /**If searchParams have a valid round query, return it - Else default to latest round
    * @returns roundIndex number
    */
-  const setInitialRounds = (searchParams: {
+  const getInitialRounds = (searchParams: {
     [key: string]: string | string[] | undefined;
   }): number => {
     if (typeof searchParams.round === "string") {
@@ -80,7 +81,7 @@ export const GameContainer = ({
     return rounds.length - 1;
   };
 
-  const setInitialEntrantType = (searchParams: {
+  const getInitialEntrantType = (searchParams: {
     [key: string]: string | string[] | undefined;
   }): string => {
     const entrantTypeArr = Object.keys(allEntrants);
@@ -97,20 +98,22 @@ export const GameContainer = ({
     }
   };
 
-  const setInitialPage = (searchParams: {
+  const getInitialPage = (searchParams: {
     [key: string]: string | string[] | undefined;
   }): number => {
-    return typeof searchParams.page === "string" ? +searchParams.page : 1;
+    return typeof searchParams.page === "string" && +searchParams.page > 0
+      ? +searchParams.page
+      : 1;
   };
 
   /**@todo Probably need to readd "mode" state to allow for the current user to be automatically navigated to when pagination is added */
   const [roundIndex, setRoundIndex] = useState(
-    setInitialRounds(currentSearchParams)
+    getInitialRounds(currentSearchParams)
   );
   const [entrantType, setEntrantType] = useState(
-    setInitialEntrantType(currentSearchParams)
+    getInitialEntrantType(currentSearchParams)
   );
-  const [page, setPage] = useState<number>(setInitialPage(currentSearchParams));
+  const [page, setPage] = useState<number>(getInitialPage(currentSearchParams));
   const [selectedUser, setSelectedUser] = useState<UserGameData | null>(null);
   const [usersData, setUsersData] = useState<UserGameDataMap | null>(null);
   const noOfPredictions = useRef<null | number>(null);
@@ -120,9 +123,12 @@ export const GameContainer = ({
   };
 
   useEffect(() => {
-    setEntrantType(setInitialEntrantType(currentSearchParams));
-    setRoundIndex(setInitialRounds(currentSearchParams));
-    setPage(setInitialPage(currentSearchParams));
+    const newPage = getInitialPage(currentSearchParams);
+    const newEntrantType = getInitialEntrantType(currentSearchParams);
+    const newRoundIndex = getInitialRounds(currentSearchParams);
+    setEntrantType(newEntrantType);
+    setRoundIndex(newRoundIndex);
+    setPage(newPage);
 
     const getData = async () => {
       const getNoOfPredictions = async () => {
@@ -131,7 +137,7 @@ export const GameContainer = ({
             season,
             competitionStrs.shortHand
           );
-          noOfPredictions.current = res.noOfPredictions[entrantType];
+          noOfPredictions.current = res.noOfPredictions[newEntrantType];
         } catch (err) {
           throw err;
         }
@@ -141,11 +147,12 @@ export const GameContainer = ({
         try {
           const res = await getLeaderboardDataQuery(
             competitionStrs.shortHand,
-            entrantType,
+            newEntrantType,
             noOfPredictions.current,
-            page,
-            roundIndex,
-            season
+            newPage,
+            newRoundIndex,
+            season,
+            usersPerPage
           );
 
           setUsersData(res);
@@ -190,6 +197,13 @@ export const GameContainer = ({
     router.push(pathname + "?" + createQueryString("user", userId));
   };
 
+  /**Updates page in query string */
+  const changePageHandler = (page: number) => {
+    router.replace(
+      pathname + "?" + createQueryString("page", page.toLocaleString())
+    );
+  };
+
   return (
     <>
       <div
@@ -202,6 +216,7 @@ export const GameContainer = ({
               {children}
               {usersData ? (
                 <Leaderboard
+                  changePageHandler={changePageHandler}
                   changeSelectedUserHandler={changeSelectedUserHandler}
                   currentUserDisplayName={currentUserDisplayName}
                   currentUserId={currentUserId}
@@ -215,7 +230,7 @@ export const GameContainer = ({
                   users={usersData}
                 />
               ) : (
-                <LeaderboardSkeleton />
+                <LeaderboardSkeleton usersPerPage={usersPerPage} />
               )}
             </div>
             <StandingsTable

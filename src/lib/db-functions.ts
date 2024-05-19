@@ -153,14 +153,14 @@ export const getLeaderboardDataQuery = async (
   noOfPredictions: number | null,
   page: number,
   roundIndex: number,
-  season: string
+  season: string,
+  usersPerPage: number
 ) => {
   const client = await clientPromise;
   try {
     if (noOfPredictions === null)
       throw new Error("Can't tell how many predictions there are");
 
-    const usersPerPage = 15;
     const maxLeaderboardPos = page * usersPerPage;
     /**If there will be less than the standard number of users per page, instead get the bottom 8 users */
     const minLeaderboardPos =

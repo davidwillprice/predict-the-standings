@@ -1,10 +1,13 @@
+import { Button } from "@components/button/button";
+import Icon from "@ui/svgs/icons/sq-icon";
+
 import styles from "@components/game/leaderboard.module.scss";
 import predictStyles from "@components/prediction-table/prediction-table.module.scss";
 
 import { Round, UserGameDataMap } from "@custom-types/game-types";
-import Icon from "@ui/svgs/icons/sq-icon";
 
 interface Props {
+  changePageHandler: Function;
   changeSelectedUserHandler: Function;
   currentUserId: string | null;
   currentUserDisplayName: string | null;
@@ -12,13 +15,14 @@ interface Props {
   isSeasonOver: boolean;
   lastUpdated: Date | string;
   noOfPredictions: number | null;
-  page: number | null;
+  page: number;
   rounds: Round[];
   roundIndex: number;
   users: UserGameDataMap;
 }
 
 export const Leaderboard = ({
+  changePageHandler,
   changeSelectedUserHandler,
   currentUserId,
   currentUserDisplayName,
@@ -117,6 +121,29 @@ export const Leaderboard = ({
           })}
         </tbody>
       </table>
+      <div>
+        {/**Don't show the next button if the person in first is currently showing */}
+        {leaderboardArr[0].season[entrantType][roundIndex].leaderboardPos !==
+          1 && (
+          <Button
+            onClick={() => {
+              changePageHandler(page - 1);
+            }}>
+            <Icon type="chevronLeft" strokeWidth={2} /> Next
+          </Button>
+        )}
+        {/**Don't show the previous button if the person in last is currently showing */}
+        {leaderboardArr[leaderboardArr.length - 1].season[entrantType][
+          roundIndex
+        ].leaderboardPos !== noOfPredictions && (
+          <Button
+            onClick={() => {
+              changePageHandler(page + 1);
+            }}>
+            Previous <Icon type="chevronRight" strokeWidth={2} />
+          </Button>
+        )}
+      </div>
       <div className={styles.small_print}>
         {noOfPredictions && (
           <p>
