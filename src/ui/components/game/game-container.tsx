@@ -80,13 +80,6 @@ export const GameContainer = ({
     return rounds.length - 1;
   };
 
-  const [roundIndex, setRoundIndex] = useState(
-    setInitialRounds(currentSearchParams)
-  );
-
-  /**If searchParams have a valid entrantType query, return it - Else default to driver
-   * @returns entrantType string
-   */
   const setInitialEntrantType = (searchParams: {
     [key: string]: string | string[] | undefined;
   }): string => {
@@ -103,10 +96,21 @@ export const GameContainer = ({
       return competitionStrs.shortHand === "f1" ? "drivers" : entrantTypeArr[0];
     }
   };
+
+  const setInitialPage = (searchParams: {
+    [key: string]: string | string[] | undefined;
+  }): number => {
+    return typeof searchParams.page === "string" ? +searchParams.page : 1;
+  };
+
+  /**@todo Probably need to readd "mode" state to allow for the current user to be automatically navigated to when pagination is added */
+  const [roundIndex, setRoundIndex] = useState(
+    setInitialRounds(currentSearchParams)
+  );
   const [entrantType, setEntrantType] = useState(
     setInitialEntrantType(currentSearchParams)
   );
-  /**@todo Probably need to readd "mode" state to allow for the current user to be automatically navigated to when pagination is added */
+  const [page, setPage] = useState<number>(setInitialPage(currentSearchParams));
   const [selectedUser, setSelectedUser] = useState<UserGameData | null>(null);
   const [usersData, setUsersData] = useState<UserGameDataMap | null>(null);
   const noOfPredictions = useRef<null | number>(null);
@@ -118,40 +122,48 @@ export const GameContainer = ({
   useEffect(() => {
     setEntrantType(setInitialEntrantType(currentSearchParams));
     setRoundIndex(setInitialRounds(currentSearchParams));
+    setPage(setInitialPage(currentSearchParams));
 
-    const getNoOfPredictions = async () => {
-      try {
-        const res = await getStatsDataQuery(season, competitionStrs.shortHand);
-        noOfPredictions.current = res.noOfPredictions[entrantType];
-      } catch (err) {
-        throw err;
-      }
+    const getData = async () => {
+      const getNoOfPredictions = async () => {
+        try {
+          const res = await getStatsDataQuery(
+            season,
+            competitionStrs.shortHand
+          );
+          noOfPredictions.current = res.noOfPredictions[entrantType];
+        } catch (err) {
+          throw err;
+        }
+      };
+
+      const updateUserData = async () => {
+        try {
+          const res = await getLeaderboardDataQuery(
+            competitionStrs.shortHand,
+            entrantType,
+            noOfPredictions.current,
+            page,
+            roundIndex,
+            season
+          );
+
+          setUsersData(res);
+
+          /**If the searchParams have a valid user query, set it as the selected User*/
+          if (
+            typeof currentSearchParams.user === "string" &&
+            res[currentSearchParams.user]
+          )
+            setSelectedUser(res[currentSearchParams.user]);
+        } catch (err) {
+          throw err;
+        }
+      };
+      await getNoOfPredictions();
+      await updateUserData();
     };
-    getNoOfPredictions();
-
-    const updateUserData = async () => {
-      try {
-        const res = await getLeaderboardDataQuery(
-          competitionStrs.shortHand,
-          entrantType,
-          roundIndex,
-          season
-        );
-
-        setUsersData(res);
-
-        /**If the searchParams have a valid user query, set it as the selected User*/
-        if (
-          typeof currentSearchParams.user === "string" &&
-          res[currentSearchParams.user]
-        )
-          setSelectedUser(res[currentSearchParams.user]);
-      } catch (err) {
-        throw err;
-      }
-    };
-
-    updateUserData();
+    getData();
   }, [currentSearchParams]);
 
   /**Updates round in query string */
@@ -197,6 +209,7 @@ export const GameContainer = ({
                   isSeasonOver={isSeasonOver}
                   lastUpdated={lastUpdated}
                   noOfPredictions={noOfPredictions.current}
+                  page={page}
                   rounds={rounds}
                   roundIndex={roundIndex}
                   users={usersData}

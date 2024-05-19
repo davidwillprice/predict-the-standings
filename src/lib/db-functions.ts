@@ -150,19 +150,32 @@ export const getAllUserPredictionDataQuery = async (
 export const getLeaderboardDataQuery = async (
   competition: ShortHandCompStr,
   entrantType: string,
+  noOfPredictions: number | null,
+  page: number,
   roundIndex: number,
   season: string
 ) => {
   const client = await clientPromise;
   try {
+    if (noOfPredictions === null)
+      throw new Error("Can't tell how many predictions there are");
+
+    const usersPerPage = 15;
+    const maxLeaderboardPos = page * usersPerPage;
+    /**If there will be less than the standard number of users per page, instead get the bottom 8 users */
+    const minLeaderboardPos =
+      maxLeaderboardPos > noOfPredictions
+        ? noOfPredictions - (usersPerPage - 1)
+        : page * usersPerPage - (usersPerPage - 1);
+
     const db = client.db("pts");
     const collection = db.collection(competition + season);
     const result = await collection
       .find({
         type: "userData",
         [`season.${entrantType}.${roundIndex}.leaderboardPos`]: {
-          $gte: 1,
-          $lte: 15,
+          $gte: minLeaderboardPos,
+          $lte: maxLeaderboardPos,
         },
       })
       .toArray();

@@ -12,6 +12,7 @@ interface Props {
   isSeasonOver: boolean;
   lastUpdated: Date | string;
   noOfPredictions: number | null;
+  page: number | null;
   rounds: Round[];
   roundIndex: number;
   users: UserGameDataMap;
@@ -25,6 +26,7 @@ export const Leaderboard = ({
   isSeasonOver,
   lastUpdated,
   noOfPredictions,
+  page,
   rounds,
   roundIndex,
   users,
