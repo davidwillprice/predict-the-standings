@@ -404,6 +404,8 @@ export default function Icon({ strokeWidth, type }: Props) {
       ? iconPaths.reddit
       : type === "star"
       ? iconPaths.star
+      : type === "start"
+      ? iconPaths.start
       : type === "stats"
       ? iconPaths.stats
       : type === "submit"

@@ -214,7 +214,7 @@ export const GameContainer = ({
           <>
             <div className={styles.main}>
               {children}
-              {usersData ? (
+              {usersData && noOfPredictions.current !== null ? (
                 <Leaderboard
                   changePageHandler={changePageHandler}
                   changeSelectedUserHandler={changeSelectedUserHandler}
@@ -228,6 +228,7 @@ export const GameContainer = ({
                   rounds={rounds}
                   roundIndex={roundIndex}
                   users={usersData}
+                  usersPerPage={usersPerPage}
                 />
               ) : (
                 <LeaderboardSkeleton usersPerPage={usersPerPage} />
@@ -272,6 +273,7 @@ export const GameContainer = ({
       </div>
       {
         //**Don't show the round slider if there is no round data or if there is only one round total in the season */
+        /**@todo Add debouncing so new DB info isn't obtained until after 0.3s after the slider has been adjusted */
         rounds.length === 0 || (rounds.length === 1 && isSeasonOver) ? (
           ""
         ) : (

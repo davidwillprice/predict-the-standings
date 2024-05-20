@@ -14,11 +14,12 @@ interface Props {
   entrantType: string;
   isSeasonOver: boolean;
   lastUpdated: Date | string;
-  noOfPredictions: number | null;
+  noOfPredictions: number;
   page: number;
   rounds: Round[];
   roundIndex: number;
   users: UserGameDataMap;
+  usersPerPage: number;
 }
 
 export const Leaderboard = ({
@@ -34,6 +35,7 @@ export const Leaderboard = ({
   rounds,
   roundIndex,
   users,
+  usersPerPage,
 }: Props) => {
   //**Sort the users object into an array ordered by their leaderboard positions */
   const leaderboardArr = [];
@@ -47,6 +49,8 @@ export const Leaderboard = ({
   );
 
   if (typeof lastUpdated === "string") lastUpdated = new Date(lastUpdated);
+
+  const noOfPages = Math.ceil(noOfPredictions / usersPerPage);
 
   return (
     <div className={predictStyles.prediction_table}>
@@ -121,43 +125,74 @@ export const Leaderboard = ({
           })}
         </tbody>
       </table>
-      <div>
-        {/**Don't show the next button if the person in first is currently showing */}
-        {leaderboardArr[0].season[entrantType][roundIndex].leaderboardPos !==
-          1 && (
-          <Button
-            onClick={() => {
-              changePageHandler(page - 1);
-            }}>
-            <Icon type="chevronLeft" strokeWidth={2} /> Next
-          </Button>
-        )}
+      <div className={styles.page_nav}>
+        {/**Don't show the upwards buttons if the person in first is currently showing */}
+        <div className={styles.button_con}>
+          {leaderboardArr[0].season[entrantType][roundIndex].leaderboardPos !==
+            1 && (
+            <>
+              <Button
+                className={styles.skip}
+                aria-label="Go to the first page"
+                onClick={() => {
+                  changePageHandler(1);
+                }}>
+                <Icon type="start" strokeWidth={2} />
+              </Button>
+              <Button
+                aria-label="Go up a page"
+                onClick={() => {
+                  changePageHandler(page - 1);
+                }}>
+                <Icon type="chevronLeft" strokeWidth={2} />
+                <span>Next</span>
+              </Button>
+            </>
+          )}
+        </div>
+        <p>
+          Page {page > noOfPages ? noOfPages : page} of {noOfPages}
+        </p>
         {/**Don't show the previous button if the person in last is currently showing */}
-        {leaderboardArr[leaderboardArr.length - 1].season[entrantType][
-          roundIndex
-        ].leaderboardPos !== noOfPredictions && (
-          <Button
-            onClick={() => {
-              changePageHandler(page + 1);
-            }}>
-            Previous <Icon type="chevronRight" strokeWidth={2} />
-          </Button>
-        )}
+        <div className={styles.button_con}>
+          {leaderboardArr[leaderboardArr.length - 1].season[entrantType][
+            roundIndex
+          ].leaderboardPos !== noOfPredictions && (
+            <>
+              <Button
+                aria-label="Go down a page"
+                onClick={() => {
+                  changePageHandler(page + 1);
+                }}>
+                <span>Previous</span>
+                <Icon type="chevronRight" strokeWidth={2} />
+              </Button>
+              <Button
+                className={styles.skip}
+                aria-label="Go to the last page"
+                onClick={() => {
+                  changePageHandler(
+                    noOfPredictions / Object.values(users).length
+                  );
+                }}>
+                <Icon type="end" strokeWidth={2} />
+              </Button>
+            </>
+          )}
+        </div>
       </div>
       <div className={styles.small_print}>
-        {noOfPredictions && (
-          <p>
-            <small>
-              {`Showing ${
-                leaderboardArr[0].season[entrantType][roundIndex].leaderboardPos
-              } - ${
-                leaderboardArr[leaderboardArr.length - 1].season[entrantType][
-                  roundIndex
-                ].leaderboardPos
-              } of ${noOfPredictions} players`}
-            </small>
-          </p>
-        )}
+        <p>
+          <small>
+            {`Showing ${
+              leaderboardArr[0].season[entrantType][roundIndex].leaderboardPos
+            } - ${
+              leaderboardArr[leaderboardArr.length - 1].season[entrantType][
+                roundIndex
+              ].leaderboardPos
+            } of ${noOfPredictions} players`}
+          </small>
+        </p>
         {lastUpdated && (
           <p>
             <small>Last updated: {lastUpdated.toLocaleString()}</small>

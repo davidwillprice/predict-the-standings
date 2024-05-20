@@ -61,6 +61,23 @@
   display: flex;
   justify-content: space-between;
 }
+.page_nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  .button_con {
+    display: flex;
+    gap: 10px;
+  }
+  button {
+    background-color: var(--primary-color);
+    max-width: 130px;
+  }
+  .skip {
+    max-width: 35px;
+  }
+}
 .skeleton_table {
   padding: 51px 0 48px;
   display: flex;
@@ -99,10 +116,18 @@
   }
 }
 
-@media (max-width: $tablet-menu-breakpoint) {
+@media (max-width: 800px) {
   .small_print {
     flex-direction: column;
     text-align: center;
+  }
+  .page_nav {
+    button {
+      max-width: 35px;
+    }
+    span {
+      display: none;
+    }
   }
 }
 @media (max-width: $small-mobile-menu-breakpoint) {
