@@ -36,28 +36,14 @@ export const PlayerStats = async ({
   } = seasonData;
 
   /**If the user is logged in and there is round data, get the user's competition data*/
-  let currUser: UserGameData | null;
+  let currUser: UserGameData | null = null;
   if (currUserId && rounds.length > 0) {
     const res = await getSingleUserPredictionDataQuery(
       seasonStr,
       competitionStrs.shortHand,
       currUserId
     );
-    currUser = {
-      id: res.id,
-      displayName: res.displayName,
-      controversyPercentile: res.controversyPercentile,
-      information: res.information,
-      lastSubmissionTime: res.lastSubmissionTime,
-      predictions: res.predictions,
-      predictionsFromAvg: res.predictionsFromAvg,
-      season: res.season,
-      timesPredictionsUpdated: res.timesPredictionsUpdated,
-      userId: res.userId,
-      userType: res.userType,
-    };
-  } else {
-    currUser = null;
+    if (res) currUser = res;
   }
 
   /**If there is round data, get the stats for this competition/season, and then get the users referenced in those stats*/
@@ -101,6 +87,9 @@ export const PlayerStats = async ({
 
   /**@todo Stat for copying last year's standings */
   /**@todo "X, Y, and Z were the only players to predict Hamilton would win the WDC" */
+  /**@todo Stat for who was top of the table for longest */
+  /**@todo Leaderboard based on xG for football? */
+  /**@todo Table of which entrants is causing the logged in user the biggest issues? */
   return (
     <>
       {rounds.length > 0 && controversialUserIds !== undefined ? (

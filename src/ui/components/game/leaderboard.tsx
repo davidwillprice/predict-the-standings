@@ -151,6 +151,7 @@ export const Leaderboard = ({
           )}
         </div>
         <p>
+          {/**@todo Add a number input to allow the user to jump to any page quickly */}
           Page {page > noOfPages ? noOfPages : page} of {noOfPages}
         </p>
         {/**Don't show the previous button if the person in last is currently showing */}
@@ -172,7 +173,7 @@ export const Leaderboard = ({
                 aria-label="Go to the last page"
                 onClick={() => {
                   changePageHandler(
-                    noOfPredictions / Object.values(users).length
+                    Math.ceil(noOfPredictions / Object.values(users).length)
                   );
                 }}>
                 <Icon type="end" strokeWidth={2} />

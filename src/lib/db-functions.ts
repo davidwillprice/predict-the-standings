@@ -37,17 +37,31 @@ export const getSingleUserPredictionDataQuery = async (
   season: string,
   competition: ShortHandCompStr,
   userId: string
-) => {
+): Promise<UserGameData> => {
   const client = await clientPromise;
   try {
     const db = client.db("pts");
     const collection = db.collection(competition + season);
-    const result = await collection.findOne({ userId: userId });
-    if (!result)
+    const res = await collection.findOne({ userId: userId });
+    if (!res)
       throw new Error(
         `Failed to get user prediction data for ${competition + season}`
       );
-    return result;
+    /**@todo Use a function for the conversion between res and UserGameData */
+    console.log("Returning single userGameData");
+    return {
+      id: res._id.toString(),
+      displayName: res.displayName,
+      controversyPercentile: res.controversyPercentile,
+      information: res.information,
+      lastSubmissionTime: res.lastSubmissionTime,
+      predictions: res.predictions,
+      predictionsFromAvg: res.predictionsFromAvg,
+      season: res.season,
+      timesPredictionsUpdated: res.timesPredictionsUpdated,
+      userId: res.userId,
+      userType: res.userType,
+    };
   } catch (error) {
     throw error;
   }

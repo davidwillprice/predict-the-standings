@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 
 import predictionTableStyles from "@components/prediction-table/prediction-table.module.scss";

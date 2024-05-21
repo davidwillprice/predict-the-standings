@@ -35,25 +35,41 @@ const Page = () => {
         <h1>Help</h1>
       </PanelHeading>
       <Panel>
-        <h2>Rules</h2>
+        <h2>How Does It Work?</h2>
         <ol>
           <li>
-            The accuracy rating on the leaderboard shows how close each player
-            is to the actual standings.
+            <p>
+              The accuracy percentage on the leaderboard shows how close each
+              player is to the actual standings.
+            </p>
+            <ul>
+              <li>
+                100% accuracy means they perfectly predicted the standings.
+              </li>
+              <li>
+                0% accuracy means their predictions couldn&apos;t have been
+                further from the actual standings.
+              </li>
+              <li>
+                Below 50% accuracy means they would likely have been better off
+                randomising their predictions.
+              </li>
+            </ul>
           </li>
+
           <li>
             The player with the most accurate prediction table at the end of the
             season wins.
           </li>
           <li>
-            When viewing someone&apos;s prediction table, the number on the
-            right of each entrant (aka team/driver/country) denotes how many
-            positions that entrant was predicted away from their position in the
-            actual standings.
+            If players have equal accuracy percentages, how many entrants
+            (teams/drivers/countries etc) they perfectly predicted will be used
+            a tie break. Then how many predictions were 1 off, then how many
+            predictions were 2 off etc.
           </li>
           <li>
-            If the player has perfectly predicted an entrant, a green tick shows
-            next to the entrant.
+            If players made identical predictions, they will be ordered by who
+            made submitted their predictions first.
           </li>
         </ol>
       </Panel>
@@ -144,18 +160,9 @@ const Page = () => {
         <h2>Additional Info</h2>
         <ul>
           <li>
-            If players have equal accuracy ratings, perfect predictions will be
-            used a tie break, then predictions that were 1 off, then predictions
-            that were 2 off etc.
-          </li>
-          <li>
-            If players have made identical predictions, they will be ordered by
-            who made submitted their predictions first.
-          </li>
-          <li>
-            The &apos;Average&apos; prediction tables were worked out by
-            calculating the mean position of each driver/team across the other
-            player prediction tables.
+            The &apos;Average&apos; prediction table is worked out by
+            calculating the mean position of each driver/team across
+            everyone&apos; player prediction tables.
           </li>
           <li>
             For Formula 1, stand-in drivers and new mid-season drivers will be
@@ -163,7 +170,7 @@ const Page = () => {
           </li>
           <li>
             Other than that, the actual standings will be ordered as they are in
-            real life.
+            real life (including factoring things like point deductions).
           </li>
         </ul>
       </Panel>
