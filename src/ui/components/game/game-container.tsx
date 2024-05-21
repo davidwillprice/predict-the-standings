@@ -3,7 +3,11 @@
 import { useState, useEffect, ReactNode, useRef, useCallback } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 
-import { getLeaderboardDataQuery, getStatsDataQuery } from "@lib/db-functions";
+import {
+  getLeaderboardDataQuery,
+  getSingleUserPredictionDataQuery,
+  getStatsDataQuery,
+} from "@lib/db-functions";
 
 import { Leaderboard } from "./leaderboard";
 import { PredictionTable } from "@components/prediction-table/prediction-table";
@@ -117,11 +121,29 @@ export const GameContainer = ({
   const [selectedUser, setSelectedUser] = useState<UserGameData | null>(null);
   const [usersData, setUsersData] = useState<UserGameDataMap | null>(null);
   const noOfPredictions = useRef<null | number>(null);
+  const currUserGameData = useRef<null | UserGameData>(null);
 
   const handleBackBtn = () => {
     setSelectedUser(null);
   };
 
+  /**UseEffect that only runs once on page load */
+  useEffect(() => {
+    if (currentUserId) {
+      const getCurrUserGameData = async () => {
+        currUserGameData.current = await getSingleUserPredictionDataQuery(
+          season,
+          competitionStrs.shortHand,
+          currentUserId
+        );
+      };
+      getCurrUserGameData();
+    }
+  }, [season, competitionStrs.shortHand, currentUserId]);
+
+  /**useEffect that only runs when the query strings change
+   * @todo Fix this seeming to run more than once after a page load and it is causing multiple unnecessary DB calls
+   */
   useEffect(() => {
     const newPage = getInitialPage(currentSearchParams);
     const newEntrantType = getInitialEntrantType(currentSearchParams);
@@ -157,12 +179,19 @@ export const GameContainer = ({
 
           setUsersData(res);
 
-          /**If the searchParams have a valid user query, set it as the selected User*/
-          if (
-            typeof currentSearchParams.user === "string" &&
-            res[currentSearchParams.user]
-          )
-            setSelectedUser(res[currentSearchParams.user]);
+          if (typeof currentSearchParams.user === "string") {
+            /**If the searchParams have a valid user query, set it as the selected User*/
+            if (res[currentSearchParams.user])
+              setSelectedUser(res[currentSearchParams.user]);
+            /**Else if it is the current user's Id in the params, use their data for the selected user */ else if (
+              currUserGameData.current !== null &&
+              currUserGameData.current.userId === currentSearchParams.user
+            )
+              setSelectedUser(currUserGameData.current);
+            /**@todo If both the above fail, I need to try and obtain the user's data via its own DB query, else if you navigate to a selectedUser without being on their page then it redirects you to the first page as the game container won't have loaded their data
+             * Or maybe when the selectedUser is updated, I can always ensure the page is updated to the one the user is on? That has the added benefit of meaning if the currUser shortcut is used, if the user goes back to the leaderboard after then it will be on the currUser's page
+             */
+          }
         } catch (err) {
           throw err;
         }
@@ -218,8 +247,7 @@ export const GameContainer = ({
                 <Leaderboard
                   changePageHandler={changePageHandler}
                   changeSelectedUserHandler={changeSelectedUserHandler}
-                  currentUserDisplayName={currentUserDisplayName}
-                  currentUserId={currentUserId}
+                  currUserGameData={currUserGameData.current}
                   entrantType={entrantType}
                   isSeasonOver={isSeasonOver}
                   lastUpdated={lastUpdated}

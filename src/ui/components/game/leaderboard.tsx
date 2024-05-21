@@ -4,13 +4,12 @@ import Icon from "@ui/svgs/icons/sq-icon";
 import styles from "@components/game/leaderboard.module.scss";
 import predictStyles from "@components/prediction-table/prediction-table.module.scss";
 
-import { Round, UserGameDataMap } from "@custom-types/game-types";
+import { Round, UserGameData, UserGameDataMap } from "@custom-types/game-types";
 
 interface Props {
   changePageHandler: Function;
   changeSelectedUserHandler: Function;
-  currentUserId: string | null;
-  currentUserDisplayName: string | null;
+  currUserGameData: UserGameData | null;
   entrantType: string;
   isSeasonOver: boolean;
   lastUpdated: Date | string;
@@ -25,8 +24,7 @@ interface Props {
 export const Leaderboard = ({
   changePageHandler,
   changeSelectedUserHandler,
-  currentUserId,
-  currentUserDisplayName,
+  currUserGameData,
   entrantType,
   isSeasonOver,
   lastUpdated,
@@ -52,6 +50,66 @@ export const Leaderboard = ({
 
   const noOfPages = Math.ceil(noOfPredictions / usersPerPage);
 
+  const worstDisplayedLeaderboardPos =
+    leaderboardArr[leaderboardArr.length - 1].season[entrantType][roundIndex]
+      .leaderboardPos;
+  const bestDisplayedLeaderboardPos =
+    leaderboardArr[0].season[entrantType][roundIndex].leaderboardPos;
+
+  const leaderboardRow = (userGameData: UserGameData) => {
+    const roundData = userGameData.season[entrantType][roundIndex];
+    return (
+      <tr
+        className={`${predictStyles.table_row} ${styles.table_row} ${
+          userGameData.userId === currUserGameData?.userId &&
+          styles.table_row__currentUser
+        }`}
+        onClick={() => changeSelectedUserHandler(userGameData.userId)}>
+        <td className={styles.position}>
+          {isSeasonOver &&
+          roundData.leaderboardPos === 1 &&
+          roundIndex === rounds.length - 1 ? (
+            <Icon type="trophy" strokeWidth={1} />
+          ) : (
+            roundData.leaderboardPos
+          )}
+        </td>
+        {rounds.length === 1 && isSeasonOver ? (
+          ""
+        ) : (
+          <td
+            className={`${styles.position_diff} ${
+              roundData.prevLeaderboardPosDiff > 0
+                ? styles.pos_change
+                : roundData.prevLeaderboardPosDiff < 0
+                ? styles.neg_change
+                : styles.no_change
+            }`}>
+            <i />
+          </td>
+        )}
+        <td className={styles.name_cell}>
+          {userGameData.userId === currUserGameData?.userId
+            ? currUserGameData?.displayName
+            : userGameData.displayName}{" "}
+          {userGameData.userType === "special" && (
+            <Icon type="star" strokeWidth={1} />
+          )}
+        </td>
+        <td className={styles.accuracy}>{`${roundData.percentCorrect}%`}</td>
+        <td className={styles.perfect_positions}>{roundData.diffCounts[0]}</td>
+      </tr>
+    );
+  };
+
+  const lineRow = (
+    <tr className={styles.line_row} aria-hidden="true">
+      <td colSpan={5}>
+        <hr />
+      </td>
+    </tr>
+  );
+
   return (
     <div className={predictStyles.prediction_table}>
       <table className={styles.leaderboard}>
@@ -72,64 +130,34 @@ export const Leaderboard = ({
           </tr>
         </thead>
         <tbody>
-          {leaderboardArr.map((row, index) => {
-            const roundData = row.season[entrantType][roundIndex];
-            return (
-              <tr
-                key={row.id}
-                className={`${predictStyles.table_row} ${styles.table_row} ${
-                  row.userId === currentUserId && styles.table_row__currentUser
-                }`}
-                onClick={() => changeSelectedUserHandler(row.userId)}>
-                <td className={styles.position}>
-                  {isSeasonOver &&
-                  index === 0 &&
-                  roundIndex === rounds.length - 1 ? (
-                    <Icon type="trophy" strokeWidth={1} />
-                  ) : (
-                    roundData.leaderboardPos
-                  )}
-                </td>
-                {rounds.length === 1 && isSeasonOver ? (
-                  ""
-                ) : (
-                  <td
-                    className={`${styles.position_diff} ${
-                      roundData.prevLeaderboardPosDiff > 0
-                        ? styles.pos_change
-                        : roundData.prevLeaderboardPosDiff < 0
-                        ? styles.neg_change
-                        : styles.no_change
-                    }`}>
-                    <i />
-                  </td>
-                )}
-                <td className={styles.name_cell}>
-                  {row.userId === currentUserId
-                    ? currentUserDisplayName
-                    : row.displayName}{" "}
-                  {row.userType === "special" && (
-                    <Icon type="star" strokeWidth={1} />
-                  )}
-                  {/**@todo Add which entrants are causing them the biggest issues? */}
-                </td>
-                <td
-                  className={
-                    styles.accuracy
-                  }>{`${roundData.percentCorrect}%`}</td>
-                <td className={styles.perfect_positions}>
-                  {roundData.diffCounts[0]}
-                </td>
-              </tr>
-            );
+          {/**If the current user is position above players showing on the current page, show a preview of their position above the other players */}
+          {currUserGameData &&
+            currUserGameData.season[entrantType][roundIndex].leaderboardPos <
+              bestDisplayedLeaderboardPos && (
+              <>
+                {leaderboardRow(currUserGameData)}
+                {lineRow}
+              </>
+            )}
+          {/**Loop over and display the leaderboard rows for the currrent page */}
+          {leaderboardArr.map((userGameData) => {
+            return leaderboardRow(userGameData);
           })}
+          {/**If the current user is position below players showing on the current page, show a preview of their position below the other players */}
+          {currUserGameData &&
+            currUserGameData.season[entrantType][roundIndex].leaderboardPos >
+              worstDisplayedLeaderboardPos && (
+              <>
+                {lineRow}
+                {leaderboardRow(currUserGameData)}
+              </>
+            )}
         </tbody>
       </table>
       <div className={styles.page_nav}>
-        {/**Don't show the upwards buttons if the person in first is currently showing */}
+        {/**Don't show the upwards buttons if the person first in the leaderboard is currently showing */}
         <div className={styles.button_con}>
-          {leaderboardArr[0].season[entrantType][roundIndex].leaderboardPos !==
-            1 && (
+          {bestDisplayedLeaderboardPos !== 1 && (
             <>
               <Button
                 className={styles.skip}
@@ -154,11 +182,9 @@ export const Leaderboard = ({
           {/**@todo Add a number input to allow the user to jump to any page quickly */}
           Page {page > noOfPages ? noOfPages : page} of {noOfPages}
         </p>
-        {/**Don't show the previous button if the person in last is currently showing */}
+        {/**Don't show the previous button if the person last in the leaderboard is currently showing */}
         <div className={styles.button_con}>
-          {leaderboardArr[leaderboardArr.length - 1].season[entrantType][
-            roundIndex
-          ].leaderboardPos !== noOfPredictions && (
+          {worstDisplayedLeaderboardPos !== noOfPredictions && (
             <>
               <Button
                 aria-label="Go down a page"
@@ -185,13 +211,7 @@ export const Leaderboard = ({
       <div className={styles.small_print}>
         <p>
           <small>
-            {`Showing ${
-              leaderboardArr[0].season[entrantType][roundIndex].leaderboardPos
-            } - ${
-              leaderboardArr[leaderboardArr.length - 1].season[entrantType][
-                roundIndex
-              ].leaderboardPos
-            } of ${noOfPredictions} players`}
+            {`Showing ${bestDisplayedLeaderboardPos} - ${worstDisplayedLeaderboardPos} of ${noOfPredictions} players`}
           </small>
         </p>
         {lastUpdated && (
