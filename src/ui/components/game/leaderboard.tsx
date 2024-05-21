@@ -64,7 +64,7 @@ export const Leaderboard = ({
           userGameData.userId === currUserGameData?.userId &&
           styles.table_row__currentUser
         }`}
-        onClick={() => changeSelectedUserHandler(userGameData.userId)}>
+        onClick={() => changeSelectedUserHandler(userGameData)}>
         <td className={styles.position}>
           {isSeasonOver &&
           roundData.leaderboardPos === 1 &&

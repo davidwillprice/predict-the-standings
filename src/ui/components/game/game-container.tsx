@@ -57,10 +57,11 @@ export const GameContainer = ({
   const usersPerPage = 15;
 
   const createQueryString = useCallback(
-    (name: string, value: string) => {
+    (queryArr: { name: string; value: string }[]) => {
       const params = new URLSearchParams(searchParams.toString());
-      params.set(name, value);
-
+      queryArr.forEach((queryObj) => {
+        params.set(queryObj.name, queryObj.value);
+      });
       return params.toString();
     },
     [searchParams]
@@ -188,9 +189,6 @@ export const GameContainer = ({
               currUserGameData.current.userId === currentSearchParams.user
             )
               setSelectedUser(currUserGameData.current);
-            /**@todo If both the above fail, I need to try and obtain the user's data via its own DB query, else if you navigate to a selectedUser without being on their page then it redirects you to the first page as the game container won't have loaded their data
-             * Or maybe when the selectedUser is updated, I can always ensure the page is updated to the one the user is on? That has the added benefit of meaning if the currUser shortcut is used, if the user goes back to the leaderboard after then it will be on the currUser's page
-             */
           }
         } catch (err) {
           throw err;
@@ -209,7 +207,9 @@ export const GameContainer = ({
     router.replace(
       pathname +
         "?" +
-        createQueryString("round", (newRoundIndex + 1).toString())
+        createQueryString([
+          { name: "round", value: (newRoundIndex + 1).toString() },
+        ])
     );
   };
 
@@ -217,19 +217,36 @@ export const GameContainer = ({
   const changeEntrantTypeHandler = () => {
     const newEntrantType = entrantType === "teams" ? "drivers" : "constructors";
     router.push(
-      pathname + "?" + createQueryString("leaderboard", newEntrantType)
+      pathname +
+        "?" +
+        createQueryString([{ name: "leaderboard", value: newEntrantType }])
     );
   };
 
   /**Updates user in query string */
-  const changeSelectedUserHandler = (userId: string) => {
-    router.push(pathname + "?" + createQueryString("user", userId));
+  const changeSelectedUserHandler = (userGameData: UserGameData) => {
+    router.push(
+      pathname +
+        "?" +
+        createQueryString([
+          { name: "user", value: userGameData.userId },
+          {
+            name: "page",
+            value: Math.ceil(
+              userGameData.season[entrantType][roundIndex].leaderboardPos /
+                usersPerPage
+            ).toString(),
+          },
+        ])
+    );
   };
 
   /**Updates page in query string */
   const changePageHandler = (page: number) => {
     router.replace(
-      pathname + "?" + createQueryString("page", page.toLocaleString())
+      pathname +
+        "?" +
+        createQueryString([{ name: "page", value: page.toLocaleString() }])
     );
   };
 
