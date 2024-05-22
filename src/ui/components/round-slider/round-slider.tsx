@@ -1,22 +1,33 @@
+"use client";
+import { useState } from "react";
+
 import styles from "@components/round-slider/round-slider.module.scss";
+import { Round } from "@custom-types/game-types";
 
 interface Props {
-  selectedRound: number;
-  trackName: string;
-  noOfRounds: number;
+  addDebouncingState: Function;
   changeRound: Function;
+  initialRoundIndex: number;
+  rounds: Round[];
 }
 
 export const RoundSlider = ({
-  selectedRound,
-  trackName,
-  noOfRounds,
+  addDebouncingState,
   changeRound,
+  initialRoundIndex,
+  rounds,
 }: Props) => {
+  const noOfRounds = rounds.length;
+  const [sliderValue, setSliderValue] = useState(initialRoundIndex);
   const onChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    /**Change leaderboard to loading skeleton UI */
+    addDebouncingState();
+    /**Update RoundSlider states so the updated track name can be immediately shown */
+    setSliderValue(+event.target.value);
+    /**Change round within GameContainer but with debounce */
     changeRound(+event.target.value);
   };
-  /**@todo URGENT Fix round slider covering mobile footer */
+
   return (
     <div
       className={styles.round_footer}
@@ -24,8 +35,10 @@ export const RoundSlider = ({
       <div className={styles.con}>
         {/**@todo Add arrow buttons to let people change the round without having to use the slider */}
         {/**@todo Compare slider to Aria React's slider and W3 slider pattern to see what improvements can be made or possibly just implement the React Aria solution */}
+        {/**@todo! 'Track-name' needs to be updated for football */}
         <h2>
-          Round {selectedRound + 1}: <span id="track-name">{trackName}</span>
+          Round {sliderValue + 1}:{" "}
+          <span id="track-name">{rounds[sliderValue].trackName}</span>
         </h2>
         {noOfRounds > 1 && (
           <div className={styles.slider_footer}>
@@ -41,7 +54,7 @@ export const RoundSlider = ({
               min="0"
               max={noOfRounds - 1}
               className={styles.slider}
-              value={selectedRound}
+              defaultValue={initialRoundIndex}
             />
           </div>
         )}

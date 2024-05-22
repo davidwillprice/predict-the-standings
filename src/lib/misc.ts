@@ -69,6 +69,23 @@ export const bringCurrUserToFrontOfArr = (
   return userArr;
 };
 
+let debounceTimeout: ReturnType<typeof setTimeout> | null = null;
+
+export function debounce<Args extends any[]>(
+  func: (...args: Args) => void,
+  delay: number
+): (...args: Args) => void {
+  return (...args: Args) => {
+    if (debounceTimeout) {
+      clearTimeout(debounceTimeout);
+    }
+    debounceTimeout = setTimeout(() => {
+      func(...args);
+      debounceTimeout = null;
+    }, delay);
+  };
+}
+
 //3 as e
 //1 as i
 //0 as o

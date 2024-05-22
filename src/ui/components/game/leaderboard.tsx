@@ -154,60 +154,62 @@ export const Leaderboard = ({
             )}
         </tbody>
       </table>
-      <div className={styles.page_nav}>
-        {/**Don't show the upwards buttons if the person first in the leaderboard is currently showing */}
-        <div className={styles.button_con}>
-          {bestDisplayedLeaderboardPos !== 1 && (
-            <>
-              <Button
-                className={styles.skip}
-                aria-label="Go to the first page"
-                onClick={() => {
-                  changePageHandler(1);
-                }}>
-                <Icon type="start" strokeWidth={2} />
-              </Button>
-              <Button
-                aria-label="Go up a page"
-                onClick={() => {
-                  changePageHandler(page - 1);
-                }}>
-                <Icon type="chevronLeft" strokeWidth={2} />
-                <span>Next</span>
-              </Button>
-            </>
-          )}
+      {noOfPages > 1 && (
+        <div className={styles.page_nav}>
+          {/**Don't show the upwards buttons if the person first in the leaderboard is currently showing */}
+          <div className={styles.button_con}>
+            {bestDisplayedLeaderboardPos !== 1 && (
+              <>
+                <Button
+                  className={styles.skip}
+                  aria-label="Go to the first page"
+                  onClick={() => {
+                    changePageHandler(1);
+                  }}>
+                  <Icon type="start" strokeWidth={2} />
+                </Button>
+                <Button
+                  aria-label="Go up a page"
+                  onClick={() => {
+                    changePageHandler(page - 1);
+                  }}>
+                  <Icon type="chevronLeft" strokeWidth={2} />
+                  <span>Next</span>
+                </Button>
+              </>
+            )}
+          </div>
+          <p>
+            {/**@todo Add a number input to allow the user to jump to any page quickly */}
+            Page {page > noOfPages ? noOfPages : page} of {noOfPages}
+          </p>
+          {/**Don't show the previous button if the person last in the leaderboard is currently showing */}
+          <div className={styles.button_con}>
+            {worstDisplayedLeaderboardPos !== noOfPredictions && (
+              <>
+                <Button
+                  aria-label="Go down a page"
+                  onClick={() => {
+                    changePageHandler(page + 1);
+                  }}>
+                  <span>Previous</span>
+                  <Icon type="chevronRight" strokeWidth={2} />
+                </Button>
+                <Button
+                  className={styles.skip}
+                  aria-label="Go to the last page"
+                  onClick={() => {
+                    changePageHandler(
+                      Math.ceil(noOfPredictions / Object.values(users).length)
+                    );
+                  }}>
+                  <Icon type="end" strokeWidth={2} />
+                </Button>
+              </>
+            )}
+          </div>
         </div>
-        <p>
-          {/**@todo Add a number input to allow the user to jump to any page quickly */}
-          Page {page > noOfPages ? noOfPages : page} of {noOfPages}
-        </p>
-        {/**Don't show the previous button if the person last in the leaderboard is currently showing */}
-        <div className={styles.button_con}>
-          {worstDisplayedLeaderboardPos !== noOfPredictions && (
-            <>
-              <Button
-                aria-label="Go down a page"
-                onClick={() => {
-                  changePageHandler(page + 1);
-                }}>
-                <span>Previous</span>
-                <Icon type="chevronRight" strokeWidth={2} />
-              </Button>
-              <Button
-                className={styles.skip}
-                aria-label="Go to the last page"
-                onClick={() => {
-                  changePageHandler(
-                    Math.ceil(noOfPredictions / Object.values(users).length)
-                  );
-                }}>
-                <Icon type="end" strokeWidth={2} />
-              </Button>
-            </>
-          )}
-        </div>
-      </div>
+      )}
       <div className={styles.small_print}>
         <p>
           <small>

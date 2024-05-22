@@ -8,6 +8,7 @@ import {
   getSingleUserPredictionDataQuery,
   getStatsDataQuery,
 } from "@lib/db-functions";
+import { debounce } from "@lib/misc";
 
 import { Leaderboard } from "./leaderboard";
 import { PredictionTable } from "@components/prediction-table/prediction-table";
@@ -111,7 +112,6 @@ export const GameContainer = ({
       : 1;
   };
 
-  /**@todo Probably need to readd "mode" state to allow for the current user to be automatically navigated to when pagination is added */
   const [roundIndex, setRoundIndex] = useState(
     getInitialRounds(currentSearchParams)
   );
@@ -121,6 +121,7 @@ export const GameContainer = ({
   const [page, setPage] = useState<number>(getInitialPage(currentSearchParams));
   const [selectedUser, setSelectedUser] = useState<UserGameData | null>(null);
   const [usersData, setUsersData] = useState<UserGameDataMap | null>(null);
+  const [isDebouncing, setIsDebouncing] = useState(false);
   const noOfPredictions = useRef<null | number>(null);
   const currUserGameData = useRef<null | UserGameData>(null);
 
@@ -200,10 +201,10 @@ export const GameContainer = ({
     getData();
   }, [currentSearchParams]);
 
-  /**Updates round in query string */
-  const changeRoundHandler = (newRoundIndex: number) => {
+  const updateRoundQueryString = (newRoundIndex: number) => {
+    /**Cancel loading skeleton UI*/
+    setIsDebouncing(false);
     /**Uses router.replace() rather than router.push() as I don't want round chnages clogging up the user history */
-    /**@todo Consider shallow routing? */
     router.replace(
       pathname +
         "?" +
@@ -211,6 +212,14 @@ export const GameContainer = ({
           { name: "round", value: (newRoundIndex + 1).toString() },
         ])
     );
+  };
+
+  /**Updates round in query string, but only if this function isn't triggered again within 500ms */
+  const changeRoundHandler = debounce(updateRoundQueryString, 500);
+
+  /**Enables loading skeleton UI while slider is debouncing*/
+  const addDebouncingState = () => {
+    setIsDebouncing(true);
   };
 
   /**Updates entrantType in query string - F1 only currently */
@@ -260,7 +269,9 @@ export const GameContainer = ({
           <>
             <div className={styles.main}>
               {children}
-              {usersData && noOfPredictions.current !== null ? (
+              {usersData &&
+              noOfPredictions.current !== null &&
+              !isDebouncing ? (
                 <Leaderboard
                   changePageHandler={changePageHandler}
                   changeSelectedUserHandler={changeSelectedUserHandler}
@@ -318,15 +329,14 @@ export const GameContainer = ({
       </div>
       {
         //**Don't show the round slider if there is no round data or if there is only one round total in the season */
-        /**@todo Add debouncing so new DB info isn't obtained until after 0.3s after the slider has been adjusted */
         rounds.length === 0 || (rounds.length === 1 && isSeasonOver) ? (
           ""
         ) : (
           <RoundSlider
-            selectedRound={roundIndex}
-            noOfRounds={rounds.length}
-            trackName={rounds[roundIndex].trackName}
+            addDebouncingState={addDebouncingState}
             changeRound={changeRoundHandler}
+            initialRoundIndex={roundIndex}
+            rounds={rounds}
           />
         )
       }
