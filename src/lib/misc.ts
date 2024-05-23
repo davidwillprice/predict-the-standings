@@ -86,6 +86,20 @@ export function debounce<Args extends any[]>(
   };
 }
 
+export const toTitleCase = (str: string) => {
+  // Split the string into an array of words
+  const words = str.toLowerCase().split(" ");
+
+  // Capitalize the first letter of each word and join them back into a string
+  const titleCaseStr = words
+    .map((word) => {
+      return word.charAt(0).toUpperCase() + word.slice(1);
+    })
+    .join(" ");
+
+  return titleCaseStr;
+};
+
 //3 as e
 //1 as i
 //0 as o

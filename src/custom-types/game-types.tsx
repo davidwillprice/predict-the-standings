@@ -19,7 +19,12 @@ export class LocalSeasonData {
   predictionsOpen: boolean;
   rounds: Round[];
   startingEntrantOrders?: StartingEntrantOrders;
-  status: "preseason" | "predictionsOpen" | "midSeason" | "completed";
+  status:
+    | "preseason"
+    | "predictions open"
+    | "predictions closed"
+    | "midseason"
+    | "completed";
   /**Once a season is over no more game data updates need to be made to the collection, lock the gamedata */
   isGameDataLocked: boolean;
   constructor(
@@ -44,9 +49,11 @@ export class LocalSeasonData {
     this.status = !predictionsOpen
       ? "preseason"
       : predictionFreezeDate.getTime() > new Date().getTime()
-      ? "predictionsOpen"
+      ? "predictions open"
+      : rounds.length < 1
+      ? "predictions closed"
       : !isSeasonOver
-      ? "midSeason"
+      ? "midseason"
       : "completed";
     this.isGameDataLocked = isGameDataLocked;
   }

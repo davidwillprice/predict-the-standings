@@ -8,6 +8,7 @@ import { Panel } from "@components/panels/panel";
 import { PanelHeading } from "@components/panels/panel-heading";
 import { SignOutBtn } from "@components/profile/sign-out";
 import { ProfileForm } from "@components/form/profile-form";
+import { PredictionsOverview } from "@components/profile/predictions-overview";
 
 import styles from "@components/form/form.module.scss";
 import commonStyles from "@styles/common.module.scss";
@@ -18,8 +19,9 @@ export const metadata: Metadata = {
 
 export default async function ProfilePage() {
   const session = await getServerSession(authOptions);
-  if (session == null) return redirect("/login");
-  //**Stopping redirecting people without a display name as it seems to be causing issues */
+  const user = session?.user;
+  if (user == null) return redirect("/login");
+  /**@todo Fix redirecting people without a display name causing issues */
   //if (!session.user.displayName) return redirect("/get-started");
 
   const initialDisplayName = session?.user.displayName;
@@ -40,6 +42,7 @@ export default async function ProfilePage() {
           <SignOutBtn />
         </div>
       </Panel>
+      <PredictionsOverview user={user} />
     </>
   );
 }

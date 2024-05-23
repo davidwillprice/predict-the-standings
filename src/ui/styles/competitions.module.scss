@@ -7,7 +7,7 @@
   margin: 0 auto;
   width: 100%;
   th {
-    padding: 10px 30px;
+    padding: 10px 10px;
     text-align: left;
   }
 }
@@ -21,7 +21,7 @@
 
   td {
     background-color: var(--primary-color);
-    padding: 15px 30px;
+    padding: 20px 10px;
     svg {
       max-height: 30px;
       height: 30px;
@@ -47,6 +47,9 @@
 }
 @media (min-width: 1000px) {
   .name span {
+    display: none;
+  }
+  .mobOnlyLabel {
     display: none;
   }
 }
