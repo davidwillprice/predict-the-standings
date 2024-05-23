@@ -10,18 +10,21 @@ import Link from "next/link";
 import { PanelHeading } from "@components/panels/panel-heading";
 import Icon from "@ui/svgs/icons/sq-icon";
 import { numberToOrdinalNumber, toTitleCase } from "@lib/misc";
+import { Panel } from "@components/panels/panel";
 
 import { User } from "next-auth";
 import { CompetitionStrings } from "@custom-types/game-types";
 
 import styles from "@styles/competitions.module.scss";
+import btnConstyles from "@components/button/button-containers.module.scss";
+import skeleStyles from "@components/profile/competitions-skeleton.module.scss";
 import btnStyles from "@components/button/button.module.scss";
 
 interface Props {
   user: User;
 }
 
-interface PredictionsOverviewRow {
+interface PerformanceRow {
   accurracy: number | null;
   competitionStrs: CompetitionStrings;
   entrantType: string;
@@ -30,15 +33,16 @@ interface PredictionsOverviewRow {
   seasonStr: string;
 }
 
-export const PredictionsOverview = ({ user }: Props) => {
-  const [predictionsOverviewRowArr, setPredictionsOverviewRowArr] = useState<
-    PredictionsOverviewRow[] | null
+export const PerformanceOverview = ({ user }: Props) => {
+  const [performanceRowArr, setPerformanceRowArr] = useState<
+    PerformanceRow[] | null
   >(null);
 
   useEffect(() => {
-    console.log(allEurovisionSeasonData);
+    /**Merge all local season data */
     const allLocalSeasonData = allF1SeasonData.concat(allEurovisionSeasonData);
 
+    /**Get all strings from `predictionsMadeFor` via the user session */
     let gameDataCollections: string[] = [];
     for (const [competition, seasonArr] of Object.entries(
       user.predictionsMadeFor
@@ -49,6 +53,7 @@ export const PredictionsOverview = ({ user }: Props) => {
     }
 
     const getAllGameDataForUser = () => {
+      /**Get the userPredictionData for every comp/season the user has predicted for */
       return new Promise((_, reject) => {
         Promise.all(
           gameDataCollections.map((collectionName) =>
@@ -56,7 +61,8 @@ export const PredictionsOverview = ({ user }: Props) => {
           )
         )
           .then((res) => {
-            const tempPredictionsOverviewRowArr: PredictionsOverviewRow[] = [];
+            /**Combine the local season data and userGameData into just the data I need to display */
+            const tempPerformanceRowArr: PerformanceRow[] = [];
             res.forEach((userGameData, index) => {
               const localSeasonData = allLocalSeasonData.find(
                 (seasonData) =>
@@ -67,7 +73,7 @@ export const PredictionsOverview = ({ user }: Props) => {
                 throw new Error("Couldn't find local data");
               }
               for (const entrantType of Object.keys(userGameData.predictions)) {
-                tempPredictionsOverviewRowArr.push({
+                tempPerformanceRowArr.push({
                   accurracy:
                     userGameData.season[entrantType][
                       userGameData.season[entrantType].length - 1
@@ -83,7 +89,21 @@ export const PredictionsOverview = ({ user }: Props) => {
                 });
               }
             });
-            setPredictionsOverviewRowArr(tempPredictionsOverviewRowArr);
+            /**Sort put rows which are completed at the bottom, else keep their order */
+            tempPerformanceRowArr.sort((compA, compB) => {
+              if (
+                compA.seasonStatus === "completed" &&
+                compB.seasonStatus !== "completed"
+              )
+                return 1;
+              if (
+                compA.seasonStatus !== "completed" &&
+                compB.seasonStatus === "completed"
+              )
+                return -1;
+              return -1;
+            });
+            setPerformanceRowArr(tempPerformanceRowArr);
           })
           .catch((err) => {
             reject(err);
@@ -96,11 +116,29 @@ export const PredictionsOverview = ({ user }: Props) => {
   return (
     <>
       <PanelHeading>
-        <h2>Predictions Overview</h2>
+        <h2>Performance Overview</h2>
       </PanelHeading>
-      {/**@todo Add loading skeleton */}
-      {/**@todo Add message if user has no predictions */}
-      {predictionsOverviewRowArr && (
+      {performanceRowArr === null ? (
+        <div className={skeleStyles.con}>
+          <div className={skeleStyles.gradient}></div>
+          <div className={skeleStyles.row}></div>
+          <div className={skeleStyles.row}></div>
+          <div className={skeleStyles.row}></div>
+        </div>
+      ) : performanceRowArr.length === 0 ? (
+        <Panel>
+          <p>You haven&apos;t made any predictions yet.</p>
+          <p>
+            Please visit the competitions page below to see if there are any
+            open to predictions at the moment.
+          </p>
+          <div className={btnConstyles.single}>
+            <Link href={"competitions"} className={btnStyles.button}>
+              View Competitions
+            </Link>
+          </div>
+        </Panel>
+      ) : (
         <table className={styles.competitions}>
           <thead>
             <tr>
@@ -112,7 +150,7 @@ export const PredictionsOverview = ({ user }: Props) => {
             </tr>
           </thead>
           <tbody>
-            {predictionsOverviewRowArr.map((predictionsOverviewRow) => {
+            {performanceRowArr.map((performanceRow) => {
               const {
                 accurracy,
                 competitionStrs,
@@ -120,7 +158,7 @@ export const PredictionsOverview = ({ user }: Props) => {
                 leaderboardPos,
                 seasonStatus,
                 seasonStr,
-              } = predictionsOverviewRow;
+              } = performanceRow;
               return (
                 <tr
                   key={competitionStrs.shortHand}
@@ -141,7 +179,8 @@ export const PredictionsOverview = ({ user }: Props) => {
                         {competitionStrs.display} {seasonStr}{" "}
                         {competitionStrs.shortHand === "f1" && (
                           <>
-                            <br />
+                            {" "}
+                            -{" "}
                             {entrantType === "teams"
                               ? "Constructors"
                               : toTitleCase(entrantType)}
@@ -153,6 +192,7 @@ export const PredictionsOverview = ({ user }: Props) => {
                   <td>
                     <span className={styles.mobOnlyLabel}>
                       Leaderboard Position:{" "}
+                      {/**@todo Would be nice to add how many other players there were/are */}
                     </span>
                     {leaderboardPos && numberToOrdinalNumber(leaderboardPos)}
                   </td>
@@ -160,7 +200,9 @@ export const PredictionsOverview = ({ user }: Props) => {
                     <span className={styles.mobOnlyLabel}>Accuracy: </span>
                     {accurracy}%
                   </td>
-                  <td className={styles.status}>{seasonStatus}</td>
+                  <td className={styles.status}>
+                    {seasonStatus !== "completed" ? seasonStatus : ""}
+                  </td>
                   <td>
                     {seasonStatus === "predictions open" ? (
                       <Link
@@ -183,7 +225,7 @@ export const PredictionsOverview = ({ user }: Props) => {
                             : ""
                         }`}
                         className={btnStyles.button}>
-                        View Leaderboard
+                        View
                       </Link>
                     )}
                   </td>

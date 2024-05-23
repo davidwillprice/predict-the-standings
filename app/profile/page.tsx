@@ -8,7 +8,7 @@ import { Panel } from "@components/panels/panel";
 import { PanelHeading } from "@components/panels/panel-heading";
 import { SignOutBtn } from "@components/profile/sign-out";
 import { ProfileForm } from "@components/form/profile-form";
-import { PredictionsOverview } from "@components/profile/predictions-overview";
+import { PerformanceOverview } from "@components/profile/performance-overview";
 
 import styles from "@components/form/form.module.scss";
 import commonStyles from "@styles/common.module.scss";
@@ -42,7 +42,7 @@ export default async function ProfilePage() {
           <SignOutBtn />
         </div>
       </Panel>
-      <PredictionsOverview user={user} />
+      <PerformanceOverview user={user} />
     </>
   );
 }
