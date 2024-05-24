@@ -5,26 +5,26 @@ import { PanelHeading } from "@components/panels/panel-heading";
 import Icon from "@ui/svgs/icons/sq-icon";
 
 import styles from "@styles/help.module.scss";
-import predictionStyles from "@components/prediction-table/prediction-table.module.scss";
+import entrantTableStyles from "@components/entrant-table/entrant-table.module.scss";
 
 export const metadata: Metadata = {
   title: "Help | Predict The Standings",
 };
 
 const BlankTableRow = () => (
-  <tr className={predictionStyles.table_row}>
-    <td className={predictionStyles.position_cell}>
+  <tr className={entrantTableStyles.table_row}>
+    <td className={entrantTableStyles.position_cell}>
       <span className={styles.gradient}></span>
     </td>
     <td>
       <span
-        className={`${predictionStyles.flair}`}
+        className={`${entrantTableStyles.flair}`}
         style={{
           backgroundColor: "var(--tertiary-color)",
         }}></span>
     </td>
-    <td className={predictionStyles.name_cell}></td>
-    <td className={`${predictionStyles.pos_diff_cell}`}></td>
+    <td className={entrantTableStyles.name_cell}></td>
+    <td className={`${entrantTableStyles.pos_diff_cell}`}></td>
   </tr>
 );
 
@@ -74,57 +74,57 @@ const Page = () => {
         </ol>
       </Panel>
       <div className={styles.example_con}>
-        <div
-          className={`${styles.example} ${predictionStyles.prediction_table}`}>
+        <div className={styles.example}>
           <h2>Example Prediction Table</h2>
-          <table>
+          {/**@todo Use EntrantRow instead of manually writing out the rows */}
+          <table className={entrantTableStyles.table}>
             <tbody>
               <BlankTableRow />
-              <tr className={predictionStyles.table_row}>
-                <td className={predictionStyles.position_cell}>2</td>
-                <td>
+              <tr className={entrantTableStyles.table_row}>
+                <td className={entrantTableStyles.position_cell}>2</td>
+                <td className={entrantTableStyles.flair_cell}>
                   <span
-                    className={`${predictionStyles.flair}`}
+                    className={`${entrantTableStyles.flair}`}
                     style={{ backgroundColor: "#AAD2F3" }}></span>
                 </td>
-                <td className={predictionStyles.name_cell}>
+                <td className={entrantTableStyles.name_cell}>
                   <span>Manchester City</span>
                 </td>
                 <td
-                  className={`${predictionStyles.pos_diff_cell} ${predictionStyles.perfect}`}>
+                  className={`${entrantTableStyles.pos_diff_cell} ${entrantTableStyles.perfect}`}>
                   <Icon type={"success"} strokeWidth={2} />
                 </td>
               </tr>
-              <tr className={predictionStyles.table_row}>
-                <td className={predictionStyles.position_cell}>3</td>
-                <td>
+              <tr className={entrantTableStyles.table_row}>
+                <td className={entrantTableStyles.position_cell}>3</td>
+                <td className={entrantTableStyles.flair_cell}>
                   <span
-                    className={`${predictionStyles.flair}`}
+                    className={`${entrantTableStyles.flair}`}
                     style={{ backgroundColor: "#EF0107" }}></span>
                 </td>
-                <td className={predictionStyles.name_cell}>
+                <td className={entrantTableStyles.name_cell}>
                   <span>Arsenal</span>
                 </td>
                 <td
-                  className={`${predictionStyles.pos_diff_cell} ${predictionStyles.up}`}>
+                  className={`${entrantTableStyles.pos_diff_cell} ${entrantTableStyles.up}`}>
                   <>
                     <i></i>
                     <span>5</span>
                   </>
                 </td>
               </tr>
-              <tr className={predictionStyles.table_row}>
-                <td className={predictionStyles.position_cell}>4</td>
-                <td>
+              <tr className={entrantTableStyles.table_row}>
+                <td className={entrantTableStyles.position_cell}>4</td>
+                <td className={entrantTableStyles.flair_cell}>
                   <span
-                    className={`${predictionStyles.flair}`}
+                    className={`${entrantTableStyles.flair}`}
                     style={{ backgroundColor: "#034694" }}></span>
                 </td>
-                <td className={predictionStyles.name_cell}>
+                <td className={entrantTableStyles.name_cell}>
                   <span>Chelsea</span>
                 </td>
                 <td
-                  className={`${predictionStyles.pos_diff_cell} ${predictionStyles.down}`}>
+                  className={`${entrantTableStyles.pos_diff_cell} ${entrantTableStyles.down}`}>
                   <>
                     <i></i>
                     <span>2</span>

@@ -1,15 +1,9 @@
 import { getSingleUserPredictionDataQuery } from "@lib/db-functions";
 
-import { FlagCell } from "@components/prediction-table/eurovision-flag-cell";
+import styles from "@components/entrant-table/entrant-table.module.scss";
 
-import predictionTableStyles from "@components/prediction-table/prediction-table.module.scss";
-import styles from "@components/submit-predictions/editable-prediction-table.module.scss";
-
-import {
-  Entrant,
-  LocalSeasonData,
-  ShortHandCompStr,
-} from "@custom-types/game-types";
+import { Entrant, LocalSeasonData } from "@custom-types/game-types";
+import { EntrantTable } from "@components/entrant-table/entrant-table";
 
 interface Props {
   seasonData: LocalSeasonData;
@@ -19,7 +13,10 @@ interface Props {
 export const YourPredictions = async ({ seasonData, userId }: Props) => {
   const { allEntrants, competitionStrs, id } = seasonData;
 
+  const noOfEntrantTypes = Object.keys(allEntrants).length;
+
   let userPredictions: { [entrantType: string]: Entrant[] } = {};
+
   try {
     /**Obtain userGamedata */
     const userGameData = await getSingleUserPredictionDataQuery(
@@ -39,64 +36,16 @@ export const YourPredictions = async ({ seasonData, userId }: Props) => {
     new Error("Couldn't obtain your predictions");
   }
   return (
-    <div
-      className={`${predictionTableStyles.prediction_table} ${
-        styles.editable_prediction_table
-      } ${
-        Object.keys(userPredictions).length === 1
-          ? styles.single_entrant_type_table
-          : ""
-      }`}
-      style={{ maxWidth: "800px", margin: "0 auto 30px" }}>
+    <div className={styles.multi_table_con}>
       {Object.keys(userPredictions).map((entrantType) => (
-        <PredictionTable
+        <EntrantTable
+          entrantArr={userPredictions[entrantType]}
+          isFullWidth={true}
           key={entrantType}
-          predictionArr={userPredictions[entrantType]}
+          isTwoColumns={noOfEntrantTypes === 1}
           shortHandCompStr={competitionStrs.shortHand}
         />
       ))}
     </div>
   );
 };
-
-interface TableProps {
-  predictionArr: Entrant[];
-  shortHandCompStr: ShortHandCompStr;
-}
-/**@todo Need to adjust styling if there is two entrantTypes */
-const PredictionTable = ({ predictionArr, shortHandCompStr }: TableProps) => (
-  <table>
-    <tbody
-      style={{
-        gridTemplateRows: `repeat(${Math.ceil(
-          predictionArr.length / 2
-        )}, auto)`,
-      }}>
-      {predictionArr.map((entrant, index) => (
-        <tr
-          key={entrant.sName}
-          className={`${predictionTableStyles.table_row} ${styles.table_row}`}>
-          <td className={predictionTableStyles.position_cell}>
-            {index !== null ? index + 1 : " "}
-          </td>
-          {shortHandCompStr === "eurovision" ? (
-            <FlagCell name={entrant.name} sName={entrant.sName} />
-          ) : (
-            <td className={predictionTableStyles.flair_cell}>
-              <span
-                className={`${predictionTableStyles.flair}`}
-                style={{ backgroundColor: entrant.color }}></span>
-            </td>
-          )}
-          <td
-            className={`${predictionTableStyles.name_cell} ${
-              entrant.name.length > 11 && predictionTableStyles.large_name
-            }`}>
-            <span className={predictionTableStyles.name}>{entrant.name}</span>
-            <span className={predictionTableStyles.sName}>{entrant.sName}</span>
-          </td>
-        </tr>
-      ))}
-    </tbody>
-  </table>
-);

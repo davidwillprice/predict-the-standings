@@ -7,8 +7,16 @@
     display: block;
     margin: 0 auto;
   }
-  .name_cell svg {
-    margin-left: 5px;
+  th {
+    padding: 0 5px 5px;
+    text-align: left;
+  }
+  th:first-child {
+    padding-left: 10px;
+    text-align: center;
+  }
+  th:last-child {
+    padding-right: 10px;
   }
 }
 .table_row {
@@ -45,6 +53,9 @@
 .name_cell {
   display: flex;
   align-items: center;
+  svg {
+    margin-left: 5px;
+  }
 }
 .perfect_positions {
   max-width: 92px;

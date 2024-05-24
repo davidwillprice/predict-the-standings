@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 
-import predictionTableStyles from "@components/prediction-table/prediction-table.module.scss";
+import styles from "@components/entrant-table/entrant-table.module.scss";
 
 type Props = {
   name: string;
@@ -11,8 +11,8 @@ type Props = {
 
 export const FlagCell = ({ name, sName }: Props) => {
   return (
-    <td className={predictionTableStyles.flag_cell}>
-      <div className={predictionTableStyles.flag_con}>
+    <td className={styles.flag_cell}>
+      <div className={styles.flag_con}>
         <Image
           draggable="false"
           src={require(`../../../images/flags/${sName}-flag.png`)}

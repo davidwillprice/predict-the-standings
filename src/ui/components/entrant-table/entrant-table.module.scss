@@ -1,0 +1,193 @@
+//Only used  as a container for multiple <EntrantTable>
+.multi_table_con {
+  max-width: 800px;
+  margin: 0 auto 30px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 10px;
+}
+
+.con {
+  .heading {
+    text-align: center;
+  }
+}
+
+table.table {
+  border-spacing: 0 5px;
+  border-collapse: separate;
+  &.full_width {
+    width: 100%;
+    max-width: 250px;
+  }
+  &.single_entrant_type_table {
+    border-spacing: 0px;
+    max-width: 500px;
+    tbody {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-auto-flow: column;
+      gap: 5px;
+    }
+  }
+}
+
+.table_row {
+  position: relative;
+  td {
+    padding: 5px 5px;
+    border: none;
+    background-color: var(--primary-color);
+    height: 30px;
+  }
+  td:first-child {
+    border-radius: 5px 0 0 5px;
+    padding-left: 10px;
+  }
+  td:last-child {
+    border-radius: 0 5px 5px 0;
+    padding-right: 10px;
+  }
+}
+.position_cell {
+  text-align: center;
+}
+.name_cell {
+  padding-right: 10px;
+  min-width: 105px;
+  width: 100%;
+  .sName {
+    display: none;
+  }
+}
+.flair_cell {
+  .flair {
+    height: 100%;
+    width: 5px;
+    border-radius: 10px;
+    background-color: black;
+    display: block;
+  }
+}
+.flag_cell {
+  width: 34px;
+}
+.flag_con {
+  width: 34px;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  img {
+    border: 2px solid var(--tertiary-color);
+  }
+}
+.pos_diff_cell {
+  text-align: right;
+  height: 30px;
+  vertical-align: middle;
+  display: flex;
+  align-items: center;
+  padding-left: 8px;
+
+  justify-content: flex-start;
+  gap: 5px;
+  i {
+    border: solid var(--error-color);
+    border-width: 0 1.5px 1.5px 0;
+    display: inline-block;
+    padding: 3px;
+  }
+  &.up i {
+    transform: rotate(225deg) translate(-1px, -1px);
+  }
+  &.down i {
+    transform: rotate(45deg) translate(-2px, -2px);
+  }
+  &.perfect svg {
+    color: var(--success-color);
+    height: 100%;
+  }
+}
+.accuracy {
+  text-align: center;
+  font-weight: 500;
+  margin-top: 10px;
+}
+
+@media (max-width: 1000px) and (min-width: 600px) {
+  .name_cell.large_name {
+    .name {
+      display: none;
+    }
+    .sName {
+      display: inline;
+      text-transform: uppercase;
+    }
+    .name_cell {
+      min-width: auto;
+    }
+  }
+}
+
+@media (max-width: 750px) and (min-width: 600px) {
+  .name_cell {
+    min-width: auto;
+    .name {
+      display: none;
+    }
+    .sName {
+      display: inline;
+      text-transform: uppercase;
+    }
+  }
+}
+
+//@todo There is scope to make the space saving less severe for non-Eurovision entrants as flairs are 25px thinner than flags
+@media (max-width: 500px) {
+  .table_row {
+    font-size: 14px;
+    td {
+      padding: 3px 3px;
+    }
+    td:first-child {
+      padding-left: 7px;
+    }
+    td:last-child {
+      padding-right: 7px;
+    }
+  }
+  .drag_cell {
+    display: none;
+  }
+  .position_cell {
+    max-width: 25px;
+    border-radius: 5px 0 0 5px;
+    padding-left: 10px;
+  }
+  .name_cell {
+    min-width: auto;
+    &.large_name {
+      .name {
+        display: none;
+      }
+      .sName {
+        display: inline;
+        text-transform: uppercase;
+      }
+    }
+  }
+}
+
+@media (max-width: 350px) {
+  .name_cell {
+    .name {
+      display: none;
+    }
+    .sName {
+      display: inline;
+      text-transform: uppercase;
+    }
+  }
+}

@@ -2,7 +2,7 @@ import { Button } from "@components/button/button";
 import Icon from "@ui/svgs/icons/sq-icon";
 
 import styles from "@components/game/leaderboard.module.scss";
-import predictStyles from "@components/prediction-table/prediction-table.module.scss";
+import entrantTableStyles from "@components/entrant-table/entrant-table.module.scss";
 
 import { Round, UserGameData, UserGameDataMap } from "@custom-types/game-types";
 
@@ -60,7 +60,7 @@ export const Leaderboard = ({
     const roundData = userGameData.season[entrantType][roundIndex];
     return (
       <tr
-        className={`${predictStyles.table_row} ${styles.table_row} ${
+        className={`${entrantTableStyles.table_row} ${styles.table_row} ${
           userGameData.userId === currUserGameData?.userId &&
           styles.table_row__currentUser
         }`}
@@ -111,8 +111,8 @@ export const Leaderboard = ({
   );
 
   return (
-    <div className={predictStyles.prediction_table}>
-      <table className={styles.leaderboard}>
+    <div>
+      <table className={`${styles.leaderboard} ${entrantTableStyles.table}`}>
         <thead>
           <tr>
             <th className={styles.position}>Pos</th>

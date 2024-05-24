@@ -33,7 +33,7 @@ const Page: NextPage<PageProps> = async ({ params }) => {
 
   return (
     <>
-      <PanelHeading>
+      <PanelHeading align="center">
         <h1>
           {seasonData.competitionStrs.display} {season} - Your Predictions
         </h1>

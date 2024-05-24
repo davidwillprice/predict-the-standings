@@ -20,8 +20,7 @@ import {
 } from "@dnd-kit/sortable";
 
 import { CSS } from "@dnd-kit/utilities";
-
-import { FlagCell } from "@components/prediction-table/eurovision-flag-cell";
+import { EntrantRow } from "@components/entrant-table/entrant-row";
 
 import {
   AllEntrants,
@@ -29,12 +28,12 @@ import {
   ShortHandCompStr,
 } from "@custom-types/game-types";
 
-import predictionTableStyles from "@components/prediction-table/prediction-table.module.scss";
+import entrantRowStyles from "@components/entrant-table/entrant-table.module.scss";
 import styles from "@components/submit-predictions/editable-prediction-table.module.scss";
 
 type Props = {
   allEntrants: AllEntrants;
-  competition?: ShortHandCompStr;
+  competition: ShortHandCompStr;
   entrantArr: Entrant[];
   entrantType: string;
   handleEntrantState: (entrantArr: Entrant[]) => void;
@@ -83,14 +82,12 @@ export function EditablePredictionTable({
 
   return (
     <div
-      className={`${predictionTableStyles.prediction_table} ${
-        styles.editable_prediction_table
-      } ${
+      className={`${styles.editable_prediction_table} ${
         Object.keys(allEntrants).length === 1
           ? styles.single_entrant_type_table
           : ""
       }`}>
-      <table>
+      <table className={entrantRowStyles.table}>
         <DndContext
           sensors={sensors}
           collisionDetection={closestCenter}
@@ -133,7 +130,7 @@ export function EditablePredictionTable({
 
 export type ItemProps = HTMLAttributes<HTMLTableRowElement> & {
   id: string;
-  competition: string | undefined;
+  competition: string;
   entrant: Entrant;
   withOpacity?: boolean;
   isDragging?: boolean;
@@ -162,33 +159,19 @@ const Item = forwardRef<HTMLTableRowElement, ItemProps>(
       transform: isDragging ? "scale(1.02)" : "scale(1)",
       ...style,
     };
-
+    /**@todo Would be nice to better incorporate the <tr> within EntrantRow while keeping the dragging functionality working */
     return (
       <tr
-        className={`${predictionTableStyles.table_row} ${styles.table_row}`}
+        className={`${entrantRowStyles.table_row} ${styles.table_row}`}
         ref={ref}
         style={inlineStyles}
         {...props}>
-        <td className={predictionTableStyles.drag_cell}>≡</td>
-        <td className={predictionTableStyles.position_cell}>
-          {index !== null ? index + 1 : " "}
-        </td>
-        {competition === "eurovision" ? (
-          <FlagCell name={entrant.name} sName={entrant.sName} />
-        ) : (
-          <td className={predictionTableStyles.flair_cell}>
-            <span
-              className={`${predictionTableStyles.flair}`}
-              style={{ backgroundColor: entrant.color }}></span>
-          </td>
-        )}
-        <td
-          className={`${predictionTableStyles.name_cell} ${
-            entrant.name.length > 11 && predictionTableStyles.large_name
-          }`}>
-          <span className={predictionTableStyles.name}>{entrant.name}</span>
-          <span className={predictionTableStyles.sName}>{entrant.sName}</span>
-        </td>
+        <EntrantRow
+          draggable={true}
+          entrant={entrant}
+          index={index}
+          shortHandCompStr={competition}
+        />
       </tr>
     );
   }

@@ -1,10 +1,10 @@
-import styles from "@components/prediction-table/prediction-table.module.scss";
+import styles from "@components/entrant-table/entrant-table.module.scss";
 
 export const PreSeasonPredictionTable = () => {
   const dummyRows = 20;
 
   return (
-    <div className={styles.prediction_table}>
+    <div>
       <table>
         <tbody>
           {[...Array(dummyRows)].map((_, index) => (

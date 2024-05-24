@@ -12,12 +12,12 @@ import { debounce } from "@lib/misc";
 
 import { Leaderboard } from "./leaderboard";
 import { PredictionTable } from "@components/prediction-table/prediction-table";
-import { StandingsTable } from "@components/prediction-table/standings-table";
 import { RoundSlider } from "@components/round-slider/round-slider";
 import { LeaderboardSkeleton } from "./leaderboard-skeleton";
 import { UserData } from "./user-data";
 import { Button } from "@components/button/button";
 import Icon from "@ui/svgs/icons/sq-icon";
+import { EntrantTable } from "@components/entrant-table/entrant-table";
 
 import btnStyles from "@components/button/button.module.scss";
 import styles from "@components/game/game-container.module.scss";
@@ -259,6 +259,20 @@ export const GameContainer = ({
     );
   };
 
+  const standingsArr = rounds[roundIndex].standings[entrantType].map(
+    (entrant) => allEntrants[entrantType][entrant]
+  );
+
+  const standingsTable = (
+    <div id="standings-table" className={styles.standings_table}>
+      <EntrantTable
+        entrantArr={standingsArr}
+        heading={"Actual Standings"}
+        shortHandCompStr={competitionStrs.shortHand}
+      />
+    </div>
+  );
+
   return (
     <>
       <div
@@ -290,12 +304,7 @@ export const GameContainer = ({
                 <LeaderboardSkeleton usersPerPage={usersPerPage} />
               )}
             </div>
-            <StandingsTable
-              className={styles.standings_table}
-              competition={competitionStrs.shortHand}
-              entrants={allEntrants[entrantType]}
-              standingsArr={rounds[roundIndex].standings[entrantType]}
-            />
+            {standingsTable}
           </>
         ) : (
           <>
@@ -309,20 +318,15 @@ export const GameContainer = ({
             />
             <div className={styles.tables}>
               <PredictionTable
-                competition={competitionStrs.shortHand}
                 currentUserDisplayName={currentUserDisplayName}
                 currentUserId={currentUserId}
                 entrants={allEntrants[entrantType]}
                 entrantType={entrantType}
                 selectedRound={roundIndex}
                 selectedUser={selectedUser}
+                shortHandCompStr={competitionStrs.shortHand}
               />
-              <StandingsTable
-                className={styles.standings_table}
-                competition={competitionStrs.shortHand}
-                entrants={allEntrants[entrantType]}
-                standingsArr={rounds[roundIndex].standings[entrantType]}
-              />
+              {standingsTable}
             </div>
           </>
         )}
