@@ -5,7 +5,7 @@ import { NextPage } from "next";
 import { notFound } from "next/navigation";
 
 import { authOptions } from "@lib/auth";
-import { allEurovisionSeasonData } from "@data/eurovision/season-data";
+import { allF1SeasonData } from "@data/formula-1/season-data";
 
 import { PanelHeading } from "@components/panels/panel-heading";
 import { YourPredictions } from "@components/your-predictions/your-predictions";
@@ -13,12 +13,12 @@ import { YourPredictions } from "@components/your-predictions/your-predictions";
 import { PageProps } from "@custom-types/misc";
 
 export const metadata: Metadata = {
-  title: "View Your Eurovision Predictions | Predict The Standings",
+  title: "View Your Formula 1 Predictions | Predict The Standings",
 };
 
 const Page: NextPage<PageProps> = async ({ params }) => {
   const { season } = params;
-  const seasonData = allEurovisionSeasonData.find(
+  const seasonData = allF1SeasonData.find(
     (seasonData) => seasonData.id === season
   );
   if (seasonData === undefined) notFound();
@@ -34,7 +34,9 @@ const Page: NextPage<PageProps> = async ({ params }) => {
   return (
     <>
       <PanelHeading>
-        <h1>Eurovision {season} Grand Final - Your Predictions</h1>
+        <h1>
+          {seasonData.competitionStrs.display} {season} - Your Predictions
+        </h1>
       </PanelHeading>
       <YourPredictions seasonData={seasonData} userId={session.user.id} />
     </>

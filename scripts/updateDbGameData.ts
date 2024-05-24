@@ -4,7 +4,7 @@ import { MongoClient } from "mongodb";
 
 import { allF1SeasonData } from "@data/formula-1/season-data";
 import { allEurovisionSeasonData } from "@data/eurovision/season-data";
-import { createGameData } from "@lib/prediction-data";
+import { createGameData } from "@lib/game-data";
 import {
   getAllUserPredictionDataQuery,
   updateAllUserDocGameData,

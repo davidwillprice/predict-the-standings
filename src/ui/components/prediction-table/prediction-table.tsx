@@ -3,7 +3,7 @@ import type {
   ShortHandCompStr,
   UserGameData,
 } from "@custom-types/game-types";
-import { calcPredictionsAccuracy } from "@lib/prediction-data";
+import { calcPredictionsAccuracy } from "@lib/game-data";
 
 import Icon from "@ui/svgs/icons/sq-icon";
 import { FlagCell } from "@components/prediction-table/eurovision-flag-cell";
