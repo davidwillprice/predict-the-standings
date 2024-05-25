@@ -5,6 +5,8 @@ import { Collection } from "mongodb";
 import { ObjectId } from "mongodb";
 import {
   AllEntrants,
+  EntrantId,
+  RoundPerformance,
   ShortHandCompStr,
   StatsData,
   UserGameData,
@@ -413,32 +415,46 @@ export const updateAllUserDocGameData = async (
 ) => {
   let userArr = Object.values(users);
 
-  /**Standard users only need a couple of properties updated as the rest is already in the DB
-   * Special users may not already be in the DB so can't be filtered by their a MongoDB ObjectId and need more data to be added
-   */
   const operations = userArr.map((user) => {
+    /**Standard users only need a couple of properties updated as the rest is already in the DB
+     * Special users may not already be in the DB so can't be filtered by their a MongoDB ObjectId and need more data to be added */
+    const propertiesToUpdate: {
+      controversyPercentile: { [entrantType: string]: number };
+      predictionsFromAvg: { [entrantType: string]: number };
+      season: { [entrantType: string]: RoundPerformance[] };
+      userId?: string;
+      information?: string;
+      type?: "userData";
+      displayName?: string;
+      predictions?: { [entrantType: string]: EntrantId[] };
+      timesPredictionsUpdated?: number;
+      roundsTop?: { [entrantType: string]: number[] };
+      userType?: "standard" | "special";
+    } =
+      user.userType === "standard"
+        ? {
+            controversyPercentile: user.controversyPercentile,
+            predictionsFromAvg: user.predictionsFromAvg,
+            season: user.season,
+          }
+        : {
+            userId: user.userId,
+            controversyPercentile: user.controversyPercentile,
+            displayName: user.displayName,
+            information: user.information,
+            predictions: user.predictions,
+            predictionsFromAvg: user.predictionsFromAvg,
+            season: user.season,
+            type: "userData",
+            userType: "special",
+          };
+
+    if (user.roundsTop) propertiesToUpdate.roundsTop = user.roundsTop;
     return {
       updateOne: {
         filter: { userId: user.userId },
         update: {
-          $set:
-            user.userType === "standard"
-              ? {
-                  controversyPercentile: user.controversyPercentile,
-                  predictionsFromAvg: user.predictionsFromAvg,
-                  season: user.season,
-                }
-              : {
-                  userId: user.userId,
-                  controversyPercentile: user.controversyPercentile,
-                  displayName: user.displayName,
-                  information: user.information,
-                  predictions: user.predictions,
-                  predictionsFromAvg: user.predictionsFromAvg,
-                  season: user.season,
-                  type: "userData",
-                  userType: "special",
-                },
+          $set: propertiesToUpdate,
         },
         upsert: true,
       },

@@ -119,6 +119,7 @@ export class UserGameData {
   userType: "standard" | "special";
   controversyPercentile: { [entrantType: string]: number };
   timesPredictionsUpdated?: number;
+  roundsTop?: { [entrantType: string]: number[] };
   userId: string;
   constructor(
     displayName: string,
@@ -169,7 +170,7 @@ export type Leaderboard = {
   percentCorrect: number;
 };
 
-interface RoundPerformance {
+export interface RoundPerformance {
   /**Total of how off all entrant predictions were in this round */
   diffTotal: number;
   /**How off each entrant prediction was in this round */

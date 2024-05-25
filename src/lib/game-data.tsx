@@ -49,6 +49,8 @@ export const createGameData = async (
 
   rounds = orderLeaderboards(rounds, users);
 
+  users = addRoundsOnTopToUsers(rounds, users);
+
   users = addLeaderboardDataToUserGameDataMap(rounds, users);
 
   rounds = generateEntrantDiffTotals(rounds, users);
@@ -269,6 +271,24 @@ const orderLeaderboards = (rounds: Round[], users: UserGameDataMap) => {
     }
   });
   return rounds;
+};
+
+/**Add which rounds each user was first in the leaderboard to their userGameData */
+const addRoundsOnTopToUsers = (
+  rounds: Round[],
+  users: UserGameDataMap
+): UserGameDataMap => {
+  rounds.forEach((round, roundIndex) => {
+    for (const entrantType in round.leaderboards) {
+      const userTopThisRound = users[round.leaderboards[entrantType][0].userId];
+      if (userTopThisRound?.roundsTop === undefined)
+        userTopThisRound.roundsTop = {};
+      if (userTopThisRound.roundsTop[entrantType] === undefined)
+        userTopThisRound.roundsTop[entrantType] = [];
+      userTopThisRound.roundsTop[entrantType].push(roundIndex + 1);
+    }
+  });
+  return users;
 };
 
 /**Copy leaderboard data from the round data to the user data, and calculate how each user's leaderboard position has changed since the previous round */
