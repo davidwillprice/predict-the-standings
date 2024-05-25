@@ -22,6 +22,7 @@ export const Formula1Nav = ({ params, session }: Props) => {
   allF1SeasonData[0];
 
   const hasMadePredictions =
+    session?.user?.predictionsMadeFor?.[competitionStrs.shortHand] &&
     session?.user?.predictionsMadeFor?.[competitionStrs.shortHand].includes(
       seasonStr
     );
@@ -42,7 +43,7 @@ export const Formula1Nav = ({ params, session }: Props) => {
       )}
       {!arePredictionsFrozen && predictionsOpen && (
         <HeaderLink
-          href={`/${competitionStrs.hyphenated}/2024/predict`}
+          href={`/${competitionStrs.hyphenated}/${seasonStr}/predict`}
           icon="listBullet">
           Submit Predictions
         </HeaderLink>

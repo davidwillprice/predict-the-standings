@@ -23,6 +23,7 @@ export const EurovisionNav = ({ params, session }: Props) => {
   ) || allEurovisionSeasonData[0];
 
   const hasMadePredictions =
+    session?.user?.predictionsMadeFor?.[competitionStrs.shortHand] &&
     session?.user?.predictionsMadeFor?.[competitionStrs.shortHand].includes(
       seasonStr
     );

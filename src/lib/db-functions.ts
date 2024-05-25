@@ -126,7 +126,7 @@ export const getAllUserPredictionDataQuery = async (
   try {
     const result = await collection.find({
       type: "userData",
-      userType: "standard",
+      displayName: { $ne: "Average" },
     });
     if (!result)
       throw new Error(
@@ -345,7 +345,7 @@ export const submitPredictionsQuery = async (
       );
 
     if (predictionFreezeDate.getTime() < new Date().getTime()) {
-      return `Predictions for ${competition + season} are frozen`;
+      return `The competition has started and predictions are frozen`;
     } else {
       const olduserPredictionDoc = await collection.findOne({ userId: userId });
       const prevTimesPredictionsUpdated =
