@@ -313,6 +313,8 @@ export const GameContainer = ({
               currentUserId={currentUserId}
               entrantType={entrantType}
               handleBackBtn={handleBackBtn}
+              isSeasonOver={isSeasonOver}
+              moreThanOneRound={rounds.length !== 1}
               roundIndex={roundIndex}
               selectedUser={selectedUser}
             />

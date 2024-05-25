@@ -1,6 +1,6 @@
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
-import { markdownLinksToHTML } from "@lib/misc";
+import { markdownLinksToHTML, numberToOrdinalNumber } from "@lib/misc";
 
 import ReportContainer from "@components/report-display-name/report-container";
 import { Button } from "@components/button/button";
@@ -15,6 +15,8 @@ interface Props {
   currentUserDisplayName: string | null;
   entrantType: string;
   handleBackBtn: Function;
+  isSeasonOver: boolean;
+  moreThanOneRound: boolean;
   roundIndex: number;
   selectedUser: UserGameData;
 }
@@ -24,6 +26,8 @@ export const UserData = ({
   currentUserDisplayName,
   entrantType,
   handleBackBtn,
+  isSeasonOver,
+  moreThanOneRound,
   roundIndex,
   selectedUser,
 }: Props) => {
@@ -60,7 +64,9 @@ export const UserData = ({
       )}
       <p>
         Leaderboard Position:{" "}
-        {selectedUser.season[entrantType][roundIndex].leaderboardPos}
+        {numberToOrdinalNumber(
+          selectedUser.season[entrantType][roundIndex].leaderboardPos
+        )}
       </p>
       <p>
         Perfect Predictions:{" "}
@@ -72,6 +78,22 @@ export const UserData = ({
           {selectedUser.controversyPercentile[entrantType]}%
         </p>
       )}
+      {moreThanOneRound &&
+        selectedUser.roundsTop &&
+        selectedUser.roundsTop[entrantType] && (
+          <p>
+            {selectedUser.userId !== currentUserId
+              ? `${selectedUser.displayName} ${
+                  isSeasonOver ? "was" : "has been"
+                }`
+              : `You ${isSeasonOver ? "were" : "have been"}`}{" "}
+            top of the leaderboard for{" "}
+            {selectedUser.roundsTop[entrantType].length} round
+            {selectedUser.roundsTop[entrantType].length > 1 && "s"} across the
+            season.
+          </p>
+        )}
+      {/**@todo Add something like 'Including two X round streaks.*/}
     </div>
   );
 };

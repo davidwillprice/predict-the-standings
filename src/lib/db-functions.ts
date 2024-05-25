@@ -59,6 +59,7 @@ export const getSingleUserPredictionDataQuery = async (
       lastSubmissionTime: res.lastSubmissionTime,
       predictions: res.predictions,
       predictionsFromAvg: res.predictionsFromAvg,
+      roundsTop: res.roundsTop,
       season: res.season,
       timesPredictionsUpdated: res.timesPredictionsUpdated,
       userId: res.userId,
@@ -105,6 +106,7 @@ export const getMultipleUserGameData = async (
         predictionsObj,
         doc.userType
       );
+      users[doc.userId].roundsTop = doc.roundsTop;
       users[doc.userId].userId = doc.userId;
       users[doc.userId].predictionsFromAvg = doc.predictionsFromAvg;
       users[doc.userId].timesPredictionsUpdated = doc.timesPredictionsUpdated;
@@ -215,6 +217,7 @@ export const getLeaderboardDataQuery = async (
         lastSubmissionTime: user.lastSubmissionTime,
         predictions: user.predictions,
         predictionsFromAvg: user.predictionsFromAvg,
+        roundsTop: user.roundsTop,
         season: user.season,
         userType: user.userType,
       };
