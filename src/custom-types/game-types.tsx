@@ -7,7 +7,7 @@ export class LocalSeasonData {
     hyphenated: "",
     shortHand: "",
   };
-  /**Season string like '2023' */
+  /**Season string like '2023' or '2023-2024' */
   id: string;
   /**True when the final round of data has come in */
   isSeasonOver: boolean;
@@ -151,9 +151,9 @@ export class Round {
   entrantDiffTotals: { [entrantType: string]: EntrantDiffTotal[] };
   leaderboards: { [entrantType: string]: Leaderboard[] };
   standings: { [entrantType: string]: EntrantId[] };
-  trackName;
-  constructor(trackName: string, standings: {}) {
-    this.trackName = trackName;
+  venue;
+  constructor(venue: string, standings: {}) {
+    this.venue = venue;
     this.standings = standings;
     this.leaderboards = {};
     this.entrantDiffTotals = {};

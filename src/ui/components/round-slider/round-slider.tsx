@@ -2,13 +2,14 @@
 import { useState } from "react";
 
 import styles from "@components/round-slider/round-slider.module.scss";
-import { Round } from "@custom-types/game-types";
+import { Round, ShortHandCompStr } from "@custom-types/game-types";
 
 interface Props {
   addDebouncingState: Function;
   changeRound: Function;
   initialRoundIndex: number;
   rounds: Round[];
+  shortHandCompStr: ShortHandCompStr;
 }
 
 export const RoundSlider = ({
@@ -16,6 +17,7 @@ export const RoundSlider = ({
   changeRound,
   initialRoundIndex,
   rounds,
+  shortHandCompStr,
 }: Props) => {
   const noOfRounds = rounds.length;
   const [sliderValue, setSliderValue] = useState(initialRoundIndex);
@@ -37,8 +39,14 @@ export const RoundSlider = ({
         {/**@todo Compare slider to Aria React's slider and W3 slider pattern to see what improvements can be made or possibly just implement the React Aria solution */}
         {/**@todo! 'Track-name' needs to be updated for football */}
         <h2>
-          Round {sliderValue + 1}:{" "}
-          <span id="track-name">{rounds[sliderValue].trackName}</span>
+          {shortHandCompStr === "f1" ? (
+            <>
+              Round {sliderValue + 1}:{" "}
+              <span id="track-name">{rounds[sliderValue].venue}</span>
+            </>
+          ) : (
+            <>Gameweek {sliderValue + 1}</>
+          )}
         </h2>
         {noOfRounds > 1 && (
           <div className={styles.slider_footer}>

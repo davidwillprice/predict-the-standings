@@ -341,6 +341,7 @@ export const GameContainer = ({
             changeRound={changeRoundHandler}
             initialRoundIndex={roundIndex}
             rounds={rounds}
+            shortHandCompStr={competitionStrs.shortHand}
           />
         )
       }

@@ -2,8 +2,9 @@ import "dotenv/config";
 import dotenv from "dotenv";
 import { MongoClient } from "mongodb";
 
-import { allF1SeasonData } from "@data/formula-1/season-data";
 import { allEurovisionSeasonData } from "@data/eurovision/season-data";
+import { allF1SeasonData } from "@data/formula-1/season-data";
+import { allPlSeasonData } from "@data/premier-league/season-data";
 import { createGameData } from "@lib/game-data";
 import {
   getAllUserPredictionDataQuery,
@@ -110,6 +111,7 @@ async function run() {
   try {
     await submitCompetitionGameData(allF1SeasonData, client);
     await submitCompetitionGameData(allEurovisionSeasonData, client);
+    await submitCompetitionGameData(allPlSeasonData, client);
     process.exit(0);
   } catch (err) {
     console.error(err);

@@ -11,6 +11,7 @@ import { AccessibilityOptions } from "@components/accessibility/accessibility";
 import { Dropdown } from "@components/dropdown/dropdown";
 import { EurovisionNav } from "@components/header/competition-nav/eurovision-nav";
 import { Formula1Nav } from "./competition-nav/formula-1-nav";
+import { PremierLeagueNav } from "./competition-nav/premier-league-nav";
 
 import styles from "@components/header/header.module.scss";
 import commonStyles from "@styles/common.module.scss";
@@ -42,6 +43,8 @@ export const MainNav = ({ children, session }: Props) => {
     <Formula1Nav params={params} session={session} />
   ) : pathname.startsWith("/eurovision") ? (
     <EurovisionNav params={params} session={session} />
+  ) : pathname.startsWith("/premier-league") ? (
+    <PremierLeagueNav params={params} session={session} />
   ) : (
     <>
       <HeaderLink href="/eurovision" icon="microphone">

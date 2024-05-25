@@ -5,9 +5,11 @@ import { NextPage } from "next";
 import { notFound } from "next/navigation";
 
 import { getSingleUserPredictionDataQuery } from "@lib/db-functions";
+import { sortEntrantsAlphabetically } from "@lib/misc";
 import { authOptions } from "@lib/auth";
-import { allEurovisionSeasonData } from "@data/eurovision/season-data";
+import { allPlSeasonData } from "@data/premier-league/season-data";
 
+import { Countdown } from "@components/countdown/countdown";
 import { CompetitionNavLinks } from "@components/latest-season-showcase/comp-nav-links";
 import { Panel } from "@components/panels/panel";
 import { PanelHeading } from "@components/panels/panel-heading";
@@ -19,12 +21,12 @@ import { PageProps, CompetitionLink } from "@custom-types/misc";
 import { Entrant } from "@custom-types/game-types";
 
 export const metadata: Metadata = {
-  title: "Make Your Eurovision Predictions | Predict The Standings",
+  title: "Submit Your Premier League Predictions | Predict The Standings",
 };
 
 const Page: NextPage<PageProps> = async ({ params }) => {
   const { season } = params;
-  const seasonData = allEurovisionSeasonData.find(
+  const seasonData = allPlSeasonData.find(
     (seasonData) => seasonData.id === season
   );
   if (seasonData === undefined) notFound();
@@ -39,23 +41,22 @@ const Page: NextPage<PageProps> = async ({ params }) => {
   const {
     arePredictionsFrozen,
     competitionStrs,
+    predictionFreezeDate,
     predictionsOpen,
     isSeasonOver,
-    startingEntrantOrders,
   } = seasonData;
-  const { countries } = seasonData.allEntrants;
+  const entrantType = "teams";
+  const entrants = seasonData.allEntrants[entrantType];
   const userId = session.user.id;
 
-  let defaultCountryArr;
-  if (startingEntrantOrders) {
-    defaultCountryArr = startingEntrantOrders.countries.map(
-      (countrySName) => countries[countrySName]
-    );
-  } else {
-    throw new Error("Can't find performance order of countries");
+  /**Create alphabetically ordered array of entrants to use as defaults if the user hasn't made predictions before */
+  let defaultEntrantArr = [];
+  for (const entrant of Object.values(entrants)) {
+    defaultEntrantArr.push(entrant);
   }
+  defaultEntrantArr = sortEntrantsAlphabetically(defaultEntrantArr);
 
-  let countryArr: Entrant[];
+  let entrantArr: Entrant[];
   try {
     const userPredictionData = await getSingleUserPredictionDataQuery(
       season,
@@ -63,16 +64,16 @@ const Page: NextPage<PageProps> = async ({ params }) => {
       userId
     );
 
-    /**Check if user has made predictions previously, and if not use the performance order of the countries */
-    if (userPredictionData.predictions.countries) {
-      countryArr = userPredictionData.predictions.countries.map(
-        (entrantStr: string) => countries[entrantStr]
+    /**Check if there is existing entrant predictions, and if not use the alphabetically ordered array instead */
+    if (userPredictionData.predictions[entrantType]) {
+      entrantArr = userPredictionData.predictions[entrantType].map(
+        (entrantStr: string) => entrants[entrantStr]
       );
     } else {
-      countryArr = defaultCountryArr;
+      entrantArr = defaultEntrantArr;
     }
   } catch (_) {
-    countryArr = defaultCountryArr;
+    entrantArr = defaultEntrantArr;
   }
 
   return (
@@ -81,15 +82,14 @@ const Page: NextPage<PageProps> = async ({ params }) => {
         <>
           <PanelHeading>
             <h1>
-              Predict The {competitionStrs.display} {season} Grand Final -
+              Predict The {competitionStrs.display} {season}
               Standings
             </h1>
           </PanelHeading>
           <Panel>
             <p>
-              Please return once the countries competing in the{" "}
-              {competitionStrs.display} {season} Grand Final have been
-              confirmed.
+              Please return once the teams competing in the{" "}
+              {competitionStrs.display} {season} season have been confirmed.
             </p>
           </Panel>
         </>
@@ -97,20 +97,20 @@ const Page: NextPage<PageProps> = async ({ params }) => {
         <EditPredictions
           arePredictionsFrozen={arePredictionsFrozen}
           displayName={displayName}
-          entrantType={"countries"}
-          initialEntrants={JSON.parse(JSON.stringify(countryArr))}
+          entrantType={entrantType}
+          initialEntrants={JSON.parse(JSON.stringify(entrantArr))}
           season={season}
           seasonData={JSON.parse(JSON.stringify(seasonData))}
           userId={userId}>
           <Panel>
             <p>
-              Drag the countries into the order which you think they will finish
-              in.
+              Drag the teams into the order which you think they will finish in.
             </p>
             <p>
-              Predictions will lock when the voting results start being
-              announced.
+              Predictions will freeze once the first game of the season kicks
+              off.
             </p>
+            <Countdown deadline={predictionFreezeDate} />
           </Panel>
           <div
             id="submit-predictions-con"
@@ -127,12 +127,8 @@ const Page: NextPage<PageProps> = async ({ params }) => {
               </p>
               <CompetitionNavLinks
                 linkArr={[
-                  new CompetitionLink("", "microphone", "Leaderboard"),
-                  new CompetitionLink(
-                    "stats/country",
-                    "stats",
-                    "Country Stats"
-                  ),
+                  new CompetitionLink("", "premierLeague", "Leaderboard"),
+                  new CompetitionLink("stats/team", "stats", "Team Stats"),
                   new CompetitionLink("stats/player", "group", "Player Stats"),
                 ]}
                 localSeasonData={seasonData}
@@ -141,7 +137,7 @@ const Page: NextPage<PageProps> = async ({ params }) => {
             </>
           ) : (
             <p className={commonStyles.text_center}>
-              The results are being announced and so predictions are frozen!
+              The {season} season has started and predictions are frozen!
             </p>
           )}
         </Panel>

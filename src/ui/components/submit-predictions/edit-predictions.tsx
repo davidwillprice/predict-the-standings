@@ -17,6 +17,7 @@ interface Props {
   arePredictionsFrozen: boolean;
   children: string | ReactNode;
   displayName: string;
+  entrantType: string;
   initialEntrants: Entrant[];
   season: string;
   seasonData: LocalSeasonData;
@@ -26,6 +27,7 @@ interface Props {
 export const EditPredictions = ({
   arePredictionsFrozen,
   displayName,
+  entrantType,
   initialEntrants,
   children,
   season,
@@ -52,7 +54,7 @@ export const EditPredictions = ({
 
         {children}
         <SubmitPredictions
-          allEntrantArrs={{ countries: entrantArr }}
+          allEntrantArrs={{ [entrantType]: entrantArr }}
           arePredictionsFrozen={arePredictionsFrozen}
           displayName={displayName}
           competitionStrs={competitionStrs}
@@ -66,7 +68,7 @@ export const EditPredictions = ({
             allEntrants={allEntrants}
             competition={competitionStrs.shortHand}
             entrantArr={entrantArr}
-            entrantType={"countries"}
+            entrantType={entrantType}
             handleEntrantState={handleEntrantState}
           />
         </div>
