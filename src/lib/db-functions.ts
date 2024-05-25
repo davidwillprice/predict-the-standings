@@ -149,6 +149,9 @@ export const getAllUserPredictionDataQuery = async (
       );
       users[doc.userId].userId = doc.userId;
       users[doc.userId].timesPredictionsUpdated = doc.timesPredictionsUpdated;
+      if (doc.userType === "special") {
+        users[doc.userId].information = doc.information;
+      }
     }
     if (Object.keys(users).length === 0)
       console.log(

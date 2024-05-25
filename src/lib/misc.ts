@@ -100,6 +100,14 @@ export const toTitleCase = (str: string) => {
   return titleCaseStr;
 };
 
+export const markdownLinksToHTML = (text: string): string => {
+  const regex = /\[([^\]]+)\]\(([^)]+)\)/g;
+
+  return text.replace(regex, (match, linkText, linkUrl) => {
+    return `<a href="${linkUrl}" target="_blank" rel="noopener noreferrer">${linkText}</a>`;
+  });
+};
+
 //3 as e
 //1 as i
 //0 as o

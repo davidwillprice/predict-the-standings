@@ -1,5 +1,7 @@
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
+import { markdownLinksToHTML } from "@lib/misc";
+
 import ReportContainer from "@components/report-display-name/report-container";
 import { Button } from "@components/button/button";
 import Icon from "@ui/svgs/icons/sq-icon";
@@ -46,7 +48,16 @@ export const UserData = ({
         currentUserId={currentUserId}
         currentUserDisplayName={currentUserDisplayName}
       />
-      {selectedUser.information && <p>Note: {selectedUser.information}</p>}
+      {selectedUser.information && (
+        <p>
+          Note:{" "}
+          <span
+            dangerouslySetInnerHTML={{
+              __html: markdownLinksToHTML(selectedUser.information),
+            }}
+          />
+        </p>
+      )}
       <p>
         Leaderboard Position:{" "}
         {selectedUser.season[entrantType][roundIndex].leaderboardPos}
