@@ -37,7 +37,6 @@ export const RoundSlider = ({
       <div className={styles.con}>
         {/**@todo Add arrow buttons to let people change the round without having to use the slider */}
         {/**@todo Compare slider to Aria React's slider and W3 slider pattern to see what improvements can be made or possibly just implement the React Aria solution */}
-        {/**@todo! 'Track-name' needs to be updated for football */}
         <h2>
           {shortHandCompStr === "f1" ? (
             <>

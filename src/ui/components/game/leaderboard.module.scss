@@ -55,6 +55,7 @@
   align-items: center;
   svg {
     margin-left: 5px;
+    height: 15px;
   }
 }
 .perfect_positions {
@@ -158,7 +159,7 @@
     }
   }
 }
-@media (max-width: 333px) {
+@media (max-width: 345px) {
   .perfect_positions {
     display: none;
   }
