@@ -41,6 +41,9 @@ table.table {
     background-color: var(--primary-color);
     height: 30px;
   }
+  &__tertiary_bg td {
+    background-color: var(--tertiary-color);
+  }
   td:first-child {
     border-radius: 5px 0 0 5px;
     padding-left: 10px;

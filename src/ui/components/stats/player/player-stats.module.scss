@@ -1,0 +1,30 @@
+.leaderboard_toppers__ {
+  &con {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  &tables {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+  }
+  &table_con {
+    width: 100%;
+  }
+}
+
+@media (min-width: 1100px) {
+  .leaderboard_toppers__ {
+    &name_cell {
+      min-width: 105px;
+    }
+  }
+}
+
+@media (max-width: 1100px) {
+  .leaderboard_toppers__ {
+    &tables {
+      flex-direction: column;
+    }
+  }
+}

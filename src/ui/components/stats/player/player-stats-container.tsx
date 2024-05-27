@@ -12,6 +12,7 @@ import { Controversy } from "@components/stats/player/controversy";
 import { LastestSubmission } from "./latest-submission";
 import { MostUpdated } from "./most-updated";
 import { LoadingSpinner } from "@components/loading-spinner/loading-spinner";
+import { LeaderboardToppers } from "./leaderboard-toppers";
 
 import { LocalSeasonData, UserGameData } from "@custom-types/game-types";
 
@@ -31,6 +32,7 @@ export const PlayerStats = async ({
     allEntrants,
     competitionStrs,
     id: seasonStr,
+    isSeasonOver,
     predictionsOpen,
     rounds,
   } = seasonData;
@@ -49,20 +51,22 @@ export const PlayerStats = async ({
   /**If there is round data, get the stats for this competition/season, and then get the users referenced in those stats*/
   let controversialUserIds;
   let latestSubmissionUserId;
+  let leaderboardToppingUserIds;
   let mostUpdatedPredictionUserIds;
   /**@todo Make this a set to avoid getting the same user data from the DB multiple times */
   let noteworthyUserIds: string[] = [];
   let users;
   if (rounds.length > 0) {
-    const StatsData = await getStatsDataQuery(
+    const statsData = await getStatsDataQuery(
       seasonStr,
       competitionStrs.shortHand
     );
-    controversialUserIds = StatsData.controversialUserIds;
-    latestSubmissionUserId = StatsData.latestSubmissionUserId;
-    mostUpdatedPredictionUserIds = StatsData.mostUpdatedPredictionUserIds;
+    controversialUserIds = statsData.controversialUserIds;
+    latestSubmissionUserId = statsData.latestSubmissionUserId;
+    leaderboardToppingUserIds = statsData.leaderboardToppingUserIds;
+    mostUpdatedPredictionUserIds = statsData.mostUpdatedPredictionUserIds;
 
-    /**Obtain game data for all the users referenced in the controversy Id obj anmd mostUpdatedPredictionUserIds */
+    /**Obtain game data for all the users referenced in the controversy Id obj and mostUpdatedPredictionUserIds */
     for (const entrantType of Object.keys(controversialUserIds)) {
       controversialUserIds[entrantType].most.forEach((userId) =>
         noteworthyUserIds.push(userId)
@@ -70,6 +74,12 @@ export const PlayerStats = async ({
       controversialUserIds[entrantType].least.forEach((userId) =>
         noteworthyUserIds.push(userId)
       );
+    }
+    /**Obtain game data for all the users referenced in the leaderboardToppingUserIds */
+    for (const arr of Object.values(leaderboardToppingUserIds)) {
+      arr.forEach((userToppingData) => {
+        noteworthyUserIds.push(userToppingData.userId);
+      });
     }
 
     noteworthyUserIds = noteworthyUserIds.concat(
@@ -85,9 +95,10 @@ export const PlayerStats = async ({
     );
   }
 
+  const isOneRoundSeason = isSeasonOver && rounds.length === 1;
+
   /**@todo Stat for copying last year's standings */
   /**@todo "X, Y, and Z were the only players to predict Hamilton would win the WDC" */
-  /**@todo Stat for who was top of the table for longest */
   /**@todo Leaderboard based on xG for football? */
   /**@todo Table of which entrants is causing the logged in user the biggest issues? */
   return (
@@ -116,6 +127,15 @@ export const PlayerStats = async ({
               currUser={currUser}
               predictionFreezeDate={seasonData.predictionFreezeDate}
               userId={latestSubmissionUserId}
+              users={JSON.parse(JSON.stringify(users))}
+            />
+          )}
+          {leaderboardToppingUserIds && !isOneRoundSeason && (
+            <LeaderboardToppers
+              currUserId={currUserId}
+              shortHandCompStr={competitionStrs.shortHand}
+              isSeasonOver={isSeasonOver}
+              leaderboardToppingUserIds={leaderboardToppingUserIds}
               users={JSON.parse(JSON.stringify(users))}
             />
           )}

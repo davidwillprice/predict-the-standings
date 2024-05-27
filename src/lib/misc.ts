@@ -108,6 +108,22 @@ export const markdownLinksToHTML = (text: string): string => {
   });
 };
 
+export const getLengthOfLongestConsecutiveNumbers = (arr: number[]): number => {
+  let longestStreak = 1;
+  let currentStreak = 1;
+  arr.forEach((round, index) => {
+    if (index !== 0) {
+      if (round === arr[index - 1] + 1) {
+        currentStreak++;
+        if (currentStreak > longestStreak) longestStreak = currentStreak;
+      } else {
+        currentStreak = 1;
+      }
+    }
+  });
+  return longestStreak;
+};
+
 //3 as e
 //1 as i
 //0 as o
