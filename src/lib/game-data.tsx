@@ -4,6 +4,7 @@ import {
   Entrants,
   EntrantStats,
   GameData,
+  LeaderboardToppingUserIds,
   MostUpdatedPredictionUserIds,
   Round,
   ShortHandCompStr,
@@ -39,17 +40,18 @@ export const createGameData = async (
 
   users = generateControversyData(users);
 
-  /**Obtaining data for player stats */
-  const controversialUserIds = getControversialUserGameDataMap(users);
-  const mostUpdatedPredictionUserIds =
-    getUpdatedPredictionUserGameDataMap(users);
-  const latestSubmissionUserId = getlatestSubmissionUserId(users);
-
   rounds = calcLeaderboards(allEntrants, rounds, users);
 
   rounds = orderLeaderboards(rounds, users);
 
   users = addRoundsOnTopToUsers(rounds, users);
+
+  /**Storing playerIds for use on the player stats page */
+  const controversialUserIds = getControversialUserGameDataMap(users);
+  const mostUpdatedPredictionUserIds =
+    getUpdatedPredictionUserGameDataMap(users);
+  const latestSubmissionUserId = getlatestSubmissionUserId(users);
+  const leaderboardToppingUserIds = getLeaderboardToppingUserIds(users);
 
   users = addLeaderboardDataToUserGameDataMap(rounds, users);
 
@@ -66,10 +68,11 @@ export const createGameData = async (
   const allEntrantStats = generateEntrantStats(allEntrants);
 
   return {
+    allEntrantStats: allEntrantStats,
     controversialUserIds: controversialUserIds,
     latestSubmissionUserId: latestSubmissionUserId,
+    leaderboardToppingUserIds: leaderboardToppingUserIds,
     mostUpdatedPredictionUserIds: mostUpdatedPredictionUserIds,
-    allEntrantStats: allEntrantStats,
     roundStats: rounds.map((round) => {
       return {
         entrantDiffTotals: round.entrantDiffTotals,
@@ -629,4 +632,27 @@ const generateEntrantStats = (
   }
 
   return allEntrantStats;
+};
+
+const getLeaderboardToppingUserIds = (
+  users: UserGameDataMap
+): LeaderboardToppingUserIds => {
+  /**Add create arrays for each entrantType which hold objects with a userId and the rounds they were top */
+  let leaderboardToppingUserIds: LeaderboardToppingUserIds = {};
+  for (const entrantType of Object.keys(users.average.predictions)) {
+    leaderboardToppingUserIds[entrantType] = [];
+    for (const userGameData of Object.values(users)) {
+      if (userGameData.roundsTop && userGameData.roundsTop[entrantType]) {
+        leaderboardToppingUserIds[entrantType].push({
+          userId: userGameData.userId,
+          roundsTop: userGameData.roundsTop[entrantType],
+        });
+      }
+    }
+    /**Sort the arrays by those who were top for the most rounds */
+    leaderboardToppingUserIds[entrantType].sort((a, b) =>
+      a.roundsTop.length > b.roundsTop.length ? -1 : 1
+    );
+  }
+  return leaderboardToppingUserIds;
 };

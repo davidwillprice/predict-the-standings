@@ -250,6 +250,7 @@ export const getStatsDataQuery = async (
       controversialUserIds: result.controversialUserIds,
       allEntrants: result.allEntrants,
       latestSubmissionUserId: result.latestSubmissionUserId,
+      leaderboardToppingUserIds: result.leaderboardToppingUserIds,
       mostUpdatedPredictionUserIds: result.mostUpdatedPredictionUserIds,
       noOfPredictions: result.noOfPredictions,
       rounds: result.rounds,

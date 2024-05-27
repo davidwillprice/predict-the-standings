@@ -186,6 +186,7 @@ export interface GameData {
   allEntrantStats: { [entrantType: string]: EntrantStats };
   controversialUserIds: ControversialUserIds;
   latestSubmissionUserId: UserId;
+  leaderboardToppingUserIds: LeaderboardToppingUserIds;
   mostUpdatedPredictionUserIds: MostUpdatedPredictionUserIds;
   roundStats: {
     entrantDiffTotals: { [entrantType: string]: EntrantDiffTotal[] };
@@ -194,9 +195,10 @@ export interface GameData {
 }
 
 export interface StatsData {
-  controversialUserIds: ControversialUserIds;
   allEntrants: { [entrantType: string]: EntrantStats };
+  controversialUserIds: ControversialUserIds;
   latestSubmissionUserId: UserId;
+  leaderboardToppingUserIds: LeaderboardToppingUserIds;
   noOfPredictions: { [entrantType: string]: number };
   mostUpdatedPredictionUserIds: MostUpdatedPredictionUserIds;
   rounds: {
@@ -219,3 +221,10 @@ export interface ControversialUserIds {
   };
 }
 export type MostUpdatedPredictionUserIds = UserId[];
+
+export interface LeaderboardToppingUserIds {
+  [entrantType: string]: {
+    userId: UserId;
+    roundsTop: number[];
+  }[];
+}

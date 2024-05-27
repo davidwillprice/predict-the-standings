@@ -79,6 +79,7 @@ async function submitCompetitionGameData(
     }
 
     /**Update/Add the stats data to the DB */
+    /**@todo This would be moved to the db-functions.tsx file */
     const result = await collection.updateOne(
       { type: "statsData" },
       {
@@ -87,6 +88,7 @@ async function submitCompetitionGameData(
           allEntrants: gameData.allEntrantStats,
           controversialUserIds: gameData.controversialUserIds,
           latestSubmissionUserId: gameData.latestSubmissionUserId,
+          leaderboardToppingUserIds: gameData.leaderboardToppingUserIds,
           mostUpdatedPredictionUserIds: gameData.mostUpdatedPredictionUserIds,
           noOfPredictions: noOfPredictions,
           rounds: gameData.roundStats,
