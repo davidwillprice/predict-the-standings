@@ -9,7 +9,7 @@
   --tertiary-color-values: 237, 241, 244; //For use as part of rgba()
   --quaternary-color: #d4d4d4;
   --box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-  --error-color: red;
+  --error-color: rgb(198, 0, 0);
   --success-color: green;
 }
 
@@ -20,7 +20,7 @@
   --tertiary-color-values: 1, 22, 39; //For use as part of rgba()
   --quaternary-color: #0d65b3;
   --box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 1px 2px;
-  --error-color: rgb(255, 75, 75);
+  --error-color: #ff7f7f;
   --success-color: rgb(27, 235, 27);
 }
 
@@ -46,6 +46,10 @@ body {
   font-family: var(--font-roboto);
 }
 
+body {
+  overflow-x: hidden;
+}
+
 h1,
 h2,
 h3,
@@ -62,6 +66,10 @@ h1 {
 h3,
 h2 {
   font-size: 18px;
+}
+
+h4 {
+  font-size: 16px;
 }
 
 a {
@@ -88,7 +96,7 @@ hr {
 
 ul,
 ol {
-  margin-left: 10px;
+  margin-left: 20px;
 }
 
 p,
@@ -97,7 +105,8 @@ ol,
 hr,
 h1,
 h2,
-h3 {
+h3,
+h4 {
   margin-bottom: 15px;
 }
 

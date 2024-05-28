@@ -10,12 +10,12 @@
   display: flex;
   justify-content: space-between;
   gap: 20px;
-  a {
+  & > a,
+  & > button {
     width: 100%;
   }
 }
 .doubleCol {
-  flex-wrap: wrap;
   gap: 0 20px;
   align-items: center;
   justify-content: center;

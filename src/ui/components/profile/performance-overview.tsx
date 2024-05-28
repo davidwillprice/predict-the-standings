@@ -5,6 +5,7 @@ import { getSingleUserPredictionDataQuery } from "@lib/db-functions";
 
 import { allF1SeasonData } from "@data/formula-1/season-data";
 import { allEurovisionSeasonData } from "@data/eurovision/season-data";
+import { allPlSeasonData } from "@data/premier-league/season-data";
 
 import Link from "next/link";
 import { PanelHeading } from "@components/panels/panel-heading";
@@ -40,7 +41,10 @@ export const PerformanceOverview = ({ user }: Props) => {
 
   useEffect(() => {
     /**Merge all local season data */
-    const allLocalSeasonData = allF1SeasonData.concat(allEurovisionSeasonData);
+    const allLocalSeasonData = allF1SeasonData.concat(
+      allEurovisionSeasonData,
+      allPlSeasonData
+    );
 
     /**Get all strings from `predictionsMadeFor` via the user session */
     let gameDataCollections: string[] = [];
@@ -52,6 +56,7 @@ export const PerformanceOverview = ({ user }: Props) => {
       );
     }
 
+    /**@todo Add pagination */
     const getAllGameDataForUser = () => {
       /**Get the userPredictionData for every comp/season the user has predicted for */
       return new Promise((_, reject) => {
@@ -171,6 +176,8 @@ export const PerformanceOverview = ({ user }: Props) => {
                             ? "microphone"
                             : competitionStrs.shortHand === "f1"
                             ? "f1"
+                            : competitionStrs.shortHand === "pl"
+                            ? "premierLeague"
                             : "group"
                         }
                         strokeWidth={2}

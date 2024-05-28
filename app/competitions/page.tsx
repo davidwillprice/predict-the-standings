@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { allF1SeasonData } from "@data/formula-1/season-data";
 import { allEurovisionSeasonData } from "@data/eurovision/season-data";
+import { allPlSeasonData } from "@data/premier-league/season-data";
 
 import { PanelHeading } from "@components/panels/panel-heading";
 import Icon from "@ui/svgs/icons/sq-icon";
@@ -15,7 +16,11 @@ export const metadata: Metadata = {
 };
 
 const Page = () => {
-  const competitionData = [allEurovisionSeasonData[0], allF1SeasonData[0]];
+  const competitionData = [
+    allEurovisionSeasonData[0],
+    allF1SeasonData[0],
+    allPlSeasonData[0],
+  ];
   return (
     <>
       <PanelHeading>
@@ -69,6 +74,8 @@ const Page = () => {
                           ? "microphone"
                           : competitionStrs.shortHand === "f1"
                           ? "f1"
+                          : competitionStrs.shortHand === "pl"
+                          ? "premierLeague"
                           : "group"
                       }
                       strokeWidth={2}

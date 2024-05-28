@@ -10,9 +10,9 @@ interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 export const Button = ({ children, className, smallIcon, ...rest }: Props) => (
   <button
     {...rest}
-    className={`${styles.button} ${
-      smallIcon && styles.smallIcon
-    } ${className}`}>
+    className={`${styles.button} ${smallIcon ? styles.smallIcon : ""} ${
+      className ? className : ""
+    }`}>
     {children}
   </button>
 );

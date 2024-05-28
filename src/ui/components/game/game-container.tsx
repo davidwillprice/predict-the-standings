@@ -234,6 +234,7 @@ export const GameContainer = ({
 
   /**Updates user in query string */
   const changeSelectedUserHandler = (userGameData: UserGameData) => {
+    /**@todo Fix 'back' function not working */
     router.push(
       pathname +
         "?" +
