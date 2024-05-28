@@ -1,33 +1,39 @@
-import {
-  LeaderboardToppingUserIds,
-  ShortHandCompStr,
-  UserGameData,
-  UserGameDataMap,
-} from "@custom-types/game-types";
+"use client";
+import { useRouter } from "next/navigation";
 
 import { getLengthOfLongestConsecutiveNumbers } from "@lib/misc";
 
 import { Panel } from "@components/panels/panel";
+
+import {
+  CompetitionStrings,
+  LeaderboardToppingUserIds,
+  UserGameData,
+  UserGameDataMap,
+} from "@custom-types/game-types";
 
 import styles from "./player-stats.module.scss";
 import leaderboardStyles from "@components/game/leaderboard.module.scss";
 import entrantTableStyles from "@components/entrant-table/entrant-table.module.scss";
 
 type Props = {
+  competitionStrs: CompetitionStrings;
   currUserId: string | undefined;
   isSeasonOver: boolean;
   leaderboardToppingUserIds: LeaderboardToppingUserIds;
-  shortHandCompStr: ShortHandCompStr;
+  seasonStr: string;
   users: UserGameDataMap;
 };
 
 export const LeaderboardToppers = ({
+  competitionStrs,
   currUserId,
   isSeasonOver,
   leaderboardToppingUserIds,
-  shortHandCompStr,
+  seasonStr,
   users,
 }: Props) => {
+  const router = useRouter();
   const leaderboardToppingData: {
     [entrantType: string]: {
       user: UserGameData;
@@ -45,69 +51,98 @@ export const LeaderboardToppers = ({
   }
   const entrantTypes = Object.keys(leaderboardToppingData);
 
+  const handleRowClick = (entrantType: string, userId: string) => {
+    console.log(entrantType);
+    let entrantTypeStr =
+      competitionStrs.shortHand === "f1" && entrantType === "teams"
+        ? "constructors"
+        : entrantType;
+    router.push(
+      `/${competitionStrs.hyphenated}/${seasonStr}/?user=${userId}&leaderboard=${entrantTypeStr}`
+    );
+  };
+
   return (
     <Panel>
       <div className={styles.leaderboard_toppers__con}>
         <h2>Chart Toppers</h2>
         <p>
-          Number of {shortHandCompStr === "pl" ? "gameweeks" : "rounds"} that
+          Number of{" "}
+          {competitionStrs.shortHand === "pl" ? "gameweeks" : "rounds"} that
           users {isSeasonOver ? "" : "have"} spent top of the leaderboard.
         </p>
         <hr />
         <div className={styles.leaderboard_toppers__tables}>
-          {Object.values(leaderboardToppingData).map((tableData, index) => (
-            <div key={index} className={styles.leaderboard_toppers__table_con}>
-              {entrantTypes.length > 1 && (
-                <h3>
-                  {shortHandCompStr === "f1" && entrantTypes[index] === "teams"
-                    ? "Constructors"
-                    : `${entrantTypes[index][0].toUpperCase()}${entrantTypes[
-                        index
-                      ].slice(1)}`}{" "}
-                  Leaderboard
-                </h3>
-              )}
-              <table
-                className={`${leaderboardStyles.leaderboard} ${entrantTableStyles.table}`}>
-                <thead>
-                  <tr>
-                    <th className={leaderboardStyles.position}>Pos</th>
-                    <th className={styles.leaderboard_toppers__name_cell}>
-                      Name
-                    </th>
-                    <th>
-                      No of {shortHandCompStr === "pl" ? "Gameweeks" : "Rounds"}
-                    </th>
-                    <th>Longest Streak</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {tableData.map((rowData, index) => (
-                    <tr
-                      key={rowData.user.displayName}
-                      className={`${entrantTableStyles.table_row} ${
-                        entrantTableStyles.table_row__tertiary_bg
-                      } ${leaderboardStyles.table_row} ${
-                        rowData.user.userId === currUserId
-                          ? leaderboardStyles.table_row__currentUser
-                          : ""
-                      }`}>
-                      <td className={leaderboardStyles.position}>
-                        {index + 1}
-                      </td>
-                      <td>{rowData.user.displayName}</td>
-                      <td>{rowData.roundsTop.length}</td>
-                      <td>
-                        {getLengthOfLongestConsecutiveNumbers(
-                          rowData.roundsTop
-                        )}
-                      </td>
+          {Object.values(leaderboardToppingData).map(
+            (tableData, tableIndex) => (
+              <div
+                key={tableIndex}
+                className={styles.leaderboard_toppers__table_con}>
+                {entrantTypes.length > 1 && (
+                  <h3>
+                    {competitionStrs.shortHand === "f1" &&
+                    entrantTypes[tableIndex] === "teams"
+                      ? "Constructors"
+                      : `${entrantTypes[
+                          tableIndex
+                        ][0].toUpperCase()}${entrantTypes[tableIndex].slice(
+                          1
+                        )}`}{" "}
+                    Leaderboard
+                  </h3>
+                )}
+                <table
+                  className={`${leaderboardStyles.leaderboard} ${entrantTableStyles.table}`}>
+                  <thead>
+                    <tr>
+                      <th className={leaderboardStyles.position}>Pos</th>
+                      <th className={styles.leaderboard_toppers__name_cell}>
+                        Name
+                      </th>
+                      <th>
+                        No of{" "}
+                        {competitionStrs.shortHand === "pl"
+                          ? "Gameweeks"
+                          : "Rounds"}
+                      </th>
+                      <th>Longest Streak</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          ))}
+                  </thead>
+                  <tbody>
+                    {tableData.map((rowData, index) => (
+                      <tr
+                        key={rowData.user.displayName}
+                        className={`${entrantTableStyles.table_row} ${
+                          entrantTableStyles.table_row__tertiary_bg
+                        } ${leaderboardStyles.table_row} ${
+                          rowData.user.userId === currUserId
+                            ? leaderboardStyles.table_row__currentUser
+                            : ""
+                        }`}
+                        /**@todo This is wildly inaccessible and another way should be found */
+                        onClick={() =>
+                          handleRowClick(
+                            entrantTypes[tableIndex],
+                            rowData.user.id
+                          )
+                        }>
+                        <td className={leaderboardStyles.position}>
+                          {index + 1}
+                        </td>
+                        <td>{rowData.user.displayName}</td>
+                        <td>{rowData.roundsTop.length}</td>
+                        <td>
+                          {getLengthOfLongestConsecutiveNumbers(
+                            rowData.roundsTop
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )
+          )}
         </div>
       </div>
     </Panel>

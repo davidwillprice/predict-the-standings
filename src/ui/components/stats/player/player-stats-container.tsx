@@ -132,10 +132,11 @@ export const PlayerStats = async ({
           )}
           {leaderboardToppingUserIds && !isOneRoundSeason && (
             <LeaderboardToppers
+              competitionStrs={competitionStrs}
               currUserId={currUserId}
-              shortHandCompStr={competitionStrs.shortHand}
               isSeasonOver={isSeasonOver}
               leaderboardToppingUserIds={leaderboardToppingUserIds}
+              seasonStr={seasonData.id}
               users={JSON.parse(JSON.stringify(users))}
             />
           )}
