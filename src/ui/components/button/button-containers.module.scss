@@ -16,10 +16,12 @@
   }
 }
 .doubleCol {
+  flex-wrap: wrap;
   gap: 0 20px;
   align-items: center;
   justify-content: center;
-  > a {
+  > a,
+  > button {
     width: calc(50% - 10px);
   }
 }

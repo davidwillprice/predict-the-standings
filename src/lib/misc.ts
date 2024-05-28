@@ -1,4 +1,5 @@
 import type { Entrant, UserGameData } from "@custom-types/game-types";
+import { User } from "next-auth";
 
 export const sortEntrantsAlphabetically = (entrantArr: Entrant[]) => {
   return entrantArr.sort((a, b) =>
@@ -122,6 +123,21 @@ export const getLengthOfLongestConsecutiveNumbers = (arr: number[]): number => {
     }
   });
   return longestStreak;
+};
+
+/**Convert strings from `predictionsMadeFor` via the user session */
+export const getCollectionStrFromPredictionsMadeFor = (
+  user: User
+): string[] => {
+  let gameDataCollections: string[] = [];
+  for (const [competition, seasonArr] of Object.entries(
+    user.predictionsMadeFor
+  )) {
+    seasonArr.forEach((seasonStr) =>
+      gameDataCollections.push(competition + seasonStr)
+    );
+  }
+  return gameDataCollections;
 };
 
 //3 as e

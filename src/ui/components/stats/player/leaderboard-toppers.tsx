@@ -52,7 +52,6 @@ export const LeaderboardToppers = ({
   const entrantTypes = Object.keys(leaderboardToppingData);
 
   const handleRowClick = (entrantType: string, userId: string) => {
-    console.log(entrantType);
     let entrantTypeStr =
       competitionStrs.shortHand === "f1" && entrantType === "teams"
         ? "constructors"

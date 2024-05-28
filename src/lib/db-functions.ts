@@ -301,30 +301,37 @@ export const submitDisplayNameQuery = async (
 
     if (!updatedUser) throw new Error("Failed to update user");
 
-    ////Update their display name in all their game data
-    //Create an array with all the collections which will need to be updated
-    let gameDataCollections: string[] = [];
-    const predictionsMadeFor: { [competition: ShortHandCompStr]: string[] } =
-      existingUser.predictionsMadeFor;
-    for (const [competition, seasonArr] of Object.entries(predictionsMadeFor)) {
-      seasonArr.forEach((seasonStr) =>
-        gameDataCollections.push(competition + seasonStr)
-      );
-    }
-    //Update the user's display name in all collections
-    gameDataCollections.forEach((collectionName) => {
-      const collection = db.collection(collectionName);
-      collection.updateOne(
-        {
-          userId: userId,
-        },
-        {
-          $set: {
-            displayName: submittedDisplayName,
+    ////If they have made any predictions, update their display name in all their game data
+    if (
+      existingUser.predictionsMadeFor &&
+      Object.values(existingUser.predictionsMadeFor).length > 0
+    ) {
+      //Create an array with all the collections which will need to be updated
+      let gameDataCollections: string[] = [];
+      const predictionsMadeFor: { [competition: ShortHandCompStr]: string[] } =
+        existingUser.predictionsMadeFor;
+      for (const [competition, seasonArr] of Object.entries(
+        predictionsMadeFor
+      )) {
+        seasonArr.forEach((seasonStr) =>
+          gameDataCollections.push(competition + seasonStr)
+        );
+      }
+      //Update the user's display name in all collections
+      gameDataCollections.forEach((collectionName) => {
+        const collection = db.collection(collectionName);
+        collection.updateOne(
+          {
+            userId: userId,
           },
-        }
-      );
-    });
+          {
+            $set: {
+              displayName: submittedDisplayName,
+            },
+          }
+        );
+      });
+    }
   } catch (error) {
     throw error;
   }

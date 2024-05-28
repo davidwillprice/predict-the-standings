@@ -141,7 +141,7 @@ export const GetStartedForm = ({ initialDisplayName }: Props) => {
               <p id="displayNameSuccess">
                 If you aren&apos;t automatically redirected, please{" "}
                 <Link href="/competitions">
-                  follow this link to submit your predictions
+                  follow this link to submit your first predictions
                 </Link>
                 .
               </p>

@@ -10,7 +10,11 @@ import { allPlSeasonData } from "@data/premier-league/season-data";
 import Link from "next/link";
 import { PanelHeading } from "@components/panels/panel-heading";
 import Icon from "@ui/svgs/icons/sq-icon";
-import { numberToOrdinalNumber, toTitleCase } from "@lib/misc";
+import {
+  getCollectionStrFromPredictionsMadeFor,
+  numberToOrdinalNumber,
+  toTitleCase,
+} from "@lib/misc";
 import { Panel } from "@components/panels/panel";
 
 import { User } from "next-auth";
@@ -40,83 +44,85 @@ export const PerformanceOverview = ({ user }: Props) => {
   >(null);
 
   useEffect(() => {
-    /**Merge all local season data */
-    const allLocalSeasonData = allF1SeasonData.concat(
-      allEurovisionSeasonData,
-      allPlSeasonData
-    );
-
-    /**Get all strings from `predictionsMadeFor` via the user session */
-    let gameDataCollections: string[] = [];
-    for (const [competition, seasonArr] of Object.entries(
-      user.predictionsMadeFor
-    )) {
-      seasonArr.forEach((seasonStr) =>
-        gameDataCollections.push(competition + seasonStr)
+    if (
+      user.predictionsMadeFor &&
+      Object.values(user.predictionsMadeFor).length > 0
+    ) {
+      /**Merge all local season data */
+      const allLocalSeasonData = allF1SeasonData.concat(
+        allEurovisionSeasonData,
+        allPlSeasonData
       );
-    }
 
-    /**@todo Add pagination */
-    const getAllGameDataForUser = () => {
-      /**Get the userPredictionData for every comp/season the user has predicted for */
-      return new Promise((_, reject) => {
-        Promise.all(
-          gameDataCollections.map((collectionName) =>
-            getSingleUserPredictionDataQuery(collectionName, "", user.id)
+      /**Get all strings from `predictionsMadeFor` via the user session */
+      let gameDataCollections = getCollectionStrFromPredictionsMadeFor(user);
+
+      /**@todo Add pagination */
+      const getAllGameDataForUser = () => {
+        /**Get the userPredictionData for every comp/season the user has predicted for */
+        return new Promise((_, reject) => {
+          Promise.all(
+            gameDataCollections.map((collectionName) =>
+              getSingleUserPredictionDataQuery(collectionName, "", user.id)
+            )
           )
-        )
-          .then((res) => {
-            /**Combine the local season data and userGameData into just the data I need to display */
-            const tempPerformanceRowArr: PerformanceRow[] = [];
-            res.forEach((userGameData, index) => {
-              const localSeasonData = allLocalSeasonData.find(
-                (seasonData) =>
-                  seasonData.competitionStrs.shortHand + seasonData.id ===
-                  gameDataCollections[index]
-              );
-              if (localSeasonData === undefined) {
-                throw new Error("Couldn't find local data");
-              }
-              for (const entrantType of Object.keys(userGameData.predictions)) {
-                tempPerformanceRowArr.push({
-                  accurracy:
-                    userGameData.season[entrantType][
-                      userGameData.season[entrantType].length - 1
-                    ].percentCorrect || null,
-                  competitionStrs: localSeasonData.competitionStrs,
-                  entrantType: entrantType,
-                  leaderboardPos:
-                    userGameData.season[entrantType][
-                      userGameData.season[entrantType].length - 1
-                    ].leaderboardPos || null,
-                  seasonStatus: localSeasonData.status,
-                  seasonStr: localSeasonData.id,
-                });
-              }
-            });
-            /**Sort put rows which are completed at the bottom, else keep their order */
-            tempPerformanceRowArr.sort((compA, compB) => {
-              if (
-                compA.seasonStatus === "completed" &&
-                compB.seasonStatus !== "completed"
-              )
-                return 1;
-              if (
-                compA.seasonStatus !== "completed" &&
-                compB.seasonStatus === "completed"
-              )
+            .then((res) => {
+              /**Combine the local season data and userGameData into just the data I need to display */
+              const tempPerformanceRowArr: PerformanceRow[] = [];
+              res.forEach((userGameData, index) => {
+                const localSeasonData = allLocalSeasonData.find(
+                  (seasonData) =>
+                    seasonData.competitionStrs.shortHand + seasonData.id ===
+                    gameDataCollections[index]
+                );
+                if (localSeasonData === undefined) {
+                  throw new Error("Couldn't find local data");
+                }
+                for (const entrantType of Object.keys(
+                  userGameData.predictions
+                )) {
+                  tempPerformanceRowArr.push({
+                    accurracy:
+                      userGameData.season[entrantType][
+                        userGameData.season[entrantType].length - 1
+                      ].percentCorrect || null,
+                    competitionStrs: localSeasonData.competitionStrs,
+                    entrantType: entrantType,
+                    leaderboardPos:
+                      userGameData.season[entrantType][
+                        userGameData.season[entrantType].length - 1
+                      ].leaderboardPos || null,
+                    seasonStatus: localSeasonData.status,
+                    seasonStr: localSeasonData.id,
+                  });
+                }
+              });
+              /**Sort put rows which are completed at the bottom, else keep their order */
+              tempPerformanceRowArr.sort((compA, compB) => {
+                if (
+                  compA.seasonStatus === "completed" &&
+                  compB.seasonStatus !== "completed"
+                )
+                  return 1;
+                if (
+                  compA.seasonStatus !== "completed" &&
+                  compB.seasonStatus === "completed"
+                )
+                  return -1;
                 return -1;
-              return -1;
+              });
+              setPerformanceRowArr(tempPerformanceRowArr);
+            })
+            .catch((err) => {
+              reject(err);
             });
-            setPerformanceRowArr(tempPerformanceRowArr);
-          })
-          .catch((err) => {
-            reject(err);
-          });
-      });
-    };
+        });
+      };
 
-    getAllGameDataForUser();
+      getAllGameDataForUser();
+    } else {
+      setPerformanceRowArr([]);
+    }
   }, [user]);
   return (
     <>
