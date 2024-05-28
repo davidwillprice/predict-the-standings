@@ -1,0 +1,73 @@
+import {
+  Entrant,
+  Entrants,
+  LocalSeasonData,
+  Round,
+} from "@custom-types/game-types";
+
+const teams: Entrants = {
+  ars: new Entrant("Arsenal", "ars", "#ef0107", "#1a1b3f", "white"),
+  ast: new Entrant("Aston Villa", "ast", "#7a003c", "#94bee5", "white"),
+  bou: new Entrant("Bournemouth", "bou", "#d63537", "black", "#010136"),
+  bre: new Entrant("Brentford", "bre", "#e30613", "white", "#010136"),
+  bri: new Entrant("Brighton", "bri", "#0057b8", "white", "white"),
+  lei: new Entrant("Leicester City", "lei", "#003090", "white", "white"),
+  che: new Entrant("Chelsea", "che", "#034694", "red", "white"),
+  cry: new Entrant("Crystal Palace", "cry", "#097cec", "#c4122e", "#010136"),
+  eve: new Entrant("Everton", "eve", "#039", "white", "white"),
+  ful: new Entrant("Fulham", "ful", "black", "white", "white"),
+  ips: new Entrant("Ipswich Town", "ips", "#0333a0", "#d9dde9", "white"),
+  liv: new Entrant("Liverpool", "liv", "#ab0018", "white", "white"),
+  mci: new Entrant("Man City", "mci", "#aad2f3", "#0d3f6e", "#010136"),
+  mun: new Entrant("Man United", "mun", "#dd142e", "black", "white"),
+  nec: new Entrant("Newcastle", "nec", "black", "white", "white"),
+  not: new Entrant("Notts Forest", "not", "#d30814", "white", "white"),
+  sou: new Entrant("Southampton", "sou", "#dd0427", "white", "#010136"),
+  tot: new Entrant("Tottenham", "tot", "#132257", "white", "white"),
+  whu: new Entrant("West Ham", "whu", "#7a263a", "#1bb1e7", "white"),
+  wol: new Entrant("Wolverhampton", "wol", "#fdb913", "black", "#010136"),
+};
+
+let rounds: Round[] = [
+  // new Round("Gameweek 1", {
+  //   teams: [
+  //     "nec",
+  //     "bri",
+  //     "mci",
+  //     "ars",
+  //     "cry",
+  //     "ful",
+  //     "mun",
+  //     "bre",
+  //     "tot",
+  //     "bou",
+  //     "che",
+  //     "liv",
+  //     "whu",
+  //     "not",
+  //     "eve",
+  //     "she",
+  //     "wol",
+  //     "lut",
+  //     "lei",
+  //     "ast",
+  //   ],
+  // }),
+];
+
+const allEntrants = { teams: teams };
+const id = "2024-2025";
+const isGameDataLocked = false;
+const isSeasonOver = false;
+const predictionFreezeDate = new Date("2024-08-11T20:00:00");
+const predictionsOpen = false;
+
+export const seasonData20232024 = new LocalSeasonData(
+  allEntrants,
+  id,
+  isGameDataLocked,
+  isSeasonOver,
+  predictionFreezeDate,
+  predictionsOpen,
+  rounds
+);

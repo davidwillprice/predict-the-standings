@@ -132,10 +132,7 @@ export default function Page() {
               <strong>
                 Right to Erasure (Right to be Forgotten) (Article 17)
               </strong>
-              : You have the right to request the deletion of your personal data
-              under certain circumstances, such as when the data is no longer
-              necessary for the purposes for which it was collected or when the
-              individual withdraws consent.
+              : You can delete your account via your profile page at any time.
             </li>
             <li>
               <strong>Right to Restriction of Processing (Article 18)</strong>:
@@ -181,6 +178,7 @@ export default function Page() {
           </p>
         </section>
         <hr />
+        {/**@todo Update to MongoDb */}
         <section>
           <h3>4. Data Storage and Security</h3>
           <p>

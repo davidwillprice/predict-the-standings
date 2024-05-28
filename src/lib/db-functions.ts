@@ -528,3 +528,47 @@ export const updatePredictionFreezeDateQuery = async (
     throw error;
   }
 };
+
+export const anonymiseUserGameDataQuery = async (
+  collectionStr: string,
+  userId: string
+) => {
+  const client = await clientPromise;
+  try {
+    const db = client.db("pts");
+    const collection = db.collection(collectionStr);
+    const result = await collection.updateOne(
+      { userId: userId },
+      { $set: { displayName: "[DELETED]" } }
+    );
+
+    if (!result || result.matchedCount !== 1)
+      throw new Error(
+        `Couldn't anonymise user's game data in ${collection.collectionName}`
+      );
+  } catch (error) {
+    throw error;
+  }
+};
+
+/**Deletes user from either the accounts or users collection */
+export const deleteAccountQuery = async (
+  collectionStr: string,
+  userId: string
+) => {
+  const client = await clientPromise;
+  try {
+    const db = client.db("pts");
+    const collection = db.collection(collectionStr);
+    const result = await collection.deleteOne(
+      collectionStr === "users"
+        ? { _id: new ObjectId(userId) }
+        : { userId: new ObjectId(userId) }
+    );
+
+    if (!result || result.deletedCount !== 1)
+      throw new Error(`Couldn't delete user from ${collectionStr}`);
+  } catch (error) {
+    throw error;
+  }
+};

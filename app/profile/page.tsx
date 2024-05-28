@@ -9,9 +9,10 @@ import { PanelHeading } from "@components/panels/panel-heading";
 import { SignOutBtn } from "@components/profile/sign-out";
 import { ProfileForm } from "@components/form/profile-form";
 import { PerformanceOverview } from "@components/profile/performance-overview";
+import { DeleteAccount } from "@components/profile/delete-account";
 
-import styles from "@components/form/form.module.scss";
 import commonStyles from "@styles/common.module.scss";
+import btnConStyles from "@components/button/button-containers.module.scss";
 
 export const metadata: Metadata = {
   title: "Profile | Predict The Standings",
@@ -20,6 +21,7 @@ export const metadata: Metadata = {
 export default async function ProfilePage() {
   const session = await getServerSession(authOptions);
   const user = session?.user;
+
   if (user == null) return redirect("/login");
   /**@todo Fix redirecting people without a display name causing issues */
   //if (!session.user.displayName) return redirect("/get-started");
@@ -37,9 +39,9 @@ export default async function ProfilePage() {
         </p>
         <ProfileForm initialDisplayName={initialDisplayName} />
         <hr />
-        <div className={styles.formBtns}>
-          {/**@todo Add delete account button */}
+        <div className={btnConStyles.doubleCol}>
           <SignOutBtn />
+          <DeleteAccount user={user} />
         </div>
       </Panel>
       <PerformanceOverview user={user} />

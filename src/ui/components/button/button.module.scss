@@ -26,6 +26,13 @@
     color: rgba(var(--secondary-color), 0.5);
     cursor: not-allowed;
   }
+  &.error {
+    color: var(--error-color);
+    &:not(.disabled):hover {
+      background-color: var(--error-color);
+      border-color: var(--quaternary-color);
+    }
+  }
   svg {
     min-height: 25px;
     min-width: 25px;
