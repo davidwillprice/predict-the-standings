@@ -325,7 +325,8 @@ export const GameContainer = ({
                 currentUserId={currentUserId}
                 entrants={allEntrants[entrantType]}
                 entrantType={entrantType}
-                selectedRound={roundIndex}
+                round={rounds[roundIndex]}
+                roundIndex={roundIndex}
                 selectedUser={selectedUser}
                 shortHandCompStr={competitionStrs.shortHand}
               />

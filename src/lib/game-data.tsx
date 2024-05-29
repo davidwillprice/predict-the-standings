@@ -67,6 +67,8 @@ export const createGameData = async (
 
   const allEntrantStats = generateEntrantStats(allEntrants);
 
+  users = streamlineUserGameDataForDb(users);
+
   return {
     allEntrantStats: allEntrantStats,
     controversialUserIds: controversialUserIds,
@@ -130,14 +132,12 @@ const calcUserGameDataMapPerformance = (
   users: UserGameDataMap
 ) => {
   for (const entrantType of Object.keys(allEntrants)) {
-    rounds.forEach((round, roundIndex) => {
-      /**Loop through each user to generate their entrant differences in this particular round*/
-      for (let user of Object.values(users)) {
-        if (!user.season[entrantType]) user.season[entrantType] = [];
+    /**Loop through each user to generate their entrant differences in this particular round*/
+    for (let user of Object.values(users)) {
+      user.season[entrantType] = [];
+      rounds.forEach((round, roundIndex) => {
         /**Push blank round performance ready to fill out with data */
         user.season[entrantType].push({
-          diffTotal: 0,
-          diffs: [],
           diffCounts: [],
           leaderboardPos: 0,
           percentCorrect: 0,
@@ -148,19 +148,23 @@ const calcUserGameDataMapPerformance = (
         }
 
         user = calcUserRoundPerformance(entrantType, user, round, roundIndex);
-      }
-    });
+      });
+    }
   }
   return users;
 };
 
 //**Loop over a user's predictions for a particular round, calc their pos difference from that round's standings */
-const calcUserRoundPerformance = (
+export const calcUserRoundPerformance = (
   entrantType: string,
   user: UserGameData,
   round: Round,
   roundIndex: number
 ): UserGameData => {
+  const userRoundData = user.season[entrantType][roundIndex];
+  /**Ensure the diffs and diffTotals are blank */
+  userRoundData.diffs = [];
+  userRoundData.diffTotal = 0;
   for (const [predictedPos, entrantId] of Object.entries(
     user.predictions[entrantType]
   )) {
@@ -168,11 +172,11 @@ const calcUserRoundPerformance = (
     const actualPos = round.standings[entrantType].indexOf(entrantId);
     /**Work out how many positions the user is off*/
     const posDiff = actualPos - +predictedPos;
-    user.season[entrantType][roundIndex].diffCounts[Math.abs(posDiff)]++;
+    userRoundData.diffCounts[Math.abs(posDiff)]++;
     /**Add the posDiff to their total for this round*/
-    user.season[entrantType][roundIndex].diffTotal += Math.abs(posDiff);
+    userRoundData.diffTotal += Math.abs(posDiff);
     /**Add the entrant and their posDiff to the user's data*/
-    user.season[entrantType][roundIndex].diffs.push({
+    userRoundData.diffs.push({
       entrantId: entrantId,
       posDiff,
     });
@@ -207,7 +211,7 @@ const calcLeaderboards = (
 
 export const calcPredictionsAccuracy = (
   noOfEntrants: number,
-  penaltyPoints: number
+  penaltyPoints: number | undefined
 ): number => {
   let maxDiff = 0;
   noOfEntrants--;
@@ -215,6 +219,10 @@ export const calcPredictionsAccuracy = (
     maxDiff += noOfEntrants * 2;
     noOfEntrants -= 2;
   }
+  if (!penaltyPoints)
+    throw new Error(
+      "Couldn't calculate predictions accuracy as the penalty points are undefined"
+    );
   return Math.round(((maxDiff - penaltyPoints) / maxDiff) * 100);
 };
 
@@ -353,10 +361,16 @@ const generateEntrantDiffTotals = (
               diffTotal: 0,
             });
           }
+
+          const userDiffsArr = user.season[entrantType][roundIndex].diffs;
+          if (!userDiffsArr)
+            throw new Error(
+              `Couldn't generate entrant diff totals as ${user.displayName} has no diff array for ${entrantType} round ${roundIndex}`
+            );
           /**Find entrant in user's predictions for the round*/
-          const entrantStanding = user.season[entrantType][
-            roundIndex
-          ].diffs.find((element) => element.entrantId === entrantId)!;
+          const entrantStanding = userDiffsArr.find(
+            (element) => element.entrantId === entrantId
+          )!;
           /**Find entrantDiff total*/
           let entrantTotal = rounds[roundIndex].entrantDiffTotals[
             entrantType
@@ -655,4 +669,18 @@ const getLeaderboardToppingUserIds = (
     );
   }
   return leaderboardToppingUserIds;
+};
+
+const streamlineUserGameDataForDb = (
+  users: UserGameDataMap
+): UserGameDataMap => {
+  for (const user of Object.values(users)) {
+    for (const roundArr of Object.values(user.season)) {
+      for (const roundPerformance of Object.values(roundArr)) {
+        delete roundPerformance.diffs;
+        delete roundPerformance.diffTotal;
+      }
+    }
+  }
+  return users;
 };
