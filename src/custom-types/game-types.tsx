@@ -199,7 +199,7 @@ export interface StatsData {
   controversialUserIds: ControversialUserIds;
   latestSubmissionUserId: UserId;
   leaderboardToppingUserIds: LeaderboardToppingUserIds;
-  noOfPredictions: { [entrantType: string]: number };
+  noOfPredictions: NoOfPredictions;
   mostUpdatedPredictionUserIds: MostUpdatedPredictionUserIds;
   rounds: {
     entrantDiffTotals: { [entrantType: string]: EntrantDiffTotal[] };
@@ -227,4 +227,8 @@ export interface LeaderboardToppingUserIds {
     userId: UserId;
     roundsTop: number[];
   }[];
+}
+
+export interface NoOfPredictions {
+  [entrantType: string]: number;
 }

@@ -10,6 +10,7 @@ import {
   getAllUserPredictionDataQuery,
   updateAllUserDocGameData,
   updateLastUpdatedDateQuery,
+  updateNoOfPredictionsQuery,
   updatePredictionFreezeDateQuery,
 } from "@lib/db-functions";
 import { AllLocalSeasonData } from "@custom-types/game-types";
@@ -77,6 +78,8 @@ async function submitCompetitionGameData(
     for (const entrantType in allEntrants) {
       noOfPredictions[entrantType] = Object.keys(users).length;
     }
+
+    await updateNoOfPredictionsQuery(collection, noOfPredictions);
 
     /**Update/Add the stats data to the DB */
     /**@todo This would be moved to the db-functions.tsx file */

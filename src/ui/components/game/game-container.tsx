@@ -5,8 +5,8 @@ import { useRouter, useSearchParams, usePathname } from "next/navigation";
 
 import {
   getLeaderboardDataQuery,
+  getNoOfPredictionsQuery,
   getSingleUserPredictionDataQuery,
-  getStatsDataQuery,
 } from "@lib/db-functions";
 import { debounce } from "@lib/misc";
 
@@ -27,6 +27,7 @@ import {
   Round,
   UserGameDataMap,
   UserGameData,
+  NoOfPredictions,
 } from "@custom-types/game-types";
 import {
   calcUserGameDataMapPerformance,
@@ -126,32 +127,12 @@ export const GameContainer = ({
   const [selectedUser, setSelectedUser] = useState<UserGameData | null>(null);
   const [usersData, setUsersData] = useState<UserGameDataMap | null>(null);
   const [isDebouncing, setIsDebouncing] = useState(false);
-  const noOfPredictions = useRef<null | number>(null);
+  const noOfPredictions = useRef<null | NoOfPredictions>(null);
   const currUserGameData = useRef<null | UserGameData>(null);
 
   const handleBackBtn = () => {
     setSelectedUser(null);
   };
-
-  /**UseEffect that only runs once on page load */
-  useEffect(() => {
-    if (currentUserId) {
-      const getCurrUserGameData = async () => {
-        const currUserData = await getSingleUserPredictionDataQuery(
-          season,
-          competitionStrs.shortHand,
-          currentUserId
-        );
-        let tempObj = calcUserGameDataMapPerformance(allEntrants, rounds, {
-          [currUserData.userId]: currUserData,
-        });
-        /**@todo! Figure out new way of getting the noOfPredictions */
-        tempObj = calculateRemainingRoundPerformanceData(15, tempObj);
-        currUserGameData.current = tempObj[currUserData.userId];
-      };
-      getCurrUserGameData();
-    }
-  }, [season, competitionStrs.shortHand, currentUserId]);
 
   /**useEffect that only runs when the query strings change
    * @todo Fix this seeming to run more than once after a page load and it is causing multiple unnecessary DB calls
@@ -164,20 +145,14 @@ export const GameContainer = ({
     setRoundIndex(newRoundIndex);
     setPage(newPage);
 
-    const getData = async () => {
-      /**@todo Make a new DB document for the noOfPredictions */
-      const getNoOfPredictions = async () => {
-        try {
-          const res = await getStatsDataQuery(
-            season,
-            competitionStrs.shortHand
-          );
-          noOfPredictions.current = res.noOfPredictions[newEntrantType];
-        } catch (err) {
-          throw err;
-        }
-      };
+    const getNoOfPredictions = async () => {
+      noOfPredictions.current = await getNoOfPredictionsQuery(
+        season,
+        competitionStrs.shortHand
+      );
+    };
 
+    const getData = async () => {
       const updateUserData = async () => {
         try {
           if (noOfPredictions.current === null)
@@ -185,24 +160,43 @@ export const GameContainer = ({
           const res = await getLeaderboardDataQuery(
             competitionStrs.shortHand,
             newEntrantType,
-            noOfPredictions.current,
+            noOfPredictions.current[newEntrantType],
             newPage,
             newRoundIndex,
             season,
             usersPerPage
           );
 
-          let userData = calcUserGameDataMapPerformance(
-            allEntrants,
-            rounds,
-            res
-          );
+          let userData = calcUserGameDataMapPerformance(rounds, res);
           userData = calculateRemainingRoundPerformanceData(
-            noOfPredictions.current,
+            noOfPredictions.current[newEntrantType],
             userData
           );
 
           setUsersData(userData);
+
+          /**If the user is logged in... */
+          if (currentUserId) {
+            /**Get their user game data */
+            const getCurrUserGameData = async () => {
+              if (noOfPredictions.current === null)
+                throw new Error("Can't tell how many predictions there are");
+              const currUserData = await getSingleUserPredictionDataQuery(
+                season,
+                competitionStrs.shortHand,
+                currentUserId
+              );
+              let tempObj = calcUserGameDataMapPerformance(rounds, {
+                [currUserData.userId]: currUserData,
+              });
+              tempObj = calculateRemainingRoundPerformanceData(
+                noOfPredictions.current[newEntrantType],
+                tempObj
+              );
+              currUserGameData.current = tempObj[currUserData.userId];
+            };
+            if (currUserGameData.current === null) getCurrUserGameData();
+          }
 
           if (typeof currentSearchParams.user === "string") {
             /**If the searchParams have a valid user query, set it as the selected User*/
@@ -218,7 +212,7 @@ export const GameContainer = ({
           throw err;
         }
       };
-      await getNoOfPredictions();
+      if (noOfPredictions.current === null) await getNoOfPredictions();
       await updateUserData();
     };
     getData();
@@ -317,7 +311,7 @@ export const GameContainer = ({
                   entrantType={entrantType}
                   isSeasonOver={isSeasonOver}
                   lastUpdated={lastUpdated}
-                  noOfPredictions={noOfPredictions.current}
+                  noOfPredictions={noOfPredictions.current[entrantType]}
                   page={page}
                   rounds={rounds}
                   roundIndex={roundIndex}

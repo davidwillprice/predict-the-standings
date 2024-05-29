@@ -36,7 +36,7 @@ export const createGameData = async (
 
   users = orderAveragePredictions(allEntrants, users);
 
-  users = calcUserGameDataMapPerformance(allEntrants, rounds, users);
+  users = calcUserGameDataMapPerformance(rounds, users);
 
   users = generateControversyData(users);
 
@@ -127,11 +127,10 @@ const orderAveragePredictions = (
 
 //**Based on the user predictions and round data, calculate the differences in entrant predictions for each user, their diff totals and their count of each difference (perfect predictions, predictions that were one off etc) */
 export const calcUserGameDataMapPerformance = (
-  allEntrants: { [key: string]: Entrants },
   rounds: Round[],
   users: UserGameDataMap
 ) => {
-  for (const entrantType of Object.keys(allEntrants)) {
+  for (const entrantType of Object.keys(rounds[0].standings)) {
     /**Loop through each user to generate their entrant differences in this particular round*/
     for (let user of Object.values(users)) {
       /**If they already have a leaderboardPos, then this is being triggered JIT to get data for the leaderboard. If not, user.season is an empty object that needs to be totally populated */

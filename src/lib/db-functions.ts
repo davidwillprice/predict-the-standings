@@ -6,6 +6,7 @@ import { ObjectId } from "mongodb";
 import {
   AllEntrants,
   EntrantId,
+  NoOfPredictions,
   RoundPerformance,
   ShortHandCompStr,
   StatsData,
@@ -30,6 +31,28 @@ export const getlastUpdatedDate = async (
     let lastUpdatedDate: Date = result.lastUpdatedDate;
 
     return lastUpdatedDate;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getNoOfPredictionsQuery = async (
+  season: string,
+  shortHandCompStr: ShortHandCompStr
+): Promise<NoOfPredictions> => {
+  const client = await clientPromise;
+  try {
+    const db = client.db("pts");
+    const collection = db.collection(shortHandCompStr + season);
+    const result = await collection.findOne({ type: "noOfPredictions" });
+    if (!result)
+      throw new Error(
+        `Failed to get number of predictions for ${shortHandCompStr + season}`
+      );
+
+    let noOfPredictions: NoOfPredictions = result.noOfPredictions;
+
+    return noOfPredictions;
   } catch (error) {
     throw error;
   }
@@ -520,6 +543,36 @@ export const updatePredictionFreezeDateQuery = async (
     if (!result)
       throw new Error(
         `Failed to update/add prediction freeze date document in ${collection.collectionName}`
+      );
+  } catch (error) {
+    throw error;
+  }
+};
+
+/**Add/Update a noOfPredictions document in the DB
+ * This is used to update the noOfPredictions where the statsData isn't included
+ */
+export const updateNoOfPredictionsQuery = async (
+  collection: Collection,
+  noOfPredictions: NoOfPredictions
+) => {
+  try {
+    const result = await collection.updateOne(
+      {
+        type: "noOfPredictions",
+      },
+      {
+        $set: {
+          type: "noOfPredictions",
+          noOfPredictions: noOfPredictions,
+        },
+      },
+      { upsert: true }
+    );
+
+    if (!result)
+      throw new Error(
+        `Failed to update/add noOfPredictions document in ${collection.collectionName}`
       );
   } catch (error) {
     throw error;
