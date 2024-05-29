@@ -706,8 +706,7 @@ const streamlineUserGameDataForDb = (
 /**Generate the accuracy and the prevLeaderboardPosDiff for every user/entrantType/round
  * Only used JIT for the leaderboard
  */
-export const calculateRemainingRoundPerformanceData = (
-  noOfPredictions: number,
+export const calcRemainingRoundPerformanceData = (
   users: UserGameDataMap
 ): UserGameDataMap => {
   for (let user of Object.values(users)) {
@@ -722,7 +721,7 @@ export const calculateRemainingRoundPerformanceData = (
             : user.season[entrantType][roundIndex - 1].leaderboardPos -
               user.season[entrantType][roundIndex].leaderboardPos;
         userRoundData.percentCorrect = calcPredictionsAccuracy(
-          noOfPredictions,
+          user.predictions[entrantType].length,
           userRoundData.diffTotal
         );
       });

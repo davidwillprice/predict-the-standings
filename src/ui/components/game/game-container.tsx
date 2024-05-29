@@ -31,7 +31,7 @@ import {
 } from "@custom-types/game-types";
 import {
   calcUserGameDataMapPerformance,
-  calculateRemainingRoundPerformanceData,
+  calcRemainingRoundPerformanceData,
 } from "@lib/game-data";
 
 interface Props {
@@ -134,6 +134,31 @@ export const GameContainer = ({
     setSelectedUser(null);
   };
 
+  const getNoOfPredictions = async () => {
+    noOfPredictions.current = await getNoOfPredictionsQuery(
+      season,
+      competitionStrs.shortHand
+    );
+  };
+
+  const getCurrUserGameData = async () => {
+    /**If there is no logged in user, or the logged in user's data has already been obtained, don't bother running this  */
+    if (!currentUserId || currUserGameData.current !== null) return;
+    /**Get the logged in user's data from the DB */
+    const currUserData = await getSingleUserPredictionDataQuery(
+      season,
+      competitionStrs.shortHand,
+      currentUserId
+    );
+    /**@todo Fix sloppy naming or make version of calcUserGameDataMapPerformance() for a solo userGameData*/
+    let tempObj = calcUserGameDataMapPerformance(rounds, {
+      [currUserData.userId]: currUserData,
+    });
+    tempObj = calcRemainingRoundPerformanceData(tempObj);
+    /**Set the logged in user's userGameData to a ref */
+    currUserGameData.current = tempObj[currUserData.userId];
+  };
+
   /**useEffect that only runs when the query strings change
    * @todo Fix this seeming to run more than once after a page load and it is causing multiple unnecessary DB calls
    */
@@ -145,19 +170,13 @@ export const GameContainer = ({
     setRoundIndex(newRoundIndex);
     setPage(newPage);
 
-    const getNoOfPredictions = async () => {
-      noOfPredictions.current = await getNoOfPredictionsQuery(
-        season,
-        competitionStrs.shortHand
-      );
-    };
-
     const getData = async () => {
+      /**Get leaderboard data depending on the competition/season/entrantType/pagination selection */
       const updateUserData = async () => {
         try {
           if (noOfPredictions.current === null)
             throw new Error("Can't tell how many predictions there are");
-          const res = await getLeaderboardDataQuery(
+          const leaderboardDataRes = await getLeaderboardDataQuery(
             competitionStrs.shortHand,
             newEntrantType,
             noOfPredictions.current[newEntrantType],
@@ -167,46 +186,28 @@ export const GameContainer = ({
             usersPerPage
           );
 
-          let userData = calcUserGameDataMapPerformance(rounds, res);
-          userData = calculateRemainingRoundPerformanceData(
-            noOfPredictions.current[newEntrantType],
-            userData
+          /**Generate the round perforamnce data for the users on the leaderboard  */
+          let userData = calcUserGameDataMapPerformance(
+            rounds,
+            leaderboardDataRes
           );
-
+          userData = calcRemainingRoundPerformanceData(userData);
+          /**Set leaderboard data */
           setUsersData(userData);
 
-          /**If the user is logged in... */
-          if (currentUserId) {
-            /**Get their user game data */
-            const getCurrUserGameData = async () => {
-              if (noOfPredictions.current === null)
-                throw new Error("Can't tell how many predictions there are");
-              const currUserData = await getSingleUserPredictionDataQuery(
-                season,
-                competitionStrs.shortHand,
-                currentUserId
-              );
-              let tempObj = calcUserGameDataMapPerformance(rounds, {
-                [currUserData.userId]: currUserData,
-              });
-              tempObj = calculateRemainingRoundPerformanceData(
-                noOfPredictions.current[newEntrantType],
-                tempObj
-              );
-              currUserGameData.current = tempObj[currUserData.userId];
-            };
-            if (currUserGameData.current === null) getCurrUserGameData();
-          }
+          getCurrUserGameData();
 
           if (typeof currentSearchParams.user === "string") {
             /**If the searchParams have a valid user query, set it as the selected User*/
-            if (res[currentSearchParams.user])
-              setSelectedUser(res[currentSearchParams.user]);
-            /**Else if it is the current user's Id in the params, use their data for the selected user */ else if (
+            if (userData[currentSearchParams.user])
+              setSelectedUser(userData[currentSearchParams.user]);
+            else if (
+              /**Else if it is the current user's Id in the params, use their data for the selected user */
               currUserGameData.current !== null &&
               currUserGameData.current.userId === currentSearchParams.user
-            )
+            ) {
               setSelectedUser(currUserGameData.current);
+            }
           }
         } catch (err) {
           throw err;
@@ -221,7 +222,7 @@ export const GameContainer = ({
   const updateRoundQueryString = (newRoundIndex: number) => {
     /**Cancel loading skeleton UI*/
     setIsDebouncing(false);
-    /**Uses router.replace() rather than router.push() as I don't want round chnages clogging up the user history */
+    /**Uses router.replace() rather than router.push() as I don't want round changes clogging up the user history */
     router.replace(
       pathname +
         "?" +
