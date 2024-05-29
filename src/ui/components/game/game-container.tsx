@@ -28,6 +28,10 @@ import {
   UserGameDataMap,
   UserGameData,
 } from "@custom-types/game-types";
+import {
+  calcUserGameDataMapPerformance,
+  calculateRemainingRoundPerformanceData,
+} from "@lib/game-data";
 
 interface Props {
   children: ReactNode;
@@ -133,11 +137,17 @@ export const GameContainer = ({
   useEffect(() => {
     if (currentUserId) {
       const getCurrUserGameData = async () => {
-        currUserGameData.current = await getSingleUserPredictionDataQuery(
+        const currUserData = await getSingleUserPredictionDataQuery(
           season,
           competitionStrs.shortHand,
           currentUserId
         );
+        let tempObj = calcUserGameDataMapPerformance(allEntrants, rounds, {
+          [currUserData.userId]: currUserData,
+        });
+        /**@todo! Figure out new way of getting the noOfPredictions */
+        tempObj = calculateRemainingRoundPerformanceData(15, tempObj);
+        currUserGameData.current = tempObj[currUserData.userId];
       };
       getCurrUserGameData();
     }
@@ -155,6 +165,7 @@ export const GameContainer = ({
     setPage(newPage);
 
     const getData = async () => {
+      /**@todo Make a new DB document for the noOfPredictions */
       const getNoOfPredictions = async () => {
         try {
           const res = await getStatsDataQuery(
@@ -169,6 +180,8 @@ export const GameContainer = ({
 
       const updateUserData = async () => {
         try {
+          if (noOfPredictions.current === null)
+            throw new Error("Can't tell how many predictions there are");
           const res = await getLeaderboardDataQuery(
             competitionStrs.shortHand,
             newEntrantType,
@@ -179,7 +192,17 @@ export const GameContainer = ({
             usersPerPage
           );
 
-          setUsersData(res);
+          let userData = calcUserGameDataMapPerformance(
+            allEntrants,
+            rounds,
+            res
+          );
+          userData = calculateRemainingRoundPerformanceData(
+            noOfPredictions.current,
+            userData
+          );
+
+          setUsersData(userData);
 
           if (typeof currentSearchParams.user === "string") {
             /**If the searchParams have a valid user query, set it as the selected User*/
@@ -325,7 +348,6 @@ export const GameContainer = ({
                 currentUserId={currentUserId}
                 entrants={allEntrants[entrantType]}
                 entrantType={entrantType}
-                round={rounds[roundIndex]}
                 roundIndex={roundIndex}
                 selectedUser={selectedUser}
                 shortHandCompStr={competitionStrs.shortHand}

@@ -4,10 +4,7 @@ import type {
   ShortHandCompStr,
   UserGameData,
 } from "@custom-types/game-types";
-import {
-  calcPredictionsAccuracy,
-  calcUserRoundPerformance,
-} from "@lib/game-data";
+import { calcPredictionsAccuracy } from "@lib/game-data";
 
 import { EntrantTable } from "@components/entrant-table/entrant-table";
 
@@ -16,7 +13,6 @@ interface Props {
   currentUserDisplayName: string | null;
   entrantType: string;
   entrants: Entrants;
-  round: Round;
   roundIndex: number;
   selectedUser: UserGameData;
   shortHandCompStr: ShortHandCompStr;
@@ -27,19 +23,10 @@ export const PredictionTable = ({
   currentUserDisplayName,
   entrants,
   entrantType,
-  round,
   roundIndex,
   selectedUser,
   shortHandCompStr,
 }: Props) => {
-  /**Repopulate 'diffs' array and 'diffTotal' for user.season[entrantType][roundIndex]*/
-  selectedUser = calcUserRoundPerformance(
-    entrantType,
-    selectedUser,
-    round,
-    roundIndex
-  );
-
   const tableData = selectedUser.season[entrantType][roundIndex].diffs;
   if (!tableData)
     throw new Error(

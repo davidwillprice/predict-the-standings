@@ -126,7 +126,7 @@ const orderAveragePredictions = (
 };
 
 //**Based on the user predictions and round data, calculate the differences in entrant predictions for each user, their diff totals and their count of each difference (perfect predictions, predictions that were one off etc) */
-const calcUserGameDataMapPerformance = (
+export const calcUserGameDataMapPerformance = (
   allEntrants: { [key: string]: Entrants },
   rounds: Round[],
   users: UserGameDataMap
@@ -134,17 +134,28 @@ const calcUserGameDataMapPerformance = (
   for (const entrantType of Object.keys(allEntrants)) {
     /**Loop through each user to generate their entrant differences in this particular round*/
     for (let user of Object.values(users)) {
-      user.season[entrantType] = [];
+      /**If they already have a leaderboardPos, then this is being triggered JIT to get data for the leaderboard. If not, user.season is an empty object that needs to be totally populated */
+      let hasLeaderboardPos: boolean;
+      if (user.season[entrantType]) {
+        hasLeaderboardPos = true;
+      } else {
+        hasLeaderboardPos = false;
+        user.season[entrantType] = [];
+      }
       rounds.forEach((round, roundIndex) => {
+        /**If there is no previous season data, add a blank leaderboardPos to be calculated later */
+        if (!hasLeaderboardPos) {
+          user.season[entrantType].push({
+            leaderboardPos: 0,
+          });
+        }
+        const userRoundData = user.season[entrantType][roundIndex];
         /**Push blank round performance ready to fill out with data */
-        user.season[entrantType].push({
-          diffCounts: [],
-          leaderboardPos: 0,
-          percentCorrect: 0,
-          prevLeaderboardPosDiff: 0,
-        });
+        userRoundData.diffCounts = [];
+        userRoundData.percentCorrect = 0;
+        userRoundData.prevLeaderboardPosDiff = 0;
         for (let i = 0; i < user.predictions[entrantType].length; i++) {
-          user.season[entrantType][roundIndex].diffCounts.push(0);
+          userRoundData.diffCounts.push(0);
         }
 
         user = calcUserRoundPerformance(entrantType, user, round, roundIndex);
@@ -172,6 +183,7 @@ export const calcUserRoundPerformance = (
     const actualPos = round.standings[entrantType].indexOf(entrantId);
     /**Work out how many positions the user is off*/
     const posDiff = actualPos - +predictedPos;
+    if (!userRoundData.diffCounts) throw new Error("No diffCounts available");
     userRoundData.diffCounts[Math.abs(posDiff)]++;
     /**Add the posDiff to their total for this round*/
     userRoundData.diffTotal += Math.abs(posDiff);
@@ -254,17 +266,21 @@ const orderLeaderboards = (rounds: Round[], users: UserGameDataMap) => {
             : (order = -1);
         } else {
           for (let i = 0; i < round.standings[entrantType].length; i++) {
+            const userADiffCountArr =
+              userA.season[entrantType][roundIndex].diffCounts;
+            const userBDiffCountArr =
+              userB.season[entrantType][roundIndex].diffCounts;
+            /**Error handling */
+            if (!userADiffCountArr || !userBDiffCountArr) {
+              throw new Error("No diffCounts available");
+            }
             /**If a has bigger diffCount than b return 1*/
-            if (
-              userA.season[entrantType][roundIndex].diffCounts[i] <
-              userB.season[entrantType][roundIndex].diffCounts[i]
-            ) {
+            if (userADiffCountArr[i] < userBDiffCountArr[i]) {
               order = 1;
               break;
             } else if (
               /**If b has bigger diffCount than a return -1*/
-              userA.season[entrantType][roundIndex].diffCounts[i] >
-              userB.season[entrantType][roundIndex].diffCounts[i]
+              userADiffCountArr[i] > userBDiffCountArr[i]
             ) {
               order = -1;
               break;
@@ -679,7 +695,38 @@ const streamlineUserGameDataForDb = (
       for (const roundPerformance of Object.values(roundArr)) {
         delete roundPerformance.diffs;
         delete roundPerformance.diffTotal;
+        delete roundPerformance.diffCounts;
+        delete roundPerformance.percentCorrect;
+        delete roundPerformance.prevLeaderboardPosDiff;
       }
+    }
+  }
+  return users;
+};
+
+/**Generate the accuracy and the prevLeaderboardPosDiff for every user/entrantType/round
+ * Only used JIT for the leaderboard
+ */
+export const calculateRemainingRoundPerformanceData = (
+  noOfPredictions: number,
+  users: UserGameDataMap
+): UserGameDataMap => {
+  for (let user of Object.values(users)) {
+    for (const [entrantType, roundPerformanceArr] of Object.entries(
+      user.season
+    )) {
+      roundPerformanceArr.forEach((_, roundIndex) => {
+        const userRoundData = user.season[entrantType][roundIndex];
+        userRoundData.prevLeaderboardPosDiff =
+          roundIndex === 0
+            ? 0
+            : user.season[entrantType][roundIndex - 1].leaderboardPos -
+              user.season[entrantType][roundIndex].leaderboardPos;
+        userRoundData.percentCorrect = calcPredictionsAccuracy(
+          noOfPredictions,
+          userRoundData.diffTotal
+        );
+      });
     }
   }
   return users;

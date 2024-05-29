@@ -58,8 +58,16 @@ export const Leaderboard = ({
 
   const leaderboardRow = (userGameData: UserGameData) => {
     const roundData = userGameData.season[entrantType][roundIndex];
+
+    if (
+      roundData.prevLeaderboardPosDiff === undefined ||
+      roundData.diffCounts === undefined
+    ) {
+      throw new Error("Leaderboard data hasn't been populated properly");
+    }
     return (
       <tr
+        key={userGameData.userId}
         className={`${entrantTableStyles.table_row} ${styles.table_row} ${
           userGameData.userId === currUserGameData?.userId &&
           styles.table_row__currentUser

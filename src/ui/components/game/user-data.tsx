@@ -35,6 +35,10 @@ export const UserData = ({
   const pathname = usePathname();
   const params = new URLSearchParams(useSearchParams());
   /**@todo Add share button */
+  const userRoundData = selectedUser.season[entrantType][roundIndex];
+  if (userRoundData.diffCounts === undefined) {
+    throw new Error("Leaderboard data hasn't been populated properly");
+  }
   return (
     <div className={styles.options}>
       <Button
@@ -64,14 +68,9 @@ export const UserData = ({
       )}
       <p>
         Leaderboard Position:{" "}
-        {numberToOrdinalNumber(
-          selectedUser.season[entrantType][roundIndex].leaderboardPos
-        )}
+        {numberToOrdinalNumber(userRoundData.leaderboardPos)}
       </p>
-      <p>
-        Perfect Predictions:{" "}
-        {selectedUser.season[entrantType][roundIndex].diffCounts[0]}
-      </p>
+      <p>Perfect Predictions: {userRoundData.diffCounts[0]}</p>
       {selectedUser.displayName !== "Average" && (
         <p>
           Controversy Percentile:{" "}

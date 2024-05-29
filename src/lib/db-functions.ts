@@ -171,7 +171,7 @@ export const getAllUserPredictionDataQuery = async (
 export const getLeaderboardDataQuery = async (
   competition: ShortHandCompStr,
   entrantType: string,
-  noOfPredictions: number | null,
+  noOfPredictions: number,
   page: number,
   roundIndex: number,
   season: string,
@@ -179,9 +179,6 @@ export const getLeaderboardDataQuery = async (
 ) => {
   const client = await clientPromise;
   try {
-    if (noOfPredictions === null)
-      throw new Error("Can't tell how many predictions there are");
-
     const maxLeaderboardPos = page * usersPerPage;
     /**If there will be less than the standard number of users per page, instead get the bottom 8 users */
     const minLeaderboardPos =

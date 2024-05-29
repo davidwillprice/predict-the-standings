@@ -176,10 +176,10 @@ export interface RoundPerformance {
   /**How off each entrant prediction was in this round */
   diffs?: { entrantId: EntrantId; posDiff: number }[];
   /**No of perfect predictions, then predictions that were off by one, then predictions that were off by two etc) */
-  diffCounts: number[];
+  diffCounts?: number[];
   leaderboardPos: number;
-  percentCorrect: number;
-  prevLeaderboardPosDiff: number;
+  percentCorrect?: number;
+  prevLeaderboardPosDiff?: number;
 }
 
 export interface GameData {
