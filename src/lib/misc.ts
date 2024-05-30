@@ -149,21 +149,25 @@ export const convertDocArrToUserGameDataMap = (
   for (const doc of docArr) {
     users[doc.userId] = convertDocumentToUserGameData(doc);
   }
-  return JSON.parse(JSON.stringify(users));
+  return users;
 };
 
 export const convertDocumentToUserGameData = (
   doc: WithId<UserGameData>
 ): UserGameData => {
-  const userGameData = new UserGameData(
-    doc._id.toString(),
-    doc.displayName,
-    doc.lastSubmissionTime,
-    doc.predictions,
-    doc.userId,
-    doc.userType
-  );
-
+  /**I can't use new UserGameData() as it gives a `Only plain objects, and a few built-ins, can be passed to Client Components from Server Components. Classes or null prototypes are not supported.` error as it's upset about a class instance being returned. If I use `JSON.parse(JSON.stringify(userGameData))` then I lose the Date type of lastSubmissionTime
+   */
+  const userGameData: UserGameData = {
+    _id: doc._id.toString(),
+    displayName: doc.displayName,
+    lastSubmissionTime: doc.lastSubmissionTime,
+    predictions: doc.predictions,
+    userId: doc.userId,
+    userType: doc.userType,
+    season: {},
+    controversyPercentile: {},
+    predictionsFromAvg: {},
+  };
   if (doc.roundsTop) userGameData.roundsTop = doc.roundsTop;
   if (doc.predictionsFromAvg)
     userGameData.predictionsFromAvg = doc.predictionsFromAvg;
@@ -173,7 +177,7 @@ export const convertDocumentToUserGameData = (
   // if (doc.leaderboardPositions)
   //   userGameData.leaderboardPositions = doc.leaderboardPositions;
   if (doc.information) userGameData.information = doc.information;
-  return JSON.parse(JSON.stringify(userGameData));
+  return userGameData;
 };
 
 //3 as e
