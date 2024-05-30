@@ -14,3 +14,10 @@ export class CompetitionLink {
     this.text = text;
   }
 }
+
+export interface UserDataFromSession {
+  id: string;
+  displayName: string;
+  lastDisplayNameSubmission: number;
+  predictionsMadeFor: { [competition: string]: Set<string> };
+}

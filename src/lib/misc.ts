@@ -1,5 +1,7 @@
-import type { Entrant, UserGameData } from "@custom-types/game-types";
-import { User } from "next-auth";
+import type { Entrant, UserGameDataMap } from "@custom-types/game-types";
+import { UserGameData } from "@custom-types/game-types";
+import { UserDataFromSession } from "@custom-types/misc";
+import { WithId } from "mongodb";
 
 export const sortEntrantsAlphabetically = (entrantArr: Entrant[]) => {
   return entrantArr.sort((a, b) =>
@@ -127,7 +129,7 @@ export const getLengthOfLongestConsecutiveNumbers = (arr: number[]): number => {
 
 /**Convert strings from `predictionsMadeFor` via the user session */
 export const getCollectionStrFromPredictionsMadeFor = (
-  user: User
+  user: UserDataFromSession
 ): string[] => {
   let gameDataCollections: string[] = [];
   for (const [competition, seasonArr] of Object.entries(
@@ -138,6 +140,44 @@ export const getCollectionStrFromPredictionsMadeFor = (
     );
   }
   return gameDataCollections;
+};
+
+export const convertDocArrToUserGameDataMap = (
+  docArr: WithId<UserGameData>[]
+): UserGameDataMap => {
+  const users: UserGameDataMap = {};
+  for (const doc of docArr) {
+    users[doc.userId] = convertDocumentToUserGameData(doc);
+  }
+  return users;
+};
+
+export const convertDocumentToUserGameData = (
+  doc: WithId<UserGameData>
+): UserGameData => {
+  /**I can't use new UserGameData() as it gives a `Only plain objects, and a few built-ins, can be passed to Client Components from Server Components. Classes or null prototypes are not supported.` error as it's upset about a class instance being returned. If I use `JSON.parse(JSON.stringify(userGameData))` then I lose the Date type of lastSubmissionTime
+   */
+  const userGameData: UserGameData = {
+    _id: doc._id.toString(),
+    displayName: doc.displayName,
+    lastSubmissionTime: doc.lastSubmissionTime,
+    predictions: doc.predictions,
+    userId: doc.userId,
+    userType: doc.userType,
+    season: {},
+    controversyPercentile: {},
+    predictionsFromAvg: {},
+  };
+  if (doc.roundsTop) userGameData.roundsTop = doc.roundsTop;
+  if (doc.predictionsFromAvg)
+    userGameData.predictionsFromAvg = doc.predictionsFromAvg;
+  if (doc.timesPredictionsUpdated)
+    userGameData.timesPredictionsUpdated = doc.timesPredictionsUpdated;
+  if (doc.season) userGameData.season = doc.season;
+  // if (doc.leaderboardPositions)
+  //   userGameData.leaderboardPositions = doc.leaderboardPositions;
+  if (doc.information) userGameData.information = doc.information;
+  return userGameData;
 };
 
 //3 as e

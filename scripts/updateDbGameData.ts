@@ -10,6 +10,7 @@ import {
   getAllUserPredictionDataQuery,
   updateAllUserDocGameData,
   updateLastUpdatedDateQuery,
+  updateNoOfPredictionsQuery,
   updatePredictionFreezeDateQuery,
 } from "@lib/db-functions";
 import { AllLocalSeasonData } from "@custom-types/game-types";
@@ -54,12 +55,15 @@ async function submitCompetitionGameData(
       );
     }
 
-    const collection = db.collection(competitionStrs.shortHand + seasonStr);
+    /**@todo Fix type any - I would like it to be Collection<UserGameData> but that breaks other querys */
+    const collection: any = db.collection(
+      competitionStrs.shortHand + seasonStr
+    );
 
     await updatePredictionFreezeDateQuery(collection, predictionFreezeDate);
 
     /**Get all existing user game data from the DB */
-    const users = await getAllUserPredictionDataQuery(allEntrants, collection);
+    const users = await getAllUserPredictionDataQuery(collection);
 
     /**Combine local season data with existing user game data*/
     const gameData = await createGameData(
@@ -77,6 +81,8 @@ async function submitCompetitionGameData(
     for (const entrantType in allEntrants) {
       noOfPredictions[entrantType] = Object.keys(users).length;
     }
+
+    await updateNoOfPredictionsQuery(collection, noOfPredictions);
 
     /**Update/Add the stats data to the DB */
     /**@todo This would be moved to the db-functions.tsx file */

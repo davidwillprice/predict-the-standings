@@ -58,8 +58,16 @@ export const Leaderboard = ({
 
   const leaderboardRow = (userGameData: UserGameData) => {
     const roundData = userGameData.season[entrantType][roundIndex];
+
+    if (
+      roundData.prevLeaderboardPosDiff === undefined ||
+      roundData.diffCounts === undefined
+    ) {
+      throw new Error("Leaderboard data hasn't been populated properly");
+    }
     return (
       <tr
+        key={userGameData.userId}
         className={`${entrantTableStyles.table_row} ${styles.table_row} ${
           userGameData.userId === currUserGameData?.userId &&
           styles.table_row__currentUser
@@ -131,6 +139,7 @@ export const Leaderboard = ({
         </thead>
         <tbody>
           {/**If the current user is position above players showing on the current page, show a preview of their position above the other players */}
+          {/**@todo If the current user is neighouring the shown page, don't bother showing the line row */}
           {currUserGameData &&
             currUserGameData.season[entrantType][roundIndex].leaderboardPos <
               bestDisplayedLeaderboardPos && (

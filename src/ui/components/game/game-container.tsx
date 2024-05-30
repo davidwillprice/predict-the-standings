@@ -5,8 +5,8 @@ import { useRouter, useSearchParams, usePathname } from "next/navigation";
 
 import {
   getLeaderboardDataQuery,
+  getNoOfPredictionsQuery,
   getSingleUserPredictionDataQuery,
-  getStatsDataQuery,
 } from "@lib/db-functions";
 import { debounce } from "@lib/misc";
 
@@ -27,7 +27,12 @@ import {
   Round,
   UserGameDataMap,
   UserGameData,
+  NoOfPredictions,
 } from "@custom-types/game-types";
+import {
+  calcUserGameDataMapPerformance,
+  calcRemainingRoundPerformanceData,
+} from "@lib/game-data";
 
 interface Props {
   children: ReactNode;
@@ -122,26 +127,36 @@ export const GameContainer = ({
   const [selectedUser, setSelectedUser] = useState<UserGameData | null>(null);
   const [usersData, setUsersData] = useState<UserGameDataMap | null>(null);
   const [isDebouncing, setIsDebouncing] = useState(false);
-  const noOfPredictions = useRef<null | number>(null);
+  const noOfPredictions = useRef<null | NoOfPredictions>(null);
   const currUserGameData = useRef<null | UserGameData>(null);
 
   const handleBackBtn = () => {
     setSelectedUser(null);
   };
 
-  /**UseEffect that only runs once on page load */
-  useEffect(() => {
-    if (currentUserId) {
-      const getCurrUserGameData = async () => {
-        currUserGameData.current = await getSingleUserPredictionDataQuery(
-          season,
-          competitionStrs.shortHand,
-          currentUserId
-        );
-      };
-      getCurrUserGameData();
-    }
-  }, [season, competitionStrs.shortHand, currentUserId]);
+  const getNoOfPredictions = async () => {
+    noOfPredictions.current = await getNoOfPredictionsQuery(
+      season,
+      competitionStrs.shortHand
+    );
+  };
+
+  const getCurrUserGameData = async () => {
+    /**If there is no logged in user, or the logged in user's data has already been obtained, don't bother running this  */
+    if (!currentUserId || currUserGameData.current !== null) return;
+    /**Get the logged in user's data from the DB */
+    let currUserData = await getSingleUserPredictionDataQuery(
+      season,
+      competitionStrs.shortHand,
+      currentUserId
+    );
+    /**Generate the round performance data for current user */
+    currUserData = calcUserGameDataMapPerformance(rounds, currUserData);
+    currUserData = calcRemainingRoundPerformanceData(currUserData);
+
+    /**Set the logged in user's userGameData to a ref */
+    currUserGameData.current = currUserData;
+  };
 
   /**useEffect that only runs when the query strings change
    * @todo Fix this seeming to run more than once after a page load and it is causing multiple unnecessary DB calls
@@ -155,47 +170,47 @@ export const GameContainer = ({
     setPage(newPage);
 
     const getData = async () => {
-      const getNoOfPredictions = async () => {
-        try {
-          const res = await getStatsDataQuery(
-            season,
-            competitionStrs.shortHand
-          );
-          noOfPredictions.current = res.noOfPredictions[newEntrantType];
-        } catch (err) {
-          throw err;
-        }
-      };
-
+      /**Get leaderboard data depending on the competition/season/entrantType/pagination selection */
       const updateUserData = async () => {
         try {
-          const res = await getLeaderboardDataQuery(
+          if (noOfPredictions.current === null)
+            throw new Error("Can't tell how many predictions there are");
+          const userData = await getLeaderboardDataQuery(
             competitionStrs.shortHand,
             newEntrantType,
-            noOfPredictions.current,
+            noOfPredictions.current[newEntrantType],
             newPage,
             newRoundIndex,
             season,
             usersPerPage
           );
+          /**Generate the round performance data for each user on the leaderboard  */
+          for (const [userId, user] of Object.entries(userData)) {
+            userData[userId] = calcUserGameDataMapPerformance(rounds, user);
+            userData[userId] = calcRemainingRoundPerformanceData(user);
+          }
+          /**Set leaderboard data */
+          setUsersData(userData);
 
-          setUsersData(res);
+          getCurrUserGameData();
 
           if (typeof currentSearchParams.user === "string") {
             /**If the searchParams have a valid user query, set it as the selected User*/
-            if (res[currentSearchParams.user])
-              setSelectedUser(res[currentSearchParams.user]);
-            /**Else if it is the current user's Id in the params, use their data for the selected user */ else if (
+            if (userData[currentSearchParams.user])
+              setSelectedUser(userData[currentSearchParams.user]);
+            else if (
+              /**Else if it is the current user's Id in the params, use their data for the selected user */
               currUserGameData.current !== null &&
               currUserGameData.current.userId === currentSearchParams.user
-            )
+            ) {
               setSelectedUser(currUserGameData.current);
+            }
           }
         } catch (err) {
           throw err;
         }
       };
-      await getNoOfPredictions();
+      if (noOfPredictions.current === null) await getNoOfPredictions();
       await updateUserData();
     };
     getData();
@@ -204,7 +219,7 @@ export const GameContainer = ({
   const updateRoundQueryString = (newRoundIndex: number) => {
     /**Cancel loading skeleton UI*/
     setIsDebouncing(false);
-    /**Uses router.replace() rather than router.push() as I don't want round chnages clogging up the user history */
+    /**Uses router.replace() rather than router.push() as I don't want round changes clogging up the user history */
     router.replace(
       pathname +
         "?" +
@@ -221,7 +236,7 @@ export const GameContainer = ({
   const addDebouncingState = () => {
     setIsDebouncing(true);
   };
-
+  console.log(usersData);
   /**Updates entrantType in query string - F1 only currently */
   const changeEntrantTypeHandler = () => {
     const newEntrantType = entrantType === "teams" ? "drivers" : "constructors";
@@ -294,7 +309,7 @@ export const GameContainer = ({
                   entrantType={entrantType}
                   isSeasonOver={isSeasonOver}
                   lastUpdated={lastUpdated}
-                  noOfPredictions={noOfPredictions.current}
+                  noOfPredictions={noOfPredictions.current[entrantType]}
                   page={page}
                   rounds={rounds}
                   roundIndex={roundIndex}
@@ -305,6 +320,7 @@ export const GameContainer = ({
                 <LeaderboardSkeleton usersPerPage={usersPerPage} />
               )}
             </div>
+            {/**@todo Too thin for Eurovision */}
             {standingsTable}
           </>
         ) : (
@@ -325,7 +341,7 @@ export const GameContainer = ({
                 currentUserId={currentUserId}
                 entrants={allEntrants[entrantType]}
                 entrantType={entrantType}
-                selectedRound={roundIndex}
+                roundIndex={roundIndex}
                 selectedUser={selectedUser}
                 shortHandCompStr={competitionStrs.shortHand}
               />

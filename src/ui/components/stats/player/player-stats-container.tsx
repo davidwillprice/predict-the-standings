@@ -88,7 +88,6 @@ export const PlayerStats = async ({
     );
 
     users = await getMultipleUserGameData(
-      allEntrants,
       seasonStr,
       competitionStrs.shortHand,
       noteworthyUserIds

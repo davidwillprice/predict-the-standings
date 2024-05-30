@@ -108,41 +108,83 @@ export class Entrant {
   }
 }
 
-export class UserGameData {
-  id: string;
+/**UserGameData (UGD) that is used both locally and on the DB */
+class BaseUserGameData {
+  _id: string;
+  /**Display name of the above user */
   displayName: string;
-  information: string;
+  /**Date the UGB was submitted or last edited */
   lastSubmissionTime: Date;
+  /**Arr of the prediction orders organised by entrantType - EntrantIds are converted to entrants using local data */
   predictions: { [entrantType: string]: EntrantId[] };
-  predictionsFromAvg: { [entrantType: string]: number };
-  season: { [entrantType: string]: RoundPerformance[] };
-  userType: "standard" | "special";
-  controversyPercentile: { [entrantType: string]: number };
-  timesPredictionsUpdated?: number;
-  roundsTop?: { [entrantType: string]: number[] };
+  /**_id of the user in the users collection who submitted the UGD document */
   userId: string;
+  /**Submitted by a 'special' user whose prediction was manually inserted, or a standard user */
+  userType: "standard" | "special";
+  /**Number of predictions difference the user was from the average - Needs to be calculated */
+  controversyPercentile: { [entrantType: string]: number };
+  /**A note that appears in the <UserData> component - Only used for special users currently */
+  information?: string;
+  /**Number of predictions difference the user was from the average - Needs to be calculated */
+  predictionsFromAvg: { [entrantType: string]: number };
+  /**Arrs of rounds that the UGD was top of the leaderboard - Optional as not all UGD tops leaderboard*/
+  roundsTop?: { [entrantType: string]: number[] };
+  /**Number of times the user has edited their predictions - Optional as only used for standard users */
+  timesPredictionsUpdated?: number;
   constructor(
+    _id: string,
     displayName: string,
-    id: string,
     lastSubmissionTime: Date,
     predictions: { [entrantType: string]: EntrantId[] },
-    userType: "standard" | "special",
-    predictionsFromAvg?: { [entrantType: string]: number }
+    userId: string,
+    userType: "standard" | "special"
   ) {
-    this.id = id;
-    this.controversyPercentile = {};
+    this._id = _id;
+    this.userId = userId;
     this.displayName = displayName;
-    this.information = "";
     this.lastSubmissionTime = lastSubmissionTime;
     this.predictions = predictions;
-    this.predictionsFromAvg = predictionsFromAvg || {};
-    this.season = {};
-    this.userId = "";
     this.userType = userType;
+    this.controversyPercentile = {};
+    this.predictionsFromAvg = {};
   }
 }
 
+export class UserGameData extends BaseUserGameData {
+  season: { [entrantType: string]: RoundPerformance[] };
+  constructor(
+    _id: string,
+    displayName: string,
+    lastSubmissionTime: Date,
+    predictions: { [entrantType: string]: EntrantId[] },
+    userId: string,
+    userType: "standard" | "special"
+  ) {
+    super(_id, displayName, lastSubmissionTime, predictions, userId, userType);
+    this.season = {};
+  }
+}
+
+/**@todo Use for DB to avoid having .season and use a streamlined .leaderboards */
+// export class UserGameData extends BaseUserGameData {
+//   leaderboardPositions: { [entrantType: string]: number[] };
+//   constructor(
+//     displayName: string,
+//     lastSubmissionTime: Date,
+//     predictions: { [entrantType: string]: EntrantId[] },
+//     userId: string,
+//     userType: "standard" | "special"
+//   ) {
+//     super(displayName, lastSubmissionTime, predictions, userId, userType);
+//     this.leaderboardPositions = {};
+//   }
+// }
+
 export type UserId = string;
+
+// export interface ProcessedUserGameDataMap {
+//   [userId: string]: ProcessedUserGameData;
+// }
 
 export interface UserGameDataMap {
   [userId: string]: UserGameData;
@@ -172,14 +214,14 @@ export type Leaderboard = {
 
 export interface RoundPerformance {
   /**Total of how off all entrant predictions were in this round */
-  diffTotal: number;
+  diffTotal?: number;
   /**How off each entrant prediction was in this round */
-  diffs: { entrantId: EntrantId; posDiff: number }[];
+  diffs?: { entrantId: EntrantId; posDiff: number }[];
   /**No of perfect predictions, then predictions that were off by one, then predictions that were off by two etc) */
-  diffCounts: number[];
+  diffCounts?: number[];
   leaderboardPos: number;
-  percentCorrect: number;
-  prevLeaderboardPosDiff: number;
+  percentCorrect?: number;
+  prevLeaderboardPosDiff?: number;
 }
 
 export interface GameData {
@@ -199,7 +241,7 @@ export interface StatsData {
   controversialUserIds: ControversialUserIds;
   latestSubmissionUserId: UserId;
   leaderboardToppingUserIds: LeaderboardToppingUserIds;
-  noOfPredictions: { [entrantType: string]: number };
+  noOfPredictions: NoOfPredictions;
   mostUpdatedPredictionUserIds: MostUpdatedPredictionUserIds;
   rounds: {
     entrantDiffTotals: { [entrantType: string]: EntrantDiffTotal[] };
@@ -227,4 +269,8 @@ export interface LeaderboardToppingUserIds {
     userId: UserId;
     roundsTop: number[];
   }[];
+}
+
+export interface NoOfPredictions {
+  [entrantType: string]: number;
 }

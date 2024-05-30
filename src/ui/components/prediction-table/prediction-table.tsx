@@ -1,5 +1,6 @@
 import type {
   Entrants,
+  Round,
   ShortHandCompStr,
   UserGameData,
 } from "@custom-types/game-types";
@@ -12,7 +13,7 @@ interface Props {
   currentUserDisplayName: string | null;
   entrantType: string;
   entrants: Entrants;
-  selectedRound: number;
+  roundIndex: number;
   selectedUser: UserGameData;
   shortHandCompStr: ShortHandCompStr;
 }
@@ -22,21 +23,25 @@ export const PredictionTable = ({
   currentUserDisplayName,
   entrants,
   entrantType,
-  selectedRound,
+  roundIndex,
   selectedUser,
   shortHandCompStr,
 }: Props) => {
-  const tableData = selectedUser.season[entrantType][selectedRound].diffs;
+  const tableData = selectedUser.season[entrantType][roundIndex].diffs;
+  if (!tableData)
+    throw new Error(
+      `Couldn't obtain table data for ${selectedUser.displayName}`
+    );
   const accuracy = calcPredictionsAccuracy(
     selectedUser.predictions[entrantType].length,
-    selectedUser.season[entrantType][selectedRound].diffTotal
+    selectedUser.season[entrantType][roundIndex].diffTotal
   );
   return (
     <EntrantTable
       accuracy={accuracy}
       entrantArr={tableData.map((rowData) => entrants[rowData.entrantId])}
       heading={`${
-        selectedUser.id.toString() === currentUserId
+        selectedUser.userId === currentUserId
           ? currentUserDisplayName
           : selectedUser.displayName
       } Predictions`}

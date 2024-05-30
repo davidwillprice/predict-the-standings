@@ -132,7 +132,7 @@ export const DeleteAccount = ({ user }: Props) => {
         <p>
           <strong>
             Deleting your account is irreversible, please confirm you understand
-            the above and would like to proceed by writing DELETE into the field
+            the above and would like to proceed by typing DELETE into the field
             below.
           </strong>
         </p>

@@ -1,4 +1,5 @@
 import NextAuth from "next-auth";
+import { UserDataFromSession } from "./misc";
 
 declare module "next-auth" {
   interface Session {
@@ -9,10 +10,5 @@ declare module "next-auth" {
       predictionsMadeFor: { [competition: string]: Set<string> };
     } & DefaultSession["user"];
   }
-  interface User {
-    id: string;
-    displayName: string;
-    lastDisplayNameSubmission: number;
-    predictionsMadeFor: { [competition: string]: Set<string> };
-  }
+  interface User extends UserDataFromSession {}
 }
