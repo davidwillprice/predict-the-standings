@@ -6,6 +6,10 @@ import { getSingleUserPredictionDataQuery } from "@lib/db-functions";
 import { allF1SeasonData } from "@data/formula-1/season-data";
 import { allEurovisionSeasonData } from "@data/eurovision/season-data";
 import { allPlSeasonData } from "@data/premier-league/season-data";
+import {
+  calcRemainingRoundPerformanceData,
+  calcUserGameDataMapPerformance,
+} from "@lib/game-data";
 
 import Link from "next/link";
 import { PanelHeading } from "@components/panels/panel-heading";
@@ -78,6 +82,12 @@ export const PerformanceOverview = ({ user }: Props) => {
                 if (localSeasonData === undefined) {
                   throw new Error("Couldn't find local data");
                 }
+                /**Generate the round performance data for current user as I need their accuracy value */
+                userGameData = calcUserGameDataMapPerformance(
+                  localSeasonData.rounds,
+                  userGameData
+                );
+                userGameData = calcRemainingRoundPerformanceData(userGameData);
                 for (const entrantType of Object.keys(
                   userGameData.predictions
                 )) {

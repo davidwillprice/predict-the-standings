@@ -145,18 +145,17 @@ export const GameContainer = ({
     /**If there is no logged in user, or the logged in user's data has already been obtained, don't bother running this  */
     if (!currentUserId || currUserGameData.current !== null) return;
     /**Get the logged in user's data from the DB */
-    const currUserData = await getSingleUserPredictionDataQuery(
+    let currUserData = await getSingleUserPredictionDataQuery(
       season,
       competitionStrs.shortHand,
       currentUserId
     );
-    /**@todo Fix sloppy naming or make version of calcUserGameDataMapPerformance() for a solo userGameData*/
-    let tempObj = calcUserGameDataMapPerformance(rounds, {
-      [currUserData.userId]: currUserData,
-    });
-    tempObj = calcRemainingRoundPerformanceData(tempObj);
+    /**Generate the round performance data for current user */
+    currUserData = calcUserGameDataMapPerformance(rounds, currUserData);
+    currUserData = calcRemainingRoundPerformanceData(currUserData);
+
     /**Set the logged in user's userGameData to a ref */
-    currUserGameData.current = tempObj[currUserData.userId];
+    currUserGameData.current = currUserData;
   };
 
   /**useEffect that only runs when the query strings change
@@ -176,7 +175,7 @@ export const GameContainer = ({
         try {
           if (noOfPredictions.current === null)
             throw new Error("Can't tell how many predictions there are");
-          const leaderboardDataRes = await getLeaderboardDataQuery(
+          const userData = await getLeaderboardDataQuery(
             competitionStrs.shortHand,
             newEntrantType,
             noOfPredictions.current[newEntrantType],
@@ -185,13 +184,11 @@ export const GameContainer = ({
             season,
             usersPerPage
           );
-
-          /**Generate the round perforamnce data for the users on the leaderboard  */
-          let userData = calcUserGameDataMapPerformance(
-            rounds,
-            leaderboardDataRes
-          );
-          userData = calcRemainingRoundPerformanceData(userData);
+          /**Generate the round performance data for each user on the leaderboard  */
+          for (const [userId, user] of Object.entries(userData)) {
+            userData[userId] = calcUserGameDataMapPerformance(rounds, user);
+            userData[userId] = calcRemainingRoundPerformanceData(user);
+          }
           /**Set leaderboard data */
           setUsersData(userData);
 
@@ -239,7 +236,7 @@ export const GameContainer = ({
   const addDebouncingState = () => {
     setIsDebouncing(true);
   };
-
+  console.log(usersData);
   /**Updates entrantType in query string - F1 only currently */
   const changeEntrantTypeHandler = () => {
     const newEntrantType = entrantType === "teams" ? "drivers" : "constructors";
@@ -323,6 +320,7 @@ export const GameContainer = ({
                 <LeaderboardSkeleton usersPerPage={usersPerPage} />
               )}
             </div>
+            {/**@todo Too thin for Eurovision */}
             {standingsTable}
           </>
         ) : (
