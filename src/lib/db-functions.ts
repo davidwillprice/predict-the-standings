@@ -124,13 +124,13 @@ export const getMultipleUserGameData = async (
 
       users[doc.userId] = new UserGameData(
         doc.displayName,
-        doc.userId,
+        doc._id.toString(),
         doc.lastSubmissionTime,
         predictionsObj,
+        doc.userId,
         doc.userType
       );
       users[doc.userId].roundsTop = doc.roundsTop;
-      users[doc.userId].userId = doc.userId;
       users[doc.userId].predictionsFromAvg = doc.predictionsFromAvg;
       users[doc.userId].timesPredictionsUpdated = doc.timesPredictionsUpdated;
     }
@@ -145,7 +145,7 @@ export const getMultipleUserGameData = async (
   }
 };
 
-/**Gets user prediction data so it can be processed*/
+/**Gets all user prediction data from DB so it can be processed (Excluding average)*/
 export const getAllUserPredictionDataQuery = async (
   allEntrants: AllEntrants,
   collection: Collection
@@ -169,21 +169,23 @@ export const getAllUserPredictionDataQuery = async (
 
       users[doc.userId] = new UserGameData(
         doc.displayName,
-        doc.userId,
+        doc._id.toString(),
         doc.lastSubmissionTime,
         predictionsObj,
+        doc.userId,
         doc.userType
       );
-      users[doc.userId].userId = doc.userId;
-      users[doc.userId].timesPredictionsUpdated = doc.timesPredictionsUpdated;
+
       if (doc.userType === "special") {
         users[doc.userId].information = doc.information;
+      } else {
+        users[doc.userId].timesPredictionsUpdated = doc.timesPredictionsUpdated;
       }
     }
     if (Object.keys(users).length === 0)
       console.log(
         `User prediction data obj is empty for ${collection.collectionName}`
-      ); // Don't throw error as there may not be user prediction submitted yet
+      ); // Just warn dev, don't throw error as there may not be user prediction submitted yet
 
     return users;
   } catch (error) {
