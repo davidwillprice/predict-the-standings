@@ -5,10 +5,11 @@ import { GameContainer } from "@components/game/game-container";
 import { Panel } from "@components/panels/panel";
 import { PromptPredictions } from "@components/submit-predictions/prompt-predictions";
 
-import { LocalSeasonData, UserGameData } from "@custom-types/game-types";
+import { LocalSeasonData } from "@custom-types/game-types";
+import { User } from "next-auth";
 
 type Props = {
-  currUser: UserGameData | null;
+  currUser: User | null;
   headingText: string;
   preseasonText: string;
   searchParams: { [key: string]: string | string[] | undefined };
@@ -30,7 +31,7 @@ export const LeaderboardContainer = async ({
     rounds,
   } = seasonData;
 
-  const currUserId = currUser ? currUser?.userId : null;
+  const currUserId = currUser ? currUser?.id : null;
   const currUserDisplayName = currUser ? currUser?.displayName : null;
 
   //**Only bother getting the last updated date if there is leaderboard data to show */

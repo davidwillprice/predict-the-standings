@@ -139,6 +139,7 @@ export const Leaderboard = ({
         </thead>
         <tbody>
           {/**If the current user is position above players showing on the current page, show a preview of their position above the other players */}
+          {/**@todo If the current user is neighouring the shown page, don't bother showing the line row */}
           {currUserGameData &&
             currUserGameData.season[entrantType][roundIndex].leaderboardPos <
               bestDisplayedLeaderboardPos && (
