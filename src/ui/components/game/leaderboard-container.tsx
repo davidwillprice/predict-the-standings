@@ -30,7 +30,7 @@ export const LeaderboardContainer = async ({
     rounds,
   } = seasonData;
 
-  const currUserId = currUser ? currUser?.id : null;
+  const currUserId = currUser ? currUser?.userId : null;
   const currUserDisplayName = currUser ? currUser?.displayName : null;
 
   //**Only bother getting the last updated date if there is leaderboard data to show */

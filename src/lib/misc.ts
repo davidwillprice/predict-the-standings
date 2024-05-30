@@ -1,5 +1,7 @@
-import type { Entrant, UserGameData } from "@custom-types/game-types";
+import type { Entrant, UserGameDataMap } from "@custom-types/game-types";
+import { UserGameData } from "@custom-types/game-types";
 import { UserDataFromSession } from "@custom-types/misc";
+import { WithId } from "mongodb";
 
 export const sortEntrantsAlphabetically = (entrantArr: Entrant[]) => {
   return entrantArr.sort((a, b) =>
@@ -138,6 +140,40 @@ export const getCollectionStrFromPredictionsMadeFor = (
     );
   }
   return gameDataCollections;
+};
+
+export const convertDocArrToUserGameDataMap = (
+  docArr: WithId<UserGameData>[]
+): UserGameDataMap => {
+  const users: UserGameDataMap = {};
+  for (const doc of docArr) {
+    users[doc.userId] = convertDocumentToUserGameData(doc);
+  }
+  return JSON.parse(JSON.stringify(users));
+};
+
+export const convertDocumentToUserGameData = (
+  doc: WithId<UserGameData>
+): UserGameData => {
+  const userGameData = new UserGameData(
+    doc._id.toString(),
+    doc.displayName,
+    doc.lastSubmissionTime,
+    doc.predictions,
+    doc.userId,
+    doc.userType
+  );
+
+  if (doc.roundsTop) userGameData.roundsTop = doc.roundsTop;
+  if (doc.predictionsFromAvg)
+    userGameData.predictionsFromAvg = doc.predictionsFromAvg;
+  if (doc.timesPredictionsUpdated)
+    userGameData.timesPredictionsUpdated = doc.timesPredictionsUpdated;
+  if (doc.season) userGameData.season = doc.season;
+  // if (doc.leaderboardPositions)
+  //   userGameData.leaderboardPositions = doc.leaderboardPositions;
+  if (doc.information) userGameData.information = doc.information;
+  return JSON.parse(JSON.stringify(userGameData));
 };
 
 //3 as e

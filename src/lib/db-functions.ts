@@ -1,10 +1,9 @@
 "use server";
 import clientPromise from "@lib/mongodb";
 import { Collection } from "mongodb";
-
 import { ObjectId } from "mongodb";
+
 import {
-  AllEntrants,
   EntrantId,
   NoOfPredictions,
   RoundPerformance,
@@ -13,6 +12,10 @@ import {
   UserGameData,
   UserGameDataMap,
 } from "@custom-types/game-types";
+import {
+  convertDocArrToUserGameDataMap,
+  convertDocumentToUserGameData,
+} from "./misc";
 
 export const getlastUpdatedDate = async (
   season: string,
@@ -58,6 +61,7 @@ export const getNoOfPredictionsQuery = async (
   }
 };
 
+/**@todo This would be faster if I searched via _id rather than userId*/
 export const getSingleUserPredictionDataQuery = async (
   season: string,
   competition: ShortHandCompStr,
@@ -66,37 +70,24 @@ export const getSingleUserPredictionDataQuery = async (
   const client = await clientPromise;
   try {
     const db = client.db("pts");
-    const collection = db.collection(competition + season);
+    const collection = db.collection<UserGameData>(competition + season);
     const res = await collection.findOne({ userId: userId });
     if (!res)
       throw new Error(
         `Failed to get user prediction data for ${competition + season}`
       );
-    /**@todo Use a function for the conversion between res and UserGameData */
+    const user = convertDocumentToUserGameData(res);
     console.log("Returning single userGameData");
-    return {
-      id: res._id.toString(),
-      displayName: res.displayName,
-      controversyPercentile: res.controversyPercentile,
-      information: res.information,
-      lastSubmissionTime: res.lastSubmissionTime,
-      predictions: res.predictions,
-      predictionsFromAvg: res.predictionsFromAvg,
-      roundsTop: res.roundsTop,
-      season: res.season,
-      timesPredictionsUpdated: res.timesPredictionsUpdated,
-      userId: res.userId,
-      userType: res.userType,
-    };
+    return user;
   } catch (error) {
     throw error;
   }
 };
 
 /**Get stats data to display on stats pages
+ * @todo This would be faster if I searched via _id rather than userId
  */
 export const getMultipleUserGameData = async (
-  allEntrants: AllEntrants,
   season: string,
   competition: ShortHandCompStr,
   userIdArr: string[]
@@ -104,7 +95,7 @@ export const getMultipleUserGameData = async (
   const client = await clientPromise;
   try {
     const db = client.db("pts");
-    const collection = db.collection(competition + season);
+    const collection = db.collection<UserGameData>(competition + season);
     const result = await collection
       .find({
         userId: { $in: userIdArr },
@@ -114,26 +105,8 @@ export const getMultipleUserGameData = async (
       throw new Error(
         `Failed to get user game data for ${competition + season}`
       );
-    /**@todo Refactor the process of coverting the docs to users into a new function*/
-    let users: UserGameDataMap = {};
-    for await (const doc of result) {
-      const predictionsObj: { [entrantType: string]: any } = {};
-      Object.keys(allEntrants).forEach((entrantType) => {
-        predictionsObj[entrantType] = doc.predictions[entrantType];
-      });
+    const users = convertDocArrToUserGameDataMap(result);
 
-      users[doc.userId] = new UserGameData(
-        doc.displayName,
-        doc._id.toString(),
-        doc.lastSubmissionTime,
-        predictionsObj,
-        doc.userId,
-        doc.userType
-      );
-      users[doc.userId].roundsTop = doc.roundsTop;
-      users[doc.userId].predictionsFromAvg = doc.predictionsFromAvg;
-      users[doc.userId].timesPredictionsUpdated = doc.timesPredictionsUpdated;
-    }
     if (Object.keys(users).length === 0)
       throw new Error(
         `User prediction data obj is empty for ${collection.collectionName}`
@@ -147,41 +120,21 @@ export const getMultipleUserGameData = async (
 
 /**Gets all user prediction data from DB so it can be processed (Excluding average)*/
 export const getAllUserPredictionDataQuery = async (
-  allEntrants: AllEntrants,
-  collection: Collection
+  collection: Collection<UserGameData>
 ): Promise<UserGameDataMap> => {
   try {
-    const result = await collection.find({
-      type: "userData",
-      displayName: { $ne: "Average" },
-    });
+    const result = await collection
+      .find({
+        type: "userData",
+        displayName: { $ne: "Average" },
+      })
+      .toArray();
     if (!result)
       throw new Error(
         `Failed to access DB when getting user prediction data for ${collection.collectionName}`
       );
 
-    let users: UserGameDataMap = {};
-    for await (const doc of result) {
-      const predictionsObj: { [entrantType: string]: any } = {};
-      Object.keys(allEntrants).forEach((entrantType) => {
-        predictionsObj[entrantType] = doc.predictions[entrantType];
-      });
-
-      users[doc.userId] = new UserGameData(
-        doc.displayName,
-        doc._id.toString(),
-        doc.lastSubmissionTime,
-        predictionsObj,
-        doc.userId,
-        doc.userType
-      );
-
-      if (doc.userType === "special") {
-        users[doc.userId].information = doc.information;
-      } else {
-        users[doc.userId].timesPredictionsUpdated = doc.timesPredictionsUpdated;
-      }
-    }
+    const users = convertDocArrToUserGameDataMap(result);
     if (Object.keys(users).length === 0)
       console.log(
         `User prediction data obj is empty for ${collection.collectionName}`
@@ -212,7 +165,7 @@ export const getLeaderboardDataQuery = async (
         : page * usersPerPage - (usersPerPage - 1);
 
     const db = client.db("pts");
-    const collection = db.collection(competition + season);
+    const collection = db.collection<UserGameData>(competition + season);
     const result = await collection
       .find({
         type: "userData",
@@ -227,23 +180,12 @@ export const getLeaderboardDataQuery = async (
         `Failed to get leaderboard data for ${competition + season}`
       );
 
-    const users: UserGameDataMap = {};
+    const users = convertDocArrToUserGameDataMap(result);
 
-    result.forEach((user) => {
-      users[user.userId] = {
-        id: user._id.toString(),
-        userId: user.userId,
-        displayName: user.displayName,
-        controversyPercentile: user.controversyPercentile,
-        information: user.information,
-        lastSubmissionTime: user.lastSubmissionTime,
-        predictions: user.predictions,
-        predictionsFromAvg: user.predictionsFromAvg,
-        roundsTop: user.roundsTop,
-        season: user.season,
-        userType: user.userType,
-      };
-    });
+    if (Object.keys(users).length === 0)
+      throw new Error(
+        `User prediction data obj is empty for ${collection.collectionName}`
+      );
 
     console.log("Getting leaderboard data");
 
@@ -441,7 +383,9 @@ export const addPredictionToUserDataQuery = async (
   }
 };
 
-/**Once new game data has been created, it needs to be attached to the user game data documents in the DB */
+/**Once new game data has been created, it needs to be attached to the user game data documents in the DB
+ * @todo This would be faster if I searched via _id rather than userId, but I would need to obtain the average _id when I obtain all the UserGameData
+ */
 export const updateAllUserDocGameData = async (
   collection: Collection,
   users: UserGameDataMap

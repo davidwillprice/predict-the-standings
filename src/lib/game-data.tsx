@@ -1,7 +1,6 @@
 import {
   AllEntrants,
   ControversialUserIds,
-  Entrants,
   EntrantStats,
   GameData,
   LeaderboardToppingUserIds,
@@ -22,8 +21,8 @@ export const createGameData = async (
 ): Promise<GameData | string> => {
   //**Creates an 'average' user */
   users.average = new UserGameData(
-    "Average",
     "average",
+    "Average",
     new Date("3000-04-18T20:38:36.780Z"), //Stupidly high value so other players will always be positioned ahead if they have the same predictions
     {},
     "average",
@@ -97,7 +96,7 @@ const generateAveragePredictions = (
       let noOfUserGameDataMap = 0;
       for (const user of Object.values(users)) {
         /**If the user is the generated average, ignore their predictions */
-        if (user.id === "average") continue;
+        if (user.userId === "average") continue;
         predictionPosTotal +=
           user.predictions[entrantType].indexOf(entrant.sName) + 1;
         noOfUserGameDataMap++;
@@ -423,7 +422,7 @@ const getEntrantPredictedPositions = (
       /**Loop over users, obtain the position index they predicted the entrant in, then plus one to that index in the entrant position array  */
       for (const user of Object.values(users)) {
         /**If the user is the generated average, ignore their predictions */
-        if (user.id === "average") continue;
+        if (user.userId === "average") continue;
 
         const userPredictedPos = user.predictions[entrantType].indexOf(
           entrant.sName
@@ -461,7 +460,7 @@ const generateTeammateHeadToHead = (
 
     for (const user of Object.values(users)) {
       /**If the user is the generated average, ignore their predictions */
-      if (user.id === "average") continue;
+      if (user.userId === "average") continue;
 
       const higherPredictedDriverId = user.predictions["drivers"].filter(
         (driverId) =>
@@ -493,7 +492,7 @@ export function generateControversyData(
 ): UserGameDataMap {
   for (const user of Object.values(users)) {
     /**If the user is the generated average, ignore their predictions */
-    if (user.id === "average") continue;
+    if (user.userId === "average") continue;
 
     for (const entrantType of Object.keys(user.predictions)) {
       user.predictionsFromAvg[entrantType] = 0;
@@ -514,12 +513,12 @@ export function generateControversyData(
   for (const entrantType of Object.keys(users.average.predictions)) {
     /**Create an array of every predictionsFromAvg for every user (besides the average) */
     const predictionsFromAvgArr = Object.values(users)
-      .filter((user) => user.id !== "average")
+      .filter((user) => user.userId !== "average")
       .map((user) => user.predictionsFromAvg[entrantType]);
 
     /**Use arr to calculate the controversy percentile for a user */
     for (const user of Object.values(users)) {
-      if (user.id === "average") continue;
+      if (user.userId === "average") continue;
       user.controversyPercentile[entrantType] =
         Math.trunc(
           calcPercentile(

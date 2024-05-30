@@ -122,7 +122,7 @@ export const LeaderboardToppers = ({
                         onClick={() =>
                           handleRowClick(
                             entrantTypes[tableIndex],
-                            rowData.user.id
+                            rowData.user.userId
                           )
                         }>
                         <td className={leaderboardStyles.position}>

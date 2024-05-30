@@ -110,10 +110,9 @@ export class Entrant {
 
 /**UserGameData (UGD) that is used both locally and on the DB */
 class BaseUserGameData {
+  _id: string;
   /**Display name of the above user */
   displayName: string;
-  /**_id of the UGD document in the comp/season collection */
-  id: string;
   /**Date the UGB was submitted or last edited */
   lastSubmissionTime: Date;
   /**Arr of the prediction orders organised by entrantType - EntrantIds are converted to entrants using local data */
@@ -133,14 +132,14 @@ class BaseUserGameData {
   /**Number of times the user has edited their predictions - Optional as only used for standard users */
   timesPredictionsUpdated?: number;
   constructor(
+    _id: string,
     displayName: string,
-    id: string,
     lastSubmissionTime: Date,
     predictions: { [entrantType: string]: EntrantId[] },
     userId: string,
     userType: "standard" | "special"
   ) {
-    this.id = id;
+    this._id = _id;
     this.userId = userId;
     this.displayName = displayName;
     this.lastSubmissionTime = lastSubmissionTime;
@@ -154,34 +153,38 @@ class BaseUserGameData {
 export class UserGameData extends BaseUserGameData {
   season: { [entrantType: string]: RoundPerformance[] };
   constructor(
+    _id: string,
     displayName: string,
-    id: string,
     lastSubmissionTime: Date,
     predictions: { [entrantType: string]: EntrantId[] },
     userId: string,
     userType: "standard" | "special"
   ) {
-    super(displayName, id, lastSubmissionTime, predictions, userId, userType);
+    super(_id, displayName, lastSubmissionTime, predictions, userId, userType);
     this.season = {};
   }
 }
 
-export class DbUserGameData extends BaseUserGameData {
-  leaderboardPositions: { [entrantType: string]: number[] };
-  constructor(
-    displayName: string,
-    id: string,
-    lastSubmissionTime: Date,
-    predictions: { [entrantType: string]: EntrantId[] },
-    userId: string,
-    userType: "standard" | "special"
-  ) {
-    super(displayName, id, lastSubmissionTime, predictions, userId, userType);
-    this.leaderboardPositions = {};
-  }
-}
+/**@todo Use for DB to avoid having .season and use a streamlined .leaderboards */
+// export class UserGameData extends BaseUserGameData {
+//   leaderboardPositions: { [entrantType: string]: number[] };
+//   constructor(
+//     displayName: string,
+//     lastSubmissionTime: Date,
+//     predictions: { [entrantType: string]: EntrantId[] },
+//     userId: string,
+//     userType: "standard" | "special"
+//   ) {
+//     super(displayName, lastSubmissionTime, predictions, userId, userType);
+//     this.leaderboardPositions = {};
+//   }
+// }
 
 export type UserId = string;
+
+// export interface ProcessedUserGameDataMap {
+//   [userId: string]: ProcessedUserGameData;
+// }
 
 export interface UserGameDataMap {
   [userId: string]: UserGameData;

@@ -55,12 +55,15 @@ async function submitCompetitionGameData(
       );
     }
 
-    const collection = db.collection(competitionStrs.shortHand + seasonStr);
+    /**@todo Fix type any - I would like it to be Collection<UserGameData> but that breaks other querys */
+    const collection: any = db.collection(
+      competitionStrs.shortHand + seasonStr
+    );
 
     await updatePredictionFreezeDateQuery(collection, predictionFreezeDate);
 
     /**Get all existing user game data from the DB */
-    const users = await getAllUserPredictionDataQuery(allEntrants, collection);
+    const users = await getAllUserPredictionDataQuery(collection);
 
     /**Combine local season data with existing user game data*/
     const gameData = await createGameData(

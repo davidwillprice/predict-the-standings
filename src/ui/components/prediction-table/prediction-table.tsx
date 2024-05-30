@@ -41,7 +41,7 @@ export const PredictionTable = ({
       accuracy={accuracy}
       entrantArr={tableData.map((rowData) => entrants[rowData.entrantId])}
       heading={`${
-        selectedUser.id.toString() === currentUserId
+        selectedUser.userId === currentUserId
           ? currentUserDisplayName
           : selectedUser.displayName
       } Predictions`}
