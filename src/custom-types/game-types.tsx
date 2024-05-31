@@ -194,12 +194,16 @@ export class Round {
   entrantDiffTotals: { [entrantType: string]: EntrantDiffTotal[] };
   leaderboards: { [entrantType: string]: Leaderboard[] };
   standings: { [entrantType: string]: EntrantId[] };
+  accurateEntrants: {
+    [entrantType: string]: { most: EntrantDiffTotal; least: EntrantDiffTotal };
+  };
   venue;
   constructor(venue: string, standings: {}) {
     this.venue = venue;
     this.standings = standings;
     this.leaderboards = {};
     this.entrantDiffTotals = {};
+    this.accurateEntrants = {};
   }
 }
 interface EntrantDiffTotal {
@@ -231,7 +235,12 @@ export interface GameData {
   leaderboardToppingUserIds: LeaderboardToppingUserIds;
   mostUpdatedPredictionUserIds: MostUpdatedPredictionUserIds;
   roundStats: {
-    entrantDiffTotals: { [entrantType: string]: EntrantDiffTotal[] };
+    accurateEntrants: {
+      [entrantType: string]: {
+        most: EntrantDiffTotal;
+        least: EntrantDiffTotal;
+      };
+    };
   }[];
   users: UserGameDataMap;
 }
@@ -244,7 +253,12 @@ export interface StatsData {
   noOfPredictions: NoOfPredictions;
   mostUpdatedPredictionUserIds: MostUpdatedPredictionUserIds;
   rounds: {
-    entrantDiffTotals: { [entrantType: string]: EntrantDiffTotal[] };
+    accurateEntrants: {
+      [entrantType: string]: {
+        most: EntrantDiffTotal;
+        least: EntrantDiffTotal;
+      };
+    };
   }[];
 }
 
