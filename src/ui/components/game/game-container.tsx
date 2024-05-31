@@ -192,8 +192,6 @@ export const GameContainer = ({
           /**Set leaderboard data */
           setUsersData(userData);
 
-          getCurrUserGameData();
-
           if (typeof currentSearchParams.user === "string") {
             /**If the searchParams have a valid user query, set it as the selected User*/
             if (userData[currentSearchParams.user])
@@ -211,6 +209,7 @@ export const GameContainer = ({
         }
       };
       if (noOfPredictions.current === null) await getNoOfPredictions();
+      await getCurrUserGameData();
       await updateUserData();
     };
     getData();

@@ -4,6 +4,17 @@ import { Collection } from "mongodb";
 import { ObjectId } from "mongodb";
 
 import {
+  convertDocArrToUserGameDataMap,
+  convertDocumentToUserGameData,
+} from "./misc";
+import {
+  lastUpdatedDateObjId,
+  noOfPredictionsObjId,
+  predictionFreezeDateObjId,
+  statsDataObjId,
+} from "@data/object-ids";
+
+import {
   EntrantId,
   NoOfPredictions,
   RoundPerformance,
@@ -12,10 +23,6 @@ import {
   UserGameData,
   UserGameDataMap,
 } from "@custom-types/game-types";
-import {
-  convertDocArrToUserGameDataMap,
-  convertDocumentToUserGameData,
-} from "./misc";
 
 export const getlastUpdatedDate = async (
   season: string,
@@ -25,7 +32,9 @@ export const getlastUpdatedDate = async (
   try {
     const db = client.db("pts");
     const collection = db.collection(competition + season);
-    const result = await collection.findOne({ type: "lastUpdatedDate" });
+    const result = await collection.findOne({
+      _id: new ObjectId(lastUpdatedDateObjId),
+    });
     if (!result)
       throw new Error(
         `Failed to get last updated time for ${competition + season}`
@@ -47,7 +56,9 @@ export const getNoOfPredictionsQuery = async (
   try {
     const db = client.db("pts");
     const collection = db.collection(shortHandCompStr + season);
-    const result = await collection.findOne({ type: "noOfPredictions" });
+    const result = await collection.findOne({
+      _id: new ObjectId(noOfPredictionsObjId),
+    });
     if (!result)
       throw new Error(
         `Failed to get number of predictions for ${shortHandCompStr + season}`
@@ -206,7 +217,9 @@ export const getStatsDataQuery = async (
   try {
     const db = client.db("pts");
     const collection = db.collection(competition + season);
-    const result = await collection.findOne({ type: "statsData" });
+    const result = await collection.findOne({
+      _id: new ObjectId(statsDataObjId),
+    });
     if (!result)
       throw new Error(`Failed to get stats data for ${competition + season}`);
 
@@ -314,7 +327,7 @@ export const submitPredictionsQuery = async (
     const collection = db.collection(competition + season);
 
     const predictionFreezeDateDoc = await collection.findOne({
-      type: "predictionFreezeDate",
+      _id: new ObjectId(predictionFreezeDateObjId),
     });
 
     const predictionFreezeDate = predictionFreezeDateDoc?.predictionFreezeDate;
@@ -450,7 +463,7 @@ export const updateLastUpdatedDateQuery = async (collection: Collection) => {
   try {
     const result = await collection.updateOne(
       {
-        type: "lastUpdatedDate",
+        _id: new ObjectId(lastUpdatedDateObjId),
       },
       { $set: { type: "lastUpdatedDate", lastUpdatedDate: new Date() } },
       { upsert: true }
@@ -475,7 +488,7 @@ export const updatePredictionFreezeDateQuery = async (
   try {
     const result = await collection.updateOne(
       {
-        type: "predictionFreezeDate",
+        _id: new ObjectId(predictionFreezeDateObjId),
       },
       {
         $set: {
@@ -505,7 +518,7 @@ export const updateNoOfPredictionsQuery = async (
   try {
     const result = await collection.updateOne(
       {
-        type: "noOfPredictions",
+        _id: new ObjectId(noOfPredictionsObjId),
       },
       {
         $set: {

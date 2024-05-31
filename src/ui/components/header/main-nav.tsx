@@ -28,9 +28,6 @@ export const MainNav = ({ children, session }: Props) => {
 
   const [mobMenuOpen, toggleMobMenu] = useState(false);
 
-  {
-    /**@todo Make mobile menu close if content outside of it is tapped */
-  }
   const handleMobMenuCick = () => {
     toggleMobMenu(!mobMenuOpen);
   };
@@ -60,45 +57,54 @@ export const MainNav = ({ children, session }: Props) => {
   );
   return (
     <>
-      <div className={styles.pinned_header}>
-        <div className={styles.logo}>
-          <Link href="/" className={styles.link}>
-            <div className={styles.icon}>
-              <Icon type="trophy" strokeWidth={2} />
-            </div>
-            Predict The Standings
-          </Link>
+      <div className={styles.mob_con}>
+        <div className={styles.pinned_header}>
+          <div className={styles.logo}>
+            <Link href="/" className={styles.link}>
+              <div className={styles.icon}>
+                <Icon type="trophy" strokeWidth={2} />
+              </div>
+              Predict The Standings
+            </Link>
+          </div>
+          <button
+            className={`${styles.menu_button} ${
+              mobMenuOpen ? styles.menu_open : ""
+            }`}
+            onClick={handleMobMenuCick}
+            aria-label="Mobile menu">
+            <span className={styles.menu_button__line} />
+            <span className={styles.menu_button__line} />
+            <span className={styles.menu_button__line} />
+            <span className={styles.menu_button__line} />
+          </button>
         </div>
-        <button
-          className={`${styles.menu_button} ${
-            mobMenuOpen ? styles.menu_open : ""
-          }`}
-          onClick={handleMobMenuCick}
-          aria-label="Mobile menu">
-          <span className={styles.menu_button__line} />
-          <span className={styles.menu_button__line} />
-          <span className={styles.menu_button__line} />
-          <span className={styles.menu_button__line} />
-        </button>
+        <nav
+          className={`${styles.primary_menu} ${
+            mobMenuOpen ? "" : commonStyles.mobile_hide
+          }`}>
+          <hr />
+          <div>{children}</div>
+          <hr />
+          <div>{predictionLinks}</div>
+          <hr />
+          <div>
+            <HeaderLink href="/help" icon="help">
+              Help
+            </HeaderLink>
+            <Dropdown label="Accessibility">
+              <AccessibilityOptions />
+            </Dropdown>
+          </div>
+        </nav>
       </div>
-      <nav
-        className={`${styles.primary_menu} ${
-          mobMenuOpen ? "" : commonStyles.mobile_hide
-        }`}>
-        <hr />
-        <div>{children}</div>
-        <hr />
-        <div>{predictionLinks}</div>
-        <hr />
-        <div>
-          <HeaderLink href="/help" icon="help">
-            Help
-          </HeaderLink>
-          <Dropdown label="Accessibility">
-            <AccessibilityOptions />
-          </Dropdown>
-        </div>
-      </nav>
+      <div
+        onClick={() => {
+          toggleMobMenu(false);
+        }}
+        className={`${styles.menu_background} ${
+          mobMenuOpen ? styles.menu_open : ""
+        }`}></div>
     </>
   );
 };

@@ -303,16 +303,21 @@ const addRoundsOnTopToUsers = (
   rounds: Round[],
   users: UserGameDataMap
 ): UserGameDataMap => {
-  rounds.forEach((round, roundIndex) => {
-    for (const entrantType in round.leaderboards) {
+  /**Clear out any previous roundsTop arrays to avoid duplication */
+  for (const user of Object.values(users)) {
+    delete user.roundsTop;
+  }
+  for (const entrantType in rounds[0].leaderboards) {
+    /**Loop over each round, find who is top of the leaderboard, and add the round number to their roundsTop[entrantType] array */
+    rounds.forEach((round, roundIndex) => {
       const userTopThisRound = users[round.leaderboards[entrantType][0].userId];
       if (userTopThisRound?.roundsTop === undefined)
         userTopThisRound.roundsTop = {};
       if (userTopThisRound.roundsTop[entrantType] === undefined)
         userTopThisRound.roundsTop[entrantType] = [];
       userTopThisRound.roundsTop[entrantType].push(roundIndex + 1);
-    }
-  });
+    });
+  }
   return users;
 };
 

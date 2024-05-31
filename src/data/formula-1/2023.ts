@@ -838,7 +838,7 @@ let rounds: Round[] = [
 
 const allEntrants = { drivers: drivers, teams: teams };
 const id = "2023";
-const isGameDataLocked = true;
+const isGameDataLocked = false;
 const isSeasonOver = true;
 const predictionFreezeDate = new Date("2023-02-29T11:30:00");
 const predictionsOpen = true;

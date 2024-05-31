@@ -1,8 +1,10 @@
 import { Metadata } from "next";
 
+import { allPlSeasonData } from "@data/premier-league/season-data";
+
 import { Panel } from "@components/panels/panel";
 import { PanelHeading } from "@components/panels/panel-heading";
-import Icon from "@ui/svgs/icons/sq-icon";
+import { EntrantRow } from "@components/entrant-table/entrant-row";
 
 import styles from "@styles/help.module.scss";
 import entrantTableStyles from "@components/entrant-table/entrant-table.module.scss";
@@ -76,61 +78,27 @@ const Page = () => {
       <div className={styles.example_con}>
         <div className={styles.example}>
           <h2>Example Prediction Table</h2>
-          {/**@todo Use EntrantRow instead of manually writing out the rows */}
           <table className={entrantTableStyles.table}>
             <tbody>
               <BlankTableRow />
-              <tr className={entrantTableStyles.table_row}>
-                <td className={entrantTableStyles.position_cell}>2</td>
-                <td className={entrantTableStyles.flair_cell}>
-                  <span
-                    className={`${entrantTableStyles.flair}`}
-                    style={{ backgroundColor: "#AAD2F3" }}></span>
-                </td>
-                <td className={entrantTableStyles.name_cell}>
-                  <span>Manchester City</span>
-                </td>
-                <td
-                  className={`${entrantTableStyles.pos_diff_cell} ${entrantTableStyles.perfect}`}>
-                  <Icon type={"success"} strokeWidth={2} />
-                </td>
-              </tr>
-              <tr className={entrantTableStyles.table_row}>
-                <td className={entrantTableStyles.position_cell}>3</td>
-                <td className={entrantTableStyles.flair_cell}>
-                  <span
-                    className={`${entrantTableStyles.flair}`}
-                    style={{ backgroundColor: "#EF0107" }}></span>
-                </td>
-                <td className={entrantTableStyles.name_cell}>
-                  <span>Arsenal</span>
-                </td>
-                <td
-                  className={`${entrantTableStyles.pos_diff_cell} ${entrantTableStyles.up}`}>
-                  <>
-                    <i></i>
-                    <span>5</span>
-                  </>
-                </td>
-              </tr>
-              <tr className={entrantTableStyles.table_row}>
-                <td className={entrantTableStyles.position_cell}>4</td>
-                <td className={entrantTableStyles.flair_cell}>
-                  <span
-                    className={`${entrantTableStyles.flair}`}
-                    style={{ backgroundColor: "#034694" }}></span>
-                </td>
-                <td className={entrantTableStyles.name_cell}>
-                  <span>Chelsea</span>
-                </td>
-                <td
-                  className={`${entrantTableStyles.pos_diff_cell} ${entrantTableStyles.down}`}>
-                  <>
-                    <i></i>
-                    <span>2</span>
-                  </>
-                </td>
-              </tr>
+              <EntrantRow
+                entrant={allPlSeasonData[0].allEntrants["teams"]["mci"]}
+                index={1}
+                posDiff={0}
+                shortHandCompStr={allPlSeasonData[0].competitionStrs.shortHand}
+              />
+              <EntrantRow
+                entrant={allPlSeasonData[0].allEntrants["teams"]["ars"]}
+                index={2}
+                posDiff={5}
+                shortHandCompStr={allPlSeasonData[0].competitionStrs.shortHand}
+              />
+              <EntrantRow
+                entrant={allPlSeasonData[0].allEntrants["teams"]["che"]}
+                index={3}
+                posDiff={-2}
+                shortHandCompStr={allPlSeasonData[0].competitionStrs.shortHand}
+              />
               <BlankTableRow />
             </tbody>
           </table>
@@ -170,7 +138,7 @@ const Page = () => {
           </li>
           <li>
             Other than that, the actual standings will be ordered as they are in
-            real life (including factoring things like point deductions).
+            real life (including factors like point deductions).
           </li>
         </ul>
       </Panel>

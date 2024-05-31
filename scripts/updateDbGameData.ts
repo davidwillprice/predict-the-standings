@@ -1,6 +1,6 @@
 import "dotenv/config";
 import dotenv from "dotenv";
-import { MongoClient } from "mongodb";
+import { MongoClient, ObjectId } from "mongodb";
 
 import { allEurovisionSeasonData } from "@data/eurovision/season-data";
 import { allF1SeasonData } from "@data/formula-1/season-data";
@@ -13,6 +13,8 @@ import {
   updateNoOfPredictionsQuery,
   updatePredictionFreezeDateQuery,
 } from "@lib/db-functions";
+import { statsDataObjId } from "@data/object-ids";
+
 import { AllLocalSeasonData } from "@custom-types/game-types";
 
 async function connectToMongo() {
@@ -87,7 +89,9 @@ async function submitCompetitionGameData(
     /**Update/Add the stats data to the DB */
     /**@todo This would be moved to the db-functions.tsx file */
     const result = await collection.updateOne(
-      { type: "statsData" },
+      {
+        _id: new ObjectId(statsDataObjId),
+      },
       {
         $set: {
           type: "statsData",

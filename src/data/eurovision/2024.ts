@@ -111,7 +111,7 @@ let rounds: Round[] = [
 
 const allEntrants = { countries: countries };
 const id = "2024";
-const isGameDataLocked = true;
+const isGameDataLocked = false;
 const isSeasonOver = true;
 const predictionFreezeDate = new Date("2024-05-11T22:30:00");
 const predictionsOpen = true;
