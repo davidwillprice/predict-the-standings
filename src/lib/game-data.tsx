@@ -79,7 +79,7 @@ export const createGameData = async (
     mostUpdatedPredictionUserIds: mostUpdatedPredictionUserIds,
     roundStats: rounds.map((round) => {
       return {
-        entrantDiffTotals: round.entrantDiffTotals,
+        accurateEntrants: round.accurateEntrants,
       };
     }),
     users: users,
@@ -397,6 +397,22 @@ const generateEntrantDiffTotals = (
       round.entrantDiffTotals[entrantType].sort((a, b) =>
         a.diffTotal > b.diffTotal ? 1 : -1
       );
+
+      /**Add the most and least accurate entrants for every round to a seperate `round.accurateEntrants` value so `round.entrantDiffTotals` can be deleted */
+      const diffTotalArr = round.entrantDiffTotals[entrantType];
+      const mostAccEntrant = round.entrantDiffTotals[entrantType][0];
+      const leastAccEntrant =
+        round.entrantDiffTotals[entrantType][diffTotalArr.length - 1];
+      round.accurateEntrants[entrantType] = {
+        most: {
+          entrantId: mostAccEntrant.entrantId,
+          diffTotal: mostAccEntrant.diffTotal,
+        },
+        least: {
+          entrantId: leastAccEntrant.entrantId,
+          diffTotal: leastAccEntrant.diffTotal,
+        },
+      };
     }
   });
 
