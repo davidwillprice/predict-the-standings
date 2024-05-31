@@ -63,7 +63,9 @@ export const EntrantStats = async ({
             <div className={styles.entrantPredictions}>
               <EntrantPredictions
                 allEntrants={JSON.parse(JSON.stringify(allEntrants))}
+                lastRound={isSeasonOver ? rounds[rounds.length - 1] : null}
               />
+              <hr />
               <EntrantAccuracy
                 entrants={JSON.parse(JSON.stringify(allEntrants))}
                 isSeasonOver={isSeasonOver}
@@ -77,8 +79,9 @@ export const EntrantStats = async ({
           {competitionStrs.shortHand === "f1" && (
             <Panel>
               <HeadToHeads
-                driverIdArr={rounds[0].standings["drivers"]}
                 allEntrants={JSON.parse(JSON.stringify(allEntrants))}
+                driverIdArr={rounds[0].standings["drivers"]}
+                lastRound={isSeasonOver ? rounds[rounds.length - 1] : null}
                 teamIdArr={rounds[rounds.length - 1].standings["teams"]}
               />
             </Panel>

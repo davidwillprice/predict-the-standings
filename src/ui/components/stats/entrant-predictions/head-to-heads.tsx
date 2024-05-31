@@ -1,19 +1,53 @@
 import { Fragment } from "react";
 
-import type { Entrant, EntrantId, Entrants } from "@custom-types/game-types";
+import { numberToOrdinalNumber } from "@lib/misc";
+
+import type {
+  Entrant,
+  EntrantId,
+  Entrants,
+  Round,
+} from "@custom-types/game-types";
 
 import styles from "@components/stats/stats.module.scss";
-
-interface HeadToHeadProps {
-  teammates: Entrant[];
-}
 interface HeadToHeadsProps {
-  driverIdArr: EntrantId[];
   allEntrants: { [key: string]: Entrants };
+  driverIdArr: EntrantId[];
+  lastRound: Round | null;
   teamIdArr: EntrantId[];
 }
 
-const HeadToHead = ({ teammates }: HeadToHeadProps) => {
+export const HeadToHeads = ({
+  allEntrants,
+  driverIdArr,
+  lastRound,
+  teamIdArr,
+}: HeadToHeadsProps) => {
+  const drivers = driverIdArr.map((id) => allEntrants["drivers"][id]);
+  const teams = teamIdArr.map((id) => allEntrants["teams"][id]);
+  return (
+    <div className={styles.head_to_heads}>
+      <h3>% of People Who Favoured Each&nbsp;Teammate</h3>
+      {teams.map((team, index) => (
+        <Fragment key={team.name}>
+          <HeadToHead
+            key={team.name}
+            lastRound={lastRound}
+            teammates={drivers.filter((driver) => driver.color === team.color)}
+          />
+          {index !== teams.length - 1 ? <hr /> : ""}
+        </Fragment>
+      ))}
+    </div>
+  );
+};
+
+interface HeadToHeadProps {
+  lastRound: Round | null;
+  teammates: Entrant[];
+}
+
+const HeadToHead = ({ lastRound, teammates }: HeadToHeadProps) => {
   let no1Driver;
   let no2Driver;
   if (
@@ -33,6 +67,35 @@ const HeadToHead = ({ teammates }: HeadToHeadProps) => {
   } else {
     throw new Error("No driver head to head data");
   }
+
+  let actualResultText;
+
+  if (lastRound) {
+    const no1DriverActualPos =
+      lastRound.standings.drivers.indexOf(no1Driver.sName) + 1;
+    const no2DriverActualPos =
+      lastRound.standings.drivers.indexOf(no2Driver.sName) + 1;
+
+    const betterDriver =
+      no1DriverActualPos < no2DriverActualPos
+        ? { driver: no1Driver, pos: no1DriverActualPos }
+        : { driver: no2Driver, pos: no2DriverActualPos };
+    const worseDriver =
+      no1DriverActualPos < no2DriverActualPos
+        ? { driver: no2Driver, pos: no2DriverActualPos }
+        : { driver: no1Driver, pos: no1DriverActualPos };
+
+    const diffBetweenFinishes = Math.abs(betterDriver.pos - worseDriver.pos);
+    actualResultText = (
+      <p className={styles.avgPos}>
+        {`In the final standings, ${betterDriver.driver.name} finished 
+        ${numberToOrdinalNumber(betterDriver.pos)}, ${diffBetweenFinishes} 
+        position${diffBetweenFinishes > 1 ? "s" : ""} ahead of 
+        ${worseDriver.driver.name}.`}
+      </p>
+    );
+  }
+
   const avgPosDifBetweenNo1AndNo2 =
     no1Driver.avgPrePos && no2Driver.avgPrePos
       ? Math.round((no2Driver.avgPrePos - no1Driver.avgPrePos) * 10) / 10
@@ -46,7 +109,6 @@ const HeadToHead = ({ teammates }: HeadToHeadProps) => {
           color: no1Driver.contrastColor,
         }}>
         {/**@todo Add rough logo or subtle team text to background of head to heads */}
-        {/**@todo When season ends, tick which driver actually won the head to head */}
         <div className={styles.driver_details}>
           <p>
             {no1Driver.pcPredictedToBeatTeammate}% {no1Driver.name}
@@ -81,29 +143,7 @@ const HeadToHead = ({ teammates }: HeadToHeadProps) => {
             : `${no1Driver.name} and ${no2Driver.name} had the same average predicted finish position (${no1Driver.avgPrePos}).`}
         </p>
       )}
-    </div>
-  );
-};
-
-export const HeadToHeads = ({
-  driverIdArr,
-  allEntrants,
-  teamIdArr,
-}: HeadToHeadsProps) => {
-  const drivers = driverIdArr.map((id) => allEntrants["drivers"][id]);
-  const teams = teamIdArr.map((id) => allEntrants["teams"][id]);
-  return (
-    <div className={styles.head_to_heads}>
-      <h3>% of People Who Favoured Each&nbsp;Teammate</h3>
-      {teams.map((team, index) => (
-        <Fragment key={team.name}>
-          <HeadToHead
-            key={team.name}
-            teammates={drivers.filter((driver) => driver.color === team.color)}
-          />
-          {index !== teams.length - 1 ? <hr /> : ""}
-        </Fragment>
-      ))}
+      {actualResultText ? actualResultText : ""}
     </div>
   );
 };

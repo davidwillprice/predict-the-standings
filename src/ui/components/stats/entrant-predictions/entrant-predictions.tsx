@@ -2,20 +2,21 @@
 
 import { useState } from "react";
 
-import { sortEntrantsAlphabetically } from "@lib/misc";
+import { numberToOrdinalNumber, sortEntrantsAlphabetically } from "@lib/misc";
 
 import { Chart } from "./chart";
 
-import { AllEntrants } from "@custom-types/game-types";
+import { AllEntrants, Round } from "@custom-types/game-types";
 
 import styles from "@components/stats/stats.module.scss";
 import inputStyles from "@styles/select-input.module.scss";
 
 interface Props {
   allEntrants: AllEntrants;
+  lastRound: Round | null;
 }
 
-export const EntrantPredictions = ({ allEntrants }: Props) => {
+export const EntrantPredictions = ({ allEntrants, lastRound }: Props) => {
   const entrantTypeArr = Object.keys(allEntrants);
   const initialEntrantType = entrantTypeArr[0];
 
@@ -90,6 +91,19 @@ export const EntrantPredictions = ({ allEntrants }: Props) => {
       <div className={styles.chart}>
         <Chart entrant={JSON.parse(JSON.stringify(selectedEntrant))} />
       </div>
+      {lastRound ? (
+        <p style={{ textAlign: "center" }}>
+          {`In the final standings, ${
+            selectedEntrant.name
+          } finished ${numberToOrdinalNumber(
+            lastRound.standings[selectedEntrantType].indexOf(
+              selectedEntrant.sName
+            ) + 1
+          )}.`}
+        </p>
+      ) : (
+        ""
+      )}
     </div>
   );
 };
