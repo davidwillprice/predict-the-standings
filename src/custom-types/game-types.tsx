@@ -231,8 +231,8 @@ export interface RoundPerformance {
 export interface GameData {
   allEntrantStats: { [entrantType: string]: EntrantStats };
   controversialUserIds: ControversialUserIds;
-  latestSubmissionUserId: UserId;
-  leaderboardToppingUserIds: LeaderboardToppingUserIds;
+  latestSubmissionUserId: UserId | null;
+  leaderboardToppingUserIds: LeaderboardToppingUserIds | null;
   mostUpdatedPredictionUserIds: MostUpdatedPredictionUserIds;
   roundStats: {
     accurateEntrants: {

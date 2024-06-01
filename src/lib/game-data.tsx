@@ -48,12 +48,18 @@ export const createGameData = async (
 
   users = addRoundsOnTopToUsers(rounds, users);
 
+  const haveUsersSubmittedPredictionsYet = Object.values(users).length > 1;
+
   /**Storing playerIds for use on the player stats page */
   const controversialUserIds = getControversialUserGameDataMap(users);
   const mostUpdatedPredictionUserIds =
     getUpdatedPredictionUserGameDataMap(users);
-  const latestSubmissionUserId = getlatestSubmissionUserId(users);
-  const leaderboardToppingUserIds = getLeaderboardToppingUserIds(users);
+  const latestSubmissionUserId = haveUsersSubmittedPredictionsYet
+    ? getlatestSubmissionUserId(users)
+    : null;
+  const leaderboardToppingUserIds = haveUsersSubmittedPredictionsYet
+    ? getLeaderboardToppingUserIds(users)
+    : null;
 
   users = addLeaderboardDataToUserGameDataMap(rounds, users);
 
@@ -132,6 +138,9 @@ export const calcUserGameDataMapPerformance = (
   rounds: Round[],
   user: UserGameData
 ) => {
+  /**If there is no round data, skip calculating performance */
+  if (!rounds[0]) return user;
+
   for (const entrantType of Object.keys(rounds[0].standings)) {
     /**If they already have a leaderboardPos, then this is being triggered JIT to get data for the leaderboard. If not, user.season is an empty object that needs to be totally populated */
     let hasLeaderboardPos: boolean;
@@ -303,6 +312,8 @@ const addRoundsOnTopToUsers = (
   rounds: Round[],
   users: UserGameDataMap
 ): UserGameDataMap => {
+  /**If there is no round data, skip calculating performance */
+  if (!rounds[0]) return users;
   /**Clear out any previous roundsTop arrays to avoid duplication */
   for (const user of Object.values(users)) {
     delete user.roundsTop;
