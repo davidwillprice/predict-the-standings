@@ -22,11 +22,13 @@ export const Formula1Nav = ({ params, session }: Props) => {
   } = allF1SeasonData.find((seasonData) => seasonData.id === params.season) ||
   allF1SeasonData[0];
 
-  const hasMadePredictions = checkIfUserHasMadePrediction(
-    seasonStr,
-    competitionStrs.shortHand,
-    session?.user
-  );
+  const hasMadePredictions = session
+    ? checkIfUserHasMadePrediction(
+        seasonStr,
+        competitionStrs.shortHand,
+        session?.user
+      )
+    : false;
 
   return (
     <>

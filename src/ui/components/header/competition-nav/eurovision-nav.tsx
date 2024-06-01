@@ -23,11 +23,13 @@ export const EurovisionNav = ({ params, session }: Props) => {
     (seasonData) => seasonData.id === params.season
   ) || allEurovisionSeasonData[0];
 
-  const hasMadePredictions = checkIfUserHasMadePrediction(
-    seasonStr,
-    competitionStrs.shortHand,
-    session?.user
-  );
+  const hasMadePredictions = session
+    ? checkIfUserHasMadePrediction(
+        seasonStr,
+        competitionStrs.shortHand,
+        session?.user
+      )
+    : false;
 
   return (
     <>

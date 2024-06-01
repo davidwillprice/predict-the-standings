@@ -189,6 +189,8 @@ export const convertDocumentToUserGameData = (
     userGameData.predictionsFromAvg = doc.predictionsFromAvg;
   if (doc.timesPredictionsUpdated)
     userGameData.timesPredictionsUpdated = doc.timesPredictionsUpdated;
+  if (doc.controversyPercentile)
+    userGameData.controversyPercentile = doc.controversyPercentile;
   if (doc.season) userGameData.season = doc.season;
   // if (doc.leaderboardPositions)
   //   userGameData.leaderboardPositions = doc.leaderboardPositions;

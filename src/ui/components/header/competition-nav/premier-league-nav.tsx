@@ -22,11 +22,13 @@ export const PremierLeagueNav = ({ params, session }: Props) => {
   } = allPlSeasonData.find((seasonData) => seasonData.id === params.season) ||
   allPlSeasonData[0];
 
-  const hasMadePredictions = checkIfUserHasMadePrediction(
-    seasonStr,
-    competitionStrs.shortHand,
-    session?.user
-  );
+  const hasMadePredictions = session
+    ? checkIfUserHasMadePrediction(
+        seasonStr,
+        competitionStrs.shortHand,
+        session?.user
+      )
+    : false;
 
   return (
     <>

@@ -233,9 +233,17 @@ export const GameContainer = ({
 
   /**Enables loading skeleton UI while slider is debouncing*/
   const addDebouncingState = () => {
+    /**@todo Fix the screen from scrolling while the RoundSlider is being adjusted*/
     setIsDebouncing(true);
   };
-  console.log(usersData);
+
+  /**Lock the vertical scrolling while the slider is being used */
+  if (isDebouncing) {
+    document.body.style.overflowY = "hidden";
+  } else {
+    document.body.style.overflowY = "";
+  }
+
   /**Updates entrantType in query string - F1 only currently */
   const changeEntrantTypeHandler = () => {
     const newEntrantType = entrantType === "teams" ? "drivers" : "constructors";
@@ -316,6 +324,7 @@ export const GameContainer = ({
                   usersPerPage={usersPerPage}
                 />
               ) : (
+                /**@todo Create skeleton for when there is a `user` query string in the params */
                 <LeaderboardSkeleton usersPerPage={usersPerPage} />
               )}
             </div>
