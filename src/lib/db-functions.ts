@@ -6,6 +6,7 @@ import { ObjectId } from "mongodb";
 import {
   convertDocArrToUserGameDataMap,
   convertDocumentToUserGameData,
+  getCollectionObjFromPredictionsMadeFor,
 } from "./misc";
 import {
   lastUpdatedDateObjId,
@@ -23,6 +24,7 @@ import {
   UserGameData,
   UserGameDataMap,
 } from "@custom-types/game-types";
+import { UserDataFromSession } from "@custom-types/misc";
 
 export const getlastUpdatedDate = async (
   season: string,
@@ -241,7 +243,6 @@ export const getStatsDataQuery = async (
   }
 };
 
-/**@todo Update display name in all the user's prediction data for every season/competition they've competed in?*/
 export const submitDisplayNameQuery = async (
   submittedDisplayName: string,
   userId: string
@@ -249,7 +250,7 @@ export const submitDisplayNameQuery = async (
   const client = await clientPromise;
   try {
     const db = client.db("pts");
-    const usersCollection = db.collection("users");
+    const usersCollection = db.collection<UserDataFromSession>("users");
     const userIdObj = new ObjectId(userId);
 
     // Find the user submitting a display name in DB
@@ -278,28 +279,18 @@ export const submitDisplayNameQuery = async (
 
     if (!updatedUser) throw new Error("Failed to update user");
 
-    ////If they have made any predictions, update their display name in all their game data
-    if (
-      existingUser.predictionsMadeFor &&
-      Object.values(existingUser.predictionsMadeFor).length > 0
-    ) {
-      //Create an array with all the collections which will need to be updated
-      let gameDataCollections: string[] = [];
-      const predictionsMadeFor: { [competition: ShortHandCompStr]: string[] } =
-        existingUser.predictionsMadeFor;
-      for (const [competition, seasonArr] of Object.entries(
-        predictionsMadeFor
-      )) {
-        seasonArr.forEach((seasonStr) =>
-          gameDataCollections.push(competition + seasonStr)
-        );
-      }
+    /**Create an array of all the _id's of the user's predictions and their collection names so the display name can be updated there */
+    const gameDataCollectionObjArr =
+      getCollectionObjFromPredictionsMadeFor(updatedUser);
+
+    //If they haven't made any predictions, skip this
+    if (gameDataCollectionObjArr) {
       //Update the user's display name in all collections
-      gameDataCollections.forEach((collectionName) => {
-        const collection = db.collection(collectionName);
+      gameDataCollectionObjArr.forEach((collectionObj) => {
+        const collection = db.collection(collectionObj.collectionName);
         collection.updateOne(
           {
-            userId: userId,
+            _id: new ObjectId(collectionObj._id),
           },
           {
             $set: {
@@ -320,7 +311,7 @@ export const submitPredictionsQuery = async (
   entrantArrs: { [entrantType: string]: string[] },
   season: string,
   userId: string
-): Promise<string | void> => {
+): Promise<string> => {
   const client = await clientPromise;
   try {
     const db = client.db("pts");
@@ -344,28 +335,40 @@ export const submitPredictionsQuery = async (
       const prevTimesPredictionsUpdated =
         olduserPredictionDoc?.timesPredictionsUpdated;
 
-      const userPredictionDoc = {
-        displayName: displayName,
-        lastSubmissionTime: new Date(),
-        predictions: entrantArrs,
-        timesPredictionsUpdated: prevTimesPredictionsUpdated
-          ? prevTimesPredictionsUpdated + 1
-          : 1,
-        type: "userData",
-        userId: userId,
-        userType: "standard",
+      /**@todo Get via _id if it exists on the user's predictionsMadeFor */
+      const filter = { userId: userId };
+      const update = {
+        $set: {
+          displayName: displayName,
+          lastSubmissionTime: new Date(),
+          predictions: entrantArrs,
+          timesPredictionsUpdated: prevTimesPredictionsUpdated
+            ? prevTimesPredictionsUpdated + 1
+            : 1,
+          type: "userData",
+          userId: userId,
+          userType: "standard",
+        },
       };
-      const result = await collection.updateOne(
-        { userId: userId },
-        { $set: userPredictionDoc },
-        { upsert: true }
-      );
-      addPredictionToUserDataQuery(competition, season, userId);
+
+      const result = await collection.findOneAndUpdate(filter, update, {
+        returnDocument: "after",
+        upsert: true,
+      });
 
       if (!result)
         throw new Error(
           `Failed to update user prediction data for ${competition + season}`
         );
+
+      addPredictionToUserDataQuery(
+        competition,
+        result._id.toString(),
+        season,
+        userId
+      );
+
+      return result._id.toString();
     }
   } catch (error) {
     throw error;
@@ -375,6 +378,7 @@ export const submitPredictionsQuery = async (
 /**Adds the latest competition/season the user has made predictions for to their user data */
 export const addPredictionToUserDataQuery = async (
   competition: ShortHandCompStr,
+  userGameDataId: string,
   seasonStr: string,
   userId: string
 ): Promise<string | void> => {
@@ -387,7 +391,10 @@ export const addPredictionToUserDataQuery = async (
       { _id: new ObjectId(userId) },
       {
         $addToSet: {
-          [`predictionsMadeFor.${competition}`]: seasonStr, // Add seasonStr to competition set
+          [`predictionsMadeFor.${competition}`]: {
+            season: seasonStr,
+            _id: userGameDataId,
+          }, // Add seasonStr & predictionId to competition set
         },
       }
     );
@@ -540,14 +547,14 @@ export const updateNoOfPredictionsQuery = async (
 
 export const anonymiseUserGameDataQuery = async (
   collectionStr: string,
-  userId: string
+  _id: string
 ) => {
   const client = await clientPromise;
   try {
     const db = client.db("pts");
     const collection = db.collection(collectionStr);
     const result = await collection.updateOne(
-      { userId: userId },
+      { _id: new Object(_id) },
       { $set: { displayName: "[DELETED]" } }
     );
 

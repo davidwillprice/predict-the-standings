@@ -1,4 +1,9 @@
-import type { Entrant, UserGameDataMap } from "@custom-types/game-types";
+import type {
+  CollectionObj,
+  Entrant,
+  ShortHandCompStr,
+  UserGameDataMap,
+} from "@custom-types/game-types";
 import { UserGameData } from "@custom-types/game-types";
 import { UserDataFromSession } from "@custom-types/misc";
 import { WithId } from "mongodb";
@@ -127,19 +132,30 @@ export const getLengthOfLongestConsecutiveNumbers = (arr: number[]): number => {
   return longestStreak;
 };
 
-/**Convert strings from `predictionsMadeFor` via the user session */
-export const getCollectionStrFromPredictionsMadeFor = (
+/**Convert strings from `predictionsMadeFor` via the user session into collection game data names*/
+export const getCollectionObjFromPredictionsMadeFor = (
   user: UserDataFromSession
-): string[] => {
-  let gameDataCollections: string[] = [];
+): CollectionObj[] | null => {
+  if (
+    !user.predictionsMadeFor ||
+    Object.values(user.predictionsMadeFor).length === 0
+  ) {
+    return null;
+  }
+
+  let gameDataCollectionObjArr: CollectionObj[] = [];
+
   for (const [competition, seasonArr] of Object.entries(
     user.predictionsMadeFor
   )) {
-    seasonArr.forEach((seasonStr) =>
-      gameDataCollections.push(competition + seasonStr)
-    );
+    seasonArr.forEach((seasonObj) => {
+      gameDataCollectionObjArr.push({
+        collectionName: competition + seasonObj.season,
+        _id: seasonObj._id,
+      });
+    });
   }
-  return gameDataCollections;
+  return gameDataCollectionObjArr;
 };
 
 export const convertDocArrToUserGameDataMap = (
@@ -178,6 +194,19 @@ export const convertDocumentToUserGameData = (
   //   userGameData.leaderboardPositions = doc.leaderboardPositions;
   if (doc.information) userGameData.information = doc.information;
   return userGameData;
+};
+
+export const checkIfUserHasMadePrediction = (
+  seasonStr: string,
+  shortHandCompStr: ShortHandCompStr,
+  user: UserDataFromSession
+): boolean => {
+  return user.predictionsMadeFor[shortHandCompStr] &&
+    user.predictionsMadeFor[shortHandCompStr].find(
+      (seasonObj) => seasonObj.season === seasonStr
+    )
+    ? true
+    : false;
 };
 
 //3 as e

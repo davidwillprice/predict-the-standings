@@ -4,6 +4,7 @@ import HeaderLink from "@components/header/header-link";
 import { SeasonSelector } from "../season-selector";
 
 import { allEurovisionSeasonData } from "@data/eurovision/season-data";
+import { checkIfUserHasMadePrediction } from "@lib/misc";
 
 type Props = {
   params: { season: string };
@@ -22,11 +23,11 @@ export const EurovisionNav = ({ params, session }: Props) => {
     (seasonData) => seasonData.id === params.season
   ) || allEurovisionSeasonData[0];
 
-  const hasMadePredictions =
-    session?.user?.predictionsMadeFor?.[competitionStrs.shortHand] &&
-    session?.user?.predictionsMadeFor?.[competitionStrs.shortHand].includes(
-      seasonStr
-    );
+  const hasMadePredictions = checkIfUserHasMadePrediction(
+    seasonStr,
+    competitionStrs.shortHand,
+    session?.user
+  );
 
   return (
     <>
@@ -46,7 +47,7 @@ export const EurovisionNav = ({ params, session }: Props) => {
         <HeaderLink
           href={`/${competitionStrs.hyphenated}/${seasonStr}/predict`}
           icon="listBullet">
-          Submit Predictions
+          {`${hasMadePredictions ? "Edit" : "Submit"} Predictions`}
         </HeaderLink>
       )}
       <HeaderLink

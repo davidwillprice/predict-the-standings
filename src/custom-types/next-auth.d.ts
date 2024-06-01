@@ -7,7 +7,9 @@ declare module "next-auth" {
       id: string;
       displayName: string;
       lastDisplayNameSubmissionDate: number;
-      predictionsMadeFor: { [competition: string]: Set<string> };
+      predictionsMadeFor: {
+        [competition: string]: { season: string; _id: string }[];
+      };
     } & DefaultSession["user"];
   }
   interface User extends UserDataFromSession {}

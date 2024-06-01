@@ -15,14 +15,14 @@ import Link from "next/link";
 import { PanelHeading } from "@components/panels/panel-heading";
 import Icon from "@ui/svgs/icons/sq-icon";
 import {
-  getCollectionStrFromPredictionsMadeFor,
+  getCollectionObjFromPredictionsMadeFor,
   numberToOrdinalNumber,
   toTitleCase,
 } from "@lib/misc";
 import { Panel } from "@components/panels/panel";
 
 import { User } from "next-auth";
-import { CompetitionStrings } from "@custom-types/game-types";
+import { CollectionObj, CompetitionStrings } from "@custom-types/game-types";
 
 import styles from "@styles/competitions.module.scss";
 import btnConstyles from "@components/button/button-containers.module.scss";
@@ -34,104 +34,105 @@ interface Props {
 }
 
 interface PerformanceRow {
-  accurracy: number | null;
+  accurracy: number | undefined;
   competitionStrs: CompetitionStrings;
   entrantType: string;
-  leaderboardPos: number | null;
+  leaderboardPos: number | undefined;
   seasonStatus: string;
   seasonStr: string;
 }
-
+/**@todo Add pagination */
 export const PerformanceOverview = ({ user }: Props) => {
   const [performanceRowArr, setPerformanceRowArr] = useState<
     PerformanceRow[] | null
   >(null);
 
   useEffect(() => {
-    if (
-      user.predictionsMadeFor &&
-      Object.values(user.predictionsMadeFor).length > 0
-    ) {
-      /**Merge all local season data */
-      const allLocalSeasonData = allF1SeasonData.concat(
-        allEurovisionSeasonData,
-        allPlSeasonData
-      );
-
-      /**Get all strings from `predictionsMadeFor` via the user session */
-      let gameDataCollections = getCollectionStrFromPredictionsMadeFor(user);
-
-      /**@todo Add pagination */
-      const getAllGameDataForUser = () => {
-        /**Get the userPredictionData for every comp/season the user has predicted for */
-        return new Promise((_, reject) => {
-          Promise.all(
-            gameDataCollections.map((collectionName) =>
-              getSingleUserPredictionDataQuery(collectionName, "", user.id)
+    /**Get the userPredictionData for every comp/season the user has predicted for */
+    const getAllGameDataForUser = (
+      gameDataCollectionObjArr: CollectionObj[]
+    ) => {
+      return new Promise((_, reject) => {
+        Promise.all(
+          gameDataCollectionObjArr.map((collectionObj) =>
+            getSingleUserPredictionDataQuery(
+              collectionObj.collectionName,
+              "",
+              user.id
             )
           )
-            .then((res) => {
-              /**Combine the local season data and userGameData into just the data I need to display */
-              const tempPerformanceRowArr: PerformanceRow[] = [];
-              res.forEach((userGameData, index) => {
-                const localSeasonData = allLocalSeasonData.find(
-                  (seasonData) =>
-                    seasonData.competitionStrs.shortHand + seasonData.id ===
-                    gameDataCollections[index]
-                );
-                if (localSeasonData === undefined) {
-                  throw new Error("Couldn't find local data");
-                }
-                /**Generate the round performance data for current user as I need their accuracy value */
-                userGameData = calcUserGameDataMapPerformance(
-                  localSeasonData.rounds,
-                  userGameData
-                );
-                userGameData = calcRemainingRoundPerformanceData(userGameData);
-                for (const entrantType of Object.keys(
-                  userGameData.predictions
-                )) {
-                  tempPerformanceRowArr.push({
-                    accurracy:
-                      userGameData.season[entrantType][
-                        userGameData.season[entrantType].length - 1
-                      ].percentCorrect || null,
-                    competitionStrs: localSeasonData.competitionStrs,
-                    entrantType: entrantType,
-                    leaderboardPos:
-                      userGameData.season[entrantType][
-                        userGameData.season[entrantType].length - 1
-                      ].leaderboardPos || null,
-                    seasonStatus: localSeasonData.status,
-                    seasonStr: localSeasonData.id,
-                  });
-                }
-              });
-              /**Sort put rows which are completed at the bottom, else keep their order */
-              tempPerformanceRowArr.sort((compA, compB) => {
-                if (
-                  compA.seasonStatus === "completed" &&
-                  compB.seasonStatus !== "completed"
-                )
-                  return 1;
-                if (
-                  compA.seasonStatus !== "completed" &&
-                  compB.seasonStatus === "completed"
-                )
-                  return -1;
-                return -1;
-              });
-              setPerformanceRowArr(tempPerformanceRowArr);
-            })
-            .catch((err) => {
-              reject(err);
+        )
+          .then((res) => {
+            /**Combine the local season data and userGameData into just the data I need to display */
+            const tempPerformanceRowArr: PerformanceRow[] = [];
+            res.forEach((userGameData, index) => {
+              const localSeasonData = allLocalSeasonData.find(
+                (seasonData) =>
+                  seasonData.competitionStrs.shortHand + seasonData.id ===
+                  gameDataCollectionObjArr[index].collectionName
+              );
+              if (localSeasonData === undefined) {
+                throw new Error("Couldn't find local data");
+              }
+              /**Generate the round performance data for current user as I need their accuracy value */
+              userGameData = calcUserGameDataMapPerformance(
+                localSeasonData.rounds,
+                userGameData
+              );
+              userGameData = calcRemainingRoundPerformanceData(userGameData);
+              for (const entrantType of Object.keys(userGameData.predictions)) {
+                const roundPerformance = userGameData.season[entrantType];
+                tempPerformanceRowArr.push({
+                  accurracy: roundPerformance
+                    ? roundPerformance[roundPerformance.length - 1]
+                        .percentCorrect
+                    : undefined,
+                  competitionStrs: localSeasonData.competitionStrs,
+                  entrantType: entrantType,
+                  leaderboardPos: roundPerformance
+                    ? roundPerformance[roundPerformance.length - 1]
+                        .leaderboardPos
+                    : undefined,
+                  seasonStatus: localSeasonData.status,
+                  seasonStr: localSeasonData.id,
+                });
+              }
             });
-        });
-      };
+            /**Sort put rows which are completed at the bottom, else keep their order */
+            tempPerformanceRowArr.sort((compA, compB) => {
+              if (
+                compA.seasonStatus === "completed" &&
+                compB.seasonStatus !== "completed"
+              )
+                return 1;
+              if (
+                compA.seasonStatus !== "completed" &&
+                compB.seasonStatus === "completed"
+              )
+                return -1;
+              return -1;
+            });
+            setPerformanceRowArr(tempPerformanceRowArr);
+          })
+          .catch((err) => {
+            reject(err);
+          });
+      });
+    };
 
-      getAllGameDataForUser();
-    } else {
+    /**Merge all local season data */
+    const allLocalSeasonData = allF1SeasonData.concat(
+      allEurovisionSeasonData,
+      allPlSeasonData
+    );
+
+    /**Get all strings from `predictionsMadeFor` via the user session */
+    let gameDataCollectionObjArr = getCollectionObjFromPredictionsMadeFor(user);
+
+    if (gameDataCollectionObjArr === null) {
       setPerformanceRowArr([]);
+    } else {
+      getAllGameDataForUser(gameDataCollectionObjArr);
     }
   }, [user]);
   return (
@@ -202,26 +203,40 @@ export const PerformanceOverview = ({ user }: Props) => {
                         {competitionStrs.display} {seasonStr}{" "}
                         {competitionStrs.shortHand === "f1" && (
                           <>
-                            {" "}
-                            -{" "}
-                            {entrantType === "teams"
-                              ? "Constructors"
-                              : toTitleCase(entrantType)}
+                            {` - ${
+                              entrantType === "teams"
+                                ? "Constructors"
+                                : toTitleCase(entrantType)
+                            }`}
                           </>
                         )}
                       </p>
                     </div>
                   </td>
                   <td>
-                    <span className={styles.mobOnlyLabel}>
-                      Leaderboard Position:{" "}
-                      {/**@todo Would be nice to add how many other players there were/are */}
-                    </span>
-                    {leaderboardPos && numberToOrdinalNumber(leaderboardPos)}
+                    {/**@todo Hide <td> padding if empty on mobile */}
+                    {leaderboardPos ? (
+                      <>
+                        <span className={styles.mobOnlyLabel}>
+                          Leaderboard Position:{" "}
+                          {/**@todo Would be nice to add how many other players there were/are */}
+                        </span>{" "}
+                        {numberToOrdinalNumber(leaderboardPos)}
+                      </>
+                    ) : (
+                      ""
+                    )}
                   </td>
                   <td>
-                    <span className={styles.mobOnlyLabel}>Accuracy: </span>
-                    {accurracy}%
+                    {/**@todo Hide <td> padding if empty on mobile */}
+                    {accurracy ? (
+                      <>
+                        <span className={styles.mobOnlyLabel}>Accuracy: </span>{" "}
+                        {accurracy + "%"}
+                      </>
+                    ) : (
+                      ""
+                    )}
                   </td>
                   <td className={styles.status}>
                     {seasonStatus !== "completed" ? seasonStatus : ""}

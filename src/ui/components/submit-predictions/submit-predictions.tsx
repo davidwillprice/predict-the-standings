@@ -13,6 +13,7 @@ import { submitPredictionsQuery } from "@lib/db-functions";
 
 import styles from "@components/submit-predictions/submit-predictions.module.scss";
 import btnConstyles from "@components/button/button-containers.module.scss";
+import { UserDataFromSession } from "@custom-types/misc";
 
 interface Props {
   arePredictionsFrozen: boolean;
@@ -54,16 +55,16 @@ export const SubmitPredictions = ({
       );
     }
     try {
-      const dbErrorMessage = await submitPredictionsQuery(
+      const result = await submitPredictionsQuery(
         competitionStrs.shortHand,
         displayName,
         predictionObj,
         season,
         userId
       );
-      /**If the DB has provided a user safe error message, add it to the UI, else show success message, save new entrant array, and add a note of the prediction to the user's session */
-      if (typeof dbErrorMessage === "string") {
-        isError(dbErrorMessage);
+      /**If the DB has provided a 24 character ObjectId, show success message, save new entrant array, and add a note of the prediction to the user's session, else show the error message in the UI*/
+      if (result.length !== 24) {
+        isError(result);
       } else {
         setSavedEntrantArrs(allEntrantArrs);
         submissionSuccessful.current = true;
@@ -74,12 +75,23 @@ export const SubmitPredictions = ({
             competitionStrs.shortHand
           ].includes(season)
         ) {
-          //**Get all predictionMadeFor data or start a new object if there is none  */
-          const predictionsMadeFor = session?.user.predictionsMadeFor || {};
+          //**Get all predictionMadeFor data from the session or start a new object if there is none  */
+          const currentUser: UserDataFromSession = session?.user;
+          const predictionsMadeFor = currentUser.predictionsMadeFor || {};
           if (!predictionsMadeFor[competitionStrs.shortHand]) {
             predictionsMadeFor[competitionStrs.shortHand] = [];
           }
-          predictionsMadeFor[competitionStrs.shortHand].push(season);
+          /**Don't add another season string if one already exists */
+          if (
+            !predictionsMadeFor[competitionStrs.shortHand].find(
+              (seasonObj) => seasonObj.season === season
+            )
+          ) {
+            predictionsMadeFor[competitionStrs.shortHand].push({
+              season: season,
+              _id: result,
+            });
+          }
           await update({
             ...session,
             user: {
@@ -93,7 +105,7 @@ export const SubmitPredictions = ({
       if (error instanceof Error) {
         console.log(error.message);
         isError(
-          "An error occured, please try and submit your predictions again"
+          "An error occurred, please try and submit your predictions again"
         );
       }
     }
@@ -131,8 +143,19 @@ export const SubmitPredictions = ({
               {competitionStrs.shortHand === "eurovision" ? (
                 <p>
                   You can make additional changes until the votes start being
-                  annouced. Once all the results are in, you&apos;ll be able to
+                  announced. Once all the results are in, you&apos;ll be able to
                   track how accurate you are compared to everyone else on the{" "}
+                  <Link href={`/${competitionStrs.hyphenated}/${season}`}>
+                    leaderboard page
+                  </Link>
+                  .
+                </p>
+              ) : competitionStrs.shortHand === "pl" ? (
+                <p>
+                  You can make additional changes until the first game of the
+                  season kicks off. After the first gameweek, you&apos;ll be
+                  able to track how accurate you are compared to everyone else
+                  on the{" "}
                   <Link href={`/${competitionStrs.hyphenated}/${season}`}>
                     leaderboard page
                   </Link>
@@ -141,7 +164,7 @@ export const SubmitPredictions = ({
               ) : (
                 <p>
                   You can make more changes to your predictions until the
-                  opening weekend&apos;s Free Practice 1.Once the first race of
+                  opening weekend&apos;s Free Practice 1. Once the first race of
                   the season completes, you&apos;ll be able to track how
                   accurate you are compared to everyone else on the{" "}
                   <Link href={`/${competitionStrs.hyphenated}/${season}`}>

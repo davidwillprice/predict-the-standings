@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { signOut } from "next-auth/react";
-import { getCollectionStrFromPredictionsMadeFor } from "@lib/misc";
+import { getCollectionObjFromPredictionsMadeFor } from "@lib/misc";
 import {
   anonymiseUserGameDataQuery,
   deleteAccountQuery,
@@ -40,7 +40,7 @@ export const DeleteAccount = ({ user }: Props) => {
   const handleConfirmationChange = () => {
     setConfirmationStatus(null);
   };
-  console.log(user.predictionsMadeFor);
+
   const handleDeletionRequest = async (
     event: React.FormEvent<HTMLFormElement>
   ) => {
@@ -52,19 +52,19 @@ export const DeleteAccount = ({ user }: Props) => {
       /**Show loading UI while request is processed*/
       setConfirmationStatus("loading");
       try {
-        /**If the user has made predictions...*/
-        if (
-          user.predictionsMadeFor &&
-          Object.values(user.predictionsMadeFor).length > 0
-        ) {
-          /**Get all strings from `predictionsMadeFor` via the user session */
-          const gameDataCollections =
-            getCollectionStrFromPredictionsMadeFor(user);
+        /**Get all strings from `predictionsMadeFor` via the user session */
+        const gameDataCollectionObjArr =
+          getCollectionObjFromPredictionsMadeFor(user);
 
+        /**If the user has made predictions...*/
+        if (gameDataCollectionObjArr) {
           /**Change their display name in all their userGameData to [DELETED] */
           await Promise.all(
-            gameDataCollections.map((collectionName) =>
-              anonymiseUserGameDataQuery(collectionName, user.id)
+            gameDataCollectionObjArr.map((collectionObj) =>
+              anonymiseUserGameDataQuery(
+                collectionObj.collectionName,
+                collectionObj._id
+              )
             )
           );
         }

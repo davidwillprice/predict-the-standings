@@ -4,6 +4,7 @@ import HeaderLink from "@components/header/header-link";
 import { SeasonSelector } from "../season-selector";
 
 import { allF1SeasonData } from "@data/formula-1/season-data";
+import { checkIfUserHasMadePrediction } from "@lib/misc";
 
 type Props = {
   params: { season: string };
@@ -21,11 +22,11 @@ export const Formula1Nav = ({ params, session }: Props) => {
   } = allF1SeasonData.find((seasonData) => seasonData.id === params.season) ||
   allF1SeasonData[0];
 
-  const hasMadePredictions =
-    session?.user?.predictionsMadeFor?.[competitionStrs.shortHand] &&
-    session?.user?.predictionsMadeFor?.[competitionStrs.shortHand].includes(
-      seasonStr
-    );
+  const hasMadePredictions = checkIfUserHasMadePrediction(
+    seasonStr,
+    competitionStrs.shortHand,
+    session?.user
+  );
 
   return (
     <>
@@ -45,7 +46,7 @@ export const Formula1Nav = ({ params, session }: Props) => {
         <HeaderLink
           href={`/${competitionStrs.hyphenated}/${seasonStr}/predict`}
           icon="listBullet">
-          Submit Predictions
+          {`${hasMadePredictions ? "Edit" : "Submit"} Predictions`}
         </HeaderLink>
       )}
       <HeaderLink
