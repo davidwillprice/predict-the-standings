@@ -198,17 +198,18 @@ export const convertDocumentToUserGameData = (
   return userGameData;
 };
 
-export const checkIfUserHasMadePrediction = (
+export const getSpecificGameDataIdFromSessionUser = (
   seasonStr: string,
   shortHandCompStr: ShortHandCompStr,
-  user: UserDataFromSession
-): boolean => {
-  return user.predictionsMadeFor[shortHandCompStr] &&
-    user.predictionsMadeFor[shortHandCompStr].find(
+  user: UserDataFromSession | undefined
+): string | undefined => {
+  if (!user || !user.predictionsMadeFor[shortHandCompStr]) {
+    return undefined;
+  } else {
+    return user.predictionsMadeFor[shortHandCompStr].find(
       (seasonObj) => seasonObj.season === seasonStr
-    )
-    ? true
-    : false;
+    )?._id;
+  }
 };
 
 //3 as e
