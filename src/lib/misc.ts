@@ -201,7 +201,7 @@ export const convertDocumentToUserGameData = (
 export const getSpecificGameDataIdFromSessionUser = (
   seasonStr: string,
   shortHandCompStr: ShortHandCompStr,
-  user: UserDataFromSession | undefined
+  user: UserDataFromSession | undefined | null
 ): string | undefined => {
   if (!user || !user.predictionsMadeFor[shortHandCompStr]) {
     return undefined;

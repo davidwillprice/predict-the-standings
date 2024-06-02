@@ -5,23 +5,31 @@ import Icon from "@svgs/icons/sq-icon";
 import btnConStyles from "@components/button/button-containers.module.scss";
 import btnStyles from "@components/button/button.module.scss";
 
-import { DisplayCompStr } from "@custom-types/game-types";
+import { CompetitionStrings } from "@custom-types/game-types";
+import { User } from "next-auth";
+import { getSpecificGameDataIdFromSessionUser } from "@lib/misc";
 
 interface Props {
   arePredictionsFrozen: boolean;
-  competition: DisplayCompStr;
-  isSignedIn: boolean;
+  competitionStrs: CompetitionStrings;
+  currUser: User | null | undefined;
   predictionsOpen: boolean;
-  season: string;
+  seasonStr: string;
 }
 
 export const PromptPredictions = ({
   arePredictionsFrozen,
-  competition,
-  isSignedIn,
+  competitionStrs,
+  currUser,
   predictionsOpen,
-  season,
+  seasonStr,
 }: Props) => {
+  const hasMadePredictions = !!getSpecificGameDataIdFromSessionUser(
+    seasonStr,
+    competitionStrs.shortHand,
+    currUser
+  );
+
   return (
     !arePredictionsFrozen &&
     predictionsOpen && (
@@ -29,10 +37,12 @@ export const PromptPredictions = ({
         <hr />
         <div className={btnConStyles.single}>
           <Link
-            href={`/${competition}/${season}/predict`}
+            href={`/${competitionStrs.hyphenated}/${seasonStr}/predict`}
             className={btnStyles.button}>
             <Icon strokeWidth={2} type="listBullet" />
-            {isSignedIn ? "Edit Your Predictions" : "Predict The Standings"}
+            {hasMadePredictions
+              ? "Edit Your Predictions"
+              : "Predict The Standings"}
           </Link>
         </div>
       </>

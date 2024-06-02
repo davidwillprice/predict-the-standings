@@ -12,15 +12,16 @@ import { LoadingSpinner } from "@components/loading-spinner/loading-spinner";
 import styles from "@components/stats/stats.module.scss";
 
 import { LocalSeasonData, StatsData } from "@custom-types/game-types";
+import { User } from "next-auth";
 
 type Props = {
-  isSignedIn: boolean;
+  currUser: User | undefined;
   preseasonText: string;
   seasonData: LocalSeasonData;
 };
 
 export const EntrantStats = async ({
-  isSignedIn,
+  currUser,
   preseasonText,
   seasonData,
 }: Props) => {
@@ -91,11 +92,11 @@ export const EntrantStats = async ({
         <Panel>
           <p>{preseasonText}</p>
           <PromptPredictions
-            competition={competitionStrs.hyphenated}
-            isSignedIn={isSignedIn}
+            competitionStrs={competitionStrs}
+            currUser={currUser}
             arePredictionsFrozen={arePredictionsFrozen}
             predictionsOpen={predictionsOpen}
-            season={seasonStr}
+            seasonStr={seasonStr}
           />
         </Panel>
       )}

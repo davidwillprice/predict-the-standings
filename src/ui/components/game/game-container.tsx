@@ -237,13 +237,6 @@ export const GameContainer = ({
     setIsDebouncing(true);
   };
 
-  /**Lock the vertical scrolling while the slider is being used */
-  if (isDebouncing) {
-    document.body.style.overflowY = "hidden";
-  } else {
-    document.body.style.overflowY = "";
-  }
-
   /**Updates entrantType in query string - F1 only currently */
   const changeEntrantTypeHandler = () => {
     const newEntrantType = entrantType === "teams" ? "drivers" : "constructors";

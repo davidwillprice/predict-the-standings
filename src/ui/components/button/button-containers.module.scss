@@ -38,8 +38,10 @@
   .doubleCol {
     flex-direction: column;
     gap: 0;
-    > a {
+    > a,
+    > button {
       width: 100%;
+      max-width: 300px;
     }
   }
 }

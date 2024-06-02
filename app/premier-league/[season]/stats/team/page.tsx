@@ -23,7 +23,7 @@ const Page: NextPage<PageProps> = async ({ params }) => {
   if (seasonData === undefined) notFound();
 
   const session = await getServerSession(authOptions);
-  const isSignedIn = Boolean(session?.user.displayName);
+  const currUser = session?.user;
 
   return (
     <>
@@ -31,9 +31,9 @@ const Page: NextPage<PageProps> = async ({ params }) => {
         <h1>Premier League {season} - Team Stats</h1>
       </PanelHeading>
       <EntrantStats
-        isSignedIn={isSignedIn}
+        currUser={currUser}
         preseasonText={
-          "Once the first gameweek of the season completes, various stats will show on this page for each team"
+          "Once the first gameweek of the season completes, various stats will show on this page for each team."
         }
         seasonData={seasonData}
       />

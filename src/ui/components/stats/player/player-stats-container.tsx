@@ -15,21 +15,21 @@ import { LoadingSpinner } from "@components/loading-spinner/loading-spinner";
 import { LeaderboardToppers } from "./leaderboard-toppers";
 
 import { LocalSeasonData, UserGameData } from "@custom-types/game-types";
+import { User } from "next-auth";
 
 type Props = {
-  currUserId: string | undefined;
+  currUser: User | undefined;
   preseasonText: string;
   seasonData: LocalSeasonData;
 };
 
 export const PlayerStats = async ({
-  currUserId,
+  currUser,
   preseasonText,
   seasonData,
 }: Props) => {
   const {
     arePredictionsFrozen,
-    allEntrants,
     competitionStrs,
     id: seasonStr,
     isSeasonOver,
@@ -38,14 +38,14 @@ export const PlayerStats = async ({
   } = seasonData;
 
   /**If the user is logged in and there is round data, get the user's competition data*/
-  let currUser: UserGameData | null = null;
-  if (currUserId && rounds.length > 0) {
+  let currUserGameData: UserGameData | null = null;
+  if (currUser && rounds.length > 0) {
     const res = await getSingleUserPredictionDataQuery(
       seasonStr,
       competitionStrs.shortHand,
-      currUserId
+      currUser.id
     );
-    if (res) currUser = res;
+    if (res) currUserGameData = res;
   }
 
   /**If there is round data, get the stats for this competition/season, and then get the users referenced in those stats*/
@@ -107,7 +107,7 @@ export const PlayerStats = async ({
           <Panel>
             <Controversy
               controversialUserIds={controversialUserIds}
-              currUser={currUser}
+              currUser={currUserGameData}
               users={JSON.parse(JSON.stringify(users))}
             />
           </Panel>
@@ -116,14 +116,14 @@ export const PlayerStats = async ({
               <Panel>
                 <MostUpdated
                   mostUpdatedPredictionUserIds={mostUpdatedPredictionUserIds}
-                  currUser={currUser}
+                  currUser={currUserGameData}
                   users={JSON.parse(JSON.stringify(users))}
                 />
               </Panel>
             )}
           {latestSubmissionUserId && (
             <LastestSubmission
-              currUser={currUser}
+              currUser={currUserGameData}
               predictionFreezeDate={seasonData.predictionFreezeDate}
               userId={latestSubmissionUserId}
               users={JSON.parse(JSON.stringify(users))}
@@ -132,7 +132,7 @@ export const PlayerStats = async ({
           {leaderboardToppingUserIds && !isOneRoundSeason && (
             <LeaderboardToppers
               competitionStrs={competitionStrs}
-              currUserId={currUserId}
+              currUserId={currUser?.id}
               isSeasonOver={isSeasonOver}
               leaderboardToppingUserIds={leaderboardToppingUserIds}
               seasonStr={seasonData.id}
@@ -145,10 +145,10 @@ export const PlayerStats = async ({
           <p>{preseasonText}</p>
           <PromptPredictions
             arePredictionsFrozen={arePredictionsFrozen}
-            competition={competitionStrs.hyphenated}
-            isSignedIn={Boolean(currUserId)}
+            competitionStrs={competitionStrs}
+            currUser={currUser}
             predictionsOpen={predictionsOpen}
-            season={seasonStr}
+            seasonStr={seasonStr}
           />
         </Panel>
       )}

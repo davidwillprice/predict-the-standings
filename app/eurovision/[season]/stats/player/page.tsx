@@ -25,7 +25,7 @@ const Page: NextPage<PageProps> = async ({ params }) => {
   if (seasonData === undefined) notFound();
 
   const session = await getServerSession(authOptions);
-  const currUserId = session?.user.id;
+  const currUser = session?.user;
 
   return (
     <>
@@ -33,7 +33,7 @@ const Page: NextPage<PageProps> = async ({ params }) => {
         <h1>Eurovision {season} Grand Final - Player Stats</h1>
       </PanelHeading>
       <PlayerStats
-        currUserId={currUserId}
+        currUser={currUser}
         preseasonText={`Once Eurovision ${season} is over, various player stats will show on this page.`}
         seasonData={seasonData}
       />

@@ -24,7 +24,7 @@ const Page: NextPage<PageProps> = async ({ params }) => {
   if (seasonData === undefined) notFound();
 
   const session = await getServerSession(authOptions);
-  const currUserId = session?.user.id;
+  const currUser = session?.user;
 
   return (
     <>
@@ -32,7 +32,7 @@ const Page: NextPage<PageProps> = async ({ params }) => {
         <h1>Premier League {season} - Player Stats</h1>
       </PanelHeading>
       <PlayerStats
-        currUserId={currUserId}
+        currUser={currUser}
         preseasonText={
           "Once the first gameweek of the season completes, various player stats will show on this page."
         }

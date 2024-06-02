@@ -70,10 +70,10 @@ export const LeaderboardContainer = async ({
             <p>{preseasonText}</p>
             <PromptPredictions
               arePredictionsFrozen={arePredictionsFrozen}
-              competition={competitionStrs.hyphenated}
-              isSignedIn={Boolean(currUserDisplayName)}
+              competitionStrs={competitionStrs}
+              currUser={currUser}
               predictionsOpen={predictionsOpen}
-              season={seasonStr}
+              seasonStr={seasonStr}
             />
           </Panel>
           {/**@todo Re-enable preseason container once properly built - Or could have the below text show as a modal and then underneath a placeholder of what the leaderboard will look like?

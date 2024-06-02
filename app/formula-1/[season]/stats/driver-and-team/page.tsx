@@ -23,7 +23,7 @@ const Page: NextPage<PageProps> = async ({ params }) => {
   if (seasonData === undefined) notFound();
 
   const session = await getServerSession(authOptions);
-  const isSignedIn = Boolean(session?.user.displayName);
+  const currUser = session?.user;
 
   return (
     <>
@@ -31,7 +31,7 @@ const Page: NextPage<PageProps> = async ({ params }) => {
         <h1>Formula 1 {season} - Driver & Team Stats</h1>
       </PanelHeading>
       <EntrantStats
-        isSignedIn={isSignedIn}
+        currUser={currUser}
         preseasonText={
           "Once the first race of the season completes, various stats will show on this page for each of the drivers and teams"
         }
