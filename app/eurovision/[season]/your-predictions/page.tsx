@@ -36,7 +36,7 @@ const Page: NextPage<PageProps> = async ({ params }) => {
       <PanelHeading align="center">
         <h1>Eurovision {season} Grand Final - Your Predictions</h1>
       </PanelHeading>
-      <YourPredictions seasonData={seasonData} userId={session.user.id} />
+      <YourPredictions currUser={session.user} seasonData={seasonData} />
     </>
   );
 };

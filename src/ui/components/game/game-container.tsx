@@ -6,9 +6,9 @@ import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import {
   getLeaderboardDataQuery,
   getNoOfPredictionsQuery,
-  getSingleUserPredictionDataQuery,
+  getUserGameDataQuery,
 } from "@lib/db-functions";
-import { debounce } from "@lib/misc";
+import { debounce, getSpecificGameDataIdFromSessionUser } from "@lib/misc";
 
 import { Leaderboard } from "./leaderboard";
 import { PredictionTable } from "@components/prediction-table/prediction-table";
@@ -22,6 +22,7 @@ import { EntrantTable } from "@components/entrant-table/entrant-table";
 import btnStyles from "@components/button/button.module.scss";
 import styles from "@components/game/game-container.module.scss";
 
+import { User } from "next-auth";
 import {
   LocalSeasonData,
   Round,
@@ -36,8 +37,7 @@ import {
 
 interface Props {
   children: ReactNode;
-  currentUserId: string | null;
-  currentUserDisplayName: string | null;
+  currUser: User | undefined;
   currentSearchParams: { [key: string]: string | string[] | undefined };
   lastUpdated: Date;
   localSeasonData: LocalSeasonData;
@@ -47,8 +47,7 @@ interface Props {
 
 export const GameContainer = ({
   children,
-  currentUserId,
-  currentUserDisplayName,
+  currUser,
   currentSearchParams,
   lastUpdated,
   localSeasonData,
@@ -142,13 +141,19 @@ export const GameContainer = ({
   };
 
   const getCurrUserGameData = async () => {
-    /**If there is no logged in user, or the logged in user's data has already been obtained, don't bother running this  */
-    if (!currentUserId || currUserGameData.current !== null) return;
-    /**Get the logged in user's data from the DB */
-    let currUserData = await getSingleUserPredictionDataQuery(
+    const gameDataId: string | undefined = getSpecificGameDataIdFromSessionUser(
       season,
       competitionStrs.shortHand,
-      currentUserId
+      currUser
+    );
+    /**If there is no logged in user, they've not made a prediction, or the logged in user's data has already been obtained, don't bother continuing this fn */
+    if (!gameDataId || currUserGameData.current !== null) return;
+
+    /**Get the logged in user's game data from the DB */
+    let currUserData = await getUserGameDataQuery(
+      season,
+      competitionStrs.shortHand,
+      gameDataId
     );
     /**Generate the round performance data for current user */
     currUserData = calcUserGameDataMapPerformance(rounds, currUserData);
@@ -327,8 +332,8 @@ export const GameContainer = ({
         ) : (
           <>
             <UserData
-              currentUserDisplayName={currentUserDisplayName}
-              currentUserId={currentUserId}
+              currentUserDisplayName={currUser?.displayName}
+              currentUserId={currUser?.id}
               entrantType={entrantType}
               handleBackBtn={handleBackBtn}
               isSeasonOver={isSeasonOver}
@@ -338,8 +343,8 @@ export const GameContainer = ({
             />
             <div className={styles.tables}>
               <PredictionTable
-                currentUserDisplayName={currentUserDisplayName}
-                currentUserId={currentUserId}
+                currentUserDisplayName={currUser?.displayName}
+                currentUserId={currUser?.id}
                 entrants={allEntrants[entrantType]}
                 entrantType={entrantType}
                 roundIndex={roundIndex}

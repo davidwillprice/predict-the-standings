@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { NextPage } from "next";
 import { notFound } from "next/navigation";
 
-import { getSingleUserPredictionDataQuery } from "@lib/db-functions";
+import { getUserGameDataQuery } from "@lib/db-functions";
 import { authOptions } from "@lib/auth";
 import { allEurovisionSeasonData } from "@data/eurovision/season-data";
 
@@ -17,6 +17,7 @@ import commonStyles from "@styles/common.module.scss";
 
 import { PageProps, CompetitionLink } from "@custom-types/misc";
 import { Entrant } from "@custom-types/game-types";
+import { getSpecificGameDataIdFromSessionUser } from "@lib/misc";
 
 export const metadata: Metadata = {
   title: "Make Your Eurovision Predictions | Predict The Standings",
@@ -57,21 +58,24 @@ const Page: NextPage<PageProps> = async ({ params }) => {
 
   let countryArr: Entrant[];
   try {
-    const userPredictionData = await getSingleUserPredictionDataQuery(
+    const gameDataId: string | undefined = getSpecificGameDataIdFromSessionUser(
       season,
       competitionStrs.shortHand,
-      userId
+      session.user
     );
+    if (!gameDataId) throw new Error();
 
-    /**Check if user has made predictions previously, and if not use the performance order of the countries */
-    if (userPredictionData.predictions.countries) {
-      countryArr = userPredictionData.predictions.countries.map(
-        (entrantStr: string) => countries[entrantStr]
-      );
-    } else {
-      countryArr = defaultCountryArr;
-    }
+    const userPredictionData = await getUserGameDataQuery(
+      season,
+      competitionStrs.shortHand,
+      gameDataId
+    );
+    /**If their existing predictions have been successfully obtained, convert the array of ids to Entants */
+    countryArr = userPredictionData.predictions.countries.map(
+      (entrantStr: string) => countries[entrantStr]
+    );
   } catch (_) {
+    /**If there is no existing predictions, use the default*/
     countryArr = defaultCountryArr;
   }
 

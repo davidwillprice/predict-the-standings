@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getSingleUserPredictionDataQuery } from "@lib/db-functions";
+import { getUserGameDataQuery } from "@lib/db-functions";
 
 import { allF1SeasonData } from "@data/formula-1/season-data";
 import { allEurovisionSeasonData } from "@data/eurovision/season-data";
@@ -55,10 +55,10 @@ export const PerformanceOverview = ({ user }: Props) => {
       return new Promise((_, reject) => {
         Promise.all(
           gameDataCollectionObjArr.map((collectionObj) =>
-            getSingleUserPredictionDataQuery(
+            getUserGameDataQuery(
               collectionObj.collectionName,
               "",
-              user.id
+              collectionObj._id
             )
           )
         )

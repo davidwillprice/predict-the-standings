@@ -74,17 +74,18 @@ export const getNoOfPredictionsQuery = async (
   }
 };
 
-/**@todo This would be faster if I searched via _id rather than userId*/
-export const getSingleUserPredictionDataQuery = async (
+export const getUserGameDataQuery = async (
   season: string,
   competition: ShortHandCompStr,
-  userId: string
+  gameDataId: string
 ): Promise<UserGameData> => {
   const client = await clientPromise;
   try {
     const db = client.db("pts");
     const collection = db.collection<UserGameData>(competition + season);
-    const res = await collection.findOne({ userId: userId });
+    const res = await collection.findOne({
+      _id: new ObjectId(gameDataId),
+    });
     if (!res)
       throw new Error(
         `Failed to get user prediction data for ${competition + season}`

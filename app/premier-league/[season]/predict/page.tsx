@@ -4,8 +4,11 @@ import { redirect } from "next/navigation";
 import { NextPage } from "next";
 import { notFound } from "next/navigation";
 
-import { getSingleUserPredictionDataQuery } from "@lib/db-functions";
-import { sortEntrantsAlphabetically } from "@lib/misc";
+import { getUserGameDataQuery } from "@lib/db-functions";
+import {
+  getSpecificGameDataIdFromSessionUser,
+  sortEntrantsAlphabetically,
+} from "@lib/misc";
 import { authOptions } from "@lib/auth";
 import { allPlSeasonData } from "@data/premier-league/season-data";
 
@@ -57,22 +60,27 @@ const Page: NextPage<PageProps> = async ({ params }) => {
   defaultEntrantArr = sortEntrantsAlphabetically(defaultEntrantArr);
 
   let entrantArr: Entrant[];
+
   try {
-    const userPredictionData = await getSingleUserPredictionDataQuery(
+    const gameDataId: string | undefined = getSpecificGameDataIdFromSessionUser(
       season,
       competitionStrs.shortHand,
-      userId
+      session.user
+    );
+    if (!gameDataId) throw new Error();
+
+    const userPredictionData = await getUserGameDataQuery(
+      season,
+      competitionStrs.shortHand,
+      gameDataId
     );
 
-    /**Check if there is existing entrant predictions, and if not use the alphabetically ordered array instead */
-    if (userPredictionData.predictions[entrantType]) {
-      entrantArr = userPredictionData.predictions[entrantType].map(
-        (entrantStr: string) => entrants[entrantStr]
-      );
-    } else {
-      entrantArr = defaultEntrantArr;
-    }
+    /**If their existing predictions have been successfully obtained, convert the array of ids to Entants */
+    entrantArr = userPredictionData.predictions[entrantType].map(
+      (entrantStr: string) => entrants[entrantStr]
+    );
   } catch (_) {
+    /**If there is no existing predictions, use the default*/
     entrantArr = defaultEntrantArr;
   }
 

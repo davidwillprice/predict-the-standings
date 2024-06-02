@@ -4,8 +4,11 @@ import { redirect } from "next/navigation";
 import { NextPage } from "next";
 import { notFound } from "next/navigation";
 
-import { sortEntrantsAlphabetically } from "@lib/misc";
-import { getSingleUserPredictionDataQuery } from "@lib/db-functions";
+import {
+  getSpecificGameDataIdFromSessionUser,
+  sortEntrantsAlphabetically,
+} from "@lib/misc";
+import { getUserGameDataQuery } from "@lib/db-functions";
 import { authOptions } from "@lib/auth";
 import { allF1SeasonData } from "@data/formula-1/season-data";
 
@@ -38,8 +41,12 @@ const Page: NextPage<PageProps> = async ({ params }) => {
     return redirect("/get-started");
   }
 
-  const { arePredictionsFrozen, isSeasonOver, predictionFreezeDate } =
-    seasonData;
+  const {
+    arePredictionsFrozen,
+    competitionStrs,
+    isSeasonOver,
+    predictionFreezeDate,
+  } = seasonData;
   const { drivers, teams } = seasonData.allEntrants;
   const userId = session.user.id;
 
@@ -58,29 +65,28 @@ const Page: NextPage<PageProps> = async ({ params }) => {
   let driverArr: Entrant[];
   let teamArr: Entrant[];
   try {
-    const userPredictionData = await getSingleUserPredictionDataQuery(
+    const gameDataId: string | undefined = getSpecificGameDataIdFromSessionUser(
       season,
-      "f1",
-      userId
+      competitionStrs.shortHand,
+      session.user
+    );
+    if (!gameDataId) throw new Error();
+
+    const userPredictionData = await getUserGameDataQuery(
+      season,
+      competitionStrs.shortHand,
+      gameDataId
     );
 
-    /**Check if there is existing drivers predictions, and if not use an alphabetically ordered array of drivers */
-    if (userPredictionData.predictions.drivers) {
-      driverArr = userPredictionData.predictions.drivers.map(
-        (entrantStr: string) => drivers[entrantStr]
-      );
-    } else {
-      driverArr = defaultDriverArr;
-    }
-    /**Check if there is existing teams predictions, and if not use an alphabetically ordered array of teams */
-    if (userPredictionData.predictions.teams) {
-      teamArr = userPredictionData.predictions.teams.map(
-        (entrantStr: string) => teams[entrantStr]
-      );
-    } else {
-      teamArr = defaultTeamArr;
-    }
+    /**If their existing predictions have been successfully obtained, convert the array of ids to Entants */
+    driverArr = userPredictionData.predictions.drivers.map(
+      (entrantStr: string) => drivers[entrantStr]
+    );
+    teamArr = userPredictionData.predictions.teams.map(
+      (entrantStr: string) => teams[entrantStr]
+    );
   } catch (_) {
+    /**If there is no existing predictions, use the default*/
     driverArr = defaultDriverArr;
     teamArr = defaultTeamArr;
   }

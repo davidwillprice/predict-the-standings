@@ -1,10 +1,11 @@
 import { Suspense } from "react";
 
 import {
-  getSingleUserPredictionDataQuery,
+  getUserGameDataQuery,
   getStatsDataQuery,
   getMultipleUserGameData,
 } from "@lib/db-functions";
+import { getSpecificGameDataIdFromSessionUser } from "@lib/misc";
 
 import { Panel } from "@components/panels/panel";
 import { PromptPredictions } from "@components/submit-predictions/prompt-predictions";
@@ -37,13 +38,19 @@ export const PlayerStats = async ({
     rounds,
   } = seasonData;
 
-  /**If the user is logged in and there is round data, get the user's competition data*/
   let currUserGameData: UserGameData | null = null;
-  if (currUser && rounds.length > 0) {
-    const res = await getSingleUserPredictionDataQuery(
+
+  /**If the user has game data for this comp/season, get that data from the DB*/
+  const gameDataId: string | undefined = getSpecificGameDataIdFromSessionUser(
+    seasonStr,
+    competitionStrs.shortHand,
+    currUser
+  );
+  if (gameDataId && rounds.length > 0) {
+    const res = await getUserGameDataQuery(
       seasonStr,
       competitionStrs.shortHand,
-      currUser.id
+      gameDataId
     );
     if (res) currUserGameData = res;
   }

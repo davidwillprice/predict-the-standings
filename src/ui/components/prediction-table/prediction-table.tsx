@@ -9,8 +9,8 @@ import { calcPredictionsAccuracy } from "@lib/game-data";
 import { EntrantTable } from "@components/entrant-table/entrant-table";
 
 interface Props {
-  currentUserId: string | null;
-  currentUserDisplayName: string | null;
+  currentUserId: string | undefined;
+  currentUserDisplayName: string | undefined;
   entrantType: string;
   entrants: Entrants;
   roundIndex: number;

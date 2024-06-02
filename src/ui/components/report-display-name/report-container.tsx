@@ -10,8 +10,8 @@ import { UserGameData } from "@custom-types/game-types";
 
 type Props = {
   reportedUser: UserGameData;
-  currentUserId: string | null;
-  currentUserDisplayName: string | null;
+  currentUserId: string | undefined;
+  currentUserDisplayName: string | undefined;
 };
 
 export default function ReportContainer({

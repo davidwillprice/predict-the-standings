@@ -1,3 +1,5 @@
+import { ObjectId } from "mongodb";
+
 export type AllLocalSeasonData = LocalSeasonData[];
 
 export class LocalSeasonData {
@@ -110,7 +112,7 @@ export class Entrant {
 
 /**UserGameData (UGD) that is used both locally and on the DB */
 class BaseUserGameData {
-  _id: string;
+  _id: ObjectId | string;
   /**Display name of the above user */
   displayName: string;
   /**Date the UGB was submitted or last edited */
@@ -132,7 +134,7 @@ class BaseUserGameData {
   /**Number of times the user has edited their predictions - Optional as only used for standard users */
   timesPredictionsUpdated?: number;
   constructor(
-    _id: string,
+    _id: ObjectId | string,
     displayName: string,
     lastSubmissionTime: Date,
     predictions: { [entrantType: string]: EntrantId[] },
@@ -153,7 +155,7 @@ class BaseUserGameData {
 export class UserGameData extends BaseUserGameData {
   season: { [entrantType: string]: RoundPerformance[] };
   constructor(
-    _id: string,
+    _id: ObjectId | string,
     displayName: string,
     lastSubmissionTime: Date,
     predictions: { [entrantType: string]: EntrantId[] },

@@ -11,8 +11,8 @@ import styles from "@components/game/game-container.module.scss";
 import { UserGameData } from "@custom-types/game-types";
 
 interface Props {
-  currentUserId: string | null;
-  currentUserDisplayName: string | null;
+  currentUserId: string | undefined;
+  currentUserDisplayName: string | undefined;
   entrantType: string;
   handleBackBtn: Function;
   isSeasonOver: boolean;

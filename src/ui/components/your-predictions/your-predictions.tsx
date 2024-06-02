@@ -1,30 +1,39 @@
-import { getSingleUserPredictionDataQuery } from "@lib/db-functions";
+import { getUserGameDataQuery } from "@lib/db-functions";
+import { getSpecificGameDataIdFromSessionUser } from "@lib/misc";
 
 import styles from "@components/entrant-table/entrant-table.module.scss";
 
 import { Entrant, LocalSeasonData } from "@custom-types/game-types";
 import { EntrantTable } from "@components/entrant-table/entrant-table";
+import { User } from "next-auth";
 
 interface Props {
   seasonData: LocalSeasonData;
-  userId: string;
+  currUser: User;
 }
 
-export const YourPredictions = async ({ seasonData, userId }: Props) => {
-  const { allEntrants, competitionStrs, id } = seasonData;
+export const YourPredictions = async ({ seasonData, currUser }: Props) => {
+  const { allEntrants, competitionStrs, id: seasonStr } = seasonData;
 
   const noOfEntrantTypes = Object.keys(allEntrants).length;
 
   let userPredictions: { [entrantType: string]: Entrant[] } = {};
 
   try {
-    /**Obtain userGamedata */
-    const userGameData = await getSingleUserPredictionDataQuery(
-      id,
+    const gameDataId: string | undefined = getSpecificGameDataIdFromSessionUser(
+      seasonStr,
       competitionStrs.shortHand,
-      userId
+      currUser
     );
-    /**Turn prediction arrays of entrantIds into Entrant arrays using the local season data */
+    if (!gameDataId) throw new Error();
+
+    const userGameData = await getUserGameDataQuery(
+      seasonStr,
+      competitionStrs.shortHand,
+      gameDataId
+    );
+
+    /**If their gameData has been successfully obtained,turn its prediction arrays of entrantIds into Entrant arrays using the local season data */
     for (const [entrantType, entrantIdArr] of Object.entries(
       userGameData.predictions
     )) {

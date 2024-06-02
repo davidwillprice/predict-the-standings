@@ -38,7 +38,7 @@ const Page: NextPage<PageProps> = async ({ params }) => {
           {seasonData.competitionStrs.display} {season} - Your Predictions
         </h1>
       </PanelHeading>
-      <YourPredictions seasonData={seasonData} userId={session.user.id} />
+      <YourPredictions currUser={session.user} seasonData={seasonData} />
     </>
   );
 };
