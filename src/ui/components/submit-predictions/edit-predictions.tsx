@@ -8,6 +8,7 @@ import { SubmitPredictions } from "@components/submit-predictions/submit-predict
 import Icon from "@svgs/icons/sq-icon";
 
 import { Entrant, LocalSeasonData } from "@custom-types/game-types";
+import { User } from "next-auth";
 
 import styles from "@components/submit-predictions/submit-predictions.module.scss";
 import btnStyles from "@components/button/button.module.scss";
@@ -21,18 +22,18 @@ interface Props {
   initialEntrants: Entrant[];
   season: string;
   seasonData: LocalSeasonData;
-  userId: string;
+  currUser: User;
 }
 
 export const EditPredictions = ({
   arePredictionsFrozen,
+  currUser,
   displayName,
   entrantType,
   initialEntrants,
   children,
   season,
   seasonData,
-  userId,
 }: Props) => {
   const [entrantArr, setEntrantArr] = useState(initialEntrants);
   const { allEntrants, competitionStrs } = seasonData;
@@ -56,10 +57,10 @@ export const EditPredictions = ({
         <SubmitPredictions
           allEntrantArrs={{ [entrantType]: entrantArr }}
           arePredictionsFrozen={arePredictionsFrozen}
+          currUser={currUser}
           displayName={displayName}
           competitionStrs={competitionStrs}
           season={season}
-          userId={userId}
         />
       </div>
       <div className={styles.prediction_tables}>

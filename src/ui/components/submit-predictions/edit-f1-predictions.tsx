@@ -8,6 +8,7 @@ import { SubmitPredictions } from "@components/submit-predictions/submit-predict
 import Icon from "@svgs/icons/sq-icon";
 
 import { Entrant, LocalSeasonData } from "@custom-types/game-types";
+import { User } from "next-auth";
 
 import styles from "@components/submit-predictions/submit-predictions.module.scss";
 import btnStyles from "@components/button/button.module.scss";
@@ -15,13 +16,13 @@ import btnConStyles from "@components/button/button-containers.module.scss";
 
 interface Props {
   arePredictionsFrozen: boolean;
-  displayName: string;
+  currUser: User;
   children: string | ReactNode;
+  displayName: string;
   initialDrivers: Entrant[];
   initialTeams: Entrant[];
   season: string;
   seasonData: LocalSeasonData;
-  userId: string;
 }
 
 export const EditF1Predictions = ({
@@ -32,7 +33,7 @@ export const EditF1Predictions = ({
   children,
   seasonData,
   season,
-  userId,
+  currUser,
 }: Props) => {
   const [driverArr, setDriverArr] = useState(initialDrivers);
   const [teamArr, setTeamArr] = useState(initialTeams);
@@ -58,7 +59,7 @@ export const EditF1Predictions = ({
           competitionStrs={competitionStrs}
           displayName={displayName}
           season={season}
-          userId={userId}
+          currUser={currUser}
         />
       </div>
       <div className={styles.prediction_tables}>

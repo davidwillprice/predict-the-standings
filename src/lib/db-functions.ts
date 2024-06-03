@@ -316,6 +316,7 @@ export const submitPredictionsQuery = async (
   competition: ShortHandCompStr,
   displayName: string,
   entrantArrs: { [entrantType: string]: string[] },
+  gameDataId: string | undefined,
   season: string,
   userId: string
 ): Promise<string> => {
@@ -324,10 +325,10 @@ export const submitPredictionsQuery = async (
     const db = client.db("pts");
     const collection = db.collection(competition + season);
 
+    /**Obtain when the comp/season predictions are frozen so new predictions can't be submitted passed that time */
     const predictionFreezeDateDoc = await collection.findOne({
       _id: new ObjectId(predictionFreezeDateObjId),
     });
-
     const predictionFreezeDate = predictionFreezeDateDoc?.predictionFreezeDate;
 
     if (predictionFreezeDate === undefined)
@@ -338,12 +339,14 @@ export const submitPredictionsQuery = async (
     if (predictionFreezeDate.getTime() < new Date().getTime()) {
       return `The competition has started and predictions are frozen`;
     } else {
-      const olduserPredictionDoc = await collection.findOne({ userId: userId });
+      /**Obtain previous gameData (if it exists) to get how many times it has been updated */
+      const olduserPredictionDoc = await collection.findOne({
+        _id: new ObjectId(gameDataId),
+      });
       const prevTimesPredictionsUpdated =
         olduserPredictionDoc?.timesPredictionsUpdated;
 
-      /**@todo Get via _id if it exists on the user's predictionsMadeFor */
-      const filter = { userId: userId };
+      const filter = { _id: new ObjectId(gameDataId) };
       const update = {
         $set: {
           displayName: displayName,

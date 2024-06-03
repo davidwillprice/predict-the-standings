@@ -45,7 +45,7 @@ const Page: NextPage<PageProps> = async ({ params }) => {
     startingEntrantOrders,
   } = seasonData;
   const { countries } = seasonData.allEntrants;
-  const userId = session.user.id;
+  const currUser = session.user;
 
   let defaultCountryArr;
   if (startingEntrantOrders) {
@@ -100,12 +100,12 @@ const Page: NextPage<PageProps> = async ({ params }) => {
       ) : !arePredictionsFrozen ? (
         <EditPredictions
           arePredictionsFrozen={arePredictionsFrozen}
+          currUser={currUser}
           displayName={displayName}
           entrantType={"countries"}
           initialEntrants={JSON.parse(JSON.stringify(countryArr))}
           season={season}
-          seasonData={JSON.parse(JSON.stringify(seasonData))}
-          userId={userId}>
+          seasonData={JSON.parse(JSON.stringify(seasonData))}>
           <Panel>
             <p>
               Drag the countries into the order which you think they will finish

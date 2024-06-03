@@ -50,7 +50,7 @@ const Page: NextPage<PageProps> = async ({ params }) => {
   } = seasonData;
   const entrantType = "teams";
   const entrants = seasonData.allEntrants[entrantType];
-  const userId = session.user.id;
+  const currUser = session.user;
 
   /**Create alphabetically ordered array of entrants to use as defaults if the user hasn't made predictions before */
   let defaultEntrantArr = [];
@@ -104,12 +104,12 @@ const Page: NextPage<PageProps> = async ({ params }) => {
       ) : !arePredictionsFrozen ? (
         <EditPredictions
           arePredictionsFrozen={arePredictionsFrozen}
+          currUser={currUser}
           displayName={displayName}
           entrantType={entrantType}
           initialEntrants={JSON.parse(JSON.stringify(entrantArr))}
           season={season}
-          seasonData={JSON.parse(JSON.stringify(seasonData))}
-          userId={userId}>
+          seasonData={JSON.parse(JSON.stringify(seasonData))}>
           <Panel>
             <p>
               Drag the teams into the order which you think they will finish in.

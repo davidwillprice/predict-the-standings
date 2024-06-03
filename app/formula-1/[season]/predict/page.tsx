@@ -48,7 +48,7 @@ const Page: NextPage<PageProps> = async ({ params }) => {
     predictionFreezeDate,
   } = seasonData;
   const { drivers, teams } = seasonData.allEntrants;
-  const userId = session.user.id;
+  const currUser = session.user;
 
   /**Create alphabetically ordered array of entrants to use as defaults if the user hasn't made predictions before */
   let defaultDriverArr = [];
@@ -96,12 +96,12 @@ const Page: NextPage<PageProps> = async ({ params }) => {
       {!arePredictionsFrozen ? (
         <EditF1Predictions
           arePredictionsFrozen={arePredictionsFrozen}
+          currUser={currUser}
           displayName={displayName}
           initialDrivers={JSON.parse(JSON.stringify(driverArr))}
           initialTeams={JSON.parse(JSON.stringify(teamArr))}
           season={season}
-          seasonData={JSON.parse(JSON.stringify(seasonData))}
-          userId={userId}>
+          seasonData={JSON.parse(JSON.stringify(seasonData))}>
           <Panel>
             <p>
               Drag the drivers and teams into the order which you think they

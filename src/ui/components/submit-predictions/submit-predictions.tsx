@@ -2,6 +2,8 @@
 import { useState, useRef } from "react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import { submitPredictionsQuery } from "@lib/db-functions";
+import { getSpecificGameDataIdFromSessionUser } from "@lib/misc";
 
 import { Button } from "@components/button/button";
 import { LoadingSpinner } from "@components/loading-spinner/loading-spinner";
@@ -9,7 +11,7 @@ import { FeedbackContainer } from "@components/feedback-container/feedback-conta
 import Icon from "@svgs/icons/sq-icon";
 
 import { Entrant, CompetitionStrings } from "@custom-types/game-types";
-import { submitPredictionsQuery } from "@lib/db-functions";
+import { User } from "next-auth";
 
 import styles from "@components/submit-predictions/submit-predictions.module.scss";
 import btnConstyles from "@components/button/button-containers.module.scss";
@@ -18,25 +20,31 @@ import { UserDataFromSession } from "@custom-types/misc";
 interface Props {
   arePredictionsFrozen: boolean;
   competitionStrs: CompetitionStrings;
+  currUser: User;
   displayName: string;
   allEntrantArrs: { [entrantType: string]: Entrant[] };
   season: string;
-  userId: string;
 }
 
 export const SubmitPredictions = ({
   competitionStrs,
+  currUser,
   displayName,
   allEntrantArrs,
   arePredictionsFrozen,
   season,
-  userId,
 }: Props) => {
   const { data: session, update } = useSession();
   const submissionSuccessful = useRef(false);
   const [submitting, isSubmitting] = useState(false);
   const [savedEntrantArrs, setSavedEntrantArrs] = useState(allEntrantArrs);
   const [error, isError] = useState<string | null>(null);
+
+  const gameDataId = getSpecificGameDataIdFromSessionUser(
+    season,
+    competitionStrs.shortHand,
+    currUser
+  );
 
   const submissionHandler = async () => {
     isError(null);
@@ -59,8 +67,9 @@ export const SubmitPredictions = ({
         competitionStrs.shortHand,
         displayName,
         predictionObj,
+        gameDataId,
         season,
-        userId
+        currUser.id
       );
       /**If the DB has provided a 24 character ObjectId, show success message, save new entrant array, and add a note of the prediction to the user's session, else show the error message in the UI*/
       if (result.length !== 24) {
