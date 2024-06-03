@@ -4,6 +4,7 @@ import { Collection } from "mongodb";
 import { ObjectId } from "mongodb";
 
 import {
+  convertDocArrToGameDataMap,
   convertDocArrToUserGameDataMap,
   convertDocumentToUserGameData,
   getCollectionObjFromPredictionsMadeFor,
@@ -17,6 +18,7 @@ import {
 
 import {
   EntrantId,
+  GameDataMap,
   NoOfPredictions,
   RoundPerformance,
   ShortHandCompStr,
@@ -98,35 +100,39 @@ export const getUserGameDataQuery = async (
   }
 };
 
-/**Get stats data to display on stats pages
- * @todo This would be faster if I searched via _id rather than userId
- */
+/**Get stats data to display on stats pages */
 export const getMultipleUserGameData = async (
   season: string,
   competition: ShortHandCompStr,
-  userIdArr: string[]
-): Promise<UserGameDataMap> => {
+  gameDataIdArr: string[]
+): Promise<GameDataMap> => {
   const client = await clientPromise;
+
   try {
     const db = client.db("pts");
     const collection = db.collection<UserGameData>(competition + season);
+
+    /**Change _id string arr into a _id ObjectId arr */
+    const gameDataObjIdArr = gameDataIdArr.map((_id) => new ObjectId(_id));
+
     const result = await collection
       .find({
-        userId: { $in: userIdArr },
+        _id: { $in: gameDataObjIdArr },
       })
       .toArray();
     if (!result)
       throw new Error(
         `Failed to get user game data for ${competition + season}`
       );
-    const users = convertDocArrToUserGameDataMap(result);
 
-    if (Object.keys(users).length === 0)
+    const gameDataMap = convertDocArrToGameDataMap(result);
+
+    if (Object.keys(gameDataMap).length === 0)
       throw new Error(
         `User prediction data obj is empty for ${collection.collectionName}`
       );
 
-    return users;
+    return gameDataMap;
   } catch (error) {
     throw error;
   }
@@ -227,13 +233,13 @@ export const getStatsDataQuery = async (
       throw new Error(`Failed to get stats data for ${competition + season}`);
 
     const statsData: StatsData = {
-      controversialUserIds: result.controversialUserIds,
-      allEntrants: result.allEntrants,
-      latestSubmissionUserId: result.latestSubmissionUserId,
-      leaderboardToppingUserIds: result.leaderboardToppingUserIds,
-      mostUpdatedPredictionUserIds: result.mostUpdatedPredictionUserIds,
+      allEntrants: result.allEntrantStats,
+      controversialGameDataIdMap: result.controversialGameDataIdMap,
+      lastSubmittedGameDataId: result.lastSubmittedGameDataId,
+      leaderboardToppingGameDataIdMap: result.leaderboardToppingGameDataIdMap,
+      mostUpdatedGameDataIdArr: result.mostUpdatedGameDataIdArr,
       noOfPredictions: result.noOfPredictions,
-      rounds: result.rounds,
+      rounds: result.roundStats,
     };
 
     console.log("Getting stats data");
@@ -404,9 +410,7 @@ export const addPredictionToUserDataQuery = async (
   }
 };
 
-/**Once new game data has been created, it needs to be attached to the user game data documents in the DB
- * @todo This would be faster if I searched via _id rather than userId, but I would need to obtain the average _id when I obtain all the UserGameData
- */
+/**Once new game data has been created, it needs to be attached to the user game data documents in the DB */
 export const updateAllUserDocGameData = async (
   collection: Collection,
   users: UserGameDataMap
@@ -415,7 +419,7 @@ export const updateAllUserDocGameData = async (
 
   const operations = userArr.map((user) => {
     /**Standard users only need a couple of properties updated as the rest is already in the DB
-     * Special users may not already be in the DB so can't be filtered by their a MongoDB ObjectId and need more data to be added */
+     * Special users need more data to be added */
     const propertiesToUpdate: {
       controversyPercentile: { [entrantType: string]: number };
       predictionsFromAvg: { [entrantType: string]: number };
@@ -450,7 +454,7 @@ export const updateAllUserDocGameData = async (
     if (user.roundsTop) propertiesToUpdate.roundsTop = user.roundsTop;
     return {
       updateOne: {
-        filter: { userId: user.userId },
+        filter: { _id: new ObjectId(user._id) },
         update: {
           $set: propertiesToUpdate,
         },

@@ -7,9 +7,9 @@ import { Panel } from "@components/panels/panel";
 
 import {
   CompetitionStrings,
-  LeaderboardToppingUserIds,
+  LeaderboardToppingGameDataIdMap,
   UserGameData,
-  UserGameDataMap,
+  GameDataMap,
 } from "@custom-types/game-types";
 
 import styles from "./player-stats.module.scss";
@@ -20,18 +20,18 @@ type Props = {
   competitionStrs: CompetitionStrings;
   currUserId: string | undefined;
   isSeasonOver: boolean;
-  leaderboardToppingUserIds: LeaderboardToppingUserIds;
+  leaderboardToppingGameDataIdMap: LeaderboardToppingGameDataIdMap;
   seasonStr: string;
-  users: UserGameDataMap;
+  gameDataMap: GameDataMap;
 };
 
 export const LeaderboardToppers = ({
   competitionStrs,
   currUserId,
   isSeasonOver,
-  leaderboardToppingUserIds,
+  leaderboardToppingGameDataIdMap,
   seasonStr,
-  users,
+  gameDataMap,
 }: Props) => {
   const router = useRouter();
   const leaderboardToppingData: {
@@ -40,11 +40,11 @@ export const LeaderboardToppers = ({
       roundsTop: number[];
     }[];
   } = {};
-  for (const entrantType of Object.keys(leaderboardToppingUserIds)) {
+  for (const entrantType of Object.keys(leaderboardToppingGameDataIdMap)) {
     leaderboardToppingData[entrantType] = [];
-    leaderboardToppingUserIds[entrantType].forEach((user) => {
+    leaderboardToppingGameDataIdMap[entrantType].forEach((user) => {
       leaderboardToppingData[entrantType].push({
-        user: users[user.userId],
+        user: gameDataMap[user._id],
         roundsTop: user.roundsTop,
       });
     });
@@ -60,7 +60,6 @@ export const LeaderboardToppers = ({
       `/${competitionStrs.hyphenated}/${seasonStr}/?user=${userId}&leaderboard=${entrantTypeStr}`
     );
   };
-
   return (
     <Panel>
       <div className={styles.leaderboard_toppers__con}>

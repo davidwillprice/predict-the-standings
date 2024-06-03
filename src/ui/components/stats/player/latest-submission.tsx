@@ -1,49 +1,41 @@
 import { Panel } from "@components/panels/panel";
 
-import {
-  UserGameDataMap,
-  UserGameData,
-  UserId,
-} from "@custom-types/game-types";
+import { GameDataMap, UserGameData } from "@custom-types/game-types";
 
 interface Props {
   currUser: UserGameData | null;
   predictionFreezeDate: Date;
-  userId: UserId;
-  users: UserGameDataMap;
+  gameDataId: string;
+  gameDataMap: GameDataMap;
 }
 
 export const LastestSubmission = ({
   currUser,
   predictionFreezeDate,
-  userId,
-  users,
+  gameDataId,
+  gameDataMap,
 }: Props) => {
-  const currUserIsLatestSubmission = currUser && userId === currUser.userId;
+  const latestSubmissionUser = gameDataMap[gameDataId];
 
-  const latestSubmissionUser = Object.values(users).find(
-    (user) => user.userId === userId
-  );
+  const currUserIsLatestSubmission =
+    currUser && latestSubmissionUser?.userId === currUser.userId;
 
   if (latestSubmissionUser === undefined) throw new Error("User not found");
 
-  const secondsBetweenSubmissionAndFreeze = Math.ceil(
+  const secsBetweenSubmissionAndFreeze = Math.ceil(
     (predictionFreezeDate.getTime() -
       new Date(latestSubmissionUser?.lastSubmissionTime).getTime()) /
       1000
   );
 
-  const minutesBetweenSubmissionAndFreeze = Math.ceil(
-    secondsBetweenSubmissionAndFreeze / 60
+  const minsBetweenSubmissionAndFreeze = Math.ceil(
+    secsBetweenSubmissionAndFreeze / 60
   );
 
-  /**If noone submitted a prediction within 60 minutes of the prediction freeze or the user's submission time isn't accurate, don't bother showing this stat at all*/
-  if (
-    minutesBetweenSubmissionAndFreeze > 60 ||
-    secondsBetweenSubmissionAndFreeze < 0
-  ) {
+  /**If no one submitted a prediction within 60 minutes of the prediction freeze or the user's submission time isn't accurate, don't bother showing this stat at all*/
+  if (minsBetweenSubmissionAndFreeze > 60 || secsBetweenSubmissionAndFreeze < 0)
     return "";
-  }
+
   return (
     <Panel>
       <h2>Cutting It Fine</h2>
@@ -54,12 +46,12 @@ export const LastestSubmission = ({
             : latestSubmissionUser?.displayName}{" "}
           updated {currUserIsLatestSubmission ? "your" : "their"} predictions
           the latest,{" "}
-          {secondsBetweenSubmissionAndFreeze < 300
-            ? `${secondsBetweenSubmissionAndFreeze} second${
-                secondsBetweenSubmissionAndFreeze !== 1 && "s"
+          {secsBetweenSubmissionAndFreeze < 300
+            ? `${secsBetweenSubmissionAndFreeze} second${
+                secsBetweenSubmissionAndFreeze !== 1 && "s"
               }`
-            : `${minutesBetweenSubmissionAndFreeze} minute${
-                minutesBetweenSubmissionAndFreeze !== 1 && "s"
+            : `${minsBetweenSubmissionAndFreeze} minute${
+                minsBetweenSubmissionAndFreeze !== 1 && "s"
               }`}{" "}
           before predictions froze.
         </p>

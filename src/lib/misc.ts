@@ -1,6 +1,7 @@
 import type {
   CollectionObj,
   Entrant,
+  GameDataMap,
   ShortHandCompStr,
   UserGameDataMap,
 } from "@custom-types/game-types";
@@ -164,6 +165,18 @@ export const convertDocArrToUserGameDataMap = (
   const users: UserGameDataMap = {};
   for (const doc of docArr) {
     users[doc.userId] = convertDocumentToUserGameData(doc);
+  }
+  return users;
+};
+
+/**Same as above but uses the gameData _id as a key instead of the userId */
+export const convertDocArrToGameDataMap = (
+  docArr: WithId<UserGameData>[]
+): GameDataMap => {
+  const users: GameDataMap = {};
+  for (const doc of docArr) {
+    users[typeof doc._id === "string" ? doc._id : doc._id.toString()] =
+      convertDocumentToUserGameData(doc);
   }
   return users;
 };

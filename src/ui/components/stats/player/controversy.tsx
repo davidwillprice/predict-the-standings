@@ -1,51 +1,52 @@
 import { formatArrayIntoList, bringCurrUserToFrontOfArr } from "@lib/misc";
 
 import {
-  ControversialUserIds,
-  UserGameDataMap,
+  ControversialGameDataIdMap,
+  GameDataMap,
   UserGameData,
 } from "@custom-types/game-types";
 
 interface Props {
-  controversialUserIds: ControversialUserIds;
+  controversialGameDataIdMap: ControversialGameDataIdMap;
   currUser: UserGameData | null;
-  users: UserGameDataMap;
+  gameDataMap: GameDataMap;
 }
 
 export const Controversy = ({
-  controversialUserIds,
+  controversialGameDataIdMap,
   currUser,
-  users,
+  gameDataMap,
 }: Props) => {
   class MostOrLeastControData {
-    users: UserGameData[];
+    gameDataMap: UserGameData[];
     difFromAvg: number;
     controType: "most" | "least";
     entrantType: string;
     constructor(
-      users: UserGameData[],
+      gameDataMap: UserGameData[],
       controType: "most" | "least",
       entrantType: string
     ) {
-      this.users = users;
+      this.gameDataMap = gameDataMap;
       this.controType = controType;
-      this.difFromAvg = users[0].predictionsFromAvg[entrantType];
+      this.difFromAvg = gameDataMap[0].predictionsFromAvg[entrantType];
       this.entrantType = entrantType;
     }
   }
 
-  const isMultiEntrantTypes = Object.keys(controversialUserIds).length > 1;
+  const isMultiEntrantTypes =
+    Object.keys(controversialGameDataIdMap).length > 1;
 
   //**Create an array of controversy stats, one for each entrant type and their most/least contro players */
   let mostOrLeastControPlayers = [];
-  for (const entrantType of Object.keys(controversialUserIds)) {
-    //**Convert the arr of most contro userIds into user data */
-    const mostControUsers = controversialUserIds[entrantType].most.map(
-      (userId) => users[userId]
+  for (const entrantType of Object.keys(controversialGameDataIdMap)) {
+    //**Convert the arr of most contro gameData _id's into actual user game data */
+    const mostControUsers = controversialGameDataIdMap[entrantType].most.map(
+      (_id) => gameDataMap[_id]
     );
-    //**Convert the arr of least contro userIds into user data */
-    const leastControUsers = controversialUserIds[entrantType].least.map(
-      (userId) => users[userId]
+    //**Convert the arr of least contro gameData _id's into actual user game data */
+    const leastControUsers = controversialGameDataIdMap[entrantType].least.map(
+      (_id) => gameDataMap[_id]
     );
     mostOrLeastControPlayers.push(
       new MostOrLeastControData(mostControUsers, "most", entrantType)
@@ -82,12 +83,12 @@ export const Controversy = ({
       )}
       <ul>
         {mostOrLeastControPlayers.map((userData) => {
-          const { users, difFromAvg, controType, entrantType } = userData;
+          const { gameDataMap, difFromAvg, controType, entrantType } = userData;
 
           return (
             <li key={controType + entrantType}>
               {`${formatArrayIntoList(
-                bringCurrUserToFrontOfArr(currUser, users).map((user) => {
+                bringCurrUserToFrontOfArr(currUser, gameDataMap).map((user) => {
                   if (!user.displayName) throw new Error();
                   if (user.userId === currUser?.userId) {
                     return "You";

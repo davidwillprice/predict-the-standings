@@ -96,10 +96,11 @@ async function submitCompetitionGameData(
         $set: {
           type: "statsData",
           allEntrants: gameData.allEntrantStats,
-          controversialUserIds: gameData.controversialUserIds,
-          latestSubmissionUserId: gameData.latestSubmissionUserId,
-          leaderboardToppingUserIds: gameData.leaderboardToppingUserIds,
-          mostUpdatedPredictionUserIds: gameData.mostUpdatedPredictionUserIds,
+          controversialGameDataIdMap: gameData.controversialGameDataIdMap,
+          lastSubmittedGameDataId: gameData.lastSubmittedGameDataId,
+          leaderboardToppingGameDataIdMap:
+            gameData.leaderboardToppingGameDataIdMap,
+          mostUpdatedGameDataIdArr: gameData.mostUpdatedGameDataIdArr,
           noOfPredictions: noOfPredictions,
           rounds: gameData.roundStats,
         },

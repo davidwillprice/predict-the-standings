@@ -55,49 +55,53 @@ export const PlayerStats = async ({
     if (res) currUserGameData = res;
   }
 
-  /**If there is round data, get the stats for this competition/season, and then get the users referenced in those stats*/
-  let controversialUserIds;
-  let latestSubmissionUserId;
-  let leaderboardToppingUserIds;
-  let mostUpdatedPredictionUserIds;
-  /**@todo Make this a set to avoid getting the same user data from the DB multiple times */
-  let noteworthyUserIds: string[] = [];
-  let users;
+  /**If there is round data for the comp/season, query the player stats data from the DB, and then get the full userGameData referenced in those stats*/
+  let controversialGameDataIdMap,
+    lastSubmittedGameDataId,
+    leaderboardToppingGameDataIdMap,
+    mostUpdatedGameDataIdArr,
+    gameDataMap,
+    noteworthyGameDataIds: string[] = [];
+
   if (rounds.length > 0) {
     const statsData = await getStatsDataQuery(
       seasonStr,
       competitionStrs.shortHand
     );
-    controversialUserIds = statsData.controversialUserIds;
-    latestSubmissionUserId = statsData.latestSubmissionUserId;
-    leaderboardToppingUserIds = statsData.leaderboardToppingUserIds;
-    mostUpdatedPredictionUserIds = statsData.mostUpdatedPredictionUserIds;
 
-    /**Obtain game data for all the users referenced in the controversy Id obj and mostUpdatedPredictionUserIds */
-    for (const entrantType of Object.keys(controversialUserIds)) {
-      controversialUserIds[entrantType].most.forEach((userId) =>
-        noteworthyUserIds.push(userId)
+    ({
+      controversialGameDataIdMap,
+      lastSubmittedGameDataId,
+      leaderboardToppingGameDataIdMap,
+      mostUpdatedGameDataIdArr,
+    } = statsData);
+
+    /**Obtain game data for all the _id stored in the controversy Id obj and mostUpdatedGameDataIdArr */
+    for (const entrantType of Object.keys(controversialGameDataIdMap)) {
+      controversialGameDataIdMap[entrantType].most.forEach((_id) =>
+        noteworthyGameDataIds.push(_id)
       );
-      controversialUserIds[entrantType].least.forEach((userId) =>
-        noteworthyUserIds.push(userId)
+      controversialGameDataIdMap[entrantType].least.forEach((_id) =>
+        noteworthyGameDataIds.push(_id)
       );
     }
-    /**Obtain game data for all the users referenced in the leaderboardToppingUserIds */
-    for (const arr of Object.values(leaderboardToppingUserIds)) {
+    /**Obtain game data for all the _id stored in the leaderboardToppingGameDataIdMap */
+    for (const arr of Object.values(leaderboardToppingGameDataIdMap)) {
       arr.forEach((userToppingData) => {
-        noteworthyUserIds.push(userToppingData.userId);
+        noteworthyGameDataIds.push(userToppingData._id);
       });
     }
 
-    noteworthyUserIds = noteworthyUserIds.concat(
-      mostUpdatedPredictionUserIds,
-      latestSubmissionUserId
+    noteworthyGameDataIds = noteworthyGameDataIds.concat(
+      mostUpdatedGameDataIdArr,
+      lastSubmittedGameDataId
     );
 
-    users = await getMultipleUserGameData(
+    gameDataMap = await getMultipleUserGameData(
       seasonStr,
       competitionStrs.shortHand,
-      noteworthyUserIds
+      //Turn into a set to querying to avoid querying for duplicate userGameData
+      [...new Set(noteworthyGameDataIds)]
     );
   }
 
@@ -109,41 +113,41 @@ export const PlayerStats = async ({
   /**@todo Table of which entrants is causing the logged in user the biggest issues? */
   return (
     <>
-      {rounds.length > 0 && controversialUserIds !== undefined ? (
+      {rounds.length > 0 && controversialGameDataIdMap !== undefined ? (
         <Suspense fallback={<LoadingSpinner />}>
           <Panel>
             <Controversy
-              controversialUserIds={controversialUserIds}
+              controversialGameDataIdMap={controversialGameDataIdMap}
               currUser={currUserGameData}
-              users={JSON.parse(JSON.stringify(users))}
+              gameDataMap={JSON.parse(JSON.stringify(gameDataMap))}
             />
           </Panel>
-          {mostUpdatedPredictionUserIds &&
-            mostUpdatedPredictionUserIds.length !== 0 && (
+          {mostUpdatedGameDataIdArr &&
+            mostUpdatedGameDataIdArr.length !== 0 && (
               <Panel>
                 <MostUpdated
-                  mostUpdatedPredictionUserIds={mostUpdatedPredictionUserIds}
+                  mostUpdatedGameDataIdArr={mostUpdatedGameDataIdArr}
                   currUser={currUserGameData}
-                  users={JSON.parse(JSON.stringify(users))}
+                  gameDataMap={JSON.parse(JSON.stringify(gameDataMap))}
                 />
               </Panel>
             )}
-          {latestSubmissionUserId && (
+          {lastSubmittedGameDataId && (
             <LastestSubmission
               currUser={currUserGameData}
               predictionFreezeDate={seasonData.predictionFreezeDate}
-              userId={latestSubmissionUserId}
-              users={JSON.parse(JSON.stringify(users))}
+              gameDataId={lastSubmittedGameDataId}
+              gameDataMap={JSON.parse(JSON.stringify(gameDataMap))}
             />
           )}
-          {leaderboardToppingUserIds && !isOneRoundSeason && (
+          {leaderboardToppingGameDataIdMap && !isOneRoundSeason && (
             <LeaderboardToppers
               competitionStrs={competitionStrs}
               currUserId={currUser?.id}
               isSeasonOver={isSeasonOver}
-              leaderboardToppingUserIds={leaderboardToppingUserIds}
+              leaderboardToppingGameDataIdMap={leaderboardToppingGameDataIdMap}
               seasonStr={seasonData.id}
-              users={JSON.parse(JSON.stringify(users))}
+              gameDataMap={JSON.parse(JSON.stringify(gameDataMap))}
             />
           )}
         </Suspense>

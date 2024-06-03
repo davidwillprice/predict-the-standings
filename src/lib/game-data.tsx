@@ -1,17 +1,17 @@
 import {
   AllEntrants,
-  ControversialUserIds,
+  ControversialGameDataIdMap,
   EntrantStats,
   GameData,
-  LeaderboardToppingUserIds,
-  MostUpdatedPredictionUserIds,
+  LeaderboardToppingGameDataIdMap,
+  MostUpdatedGameDataIdArr,
   Round,
   ShortHandCompStr,
   UserGameData,
   UserGameDataMap,
-  UserId,
 } from "@custom-types/game-types";
 import { calcPercentile } from "./misc";
+import { averageGameDataObjId } from "@data/object-ids";
 
 export const createGameData = async (
   allEntrants: AllEntrants,
@@ -21,7 +21,7 @@ export const createGameData = async (
 ): Promise<GameData | string> => {
   //**Creates an 'average' user */
   users.average = new UserGameData(
-    "average",
+    averageGameDataObjId,
     "Average",
     new Date("3000-04-18T20:38:36.780Z"), //Stupidly high value so other players will always be positioned ahead if they have the same predictions
     {},
@@ -50,15 +50,14 @@ export const createGameData = async (
 
   const haveUsersSubmittedPredictionsYet = Object.values(users).length > 1;
 
-  /**Storing playerIds for use on the player stats page */
-  const controversialUserIds = getControversialUserGameDataMap(users);
-  const mostUpdatedPredictionUserIds =
-    getUpdatedPredictionUserGameDataMap(users);
-  const latestSubmissionUserId = haveUsersSubmittedPredictionsYet
-    ? getlatestSubmissionUserId(users)
+  /**Store noteworthy gameData _id's for use on the player stats page */
+  const controversialGameDataIdMap = getControversialGameData(users);
+  const mostUpdatedGameDataIdArr = getMostUpdatedGameData(users);
+  const lastSubmittedGameDataId = haveUsersSubmittedPredictionsYet
+    ? getLastSubmittedGameDataId(users)
     : null;
-  const leaderboardToppingUserIds = haveUsersSubmittedPredictionsYet
-    ? getLeaderboardToppingUserIds(users)
+  const leaderboardToppingGameDataIdMap = haveUsersSubmittedPredictionsYet
+    ? getLeaderboardToppingGameData(users)
     : null;
 
   users = addLeaderboardDataToUserGameDataMap(rounds, users);
@@ -79,10 +78,10 @@ export const createGameData = async (
 
   return {
     allEntrantStats: allEntrantStats,
-    controversialUserIds: controversialUserIds,
-    latestSubmissionUserId: latestSubmissionUserId,
-    leaderboardToppingUserIds: leaderboardToppingUserIds,
-    mostUpdatedPredictionUserIds: mostUpdatedPredictionUserIds,
+    controversialGameDataIdMap: controversialGameDataIdMap,
+    lastSubmittedGameDataId: lastSubmittedGameDataId,
+    leaderboardToppingGameDataIdMap: leaderboardToppingGameDataIdMap,
+    mostUpdatedGameDataIdArr: mostUpdatedGameDataIdArr,
     roundStats: rounds.map((round) => {
       return {
         accurateEntrants: round.accurateEntrants,
@@ -563,25 +562,24 @@ export function generateControversyData(
 }
 
 /**Get only the userIds of those who were the most/least controversial */
-function getControversialUserGameDataMap(
+function getControversialGameData(
   users: UserGameDataMap
-): ControversialUserIds {
-  let controversialUserGameDataMap: ControversialUserIds = {};
-  let mostLeastControUserArrs: { [key: string]: UserGameData[] } = {};
+): ControversialGameDataIdMap {
+  let controIdMap: ControversialGameDataIdMap = {};
+  let userGameDataMap: { [key: string]: UserGameData[] } = {};
 
   /**Populate controversyArrays with the all users in any order */
   for (const user of Object.values(users)) {
     if (user.displayName === "Average") continue;
     for (const entrantType in user.predictions) {
-      if (!mostLeastControUserArrs[entrantType])
-        mostLeastControUserArrs[entrantType] = [];
-      mostLeastControUserArrs[entrantType].push(user);
+      if (!userGameDataMap[entrantType]) userGameDataMap[entrantType] = [];
+      userGameDataMap[entrantType].push(user);
     }
   }
 
-  /**Order users in mostLeastControUserArrs by how controversial they are */
-  for (const entrantType in mostLeastControUserArrs) {
-    mostLeastControUserArrs[entrantType].sort((a, b) =>
+  /**Order users in userGameDataMap by how controversial they are */
+  for (const entrantType in userGameDataMap) {
+    userGameDataMap[entrantType].sort((a, b) =>
       a.predictionsFromAvg[entrantType]! > b.predictionsFromAvg[entrantType]!
         ? 1
         : -1
@@ -589,66 +587,69 @@ function getControversialUserGameDataMap(
   }
 
   /**Get the userIds of the those who were the most/least controversial*/
-  for (const entrantType in mostLeastControUserArrs) {
+  for (const entrantType in userGameDataMap) {
     /**Get most/least controversial users*/
     const mostControUser =
-      mostLeastControUserArrs[entrantType][
-        mostLeastControUserArrs[entrantType].length - 1
-      ];
-    const leastControUser = mostLeastControUserArrs[entrantType][0];
+      userGameDataMap[entrantType][userGameDataMap[entrantType].length - 1];
+    const leastControUser = userGameDataMap[entrantType][0];
 
-    /**Filter the userArr by those who are as contro as the most/least contro user, then add their Ids to the controversialUserGameDataMap obj*/
-    controversialUserGameDataMap[entrantType] = {
-      most: mostLeastControUserArrs[entrantType]
+    /**Filter the userArr by those who are as contro as the most/least contro user, then add their gameData Ids to the controIdMap obj*/
+    controIdMap[entrantType] = {
+      most: userGameDataMap[entrantType]
         .filter(
           (user) =>
             user.predictionsFromAvg[entrantType] ===
             mostControUser.predictionsFromAvg[entrantType]
         )
-        .map((user) => user.userId),
-      least: mostLeastControUserArrs[entrantType]
+        .map((user) =>
+          typeof user._id === "string" ? user._id : user._id.toString()
+        ),
+      least: userGameDataMap[entrantType]
         .filter(
           (user) =>
             user.predictionsFromAvg[entrantType] ===
             leastControUser.predictionsFromAvg[entrantType]
         )
-        .map((user) => user.userId),
+        .map((user) =>
+          typeof user._id === "string" ? user._id : user._id.toString()
+        ),
     };
   }
-  return controversialUserGameDataMap;
+  return controIdMap;
 }
 
-/**Get only the userIds of those who updated their predictions the most */
-function getUpdatedPredictionUserGameDataMap(
+/**Get only the _id's of the userGameData which had their predictions updated the most */
+const getMostUpdatedGameData = (
   users: UserGameDataMap
-): MostUpdatedPredictionUserIds {
-  let mostUpdatedPredictionUserArr: UserGameData[] = [];
+): MostUpdatedGameDataIdArr => {
+  let mostUpdatedGameDataIdArr: UserGameData[] = [];
 
-  /**Populate arrays with the all users with a 'timesPredictionsUpdated' value in any order */
+  /**Populate arrays with the all userGameData with a 'timesPredictionsUpdated' value in any order */
   for (const user of Object.values(users)) {
     if (!user.timesPredictionsUpdated) continue;
-    mostUpdatedPredictionUserArr.push(user);
+    mostUpdatedGameDataIdArr.push(user);
   }
 
-  if (mostUpdatedPredictionUserArr.length === 0) return [];
+  if (mostUpdatedGameDataIdArr.length === 0) return [];
 
-  /**Order users by how many times they updated their predictions */
-  mostUpdatedPredictionUserArr.sort((a, b) =>
+  /**Order them by how many times they updated their predictions */
+  mostUpdatedGameDataIdArr.sort((a, b) =>
     a.timesPredictionsUpdated! > b.timesPredictionsUpdated! ? -1 : 1
   );
 
   const mostTimesAUserUpdatedPredictions =
-    mostUpdatedPredictionUserArr[0].timesPredictionsUpdated;
+    mostUpdatedGameDataIdArr[0].timesPredictionsUpdated;
 
-  mostUpdatedPredictionUserArr = mostUpdatedPredictionUserArr.filter(
+  mostUpdatedGameDataIdArr = mostUpdatedGameDataIdArr.filter(
     (user) => user.timesPredictionsUpdated === mostTimesAUserUpdatedPredictions
   );
 
-  return mostUpdatedPredictionUserArr.map((user) => user.userId);
-}
+  return mostUpdatedGameDataIdArr.map((user) =>
+    typeof user._id === "string" ? user._id : user._id.toString()
+  );
+};
 
-/**Get the userId of the user who submitted their last predictions the latest */
-const getlatestSubmissionUserId = (users: UserGameDataMap): UserId => {
+const getLastSubmittedGameDataId = (users: UserGameDataMap): string => {
   /**Add standard users to an array */
   const userGameDataArr: UserGameData[] = [];
   Object.values(users).map((user) => {
@@ -662,7 +663,12 @@ const getlatestSubmissionUserId = (users: UserGameDataMap): UserId => {
     a.lastSubmissionTime.getTime() > b.lastSubmissionTime.getTime() ? -1 : 1
   );
 
-  return userGameDataArr[0].userId;
+  /**Get the _id of the gameData which was last submitted the latest */
+  const lastSubmittedGameData = userGameDataArr[0];
+
+  return typeof lastSubmittedGameData._id === "string"
+    ? lastSubmittedGameData._id
+    : lastSubmittedGameData._id.toString();
 };
 
 /**The leaderboards are unbounded arrays so I don't want to upload them to the DB */
@@ -694,27 +700,27 @@ const generateEntrantStats = (
   return allEntrantStats;
 };
 
-const getLeaderboardToppingUserIds = (
+const getLeaderboardToppingGameData = (
   users: UserGameDataMap
-): LeaderboardToppingUserIds => {
+): LeaderboardToppingGameDataIdMap => {
   /**Add create arrays for each entrantType which hold objects with a userId and the rounds they were top */
-  let leaderboardToppingUserIds: LeaderboardToppingUserIds = {};
+  let gameDataIdMap: LeaderboardToppingGameDataIdMap = {};
   for (const entrantType of Object.keys(users.average.predictions)) {
-    leaderboardToppingUserIds[entrantType] = [];
-    for (const userGameData of Object.values(users)) {
-      if (userGameData.roundsTop && userGameData.roundsTop[entrantType]) {
-        leaderboardToppingUserIds[entrantType].push({
-          userId: userGameData.userId,
-          roundsTop: userGameData.roundsTop[entrantType],
+    gameDataIdMap[entrantType] = [];
+    for (const user of Object.values(users)) {
+      if (user.roundsTop && user.roundsTop[entrantType]) {
+        gameDataIdMap[entrantType].push({
+          _id: typeof user._id === "string" ? user._id : user._id.toString(),
+          roundsTop: user.roundsTop[entrantType],
         });
       }
     }
     /**Sort the arrays by those who were top for the most rounds */
-    leaderboardToppingUserIds[entrantType].sort((a, b) =>
+    gameDataIdMap[entrantType].sort((a, b) =>
       a.roundsTop.length > b.roundsTop.length ? -1 : 1
     );
   }
-  return leaderboardToppingUserIds;
+  return gameDataIdMap;
 };
 
 const streamlineUserGameDataForDb = (

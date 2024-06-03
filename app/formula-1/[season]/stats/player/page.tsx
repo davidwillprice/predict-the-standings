@@ -24,7 +24,7 @@ const Page: NextPage<PageProps> = async ({ params }) => {
   if (seasonData === undefined) notFound();
 
   const session = await getServerSession(authOptions);
-  const currUser = session?.user.id;
+  const currUser = session?.user;
 
   return (
     <>

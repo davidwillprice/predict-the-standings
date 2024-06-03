@@ -192,6 +192,10 @@ export interface UserGameDataMap {
   [userId: string]: UserGameData;
 }
 
+export interface GameDataMap {
+  [_id: string]: UserGameData;
+}
+
 export class Round {
   entrantDiffTotals: { [entrantType: string]: EntrantDiffTotal[] };
   leaderboards: { [entrantType: string]: Leaderboard[] };
@@ -232,10 +236,10 @@ export interface RoundPerformance {
 
 export interface GameData {
   allEntrantStats: { [entrantType: string]: EntrantStats };
-  controversialUserIds: ControversialUserIds;
-  latestSubmissionUserId: UserId | null;
-  leaderboardToppingUserIds: LeaderboardToppingUserIds | null;
-  mostUpdatedPredictionUserIds: MostUpdatedPredictionUserIds;
+  controversialGameDataIdMap: ControversialGameDataIdMap;
+  lastSubmittedGameDataId: string | null;
+  leaderboardToppingGameDataIdMap: LeaderboardToppingGameDataIdMap | null;
+  mostUpdatedGameDataIdArr: MostUpdatedGameDataIdArr;
   roundStats: {
     accurateEntrants: {
       [entrantType: string]: {
@@ -249,11 +253,11 @@ export interface GameData {
 
 export interface StatsData {
   allEntrants: { [entrantType: string]: EntrantStats };
-  controversialUserIds: ControversialUserIds;
-  latestSubmissionUserId: UserId;
-  leaderboardToppingUserIds: LeaderboardToppingUserIds;
+  controversialGameDataIdMap: ControversialGameDataIdMap;
+  lastSubmittedGameDataId: string;
+  leaderboardToppingGameDataIdMap: LeaderboardToppingGameDataIdMap;
   noOfPredictions: NoOfPredictions;
-  mostUpdatedPredictionUserIds: MostUpdatedPredictionUserIds;
+  mostUpdatedGameDataIdArr: MostUpdatedGameDataIdArr;
   rounds: {
     accurateEntrants: {
       [entrantType: string]: {
@@ -272,17 +276,17 @@ export interface EntrantStats {
   };
 }
 
-export interface ControversialUserIds {
+export interface ControversialGameDataIdMap {
   [entrantType: string]: {
-    most: UserId[];
-    least: UserId[];
+    most: string[];
+    least: string[];
   };
 }
-export type MostUpdatedPredictionUserIds = UserId[];
+export type MostUpdatedGameDataIdArr = string[];
 
-export interface LeaderboardToppingUserIds {
+export interface LeaderboardToppingGameDataIdMap {
   [entrantType: string]: {
-    userId: UserId;
+    _id: string;
     roundsTop: number[];
   }[];
 }

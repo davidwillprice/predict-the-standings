@@ -1,35 +1,38 @@
 import { formatArrayIntoList, bringCurrUserToFrontOfArr } from "@lib/misc";
 
 import {
-  MostUpdatedPredictionUserIds,
-  UserGameDataMap,
+  MostUpdatedGameDataIdArr,
+  GameDataMap,
   UserGameData,
 } from "@custom-types/game-types";
 
 interface Props {
-  mostUpdatedPredictionUserIds: MostUpdatedPredictionUserIds;
+  mostUpdatedGameDataIdArr: MostUpdatedGameDataIdArr;
   currUser: UserGameData | null;
-  users: UserGameDataMap;
+  gameDataMap: GameDataMap;
 }
 
 export const MostUpdated = ({
-  mostUpdatedPredictionUserIds,
+  mostUpdatedGameDataIdArr,
   currUser,
-  users,
+  gameDataMap,
 }: Props) => {
-  const mostUpdatedPredictionUsers = mostUpdatedPredictionUserIds.map(
-    (userId) => users[userId]
+  const mostUpdatedPredictionUsers = mostUpdatedGameDataIdArr.map(
+    (_id) => gameDataMap[_id]
   );
 
-  const currUserMostUpdated =
-    currUser && mostUpdatedPredictionUserIds.includes(currUser.userId);
+  const didCurrUserMostUpdate =
+    currUser &&
+    mostUpdatedGameDataIdArr.includes(
+      typeof currUser._id === "string" ? currUser._id : currUser._id.toString()
+    );
 
   /**If the current user was one of those who updated their predictions the most, move them to the front of the arr*/
-  if (currUserMostUpdated) {
+  if (didCurrUserMostUpdate) {
     mostUpdatedPredictionUsers.unshift(
       mostUpdatedPredictionUsers.splice(
         mostUpdatedPredictionUsers.findIndex(
-          (user) => user.userId === currUser.userId
+          (user) => user._id === currUser._id
         ),
         1
       )[0]
@@ -41,7 +44,7 @@ export const MostUpdated = ({
       <h2>Indecisive</h2>
       {currUser !== null &&
         typeof currUser.timesPredictionsUpdated === "number" &&
-        !currUserMostUpdated && (
+        !didCurrUserMostUpdate && (
           <>
             <p>
               {currUser.timesPredictionsUpdated > 1
@@ -63,7 +66,7 @@ export const MostUpdated = ({
               return user.displayName;
             }
           )
-        )} updated ${currUserMostUpdated ? "your" : "their"} predictions ${
+        )} updated ${didCurrUserMostUpdate ? "your" : "their"} predictions ${
           mostUpdatedPredictionUsers[0].timesPredictionsUpdated
         } times, more than anyone else.`}
       </p>
