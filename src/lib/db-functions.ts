@@ -233,13 +233,13 @@ export const getStatsDataQuery = async (
       throw new Error(`Failed to get stats data for ${competition + season}`);
 
     const statsData: StatsData = {
-      allEntrants: result.allEntrantStats,
+      allEntrants: result.allEntrants,
       controversialGameDataIdMap: result.controversialGameDataIdMap,
       lastSubmittedGameDataId: result.lastSubmittedGameDataId,
       leaderboardToppingGameDataIdMap: result.leaderboardToppingGameDataIdMap,
       mostUpdatedGameDataIdArr: result.mostUpdatedGameDataIdArr,
       noOfPredictions: result.noOfPredictions,
-      rounds: result.roundStats,
+      rounds: result.rounds,
     };
 
     console.log("Getting stats data");
