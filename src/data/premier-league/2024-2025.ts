@@ -60,9 +60,9 @@ const id = "2024-2025";
 const isGameDataLocked = false;
 const isSeasonOver = false;
 const predictionFreezeDate = new Date("2024-08-11T20:00:00");
-const predictionsOpen = false;
+const predictionsOpen = true;
 
-export const seasonData20232024 = new LocalSeasonData(
+export const seasonData20242025 = new LocalSeasonData(
   allEntrants,
   id,
   isGameDataLocked,
