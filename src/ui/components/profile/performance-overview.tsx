@@ -135,6 +135,8 @@ export const PerformanceOverview = ({ user }: Props) => {
       getAllGameDataForUser(gameDataCollectionObjArr);
     }
   }, [user]);
+
+  const noOfSkeleRows = 3;
   return (
     <>
       <PanelHeading>
@@ -142,10 +144,28 @@ export const PerformanceOverview = ({ user }: Props) => {
       </PanelHeading>
       {performanceRowArr === null ? (
         <div className={skeleStyles.con}>
-          <div className={skeleStyles.gradient}></div>
-          <div className={skeleStyles.row}></div>
-          <div className={skeleStyles.row}></div>
-          <div className={skeleStyles.row}></div>
+          {Array.from(Array(noOfSkeleRows).keys())
+            .reverse()
+            .map((reverseIndex, _) => {
+              const no = reverseIndex + 1;
+              const gap = (1 / (noOfSkeleRows - 1)) * no;
+              const firstValue = gap - 1 / (noOfSkeleRows - 1);
+              const secondValue = gap;
+              return (
+                <div
+                  className={skeleStyles.row}
+                  key={no}
+                  style={{
+                    maskImage: `-webkit-gradient(
+              linear,
+              left 90%,
+              left top,
+              from(rgba(0, 0, 0, ${no === noOfSkeleRows ? 1 : firstValue})),
+              to(rgba(0, 0, 0, ${no === noOfSkeleRows ? 1 : secondValue}))
+            )`,
+                  }}></div>
+              );
+            })}
         </div>
       ) : performanceRowArr.length === 0 ? (
         <Panel>
@@ -218,7 +238,7 @@ export const PerformanceOverview = ({ user }: Props) => {
                     {leaderboardPos ? (
                       <>
                         <span className={styles.mobOnlyLabel}>
-                          Leaderboard Position:{" "}
+                          Position:{" "}
                           {/**@todo Would be nice to add how many other players there were/are */}
                         </span>{" "}
                         {numberToOrdinalNumber(leaderboardPos)}

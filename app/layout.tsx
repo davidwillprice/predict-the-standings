@@ -5,6 +5,7 @@ import { Roboto } from "next/font/google";
 
 import Header from "@components/header/header";
 import { SecondaryMenu } from "@components/header/secondary-menu";
+import { Background } from "@components/background/background";
 
 import "@styles/globals.scss";
 import styles from "@styles/layout.module.scss";
@@ -33,6 +34,7 @@ export default function RootLayout({
       <body>
         <Providers>
           <SessionProvider>
+            <Background />
             <Header />
             <div className={styles.content_container}>
               <main className={styles.main}>{children}</main>

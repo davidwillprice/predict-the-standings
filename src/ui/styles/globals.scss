@@ -4,6 +4,7 @@
   --max-width: 1100px;
   --border-radius: 12px;
   --primary-color: #ffffff;
+  --primary-color-values: 255, 255, 255; //For use as part of rgba()
   --secondary-color: #010136;
   --tertiary-color: #edf1f4;
   --tertiary-color-values: 237, 241, 244; //For use as part of rgba()
@@ -11,10 +12,19 @@
   --box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
   --error-color: rgb(198, 0, 0);
   --success-color: green;
+
+  --background-color-a-1: #f8f9fd;
+  --background-color-a-2: #b8ccfd;
+  --background-color-b-1: #fee7c4;
+  --background-color-b-2: #f9b7c3;
+  --background-color-c-1: #fdf8f8;
+  --background-color-c-2: #ffa9a9;
+  --background-svg-opacity: 0.1;
 }
 
 [data-theme="dark"] {
   --primary-color: #012c4e;
+  --primary-color-values: 1, 44, 78; //For use as part of rgba()
   --secondary-color: #b8dfd8;
   --tertiary-color: #011627;
   --tertiary-color-values: 1, 22, 39; //For use as part of rgba()
@@ -22,6 +32,14 @@
   --box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 1px 2px;
   --error-color: #ff7f7f;
   --success-color: rgb(27, 235, 27);
+
+  --background-color-a-1: #011627;
+  --background-color-a-2: black;
+  --background-color-b-1: #011627;
+  --background-color-b-2: black;
+  --background-color-c-1: #011627;
+  --background-color-c-2: black;
+  --background-svg-opacity: 0.25;
 }
 
 * {
@@ -48,6 +66,8 @@ body {
 
 body {
   overflow-x: hidden;
+  z-index: -1;
+  position: relative;
 }
 
 h1,
@@ -77,7 +97,8 @@ a {
   text-decoration: none;
 }
 
-p a {
+p a,
+ul a {
   text-decoration: underline;
 }
 
@@ -98,6 +119,12 @@ ul,
 ol {
   margin-left: 20px;
 }
+li > ul {
+  margin-top: 10px;
+}
+li ul {
+  columns: 2;
+}
 
 p,
 ul,
@@ -117,4 +144,10 @@ a {
 
 li {
   margin-bottom: 10px;
+}
+
+@media (max-width: 400px) {
+  li ul {
+    columns: auto;
+  }
 }

@@ -17,6 +17,7 @@ export const SecondaryMenu = ({ type }: Props) => (
     {type === "header" ? <hr /> : ""}
     <Link href="/terms-of-service">Terms of Service</Link>
     <Link href="/privacy-policy">Privacy Policy</Link>
+    <Link href="/attribution">Attribution</Link>
     {type === "footer" ? (
       <a href="mailto:predictthestandings@protonmail.com">
         predictthestandings@protonmail.com
