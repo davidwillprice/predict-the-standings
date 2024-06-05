@@ -47,39 +47,41 @@ export const EditF1Predictions = ({
 
   const { allEntrants, competitionStrs } = seasonData;
   return (
-    <div className={styles.edit_predictions_con}>
-      <div className={styles.infoCon}>
-        <PanelHeading align="center">
-          <h1>Predict the F1 {season} Standings</h1>
-        </PanelHeading>
-        {children}
-        <SubmitPredictions
-          allEntrantArrs={{ drivers: driverArr, teams: teamArr }}
-          arePredictionsFrozen={arePredictionsFrozen}
-          competitionStrs={competitionStrs}
-          displayName={displayName}
-          season={season}
-          currUser={currUser}
-        />
-      </div>
-      <div className={styles.prediction_tables}>
-        <div className={styles.prediction_table_con}>
-          <EditablePredictionTable
-            allEntrants={allEntrants}
-            competition={competitionStrs.shortHand}
-            entrantArr={driverArr}
-            entrantType={"drivers"}
-            handleEntrantState={handleDriverState}
+    <>
+      <div className={styles.edit_predictions_con}>
+        <div className={styles.infoCon}>
+          <PanelHeading align="center">
+            <h1>Predict the F1 {season} Standings</h1>
+          </PanelHeading>
+          {children}
+          <SubmitPredictions
+            allEntrantArrs={{ drivers: driverArr, teams: teamArr }}
+            arePredictionsFrozen={arePredictionsFrozen}
+            competitionStrs={competitionStrs}
+            displayName={displayName}
+            season={season}
+            currUser={currUser}
           />
         </div>
-        <div className={styles.prediction_table_con}>
-          <EditablePredictionTable
-            allEntrants={allEntrants}
-            competition={competitionStrs.shortHand}
-            entrantArr={teamArr}
-            entrantType={"teams"}
-            handleEntrantState={handleTeamState}
-          />
+        <div className={styles.prediction_tables}>
+          <div className={styles.prediction_table_con}>
+            <EditablePredictionTable
+              allEntrants={allEntrants}
+              competition={competitionStrs.shortHand}
+              entrantArr={driverArr}
+              entrantType={"drivers"}
+              handleEntrantState={handleDriverState}
+            />
+          </div>
+          <div className={styles.prediction_table_con}>
+            <EditablePredictionTable
+              allEntrants={allEntrants}
+              competition={competitionStrs.shortHand}
+              entrantArr={teamArr}
+              entrantType={"teams"}
+              handleEntrantState={handleTeamState}
+            />
+          </div>
         </div>
       </div>
       <div className={btnConStyles.single}>
@@ -90,6 +92,6 @@ export const EditF1Predictions = ({
           Back to top
         </a>
       </div>
-    </div>
+    </>
   );
 };

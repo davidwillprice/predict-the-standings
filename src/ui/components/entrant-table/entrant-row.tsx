@@ -69,6 +69,13 @@ export const EntrantRow = ({
       </>
     );
   } else {
-    return <tr className={styles.table_row}>{standardRowContent}</tr>;
+    return (
+      <tr
+        className={`${styles.table_row} ${
+          shortHandCompStr === "eurovision" ? styles.large_entrants : ""
+        }`}>
+        {standardRowContent}
+      </tr>
+    );
   }
 };

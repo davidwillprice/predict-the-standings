@@ -61,7 +61,7 @@ const Page = () => {
           </small>
         </p>
       </PanelHeading>
-      {/**@todo Add starts on how accurate the average predictions have been for each season */}
+      {/**@todo Add stats on how accurate the average predictions have been for each season */}
     </>
   );
 };

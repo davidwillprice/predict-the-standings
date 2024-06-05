@@ -130,7 +130,7 @@ export const SubmitPredictions = ({
    * On successful submission, submit button disappears and a confirmation shows, until changes are made again when the button and confirmation swap
    */
   return (
-    <div className={styles.submitPredictionsCon}>
+    <div className={styles.submit_predictions_con}>
       {savedEntrantArrs !== allEntrantArrs ? (
         submitting ? (
           <LoadingSpinner />

@@ -42,9 +42,21 @@
     }
   }
   .status {
+    padding: 0;
     text-transform: uppercase;
+    p {
+      padding: 5px;
+    }
+  }
+  .pos_cell,
+  .accuracy_cell {
+    padding: 0;
+    p {
+      padding: 5px;
+    }
   }
 }
+
 @media (min-width: 1000px) {
   .name span {
     display: none;
@@ -54,6 +66,13 @@
   }
 }
 @media (max-width: 1000px) {
+  .competitions {
+    tbody {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+  }
   .competitions th,
   .season {
     display: none;
@@ -64,6 +83,7 @@
     justify-content: center;
     align-items: center;
     padding: 10px;
+    width: 48%;
     background-color: var(--primary-color);
     border-radius: 5px;
     margin-bottom: 15px;
@@ -75,6 +95,21 @@
     }
     .name {
       justify-content: center;
+      font-weight: 500;
     }
+    .pos_cell,
+    .accuracy_cell {
+      width: 50%;
+    }
+  }
+}
+@media (max-width: 800px) {
+  .competitions {
+    tbody {
+      display: table;
+    }
+  }
+  .competition {
+    width: auto;
   }
 }

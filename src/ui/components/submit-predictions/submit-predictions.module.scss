@@ -16,7 +16,7 @@
   justify-content: space-between;
   width: 100%;
 }
-.submitPredictionsCon {
+.submit_predictions_con {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -47,6 +47,9 @@
   a.back_to_top_btn,
   button.back_to_top_btn {
     display: none;
+  }
+  .prediction_table_con {
+    width: 100%;
   }
 }
 

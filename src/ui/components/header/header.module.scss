@@ -122,6 +122,8 @@
   align-self: flex-end;
   margin-top: auto;
   width: 100%;
+  position: relative;
+  z-index: 1;
   a {
     width: 100%;
     padding: 5px;
@@ -143,24 +145,6 @@
   }
 }
 
-@media (min-width: $mobile-menu-breakpoint) and (max-width: $tablet-menu-breakpoint) {
-  .header {
-    min-width: $header-width-tablet;
-  }
-  .icon {
-    display: none;
-  }
-  .primary_menu {
-    gap: 10px;
-    .link {
-      padding-top: 10px;
-      padding-bottom: 10px;
-    }
-    & > div {
-      gap: 10px;
-    }
-  }
-}
 @media (min-width: $mobile-menu-breakpoint) {
   .menu_button {
     display: none;

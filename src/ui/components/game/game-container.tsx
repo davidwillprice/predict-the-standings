@@ -322,11 +322,10 @@ export const GameContainer = ({
                   usersPerPage={usersPerPage}
                 />
               ) : (
-                /**@todo Create skeleton for when there is a `user` query string in the params */
+                /**@todo Create seperate skeleton for when there is a `user` query string in the params */
                 <LeaderboardSkeleton usersPerPage={usersPerPage} />
               )}
             </div>
-            {/**@todo Too thin for Eurovision */}
             {standingsTable}
           </>
         ) : (

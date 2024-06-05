@@ -178,51 +178,20 @@ export default function Page() {
           </p>
         </section>
         <hr />
-        {/**@todo Update to MongoDb */}
         <section>
           <h3>4. Data Storage and Security</h3>
           <p>
-            We store your personal data in a Vercel database in Washington,
-            D.C., USA.
+            Your personal data is stored in a MongoDB cluster AWS database in
+            Ireland.
           </p>
           <p>
-            Learn about the protection and compliance measures Vercel takes to
-            ensure the security of your data, including DDoS mitigation, SOC 2
-            compliance and more on the{" "}
-            <a href="https://vercel.com/docs/security" target="_blank">
-              Vercel website
+            Learn about the protection and compliance measures MongoDB takes to
+            ensure the security and privacy of your data on the{" "}
+            <a href="https://www.mongodb.com/legal/privacy" target="_blank">
+              MongoDB website
             </a>
             .
           </p>
-          <p>Vercel also supports GDPR compliance meaning they:</p>
-          <ul>
-            <li>
-              Implement and maintain appropriate technical and organisational
-              security measures surrounding customer data.
-            </li>
-            <li>
-              Notify their customers without undue delay of any data breaches.
-            </li>
-            <li>
-              Impose similar data protection obligations on their sub-processors
-              as they do for themselves.
-            </li>
-            <li>
-              Respond to applicable{" "}
-              <a
-                href="https://vercel.com/legal/privacy-policy#eea"
-                target="_blank">
-                data subjects rights
-              </a>
-              , including requests for access, correction, and/or deletion of
-              their personal data.
-            </li>
-            <li>
-              Rely on the EU Standard Contractual Clauses and the UK Addendum as
-              valid data transfer mechanisms when transferring personal data
-              outside the EEA.
-            </li>
-          </ul>
         </section>
         <hr />
         <section>

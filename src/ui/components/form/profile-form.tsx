@@ -77,9 +77,6 @@ export const ProfileForm = ({ initialDisplayName }: Props) => {
       if (errorMessage) {
         throw new Error(errorMessage);
       } else {
-        {
-          /**@todo Once they've submitted a value display name, show links to currently running competitions, or have a message of something like 'Come back soon' if there are no predictions to make at the moment */
-        }
         await update({
           ...session,
           user: {

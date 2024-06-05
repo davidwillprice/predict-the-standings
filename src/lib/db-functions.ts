@@ -18,6 +18,7 @@ import {
 
 import {
   EntrantId,
+  GameData,
   GameDataMap,
   NoOfPredictions,
   RoundPerformance,
@@ -548,6 +549,49 @@ export const updateNoOfPredictionsQuery = async (
       throw new Error(
         `Failed to update/add noOfPredictions document in ${collection.collectionName}`
       );
+  } catch (error) {
+    throw error;
+  }
+};
+
+/**Add/Update the statsData document in the DB
+ * This is used to update the noOfPredictions where the statsData isn't included
+ */
+export const updateStatsDataQuery = async (
+  collection: Collection,
+  gameData: GameData,
+  noOfPredictions: NoOfPredictions
+) => {
+  try {
+    const result = await collection.updateOne(
+      {
+        _id: new ObjectId(statsDataObjId),
+      },
+      {
+        $set: {
+          type: "statsData",
+          allEntrants: gameData.allEntrantStats,
+          controversialGameDataIdMap: gameData.controversialGameDataIdMap,
+          lastSubmittedGameDataId: gameData.lastSubmittedGameDataId,
+          leaderboardToppingGameDataIdMap:
+            gameData.leaderboardToppingGameDataIdMap,
+          mostUpdatedGameDataIdArr: gameData.mostUpdatedGameDataIdArr,
+          noOfPredictions: noOfPredictions,
+          rounds: gameData.roundStats,
+        },
+      },
+      { upsert: true }
+    );
+
+    if (!result)
+      throw new Error(
+        `Failed to update/add statsData document in ${collection.collectionName}`
+      );
+    console.log(
+      `${collection.collectionName} gameData document was ${
+        result.upsertedId ? "inserted" : "updated"
+      }`
+    );
   } catch (error) {
     throw error;
   }

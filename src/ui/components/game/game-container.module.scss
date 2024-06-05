@@ -25,6 +25,11 @@
   gap: 20px;
 }
 
+@media (min-width: 1100px) {
+  .standings_table {
+    min-width: 200px;
+  }
+}
 @media (max-width: 900px) {
   .leaderboard_mode {
     .standings_table {

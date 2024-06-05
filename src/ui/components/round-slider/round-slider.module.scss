@@ -11,7 +11,7 @@
   position: fixed;
   bottom: 0px;
   max-width: 100%;
-  left: $header-width-desktop;
+  left: $header-width-desktop + 10px;
   right: 15px;
 }
 .con {
@@ -71,13 +71,6 @@
   background: var(--primary-color);
   cursor: pointer;
   border: 2px solid var(--secondary-color);
-}
-
-@media (max-width: $tablet-menu-breakpoint) {
-  .round_footer {
-    width: calc(100% - ($header-width-tablet + 30px));
-    left: $header-width-tablet + 15px;
-  }
 }
 
 @media (max-width: $mobile-menu-breakpoint) {

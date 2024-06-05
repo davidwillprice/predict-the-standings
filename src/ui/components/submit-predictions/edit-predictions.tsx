@@ -42,36 +42,38 @@ export const EditPredictions = ({
     setEntrantArr(entrantArr);
   };
   return (
-    <div className={styles.edit_predictions_con}>
-      <div className={styles.infoCon}>
-        <PanelHeading align="center">
-          <h1>
-            Predict the{" "}
-            {competitionStrs.shortHand === "eurovision"
-              ? `Eurovision ${season} Results`
-              : `${competitionStrs.display} ${season} Standings`}
-          </h1>
-        </PanelHeading>
+    <>
+      <div className={styles.edit_predictions_con}>
+        <div className={styles.infoCon}>
+          <PanelHeading align="center">
+            <h1>
+              Predict the{" "}
+              {competitionStrs.shortHand === "eurovision"
+                ? `Eurovision ${season} Results`
+                : `${competitionStrs.display} ${season} Standings`}
+            </h1>
+          </PanelHeading>
 
-        {children}
-        <SubmitPredictions
-          allEntrantArrs={{ [entrantType]: entrantArr }}
-          arePredictionsFrozen={arePredictionsFrozen}
-          currUser={currUser}
-          displayName={displayName}
-          competitionStrs={competitionStrs}
-          season={season}
-        />
-      </div>
-      <div className={styles.prediction_tables}>
-        <div className={styles.prediction_table_con}>
-          <EditablePredictionTable
-            allEntrants={allEntrants}
-            competition={competitionStrs.shortHand}
-            entrantArr={entrantArr}
-            entrantType={entrantType}
-            handleEntrantState={handleEntrantState}
+          {children}
+          <SubmitPredictions
+            allEntrantArrs={{ [entrantType]: entrantArr }}
+            arePredictionsFrozen={arePredictionsFrozen}
+            currUser={currUser}
+            displayName={displayName}
+            competitionStrs={competitionStrs}
+            season={season}
           />
+        </div>
+        <div className={styles.prediction_tables}>
+          <div className={styles.prediction_table_con}>
+            <EditablePredictionTable
+              allEntrants={allEntrants}
+              competition={competitionStrs.shortHand}
+              entrantArr={entrantArr}
+              entrantType={entrantType}
+              handleEntrantState={handleEntrantState}
+            />
+          </div>
         </div>
       </div>
       <div className={btnConStyles.single}>
@@ -82,6 +84,6 @@ export const EditPredictions = ({
           Back to top
         </a>
       </div>
-    </div>
+    </>
   );
 };

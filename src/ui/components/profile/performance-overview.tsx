@@ -233,33 +233,31 @@ export const PerformanceOverview = ({ user }: Props) => {
                       </p>
                     </div>
                   </td>
-                  <td>
-                    {/**@todo Hide <td> padding if empty on mobile */}
+                  <td className={styles.pos_cell}>
                     {leaderboardPos ? (
-                      <>
+                      <p>
                         <span className={styles.mobOnlyLabel}>
                           Position:{" "}
                           {/**@todo Would be nice to add how many other players there were/are */}
                         </span>{" "}
                         {numberToOrdinalNumber(leaderboardPos)}
-                      </>
+                      </p>
                     ) : (
                       ""
                     )}
                   </td>
-                  <td>
-                    {/**@todo Hide <td> padding if empty on mobile */}
+                  <td className={styles.accuracy_cell}>
                     {accurracy ? (
-                      <>
+                      <p>
                         <span className={styles.mobOnlyLabel}>Accuracy: </span>{" "}
                         {accurracy + "%"}
-                      </>
+                      </p>
                     ) : (
                       ""
                     )}
                   </td>
                   <td className={styles.status}>
-                    {seasonStatus !== "completed" ? seasonStatus : ""}
+                    {seasonStatus !== "completed" ? <p>{seasonStatus}</p> : ""}
                   </td>
                   <td>
                     {seasonStatus === "predictions open" ? (

@@ -12,6 +12,7 @@ import {
   updateLastUpdatedDateQuery,
   updateNoOfPredictionsQuery,
   updatePredictionFreezeDateQuery,
+  updateStatsDataQuery,
 } from "@lib/db-functions";
 import { statsDataObjId } from "@data/object-ids";
 
@@ -86,36 +87,10 @@ async function submitCompetitionGameData(
 
     await updateNoOfPredictionsQuery(collection, noOfPredictions);
 
-    /**Update/Add the stats data to the DB */
-    /**@todo This would be moved to the db-functions.tsx file */
-    const result = await collection.updateOne(
-      {
-        _id: new ObjectId(statsDataObjId),
-      },
-      {
-        $set: {
-          type: "statsData",
-          allEntrants: gameData.allEntrantStats,
-          controversialGameDataIdMap: gameData.controversialGameDataIdMap,
-          lastSubmittedGameDataId: gameData.lastSubmittedGameDataId,
-          leaderboardToppingGameDataIdMap:
-            gameData.leaderboardToppingGameDataIdMap,
-          mostUpdatedGameDataIdArr: gameData.mostUpdatedGameDataIdArr,
-          noOfPredictions: noOfPredictions,
-          rounds: gameData.roundStats,
-        },
-      },
-      { upsert: true }
-    );
+    await updateStatsDataQuery(collection, gameData, noOfPredictions);
 
     /**If everything has updated okay up to this point, log when this update happened in the DB */
     await updateLastUpdatedDateQuery(collection);
-
-    console.log(
-      `${collection.collectionName} gameData document was ${
-        result.upsertedId ? "inserted" : "updated"
-      }`
-    );
   }
 }
 

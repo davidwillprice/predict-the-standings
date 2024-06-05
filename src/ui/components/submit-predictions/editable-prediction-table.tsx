@@ -28,8 +28,7 @@ import {
   ShortHandCompStr,
 } from "@custom-types/game-types";
 
-import entrantRowStyles from "@components/entrant-table/entrant-table.module.scss";
-import styles from "@components/submit-predictions/editable-prediction-table.module.scss";
+import styles from "@components/entrant-table/entrant-table.module.scss";
 
 type Props = {
   allEntrants: AllEntrants;
@@ -87,7 +86,7 @@ export function EditablePredictionTable({
           ? styles.single_entrant_type_table
           : ""
       }`}>
-      <table className={entrantRowStyles.table}>
+      <table className={styles.table}>
         <DndContext
           sensors={sensors}
           collisionDetection={closestCenter}
@@ -162,7 +161,7 @@ const Item = forwardRef<HTMLTableRowElement, ItemProps>(
     /**@todo Would be nice to better incorporate the <tr> within EntrantRow while keeping the dragging functionality working */
     return (
       <tr
-        className={`${entrantRowStyles.table_row} ${styles.table_row}`}
+        className={styles.table_row}
         ref={ref}
         style={inlineStyles}
         {...props}>

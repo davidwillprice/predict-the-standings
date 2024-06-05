@@ -13,13 +13,6 @@
   width: 100%;
   z-index: 0;
 }
-
-@media (max-width: $tablet-menu-breakpoint) {
-  .content_container {
-    width: calc(100% - $header-width-tablet);
-    margin-left: $header-width-tablet;
-  }
-}
 @media (max-width: $mobile-menu-breakpoint) {
   .content_container {
     min-height: calc(100vh - $footer-height-mobile);
