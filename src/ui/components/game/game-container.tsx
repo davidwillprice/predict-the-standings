@@ -377,7 +377,7 @@ export const GameContainer = ({
             type={entrantType === "teams" ? "driver" : "f1"}
             strokeWidth={2}
           />
-          Switch to {entrantType === "team" ? "Drivers" : "Constructors"}{" "}
+          Switch to {entrantType === "teams" ? "Drivers" : "Constructors"}{" "}
           Leaderboard
         </Button>
       )}

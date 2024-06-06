@@ -55,6 +55,8 @@ export const Leaderboard = ({
       .leaderboardPos;
   const bestDisplayedLeaderboardPos =
     leaderboardArr[0].season[entrantType][roundIndex].leaderboardPos;
+  const currUserLeaderboardPos =
+    currUserGameData?.season[entrantType][roundIndex].leaderboardPos;
 
   const leaderboardRow = (userGameData: UserGameData) => {
     const roundData = userGameData.season[entrantType][roundIndex];
@@ -138,26 +140,31 @@ export const Leaderboard = ({
           </tr>
         </thead>
         <tbody>
-          {/**If the current user is position above players showing on the current page, show a preview of their position above the other players */}
-          {/**@todo If the current user is neighouring the shown page, don't bother showing the line row */}
-          {currUserGameData &&
-            currUserGameData.season[entrantType][roundIndex].leaderboardPos <
-              bestDisplayedLeaderboardPos && (
+          {/**If the current user is positioned above the players showing on the current page, show a preview of their position above the other players
+           * If they are only one position higher, don't bother with the lineRow
+           */}
+          {currUserLeaderboardPos &&
+            currUserLeaderboardPos < bestDisplayedLeaderboardPos && (
               <>
                 {leaderboardRow(currUserGameData)}
-                {lineRow}
+                {currUserLeaderboardPos + 1 !== bestDisplayedLeaderboardPos
+                  ? lineRow
+                  : ""}
               </>
             )}
           {/**Loop over and display the leaderboard rows for the currrent page */}
           {leaderboardArr.map((userGameData) => {
             return leaderboardRow(userGameData);
           })}
-          {/**If the current user is position below players showing on the current page, show a preview of their position below the other players */}
-          {currUserGameData &&
-            currUserGameData.season[entrantType][roundIndex].leaderboardPos >
-              worstDisplayedLeaderboardPos && (
+          {/**If the current user is positioned below the players showing on the current page, show a preview of their position below the other players
+           * If they are only one position lower, don't bother with the lineRow
+           */}
+          {currUserLeaderboardPos &&
+            currUserLeaderboardPos > worstDisplayedLeaderboardPos && (
               <>
-                {lineRow}
+                {currUserLeaderboardPos - 1 !== worstDisplayedLeaderboardPos
+                  ? lineRow
+                  : ""}
                 {leaderboardRow(currUserGameData)}
               </>
             )}
@@ -222,7 +229,18 @@ export const Leaderboard = ({
       <div className={styles.small_print}>
         <p>
           <small>
-            {`Showing ${bestDisplayedLeaderboardPos} - ${worstDisplayedLeaderboardPos} of ${noOfPredictions} players`}
+            {/**Positions of the best/worst displayed users, unless the currUser is neighbouring one of those in which case include them in the numbers */}
+            {`Showing ${
+              currUserLeaderboardPos &&
+              currUserLeaderboardPos + 1 === bestDisplayedLeaderboardPos
+                ? bestDisplayedLeaderboardPos - 1
+                : bestDisplayedLeaderboardPos
+            } - ${
+              currUserLeaderboardPos &&
+              currUserLeaderboardPos - 1 === worstDisplayedLeaderboardPos
+                ? worstDisplayedLeaderboardPos + 1
+                : worstDisplayedLeaderboardPos
+            } of ${noOfPredictions} players`}
           </small>
         </p>
         {lastUpdated && (
