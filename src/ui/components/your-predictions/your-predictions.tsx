@@ -5,11 +5,11 @@ import styles from "@components/entrant-table/entrant-table.module.scss";
 
 import { Entrant, LocalSeasonData } from "@custom-types/game-types";
 import { EntrantTable } from "@components/entrant-table/entrant-table";
-import { User } from "next-auth";
+import { UserDataFromSession } from "@custom-types/misc";
 
 interface Props {
   seasonData: LocalSeasonData;
-  currUser: User;
+  currUser: UserDataFromSession;
 }
 
 export const YourPredictions = async ({ seasonData, currUser }: Props) => {

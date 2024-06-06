@@ -1,8 +1,6 @@
-import { getServerSession } from "next-auth/next";
 import { redirect } from "next/navigation";
 import { Metadata } from "next";
-
-import { authOptions } from "@lib/auth";
+import { auth } from "@lib/auth";
 
 import { Panel } from "@components/panels/panel";
 import { PanelHeading } from "@components/panels/panel-heading";
@@ -16,7 +14,7 @@ export const metadata: Metadata = {
 };
 
 export default async function ProfilePage() {
-  const session = await getServerSession(authOptions);
+  const session = await auth();
   if (!session || !session.user) {
     return redirect("/login?error=display-name");
   }

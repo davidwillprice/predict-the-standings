@@ -6,10 +6,10 @@ import { Panel } from "@components/panels/panel";
 import { PromptPredictions } from "@components/submit-predictions/prompt-predictions";
 
 import { LocalSeasonData } from "@custom-types/game-types";
-import { User } from "next-auth";
+import { UserDataFromSession } from "@custom-types/misc";
 
 type Props = {
-  currUser: User | undefined;
+  currUser: UserDataFromSession | undefined;
   headingText: string;
   preseasonText: string;
   searchParams: { [key: string]: string | string[] | undefined };

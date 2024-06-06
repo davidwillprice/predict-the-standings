@@ -1,15 +1,14 @@
 import { Metadata } from "next";
-import { getServerSession } from "next-auth/next";
 import { redirect } from "next/navigation";
 import { NextPage } from "next";
 import { notFound } from "next/navigation";
+import { auth } from "@lib/auth";
 
 import {
   getSpecificGameDataIdFromSessionUser,
   sortEntrantsAlphabetically,
 } from "@lib/misc";
 import { getUserGameDataQuery } from "@lib/db-functions";
-import { authOptions } from "@lib/auth";
 import { allF1SeasonData } from "@data/formula-1/season-data";
 
 import { Panel } from "@components/panels/panel";
@@ -33,7 +32,7 @@ const Page: NextPage<PageProps> = async ({ params }) => {
   );
   if (seasonData === undefined) notFound();
 
-  const session = await getServerSession(authOptions);
+  const session = await auth();
   const displayName = session?.user.displayName;
   if (session == null) {
     return redirect("/login?error=login");

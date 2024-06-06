@@ -1,5 +1,4 @@
 import { Metadata } from "next";
-import { getServerSession } from "next-auth/next";
 import { redirect } from "next/navigation";
 import { NextPage } from "next";
 import { notFound } from "next/navigation";
@@ -9,7 +8,7 @@ import {
   getSpecificGameDataIdFromSessionUser,
   sortEntrantsAlphabetically,
 } from "@lib/misc";
-import { authOptions } from "@lib/auth";
+import { auth } from "@lib/auth";
 import { allPlSeasonData } from "@data/premier-league/season-data";
 
 import { Countdown } from "@components/countdown/countdown";
@@ -33,7 +32,7 @@ const Page: NextPage<PageProps> = async ({ params }) => {
     (seasonData) => seasonData.id === season
   );
   if (seasonData === undefined) notFound();
-  const session = await getServerSession(authOptions);
+  const session = await auth();
   const displayName = session?.user.displayName;
   if (session == null) {
     return redirect("/login?error=login");

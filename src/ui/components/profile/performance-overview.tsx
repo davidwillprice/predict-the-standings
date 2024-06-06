@@ -21,7 +21,7 @@ import {
 } from "@lib/misc";
 import { Panel } from "@components/panels/panel";
 
-import { User } from "next-auth";
+import { UserDataFromSession } from "@custom-types/misc";
 import { CollectionObj, CompetitionStrings } from "@custom-types/game-types";
 
 import styles from "@styles/competitions.module.scss";
@@ -30,7 +30,7 @@ import skeleStyles from "@components/profile/competitions-skeleton.module.scss";
 import btnStyles from "@components/button/button.module.scss";
 
 interface Props {
-  user: User;
+  user: UserDataFromSession;
 }
 
 interface PerformanceRow {
