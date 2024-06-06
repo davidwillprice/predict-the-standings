@@ -6,13 +6,14 @@ import btnConStyles from "@components/button/button-containers.module.scss";
 import btnStyles from "@components/button/button.module.scss";
 
 import { CompetitionStrings } from "@custom-types/game-types";
-import { User } from "next-auth";
 import { getSpecificGameDataIdFromSessionUser } from "@lib/misc";
+
+import { UserDataFromSession } from "@custom-types/misc";
 
 interface Props {
   arePredictionsFrozen: boolean;
   competitionStrs: CompetitionStrings;
-  currUser: User | null | undefined;
+  currUser: UserDataFromSession | null | undefined;
   predictionsOpen: boolean;
   seasonStr: string;
 }

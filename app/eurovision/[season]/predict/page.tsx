@@ -1,11 +1,10 @@
 import { Metadata } from "next";
-import { getServerSession } from "next-auth/next";
 import { redirect } from "next/navigation";
 import { NextPage } from "next";
 import { notFound } from "next/navigation";
 
 import { getUserGameDataQuery } from "@lib/db-functions";
-import { authOptions } from "@lib/auth";
+import { auth } from "@lib/auth";
 import { allEurovisionSeasonData } from "@data/eurovision/season-data";
 
 import { CompetitionNavLinks } from "@components/latest-season-showcase/comp-nav-links";
@@ -29,7 +28,7 @@ const Page: NextPage<PageProps> = async ({ params }) => {
     (seasonData) => seasonData.id === season
   );
   if (seasonData === undefined) notFound();
-  const session = await getServerSession(authOptions);
+  const session = await auth();
   const displayName = session?.user.displayName;
   if (session == null) {
     return redirect("/login?error=login");

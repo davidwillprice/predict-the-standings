@@ -2,11 +2,10 @@
 
 import { validateDisplayName } from "@lib/form-functions";
 import { submitDisplayNameQuery } from "@lib/db-functions";
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "@lib/auth";
+import { auth } from "@lib/auth";
 
 export const submitDisplayName = async (formData: FormData) => {
-  const session = await getServerSession(authOptions);
+  const session = await auth();
   if (session == null) return;
 
   const userId = session.user.id;

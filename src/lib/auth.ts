@@ -1,14 +1,14 @@
-import DiscordProvider from "next-auth/providers/discord";
-import GithubProvider from "next-auth/providers/github";
-import GoogleProvider from "next-auth/providers/google";
-import RedditProvider from "next-auth/providers/reddit";
-import TwitterProvider from "next-auth/providers/twitter";
-import { NextAuthOptions } from "next-auth";
+import NextAuth from "next-auth";
+import Discord from "next-auth/providers/discord";
+import Github from "next-auth/providers/github";
+import Google from "next-auth/providers/google";
+import Reddit from "next-auth/providers/reddit";
+import Twitter from "next-auth/providers/twitter";
 import { MongoDBAdapter } from "@auth/mongodb-adapter";
 import clientPromise from "@lib/mongodb";
 import type { Adapter } from "next-auth/adapters";
 
-export const authOptions: NextAuthOptions = {
+export const { auth, handlers, signIn, signOut } = NextAuth({
   //debug: true,
   adapter: MongoDBAdapter(clientPromise) as Adapter,
   session: { strategy: "jwt" },
@@ -41,51 +41,30 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
   },
-  /**@todo return updated information to get rid of unwanted passed information https://next-auth.js.org/configuration/providers/oauth#override-default-options */
+  /**@todo return updated information to get rid of unwanted passed information https://next-auth.js.org/configuration/providers/oauth#override-default-options like profile pictures */
   providers: [
-    DiscordProvider({
-      clientId: process.env.DISCORD_CLIENT_ID as string,
-      clientSecret: process.env.DISCORD_CLIENT_SECRET as string,
+    Discord({
       allowDangerousEmailAccountLinking: true,
     }),
-    // FacebookProvider({
-    //   clientId: process.env.FACEBOOK_CLIENT_ID as string,
-    //   clientSecret: process.env.FACEBOOK_CLIENT_SECRET as string,
+    // Facebook({
     //   allowDangerousEmailAccountLinking: true,
     // }),
-    GithubProvider({
-      clientId: process.env.GITHUB_ID as string,
-      clientSecret: process.env.GITHUB_SECRET as string,
+    Github({
       allowDangerousEmailAccountLinking: true,
     }),
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID as string,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+    Google({
       allowDangerousEmailAccountLinking: true,
     }),
-    // InstagramProvider({
-    //   clientId: process.env.INSTAGRAM_CLIENT_ID as string,
-    //   clientSecret: process.env.INSTAGRAM_CLIENT_SECRET as string,
+    // Instagram({
     //   allowDangerousEmailAccountLinking: true,
     // }),
-    // PatreonProvider({
-    //   clientId: process.env.PATREON_IDT as string,
-    //   clientSecret: process.env.PATREON_SECRETT as string,
-    // }),
-    RedditProvider({
-      clientId: process.env.REDDIT_CLIENT_ID as string,
-      clientSecret: process.env.REDDIT_CLIENT_SECRET as string,
+    // Patreon(),
+    Reddit({
       allowDangerousEmailAccountLinking: true,
     }),
-    // SpotifyProvider({
-    //   clientId: process.env.SPOTIFY_CLIENT_ID as string,
-    //   clientSecret: process.env.SPOTIFY_CLIENT_SECRET as string,
-    // }),
-    TwitterProvider({
-      clientId: process.env.TWITTER_CLIENT_ID as string,
-      clientSecret: process.env.TWITTER_CLIENT_SECRET as string,
-      version: "2.0",
+    // Spotify(),
+    Twitter({
       allowDangerousEmailAccountLinking: true,
     }),
   ],
-};
+});

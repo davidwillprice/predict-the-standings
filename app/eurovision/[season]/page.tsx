@@ -1,8 +1,7 @@
 import { NextPage } from "next";
-import { getServerSession } from "next-auth/next";
 import { notFound } from "next/navigation";
+import { auth } from "@lib/auth";
 
-import { authOptions } from "@lib/auth";
 import { allEurovisionSeasonData } from "@data/eurovision/season-data";
 
 import { PageProps } from "@custom-types/misc";
@@ -22,7 +21,7 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
   );
   if (seasonData === undefined) notFound();
 
-  const session = await getServerSession(authOptions);
+  const session = await auth();
   const currUser = session?.user;
 
   return (
