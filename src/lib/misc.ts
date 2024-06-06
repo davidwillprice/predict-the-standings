@@ -216,7 +216,11 @@ export const getSpecificGameDataIdFromSessionUser = (
   shortHandCompStr: ShortHandCompStr,
   user: UserDataFromSession | undefined | null
 ): string | undefined => {
-  if (!user || !user.predictionsMadeFor[shortHandCompStr]) {
+  if (
+    !user ||
+    !user.predictionsMadeFor ||
+    !user.predictionsMadeFor[shortHandCompStr]
+  ) {
     return undefined;
   } else {
     return user.predictionsMadeFor[shortHandCompStr].find(
