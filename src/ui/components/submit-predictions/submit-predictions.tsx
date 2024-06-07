@@ -11,16 +11,15 @@ import { FeedbackContainer } from "@components/feedback-container/feedback-conta
 import Icon from "@svgs/icons/sq-icon";
 
 import { Entrant, CompetitionStrings } from "@custom-types/game-types";
-import { User } from "next-auth";
+import { UserDataFromSession } from "@custom-types/misc";
 
 import styles from "@components/submit-predictions/submit-predictions.module.scss";
 import btnConstyles from "@components/button/button-containers.module.scss";
-import { UserDataFromSession } from "@custom-types/misc";
 
 interface Props {
   arePredictionsFrozen: boolean;
   competitionStrs: CompetitionStrings;
-  currUser: User;
+  currUser: UserDataFromSession;
   displayName: string;
   allEntrantArrs: { [entrantType: string]: Entrant[] };
   season: string;

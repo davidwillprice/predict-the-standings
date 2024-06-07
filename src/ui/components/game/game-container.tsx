@@ -22,7 +22,6 @@ import { EntrantTable } from "@components/entrant-table/entrant-table";
 import btnStyles from "@components/button/button.module.scss";
 import styles from "@components/game/game-container.module.scss";
 
-import { User } from "next-auth";
 import {
   LocalSeasonData,
   Round,
@@ -34,10 +33,11 @@ import {
   calcUserGameDataMapPerformance,
   calcRemainingRoundPerformanceData,
 } from "@lib/game-data";
+import { UserDataFromSession } from "@custom-types/misc";
 
 interface Props {
   children: ReactNode;
-  currUser: User | undefined;
+  currUser: UserDataFromSession | undefined;
   currentSearchParams: { [key: string]: string | string[] | undefined };
   lastUpdated: Date;
   localSeasonData: LocalSeasonData;
@@ -377,7 +377,7 @@ export const GameContainer = ({
             type={entrantType === "teams" ? "driver" : "f1"}
             strokeWidth={2}
           />
-          Switch to {entrantType === "team" ? "Drivers" : "Constructors"}{" "}
+          Switch to {entrantType === "teams" ? "Drivers" : "Constructors"}{" "}
           Leaderboard
         </Button>
       )}

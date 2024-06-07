@@ -8,7 +8,7 @@ import { SubmitPredictions } from "@components/submit-predictions/submit-predict
 import Icon from "@svgs/icons/sq-icon";
 
 import { Entrant, LocalSeasonData } from "@custom-types/game-types";
-import { User } from "next-auth";
+import { UserDataFromSession } from "@custom-types/misc";
 
 import styles from "@components/submit-predictions/submit-predictions.module.scss";
 import btnStyles from "@components/button/button.module.scss";
@@ -16,7 +16,7 @@ import btnConStyles from "@components/button/button-containers.module.scss";
 
 interface Props {
   arePredictionsFrozen: boolean;
-  currUser: User;
+  currUser: UserDataFromSession;
   children: string | ReactNode;
   displayName: string;
   initialDrivers: Entrant[];

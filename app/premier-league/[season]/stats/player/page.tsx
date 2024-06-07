@@ -1,8 +1,7 @@
-import { getServerSession } from "next-auth/next";
 import { NextPage } from "next";
 import { notFound } from "next/navigation";
 
-import { authOptions } from "@lib/auth";
+import { auth } from "@lib/auth";
 import { allPlSeasonData } from "@data/premier-league/season-data";
 
 import { PanelHeading } from "@components/panels/panel-heading";
@@ -23,7 +22,7 @@ const Page: NextPage<PageProps> = async ({ params }) => {
   );
   if (seasonData === undefined) notFound();
 
-  const session = await getServerSession(authOptions);
+  const session = await auth();
   const currUser = session?.user;
 
   return (

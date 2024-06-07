@@ -12,10 +12,10 @@ import { LoadingSpinner } from "@components/loading-spinner/loading-spinner";
 import styles from "@components/stats/stats.module.scss";
 
 import { LocalSeasonData, StatsData } from "@custom-types/game-types";
-import { User } from "next-auth";
+import { UserDataFromSession } from "@custom-types/misc";
 
 type Props = {
-  currUser: User | undefined;
+  currUser: UserDataFromSession | undefined;
   preseasonText: string;
   seasonData: LocalSeasonData;
 };

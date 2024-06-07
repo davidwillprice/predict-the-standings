@@ -1,8 +1,7 @@
-import { getServerSession } from "next-auth/next";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 
-import { authOptions } from "@lib/auth";
+import { auth } from "@lib/auth";
 
 import { Panel } from "@components/panels/panel";
 import { LoginForm } from "@components/login/login-form";
@@ -14,7 +13,7 @@ interface Props {
 }
 
 const Page = async ({ searchParams }: Props) => {
-  const session = await getServerSession(authOptions);
+  const session = await auth();
   if (session !== null) {
     if (!session?.user.displayName) {
       return redirect("/get-started");

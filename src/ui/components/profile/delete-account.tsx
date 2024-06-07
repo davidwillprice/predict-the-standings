@@ -17,10 +17,10 @@ import { LoadingSpinner } from "@components/loading-spinner/loading-spinner";
 import btnStyles from "@components/button/button.module.scss";
 import formStyles from "@components/form/form.module.scss";
 
-import { User } from "next-auth";
+import { UserDataFromSession } from "@custom-types/misc";
 
 type Props = {
-  user: User;
+  user: UserDataFromSession;
 };
 
 export const DeleteAccount = ({ user }: Props) => {
