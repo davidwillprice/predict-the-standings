@@ -1,4 +1,5 @@
-"use client";
+export const runtime = "edge";
+("use client");
 
 import { FeedbackContainer } from "@components/feedback-container/feedback-container";
 import { Button } from "@components/button/button";

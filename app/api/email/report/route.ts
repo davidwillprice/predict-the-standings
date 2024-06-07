@@ -1,3 +1,5 @@
+export const runtime = "edge";
+
 import { EmailTemplate } from "@components/email/report-display-name";
 import { NextRequest } from "next/server";
 import { Resend } from "resend";
