@@ -1,15 +1,12 @@
 import NextAuth from "next-auth";
-import Discord from "next-auth/providers/discord";
-import Github from "next-auth/providers/github";
-import Google from "next-auth/providers/google";
-import Reddit from "next-auth/providers/reddit";
-import Twitter from "next-auth/providers/twitter";
 import { MongoDBAdapter } from "@auth/mongodb-adapter";
 import clientPromise from "@lib/mongodb";
 import type { Adapter } from "next-auth/adapters";
+import authConfig from "@lib/auth.config";
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
   //debug: true,
+  ...authConfig,
   adapter: MongoDBAdapter(clientPromise) as Adapter,
   session: { strategy: "jwt" },
   callbacks: {
@@ -42,29 +39,4 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     },
   },
   /**@todo return updated information to get rid of unwanted passed information https://next-auth.js.org/configuration/providers/oauth#override-default-options like profile pictures */
-  providers: [
-    Discord({
-      allowDangerousEmailAccountLinking: true,
-    }),
-    // Facebook({
-    //   allowDangerousEmailAccountLinking: true,
-    // }),
-    Github({
-      allowDangerousEmailAccountLinking: true,
-    }),
-    Google({
-      allowDangerousEmailAccountLinking: true,
-    }),
-    // Instagram({
-    //   allowDangerousEmailAccountLinking: true,
-    // }),
-    // Patreon(),
-    Reddit({
-      allowDangerousEmailAccountLinking: true,
-    }),
-    // Spotify(),
-    Twitter({
-      allowDangerousEmailAccountLinking: true,
-    }),
-  ],
 });
