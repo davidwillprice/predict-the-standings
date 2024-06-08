@@ -1,3 +1,4 @@
+export const runtime = "edge";
 import { Metadata, NextPage } from "next";
 
 import { Panel } from "@components/panels/panel";

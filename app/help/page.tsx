@@ -1,3 +1,4 @@
+export const runtime = "edge";
 import { Metadata } from "next";
 
 import { allPlSeasonData } from "@data/premier-league/season-data";

@@ -1,3 +1,4 @@
+export const runtime = "edge";
 import { NextPage } from "next";
 import { auth } from "@lib/auth";
 import { notFound } from "next/navigation";

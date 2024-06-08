@@ -1,0 +1,7 @@
+{
+  "git": {
+    "deploymentEnabled": {
+      "enhancement/move-to-cloudflare": false
+    }
+  }
+}
