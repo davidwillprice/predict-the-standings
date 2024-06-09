@@ -35,7 +35,7 @@ export default function Page() {
               Hero Icons
             </a>
             :
-            <ul>
+            <ul style={{ columns: "2" }}>
               <li>arrow-path</li>
               <li>arrow-right-end-on-rectangle</li>
               <li>arrow-right-start-on-rectangle</li>

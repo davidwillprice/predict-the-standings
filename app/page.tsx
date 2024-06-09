@@ -1,11 +1,6 @@
-import Link from "next/link";
-
 import { PanelHeading } from "@components/panels/panel-heading";
 import { Panel } from "@components/panels/panel";
-import { Button } from "@components/button/button";
-import Icon from "@svgs/icons/sq-icon";
-
-import styles from "@components/button/button-containers.module.scss";
+import { CompetitionButtons } from "@components/competition-buttons";
 
 export default function Home() {
   return (
@@ -29,27 +24,7 @@ export default function Home() {
             driver/team/country&apos;s standing.
           </li>
         </ul>
-        <hr />
-        <div className={styles.tripleCol}>
-          <Link href="/eurovision/">
-            <Button>
-              <Icon strokeWidth={2} type="microphone" />
-              Eurovision
-            </Button>
-          </Link>
-          <Link href="/formula-1/">
-            <Button>
-              <Icon strokeWidth={2} type="f1" />
-              Formula 1
-            </Button>
-          </Link>
-          <Link href="/premier-league/">
-            <Button>
-              <Icon strokeWidth={2} type="premierLeague" />
-              Premier League
-            </Button>
-          </Link>
-        </div>
+        <CompetitionButtons />
       </Panel>
     </>
   );

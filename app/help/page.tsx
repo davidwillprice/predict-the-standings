@@ -49,12 +49,12 @@ const Page = () => {
                 100% accuracy means they perfectly predicted the standings.
               </li>
               <li>
-                0% accuracy means their predictions couldn&apos;t have been
-                further from the actual standings.
-              </li>
-              <li>
                 Below 50% accuracy means they would likely have been better off
                 randomising their predictions.
+              </li>
+              <li>
+                0% accuracy means their predictions couldn&apos;t have been
+                further from the actual standings.
               </li>
             </ul>
           </li>
