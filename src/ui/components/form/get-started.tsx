@@ -26,7 +26,7 @@ export const GetStartedForm = ({ initialDisplayName }: Props) => {
   const router = useRouter();
   const { data: session, update } = useSession();
 
-  /**@todo Don't pick something disruptive or offensive*/
+  /**@todo! Don't pick something disruptive or offensive*/
   /**@todo If possible, don't let them submit their display name if they already have it*/
 
   const [displayNameErrorArr, setDisplayNameErrorArr] = useState(

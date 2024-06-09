@@ -21,7 +21,7 @@ export default async function ProfilePage() {
   const user = session?.user;
 
   if (user == null) return redirect("/login");
-  /**@todo Fix redirecting people without a display name causing issues */
+  /**@todo! Fix redirecting people without a display name causing issues */
   //if (!session.user.displayName) return redirect("/get-started");
 
   const initialDisplayName = session?.user.displayName;

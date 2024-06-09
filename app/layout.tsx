@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   title: "Predict The Standings",
   description: "Compete to predict the final tables for various sports",
   /**
-   * @todo Add proper open graph social media card images
+   * @todo! Add proper open graph social media card images
    */
 };
 

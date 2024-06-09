@@ -3,6 +3,7 @@ import { Panel } from "@components/panels/panel";
 import { CompetitionButtons } from "@components/competition-buttons";
 
 export default function Home() {
+  /**@todo! Add screenshots/video graphics to better encourage people to make predictions */
   return (
     <>
       <PanelHeading>

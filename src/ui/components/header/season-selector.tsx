@@ -21,7 +21,7 @@ export const SeasonSelector = ({
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-
+  /**@todo! Style options - Currently the options have no font */
   /**If there is only one season's worth of data, don't bother showing the selector */
   if (allLocalSeasonData.length < 2) return;
 

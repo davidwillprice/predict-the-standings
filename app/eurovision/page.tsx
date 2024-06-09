@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 const Page: NextPage = async () => {
   const seasonData = allEurovisionSeasonData[0];
   const { id: seasonStr } = seasonData;
-
+  /**@todo! Add screenshots/video graphics to better encourage people to make predictions */
   return (
     <>
       <PanelHeading>

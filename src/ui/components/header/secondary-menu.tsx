@@ -13,7 +13,6 @@ export const SecondaryMenu = ({ type }: Props) => (
         ? styles.secondary_menu__header
         : styles.secondary_menu__footer
     }`}>
-    {/**@todo Add Attribution page link */}
     {type === "header" ? <hr /> : ""}
     <Link href="/terms-of-service">Terms of Service</Link>
     <Link href="/privacy-policy">Privacy Policy</Link>

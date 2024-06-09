@@ -40,6 +40,7 @@ export default function Page() {
             When you log in using a third party&apos;s OAuth, we rely on their
             authentication system to verify your identity. We do not store any
             account passwords.
+            {/**@todo! Better specify which information is saved/requested via different providers */}
           </p>
           <p>
             If you log in using Discord&apos;s OAuth, we may collect the

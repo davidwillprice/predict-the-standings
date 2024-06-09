@@ -14,6 +14,7 @@ export const metadata: Metadata = {
 
 const Page = () => {
   const { id: seasonStr } = allF1SeasonData[0];
+  /**@todo! Add screenshots/video graphics to better encourage people to make predictions */
   return (
     <>
       <PanelHeading>

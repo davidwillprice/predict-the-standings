@@ -164,7 +164,7 @@ export const GameContainer = ({
   };
 
   /**useEffect that only runs when the query strings change
-   * @todo Fix this seeming to run more than once after a page load and it is causing multiple unnecessary DB calls
+   * @todo! Fix this seeming to run more than once after a page load and it is causing multiple unnecessary DB calls
    */
   useEffect(() => {
     const newPage = getInitialPage(currentSearchParams);
@@ -254,7 +254,7 @@ export const GameContainer = ({
 
   /**Updates user in query string */
   const changeSelectedUserHandler = (userGameData: UserGameData) => {
-    /**@todo Fix 'back' function not working */
+    /**@todo! Fix 'back' function not working */
     router.push(
       pathname +
         "?" +
@@ -322,7 +322,7 @@ export const GameContainer = ({
                   usersPerPage={usersPerPage}
                 />
               ) : (
-                /**@todo Create seperate skeleton for when there is a `user` query string in the params */
+                /**@todo! Create seperate skeleton for when there is a `user` query string in the params */
                 <LeaderboardSkeleton usersPerPage={usersPerPage} />
               )}
             </div>

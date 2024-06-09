@@ -14,6 +14,7 @@ export const LoginForm = () => {
 
   const signInHandler = async (e: React.MouseEvent<HTMLElement>) => {
     isSubmitting(true);
+    /**@todo Get userGameData for all seasons/competitions and then save them in the cache so they never have to be obtained again?*/
     await signIn(e.currentTarget.id, { redirect: false });
   };
 

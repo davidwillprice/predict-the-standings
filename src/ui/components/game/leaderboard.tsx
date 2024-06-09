@@ -122,6 +122,8 @@ export const Leaderboard = ({
 
   return (
     <div>
+      {/**@todo Add search function */}
+      {/**@todo Add filters for friend groups, special players only, and by country */}
       <table className={`${styles.leaderboard} ${entrantTableStyles.table}`}>
         <thead>
           <tr>

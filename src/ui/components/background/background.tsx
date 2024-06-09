@@ -5,9 +5,10 @@ import { useEffect } from "react";
 import styles from "./background.module.scss";
 
 export const Background = () => {
+  //Rerender this component every time the pathname changes
   const pathname = usePathname();
   useEffect(() => {}, [pathname]);
-
+  /**@todo Animate background*/
   return (
     <div
       className={`${styles.con} ${

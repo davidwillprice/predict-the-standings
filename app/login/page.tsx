@@ -32,7 +32,7 @@ const Page = async ({ searchParams }: Props) => {
           {gatedPageError === "display-name" ? (
             <p>Please login before you update your display name.</p>
           ) : (
-            <p>Please login before you submit or edit predictions.</p>
+            <p>Please login before you submit or edit predictions</p>
           )}
         </FeedbackContainer>
       ) : (

@@ -30,5 +30,9 @@ export const AccessibilityOptions = () => {
         strokeWidth={2}></Icon>
       Toggle {theme === "light" || theme === undefined ? "Dark" : "Light"} Mode
     </Button>
+    /**@todo Add high contrast mode */
+    /**@todo Add dislexic friendly font mode */
+    /**@todo Add larger cursor mode */
+    /**@todo Add reset button */
   );
 };

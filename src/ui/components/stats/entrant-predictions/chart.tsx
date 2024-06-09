@@ -30,7 +30,7 @@ interface Props {
   entrant: Entrant;
 }
 
-/**@todo Change values depending on dark mode or not */
+/**@todo Find a way to change values depending on dark mode or not */
 ChartJS.defaults.color = "#010136";
 ChartJS.defaults.borderColor = "#01013640";
 
