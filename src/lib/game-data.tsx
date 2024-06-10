@@ -150,8 +150,8 @@ export const calcUserGameDataMapPerformance = (
       user.season[entrantType] = [];
     }
     rounds.forEach((round, roundIndex) => {
-      /**If there is no previous season data, add a blank leaderboardPos to be calculated later */
-      if (!hasLeaderboardPos) {
+      /**If there is no previous round data, add a blank leaderboardPos to be calculated later */
+      if (!user.season[entrantType][roundIndex]) {
         user.season[entrantType].push({
           leaderboardPos: 0,
         });

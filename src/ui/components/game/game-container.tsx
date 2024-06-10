@@ -163,9 +163,7 @@ export const GameContainer = ({
     currUserGameData.current = currUserData;
   };
 
-  /**useEffect that only runs when the query strings change
-   * @todo! Fix this seeming to run more than once after a page load and it is causing multiple unnecessary DB calls
-   */
+  /**useEffect that only runs when the query strings change*/
   useEffect(() => {
     const newPage = getInitialPage(currentSearchParams);
     const newEntrantType = getInitialEntrantType(currentSearchParams);
@@ -199,15 +197,21 @@ export const GameContainer = ({
 
           if (typeof currentSearchParams.user === "string") {
             /**If the searchParams have a valid user query, set it as the selected User*/
-            if (userData[currentSearchParams.user])
+            if (userData[currentSearchParams.user]) {
               setSelectedUser(userData[currentSearchParams.user]);
-            else if (
+            } else if (
               /**Else if it is the current user's Id in the params, use their data for the selected user */
               currUserGameData.current !== null &&
               currUserGameData.current.userId === currentSearchParams.user
             ) {
               setSelectedUser(currUserGameData.current);
+            } else {
+              /**If there is no valid userQuery string, unsure the mode changes to the leaderboard */
+              setSelectedUser(null);
             }
+          } else {
+            /**If there is no valid userQuery string, unsure the mode changes to the leaderboard */
+            setSelectedUser(null);
           }
         } catch (err) {
           throw err;
@@ -254,7 +258,6 @@ export const GameContainer = ({
 
   /**Updates user in query string */
   const changeSelectedUserHandler = (userGameData: UserGameData) => {
-    /**@todo! Fix 'back' function not working */
     router.push(
       pathname +
         "?" +
