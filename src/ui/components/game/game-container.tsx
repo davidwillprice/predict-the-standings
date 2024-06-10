@@ -220,13 +220,12 @@ export const GameContainer = ({
       if (noOfPredictions.current === null) await getNoOfPredictions();
       await getCurrUserGameData();
       await updateUserData();
+      setIsDebouncing(false);
     };
     getData();
   }, [currentSearchParams]);
 
   const updateRoundQueryString = (newRoundIndex: number) => {
-    /**Cancel loading skeleton UI*/
-    setIsDebouncing(false);
     /**Uses router.replace() rather than router.push() as I don't want round changes clogging up the user history */
     router.replace(
       pathname +
@@ -237,8 +236,8 @@ export const GameContainer = ({
     );
   };
 
-  /**Updates round in query string, but only if this function isn't triggered again within 500ms */
-  const changeRoundHandler = debounce(updateRoundQueryString, 500);
+  /**Updates round in query string, but only if this function isn't triggered again within 300ms */
+  const changeRoundHandler = debounce(updateRoundQueryString, 300);
 
   /**Enables loading skeleton UI while slider is debouncing*/
   const addDebouncingState = () => {
