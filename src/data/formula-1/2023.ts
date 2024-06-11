@@ -23,7 +23,7 @@ const drivers: Entrants = {
   bot: new Entrant("Bottas", "bot", "#800000", "#ffffff", "#ffffff"),
   zho: new Entrant("Zhou", "zho", "#800000", "#ffffff", "#ffffff"),
   tsu: new Entrant("Tsunoda", "tsu", "#203a54", "#ffffff", "#ffffff"),
-  dev: new Entrant("de Vries", "dev", "#203a54", "#ffffff", "#ffffff"),
+  dev: new Entrant("De Vries", "dev", "#203a54", "#ffffff", "#ffffff"),
   alb: new Entrant("Albon", "alb", "#37BEDD", "#010136", "#010136"),
   sar: new Entrant("Sargeant", "sar", "#37BEDD", "#010136", "#010136"),
 };

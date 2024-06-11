@@ -17,6 +17,7 @@
   }
   &[data-pressed] {
     background-color: var(--tertiary-color);
+    border-radius: 0px;
     svg {
       transform: rotate(180deg);
     }
@@ -27,15 +28,32 @@
     transition: 0.2s;
   }
 }
+.label {
+  font-size: 14px;
+  font-weight: 500;
+  padding-bottom: 3px;
+  display: block;
+}
+.margin_bottom {
+  margin-bottom: 10px;
+}
 .popover {
   width: var(--trigger-width);
   border: 2px solid var(--secondary-color);
-  border-radius: 5px;
   padding: 3px;
-  background-color: var(--secondary-color);
+  overflow-y: scroll;
+  background-color: var(--primary-color);
+  &[data-placement="top"] {
+    border-radius: 5px 5px 0 0;
+    border-bottom: 0;
+  }
+  &[data-placement="bottom"] {
+    border-radius: 0 0 5px 5px;
+    border-top: 0;
+  }
 }
 .listBox {
-  background-color: var(--secondary-color);
+  background-color: var(--primary-color);
   width: 100%;
 }
 .listBoxItem {
@@ -45,17 +63,17 @@
   width: 100%;
   cursor: pointer;
   transition: 0.2s all;
-  color: var(--primary-color);
+  color: var(--secondary-color);
   &:hover {
-    background-color: var(--primary-color);
-    color: var(--secondary-color);
+    background-color: var(--secondary-color);
+    color: var(--primary-color);
   }
   &.selected {
     display: none;
   }
 }
 @media (max-width: $mobile-menu-breakpoint) {
-  .select button {
+  .mob_margin_bottom_top {
     margin-bottom: 10px;
     margin-top: 10px;
   }

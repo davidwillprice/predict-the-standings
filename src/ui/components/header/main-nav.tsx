@@ -92,6 +92,7 @@ export const MainNav = ({ children, session }: Props) => {
             <HeaderLink href="/help" icon="help">
               Help
             </HeaderLink>
+            {/**@todo Move to Aria React Select like SeasonPicker */}
             <Dropdown label="Accessibility">
               <AccessibilityOptions />
             </Dropdown>

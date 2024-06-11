@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { ReactAriaDropdown } from "@components/dropdown/react-aria-dropdown";
+import { ListBoxItem } from "react-aria-components";
 
 import { numberToOrdinalNumber, sortEntrantsAlphabetically } from "@lib/misc";
 
@@ -9,7 +11,7 @@ import { Chart } from "./chart";
 import { AllEntrants, Round } from "@custom-types/game-types";
 
 import styles from "@components/stats/stats.module.scss";
-import inputStyles from "@styles/select-input.module.scss";
+import dropDownStyles from "@components/dropdown/react-aria-dropdown.module.scss";
 
 interface Props {
   allEntrants: AllEntrants;
@@ -28,22 +30,17 @@ export const EntrantPredictions = ({ allEntrants, lastRound }: Props) => {
   const [selectedEntrant, setSelectedEntrant] = useState(selectedEntrants[0]);
 
   /**If the entrantType is changed, update the entrantType state and set the selectedEntrant to the first entrant under that entrantType */
-  const changeEntrantTypeHandler = (
-    event: React.FormEvent<HTMLSelectElement>
-  ) => {
-    if (event.currentTarget.value !== selectedEntrantType)
-      setSelectedEntrantType(event.currentTarget.value);
+  const changeEntrantTypeHandler = (newValue: string) => {
+    if (newValue !== selectedEntrantType) setSelectedEntrantType(newValue);
     setSelectedEntrant(
-      sortEntrantsAlphabetically(
-        Object.values(allEntrants[event.currentTarget.value])
-      )[0]
+      sortEntrantsAlphabetically(Object.values(allEntrants[newValue]))[0]
     );
   };
 
-  const changeEntrantHandler = (event: React.FormEvent<HTMLSelectElement>) => {
-    if (event.currentTarget.value !== selectedEntrant.sName) {
+  const changeEntrantHandler = (newValue: string) => {
+    if (newValue !== selectedEntrant.sName) {
       const newEntrant = selectedEntrants.find(
-        (entrant) => entrant.sName === event.currentTarget.value
+        (entrant) => entrant.sName === newValue
       );
       if (newEntrant) setSelectedEntrant(newEntrant);
     }
@@ -53,40 +50,50 @@ export const EntrantPredictions = ({ allEntrants, lastRound }: Props) => {
     <div>
       <div className={styles.inputs}>
         {entrantTypeArr.length !== 1 && (
-          <>
-            <label htmlFor="entrant-type">
-              <small>Entrant Type</small>
-            </label>
-            <select
-              className={inputStyles.select_input}
-              name="entrant-type"
-              id="entrant-type"
-              onChange={changeEntrantTypeHandler}>
-              {entrantTypeArr.map((entrantType) => (
-                <option key={entrantType} value={entrantType}>
-                  {entrantType.charAt(0).toUpperCase() + entrantType.slice(1)}
-                </option>
-              ))}
-            </select>
-          </>
+          <ReactAriaDropdown
+            defaultKey={entrantTypeArr[0]}
+            items={entrantTypeArr}
+            labelText="Entrant Type"
+            classNames={dropDownStyles.margin_bottom}
+            onSelectionChangeFn={changeEntrantTypeHandler}
+            showLabelElement={true}>
+            {entrantTypeArr.map((entrantType) => (
+              <ListBoxItem
+                id={entrantType}
+                key={entrantType}
+                className={({ isSelected }) =>
+                  `${dropDownStyles.listBoxItem} ${
+                    isSelected ? dropDownStyles.selected : ""
+                  }`
+                }>
+                {entrantType.charAt(0).toUpperCase() + entrantType.slice(1)}
+              </ListBoxItem>
+            ))}
+          </ReactAriaDropdown>
         )}
-        <label htmlFor="entrant">
-          <small>
-            {selectedEntrantType.charAt(0).toUpperCase() +
-              selectedEntrantType.slice(1, selectedEntrantType.length)}
-          </small>
-        </label>
-        <select
-          className={inputStyles.select_input}
-          name="entrant"
-          id="entrant"
-          onChange={changeEntrantHandler}>
+        <ReactAriaDropdown
+          defaultKey={selectedEntrants[0].sName}
+          items={selectedEntrants}
+          labelText={
+            selectedEntrantType.charAt(0).toUpperCase() +
+            selectedEntrantType.slice(1, selectedEntrantType.length)
+          }
+          classNames={dropDownStyles.margin_bottom}
+          onSelectionChangeFn={changeEntrantHandler}
+          showLabelElement={true}>
           {selectedEntrants.map((entrant) => (
-            <option key={entrant.sName} value={entrant.sName}>
-              {entrant.name}
-            </option>
+            <ListBoxItem
+              id={entrant.sName}
+              key={entrant.sName}
+              className={({ isSelected }) =>
+                `${dropDownStyles.listBoxItem} ${
+                  isSelected ? dropDownStyles.selected : ""
+                }`
+              }>
+              {entrant.name.charAt(0).toUpperCase() + entrant.name.slice(1)}
+            </ListBoxItem>
           ))}
-        </select>
+        </ReactAriaDropdown>
       </div>
       <div className={styles.chart}>
         <Chart entrant={JSON.parse(JSON.stringify(selectedEntrant))} />

@@ -4,6 +4,7 @@ export interface Props {
 }
 
 export type IconType =
+  | "chevronDown"
   | "chevronLeft"
   | "chevronRight"
   | "accessibility"
@@ -63,6 +64,13 @@ const iconPaths = {
         />
       </g>
     </>
+  ),
+  chevronDown: (
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="m19.5 8.25-7.5 7.5-7.5-7.5"
+    />
   ),
   chevronLeft: (
     <path
@@ -364,6 +372,8 @@ export default function Icon({ strokeWidth, type }: Props) {
   const content =
     type === "accessibility"
       ? iconPaths.accessibility
+      : type === "chevronDown"
+      ? iconPaths.chevronDown
       : type === "chevronLeft"
       ? iconPaths.chevronLeft
       : type === "chevronRight"

@@ -1,11 +1,14 @@
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { ListBoxItem } from "react-aria-components";
+
+import { ReactAriaDropdown } from "@components/dropdown/react-aria-dropdown";
+
+import dropDownStyles from "@components/dropdown/react-aria-dropdown.module.scss";
 
 import {
   AllLocalSeasonData,
   CompetitionStrings,
 } from "@custom-types/game-types";
-
-import styles from "./season-selector.module.scss";
 
 type Props = {
   allLocalSeasonData: AllLocalSeasonData;
@@ -21,38 +24,47 @@ export const SeasonSelector = ({
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  /**@todo! Style options - Currently the options have no font */
+
   /**If there is only one season's worth of data, don't bother showing the selector */
   if (allLocalSeasonData.length < 2) return;
 
-  const handleSeasonChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleSeasonChange = (selected: string) => {
     const currentSearchParams = new URLSearchParams(
       Array.from(searchParams.entries())
     );
 
-    const newSeasonStr = e.target.value;
     const competitionHomepage = `/${competitionStrs.hyphenated}/`;
     const seasonalPages = `${competitionHomepage}${currentSeasonStr}`;
     /**If not on a seasonal page like a 404 or the competition homepage, navigate to the new season's leaderboard, else navigate to the same URL but with the season changed - searchParams included either way */
     const newPathname = pathname.startsWith(seasonalPages)
-      ? pathname.replace(currentSeasonStr, newSeasonStr)
-      : `${competitionHomepage}/${newSeasonStr}`;
+      ? pathname.replace(currentSeasonStr, selected)
+      : `${competitionHomepage}/${selected}`;
 
     router.push(
       `${newPathname}${currentSearchParams ? "?" + currentSearchParams : ""}`
     );
   };
   return (
-    <select
-      className={styles.select}
-      name="season"
-      value={currentSeasonStr}
-      onChange={handleSeasonChange}>
+    <ReactAriaDropdown
+      classNames={dropDownStyles.mob_margin_bottom_top}
+      defaultKey={currentSeasonStr}
+      items={allLocalSeasonData}
+      labelText="Season Selector"
+      onSelectionChangeFn={handleSeasonChange}
+      showLabelElement={false}>
       {allLocalSeasonData.map((seasonData) => (
-        <option key={seasonData.id} value={seasonData.id}>
-          {competitionStrs.display} {seasonData.id}
-        </option>
+        <ListBoxItem
+          id={seasonData.id}
+          key={seasonData.id}
+          isDisabled={seasonData.id === currentSeasonStr}
+          className={({ isSelected }) =>
+            `${dropDownStyles.listBoxItem} ${
+              isSelected ? dropDownStyles.selected : ""
+            }`
+          }>
+          {seasonData.competitionStrs.display} {seasonData.id}
+        </ListBoxItem>
       ))}
-    </select>
+    </ReactAriaDropdown>
   );
 };
