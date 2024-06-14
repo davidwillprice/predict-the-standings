@@ -37,7 +37,7 @@ const ReportForm = ({
     formData.set("reporterUserId", currentUserId || "");
 
     try {
-      /**@todo! Need to limit how many reports are made by a user to avoid spam */
+      /**@todo Might need to limit how many reports are made by a user if it starts getting spammy */
       const response = await fetch("/api/email/report", {
         method: "POST",
         body: formData,

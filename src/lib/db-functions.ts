@@ -606,7 +606,7 @@ export const anonymiseUserGameDataQuery = async (
     const db = client.db("pts");
     const collection = db.collection(collectionStr);
     const result = await collection.updateOne(
-      { _id: new Object(_id) },
+      { _id: new ObjectId(_id) },
       { $set: { displayName: "[DELETED]" } }
     );
 

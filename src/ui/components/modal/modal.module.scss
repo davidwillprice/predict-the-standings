@@ -1,8 +1,10 @@
+@import "@styles/sass-variables.scss";
+
 .overlay {
   position: fixed;
   top: 0;
-  left: 0;
-  width: 100%;
+  left: $header-width-desktop;
+  width: calc(100% - $header-width-desktop);
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   display: flex;
@@ -44,4 +46,11 @@
 
 .body {
   padding: 0 15px 15px;
+}
+
+@media (max-width: $mobile-menu-breakpoint) {
+  .overlay {
+    left: 0;
+    width: 100%;
+  }
 }

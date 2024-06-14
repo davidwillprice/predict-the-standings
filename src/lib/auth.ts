@@ -1,7 +1,7 @@
 import NextAuth from "next-auth";
 import Discord from "next-auth/providers/discord";
 import Github from "next-auth/providers/github";
-import Google from "next-auth/providers/google";
+import Google, { GoogleProfile } from "next-auth/providers/google";
 import Reddit from "next-auth/providers/reddit";
 import Twitter from "next-auth/providers/twitter";
 import { MongoDBAdapter } from "@auth/mongodb-adapter";
@@ -53,8 +53,18 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     Github({
       allowDangerousEmailAccountLinking: true,
     }),
-    Google({
+    Google<GoogleProfile>({
       allowDangerousEmailAccountLinking: true,
+      /**Manually state the values I want from Google to avoid obtaining people's name and image */
+      profile(profile) {
+        return {
+          id: profile.id,
+          email: profile.email,
+          displayName: profile.displayName,
+          lastDisplayNameSubmission: profile.lastDisplayNameSubmission,
+          predictionsMadeFor: {},
+        };
+      },
     }),
     // Instagram({
     //   allowDangerousEmailAccountLinking: true,

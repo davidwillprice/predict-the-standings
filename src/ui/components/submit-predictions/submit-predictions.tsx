@@ -79,7 +79,8 @@ export const SubmitPredictions = ({
 
         /**If it's the users first prediction in this comp/season */
         if (
-          !session?.user?.predictionsMadeFor?.[
+          !session?.user?.predictionsMadeFor?.[competitionStrs.shortHand] ||
+          !!session?.user?.predictionsMadeFor?.[
             competitionStrs.shortHand
           ].includes(season)
         ) {
@@ -186,7 +187,7 @@ export const SubmitPredictions = ({
         )
       )}
       {/**@todo Hide error feedback if the predictions change after error started */}
-      {/**@todo! Need to limit database calls - Add lock for 10 seconds? - Add state to check if the table is the same as it was last submitted */}
+      {/**@todo Add limit to database calls? Seems unnecessary and hard to abuse - Add state to check if the table is the same as it was last submitted */}
       {error && (
         <FeedbackContainer iconType="error">
           <p>
