@@ -1,9 +1,9 @@
-import NextAuth from "next-auth";
-import Discord from "next-auth/providers/discord";
+import NextAuth, { User } from "next-auth";
+import Discord, { DiscordProfile } from "next-auth/providers/discord";
 import Github from "next-auth/providers/github";
 import Google, { GoogleProfile } from "next-auth/providers/google";
 import Reddit from "next-auth/providers/reddit";
-import Twitter from "next-auth/providers/twitter";
+import Twitter, { TwitterProfile } from "next-auth/providers/twitter";
 import { MongoDBAdapter } from "@auth/mongodb-adapter";
 import clientPromise from "@lib/mongodb";
 import type { Adapter } from "next-auth/adapters";
@@ -46,6 +46,16 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     /**@todo! Add email provider in case I hit limits on the others */
     Discord({
       allowDangerousEmailAccountLinking: true,
+      /**Manually state the values I want to set their discord username to their PTS display name */
+      profile: (profile: DiscordProfile): User => {
+        return {
+          id: profile.id,
+          email: profile.email,
+          displayName: profile.username,
+          lastDisplayNameSubmission: undefined,
+          predictionsMadeFor: {},
+        };
+      },
     }),
     // Facebook({
     //   allowDangerousEmailAccountLinking: true,
@@ -55,7 +65,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     }),
     Google<GoogleProfile>({
       allowDangerousEmailAccountLinking: true,
-      /**Manually state the values I want from Google to avoid obtaining people's name and image */
+      /**Manually state the values I want to avoid obtaining unnecessary data like people's name and image */
       profile(profile) {
         return {
           id: profile.id,
@@ -72,10 +82,30 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     // Patreon(),
     Reddit({
       allowDangerousEmailAccountLinking: true,
+      /**Manually state the values I want to set their discord username to their PTS display name */
+      profile: (profile): User => {
+        return {
+          id: profile.data.id,
+          email: profile.data?.email,
+          displayName: profile.data?.username,
+          lastDisplayNameSubmission: undefined,
+          predictionsMadeFor: {},
+        };
+      },
     }),
     // Spotify(),
     Twitter({
       allowDangerousEmailAccountLinking: true,
+      /**Manually state the values I want to avoid obtaining people's name and image */
+      profile: (profile: TwitterProfile): User => {
+        return {
+          id: profile.data.id,
+          email: profile.data?.email,
+          displayName: profile.data?.username,
+          lastDisplayNameSubmission: undefined,
+          predictionsMadeFor: {},
+        };
+      },
     }),
   ],
 });

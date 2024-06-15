@@ -33,68 +33,127 @@ export default function Page() {
             <a href="https://authjs.dev/" target="_blank">
               Auth.js
             </a>{" "}
-            to allow you to sign in with your favorite pre-existing logins while
-            minimising the personal data we store.
+            to allow you to sign in with your favorite pre-existing third party
+            logins via Open Authenication (OAuth) while minimising the personal
+            data we store.
           </p>
           <p>
-            When you log in using a third party&apos;s OAuth, we rely on their
-            authentication system to verify your identity. We do not store any
-            account passwords.
-            {/**@todo! Better specify which information is saved/requested via different providers */}
+            While these providers require us to request access to an unnecessary
+            quantity of data, we only access, view, store, or utilise a fraction
+            of this data to authenication and identify you. The table below
+            lists the different login methods, what data we need to request as
+            part of the login process, and which items of that data we actually
+            access, view, store, or utilise.
           </p>
-          <p>
-            If you log in using Discord&apos;s OAuth, we may collect the
-            following information:
-          </p>
-          <ul>
-            <li>
-              Your Discord account information, including your username, avatar,
-              email address, and banner.
-            </li>
-          </ul>
-          <p>
-            If you log in using Google&apos;s OAuth, we may collect the
-            following information:
-          </p>
-          <ul>
-            <li>
-              Your Google account information, including your name, email
-              address, and profile picture.
-            </li>
-            <li>
-              Any personal info you&apos;ve made publicly available on your
-              Google account.
-            </li>
-          </ul>
-          <p>
-            If you log in using Twitter&apos;s OAuth, we may collect the
-            following information:
-          </p>
-          <ul>
-            <li>
-              All the posts you can view, including posts from protected
-              accounts.
-            </li>
-            <li>Account information including name and email address.</li>
-          </ul>
-          <p>
-            If you log in using Reddit&apos;s OAuth, we may collect the
-            following information:
-          </p>
-          <ul>
-            <li>
-              Your Reddit account username, email address (if provided to us by
-              Reddit), and profile information.
-            </li>
-          </ul>
+          <div className={styles.con}>
+            <table className={styles.table}>
+              <thead>
+                <tr>
+                  <th>Provider</th>
+                  <th>Requested Data</th>
+                  <th>Utilised/Stored Data</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th>Discord</th>
+                  <td>
+                    <ul>
+                      <li>Avatar</li>
+                      <li>Banner</li>
+                      <li>Email address</li>
+                      <li>Username</li>
+                    </ul>
+                  </td>
+                  <td>
+                    <ul>
+                      <li>Email address</li>
+                      <li>Username</li>
+                    </ul>
+                  </td>
+                </tr>
+                <tr>
+                  <th>Google</th>
+                  <td>
+                    <ul>
+                      <li>Email address</li>
+                      <li>Full name</li>
+                      <li>Gender</li>
+                      <li>Preferred languages</li>
+                      <li>Profile picture</li>
+                      <li>Any other information you have publicly available</li>
+                    </ul>
+                  </td>
+                  <td>
+                    <ul>
+                      <li>Email address</li>
+                    </ul>
+                  </td>
+                </tr>
+                <tr>
+                  <th>Reddit</th>
+                  <td>
+                    <ul>
+                      <li>Email address</li>
+                      <li>Profile information</li>
+                      <li>Username</li>
+                    </ul>
+                  </td>
+                  <td>
+                    <ul>
+                      <li>Email address</li>
+                      <li>Username</li>
+                    </ul>
+                  </td>
+                </tr>
+                <tr>
+                  <th>Twitter</th>
+                  <td>
+                    <ul>
+                      <li>
+                        All the posts you can view, including posts from
+                        protected accounts
+                      </li>
+                      <li>
+                        Any account you can view, including protected accounts
+                      </li>
+                      <li>
+                        Account information including username and email address
+                      </li>
+                    </ul>
+                  </td>
+                  <td>
+                    <ul>
+                      <li>Email address</li>
+                      <li>Username</li>
+                    </ul>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </section>
         <hr />
         <section>
           <h3>2. How We Use Your Information</h3>
           <p>We use the information collected for the following purposes:</p>
           <ul>
-            <li>To create and manage your user account.</li>
+            <li>To create and manage your account.</li>
             <li>To comply with legal obligations.</li>
+          </ul>
+          <p>
+            Specifically, we may use the following information from OAuth
+            providers:
+          </p>
+          <ul>
+            <li>
+              Your email address is used to help identify your account. You will
+              never be emailed without your permission.
+            </li>
+            <li>
+              Your username is used as your starting display name on PTS. This
+              isn&apos;t locked and you can change your display name once a day.
+            </li>
           </ul>
           <p>We do not:</p>
           <ul>
@@ -103,8 +162,8 @@ export default function Page() {
               listed specifically in this Privacy Policy.
             </li>
             <li>
-              Employ any sort of tracking or fingerprinting for analytics or
-              advertising.
+              Employ any sort of personal data infringing tracking or
+              fingerprinting for analytics or advertising.
             </li>
           </ul>
         </section>

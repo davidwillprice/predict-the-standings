@@ -18,7 +18,7 @@ export class CompetitionLink {
 export interface UserDataFromSession {
   id: string;
   displayName: string;
-  lastDisplayNameSubmission: number | Date;
+  lastDisplayNameSubmission: number | Date | undefined;
   predictionsMadeFor: {
     [competition: string]: { season: string; _id: string }[];
   };
