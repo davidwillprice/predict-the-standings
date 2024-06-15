@@ -28,6 +28,7 @@ export const GetStartedForm = ({ initialDisplayName }: Props) => {
 
   /**@todo! Don't pick something disruptive or offensive*/
   /**@todo If possible, don't let them submit their display name if they already have it*/
+  /**@todo Delete this page and move this form to intergrate into the profile page */
 
   const [displayNameErrorArr, setDisplayNameErrorArr] = useState(
     validateDisplayName(initialDisplayName)

@@ -143,6 +143,7 @@ export const PerformanceOverview = ({ user }: Props) => {
         <h2>Performance Overview</h2>
       </PanelHeading>
       {performanceRowArr === null ? (
+        /**@todo Loading skeleton causing x-scrolling*/
         <div className={skeleStyles.con}>
           {Array.from(Array(noOfSkeleRows).keys())
             .reverse()

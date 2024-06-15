@@ -76,15 +76,19 @@ export default function Page() {
                   <th>Github</th>
                   <td>
                     <ul>
-                      {/**@todo Provide more details */}
                       <li>Email address</li>
-                      <li>Login (Username)</li>
+                      <li>Profile information</li>
                     </ul>
+                    <a
+                      href="https://docs.github.com/en/apps/oauth-apps/using-oauth-apps/authorizing-oauth-apps"
+                      target="_blank">
+                      Further details on the Github website
+                    </a>
                   </td>
                   <td>
                     <ul>
                       <li>Email address</li>
-                      <li>Login (Username)</li>
+                      <li>Username</li>
                     </ul>
                   </td>
                 </tr>

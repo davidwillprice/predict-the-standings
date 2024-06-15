@@ -169,6 +169,7 @@ export const DeleteAccount = ({ user }: Props) => {
             </FeedbackContainer>
           ) : confirmationStatus === "success" ? (
             <FeedbackContainer iconType="success">
+              {/**@todo Update 3 second timer to countdown */}
               <p id="displayNameSuccess">
                 Account successfully deleted - You will be logged out in 3
                 seconds

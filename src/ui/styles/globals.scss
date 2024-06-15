@@ -98,7 +98,9 @@ a {
 }
 
 p a,
-ul a {
+ul a,
+td > a,
+th > a {
   text-decoration: underline;
 }
 
