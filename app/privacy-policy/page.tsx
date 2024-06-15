@@ -73,6 +73,22 @@ export default function Page() {
                   </td>
                 </tr>
                 <tr>
+                  <th>Github</th>
+                  <td>
+                    <ul>
+                      {/**@todo Provide more details */}
+                      <li>Email address</li>
+                      <li>Login (Username)</li>
+                    </ul>
+                  </td>
+                  <td>
+                    <ul>
+                      <li>Email address</li>
+                      <li>Login (Username)</li>
+                    </ul>
+                  </td>
+                </tr>
+                <tr>
                   <th>Google</th>
                   <td>
                     <ul>
@@ -95,7 +111,7 @@ export default function Page() {
                   <td>
                     <ul>
                       <li>Email address</li>
-                      <li>Profile information</li>
+                      <li>Signup date</li>
                       <li>Username</li>
                     </ul>
                   </td>

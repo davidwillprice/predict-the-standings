@@ -1,6 +1,6 @@
 import NextAuth, { User } from "next-auth";
 import Discord, { DiscordProfile } from "next-auth/providers/discord";
-import Github from "next-auth/providers/github";
+import Github, { GitHubProfile } from "next-auth/providers/github";
 import Google, { GoogleProfile } from "next-auth/providers/google";
 import Reddit from "next-auth/providers/reddit";
 import Twitter, { TwitterProfile } from "next-auth/providers/twitter";
@@ -62,6 +62,16 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     // }),
     Github({
       allowDangerousEmailAccountLinking: true,
+      /**Manually state the values I want to set their login to their PTS display name */
+      profile(profile: GitHubProfile) {
+        return {
+          id: String(profile.id),
+          email: profile.email,
+          displayName: profile.login,
+          lastDisplayNameSubmission: undefined,
+          predictionsMadeFor: {},
+        };
+      },
     }),
     Google<GoogleProfile>({
       allowDangerousEmailAccountLinking: true,
@@ -85,9 +95,9 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       /**Manually state the values I want to set their discord username to their PTS display name */
       profile: (profile): User => {
         return {
-          id: profile.data.id,
-          email: profile.data?.email,
-          displayName: profile.data?.username,
+          id: profile.id,
+          email: profile.email,
+          displayName: profile.username,
           lastDisplayNameSubmission: undefined,
           predictionsMadeFor: {},
         };
