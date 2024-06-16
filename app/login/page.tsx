@@ -16,7 +16,7 @@ const Page = async ({ searchParams }: Props) => {
   const session = await auth();
   if (session !== null) {
     if (!session?.user.displayName) {
-      return redirect("/get-started");
+      return redirect("/profile");
     } else {
       return redirect("/competitions/");
     }

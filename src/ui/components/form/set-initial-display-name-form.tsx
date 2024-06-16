@@ -19,16 +19,14 @@ import btnConstyles from "@components/button/button-containers.module.scss";
 
 interface Props {
   initialDisplayName: string;
-  lastDisplayNameSubmissionDate: number | undefined;
 }
 
-export const GetStartedForm = ({ initialDisplayName }: Props) => {
+export const SetInitialDisplayNameForm = ({ initialDisplayName }: Props) => {
   const router = useRouter();
   const { data: session, update } = useSession();
 
   /**@todo! Don't pick something disruptive or offensive*/
   /**@todo If possible, don't let them submit their display name if they already have it*/
-  /**@todo Delete this page and move this form to intergrate into the profile page */
 
   const [displayNameErrorArr, setDisplayNameErrorArr] = useState(
     validateDisplayName(initialDisplayName)
@@ -72,6 +70,7 @@ export const GetStartedForm = ({ initialDisplayName }: Props) => {
       if (errorMessage) {
         throw new Error(errorMessage);
       } else {
+        /**@todo Fix it not seeming to actually update the session until the tab is refreshed */
         await update({
           ...session,
           user: {

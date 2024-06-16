@@ -27,7 +27,7 @@ const Page: NextPage<PageProps> = async ({ params }) => {
   if (session == null) {
     return redirect("/login?error=login");
   } else if (!displayName) {
-    return redirect("/get-started");
+    return redirect("/profile");
   }
 
   return (
