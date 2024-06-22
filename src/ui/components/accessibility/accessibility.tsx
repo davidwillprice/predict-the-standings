@@ -19,7 +19,7 @@ export const AccessibilityOptions = () => {
   if (!mounted) {
     return null;
   }
-
+  /**@todo! Light mode toggle not always working on first use */
   return (
     <Button
       onClick={() =>

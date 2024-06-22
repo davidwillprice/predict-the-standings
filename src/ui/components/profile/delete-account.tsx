@@ -113,8 +113,8 @@ export const DeleteAccount = ({ user }: Props) => {
         <h4>All your personal data will be deleted</h4>
         <ul>
           <li>
-            This includes any account data provided by 0Auth like your email or
-            name.
+            This includes any account data provided by AuthO like your email or
+            username.
           </li>
           <li>
             Your display name will be deleted and will become available for

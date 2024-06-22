@@ -23,7 +23,7 @@ export const metadata: Metadata = {
    * @todo! Add proper open graph social media card images
    */
 };
-
+/**@todo Randomly getting 500 error on first load some session issue? */
 export default function RootLayout({
   children,
 }: {

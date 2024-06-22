@@ -41,7 +41,6 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       return session;
     },
   },
-  /**@todo! return updated information to get rid of unwanted passed information https://next-auth.js.org/configuration/providers/oauth#override-default-options like profile pictures */
   providers: [
     /**@todo! Add email provider in case I hit limits on the others */
     Discord({

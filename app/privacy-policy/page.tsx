@@ -58,6 +58,7 @@ export default function Page() {
                 <tr>
                   <th>Discord</th>
                   <td>
+                    {/**@todo Fix lists having margin below them*/}
                     <ul>
                       <li>Avatar</li>
                       <li>Banner</li>

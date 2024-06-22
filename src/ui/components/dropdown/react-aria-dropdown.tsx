@@ -35,6 +35,8 @@ export const ReactAriaDropdown = ({
 }: Props) => {
   let [selected, setSelected] = useState<string>(defaultKey);
 
+  /**@todo! Dittering sideways on desktop*/
+  /**@todo! Getting scrollbar when there is only one option */
   /**If the defaultKey prop changes, ensure that becomes the selected key */
   useEffect(() => {
     if (defaultKey !== selected) {
