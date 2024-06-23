@@ -2,7 +2,6 @@
 
 import { useSession } from "next-auth/react";
 import { useState, useRef } from "react";
-import { useRouter } from "next/navigation";
 
 import { submitDisplayName } from "@lib/form-server-actions";
 import { validateDisplayName } from "@lib/form-functions";
@@ -21,7 +20,6 @@ interface Props {
 }
 
 export const ProfileForm = ({ initialDisplayName }: Props) => {
-  const router = useRouter();
   const { data: session, update } = useSession();
   const [isEditable, setEditable] = useState(false);
   const [displayNameErrorArr, setDisplayNameErrorArr] = useState<string[]>([]);

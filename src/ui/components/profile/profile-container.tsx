@@ -12,9 +12,10 @@ import commonStyles from "@styles/common.module.scss";
 import btnConStyles from "@components/button/button-containers.module.scss";
 import formStyles from "@components/form/form.module.scss";
 import { UserDataFromSession } from "@custom-types/misc";
+import { useRef } from "react";
 
 export const ProfileContainer = () => {
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const user: UserDataFromSession = session?.user;
 
   const initialDisplayName = user.displayName
@@ -23,7 +24,7 @@ export const ProfileContainer = () => {
     ? user.email.slice(0, user.email.indexOf("@"))
     : "";
 
-  return status !== "loading" ? (
+  return (
     <>
       <Panel>
         {!user.displayName ? (
@@ -67,7 +68,5 @@ export const ProfileContainer = () => {
       </Panel>
       {user.displayName ? <PerformanceOverview user={user} /> : ""}
     </>
-  ) : (
-    ""
   );
 };
