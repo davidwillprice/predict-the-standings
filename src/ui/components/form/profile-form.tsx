@@ -88,7 +88,6 @@ export const ProfileForm = ({ initialDisplayName }: Props) => {
         setEditable(false);
         isSubmitting(false);
         submissionSuccessful.current = true;
-        router.refresh();
       }
     } catch (error: unknown) {
       if (error instanceof Error) {

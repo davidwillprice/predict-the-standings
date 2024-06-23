@@ -70,7 +70,6 @@ export const SetInitialDisplayNameForm = ({ initialDisplayName }: Props) => {
       if (errorMessage) {
         throw new Error(errorMessage);
       } else {
-        /**@todo Fix it not seeming to actually update the session until the tab is refreshed */
         await update({
           ...session,
           user: {
@@ -80,7 +79,9 @@ export const SetInitialDisplayNameForm = ({ initialDisplayName }: Props) => {
           },
         });
         isSubmitting(false);
-        redirect();
+        /**@todo! The redirect delay doesn't work properly currently because the session's display name being set essentially refreshes the page, so for now this redirects immediately and no feedback is shown which isn't ideal*/
+        //redirect();
+        router.push("/competitions");
         submissionSuccessful.current = true;
       }
     } catch (error: unknown) {

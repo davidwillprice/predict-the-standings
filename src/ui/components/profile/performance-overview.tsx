@@ -142,8 +142,22 @@ export const PerformanceOverview = ({ user }: Props) => {
       <PanelHeading>
         <h2>Performance Overview</h2>
       </PanelHeading>
-      {performanceRowArr === null ? (
-        /**@todo Loading skeleton causing x-scrolling*/
+      {Object.keys(user.predictionsMadeFor).length === 0 ? (
+        <Panel>
+          <p>You haven&apos;t made any predictions yet.</p>
+          <p>
+            Please visit the competitions page below to see if there are any
+            open to predictions at the moment.
+          </p>
+          <div className={btnConstyles.single}>
+            <Link href={"competitions"} className={btnStyles.button}>
+              View Competitions
+            </Link>
+          </div>
+        </Panel>
+      ) : performanceRowArr === null ? (
+        /**@todo! Loading skeleton causing x-scrolling*/
+        /**@todo! Add error handling - If the session says the user has made predictions but performanceRowArr ends up empty then that error should be handled */
         <div className={skeleStyles.con}>
           {Array.from(Array(noOfSkeleRows).keys())
             .reverse()
@@ -168,19 +182,6 @@ export const PerformanceOverview = ({ user }: Props) => {
               );
             })}
         </div>
-      ) : performanceRowArr.length === 0 ? (
-        <Panel>
-          <p>You haven&apos;t made any predictions yet.</p>
-          <p>
-            Please visit the competitions page below to see if there are any
-            open to predictions at the moment.
-          </p>
-          <div className={btnConstyles.single}>
-            <Link href={"competitions"} className={btnStyles.button}>
-              View Competitions
-            </Link>
-          </div>
-        </Panel>
       ) : (
         <table className={styles.competitions}>
           <thead>
