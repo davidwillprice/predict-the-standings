@@ -169,7 +169,7 @@ export const DeleteAccount = ({ user }: Props) => {
             </FeedbackContainer>
           ) : confirmationStatus === "success" ? (
             <FeedbackContainer iconType="success">
-              {/**@todo Update 3 second timer to countdown */}
+              {/**@todo Update 3 second UI to countdown */}
               <p id="displayNameSuccess">
                 Account successfully deleted - You will be logged out in 3
                 seconds
@@ -178,10 +178,14 @@ export const DeleteAccount = ({ user }: Props) => {
           ) : (
             ""
           )}
-          <Button onClick={() => openModal()} className={btnStyles.error}>
-            <Icon strokeWidth={2} type="trash" />
-            Delete Account
-          </Button>
+          {confirmationStatus !== "success" ? (
+            <Button onClick={() => openModal()} className={btnStyles.error}>
+              <Icon strokeWidth={2} type="trash" />
+              Delete Account
+            </Button>
+          ) : (
+            ""
+          )}
         </form>
       </Modal>
     </>

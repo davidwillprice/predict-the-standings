@@ -156,7 +156,6 @@ export const PerformanceOverview = ({ user }: Props) => {
           </div>
         </Panel>
       ) : performanceRowArr === null ? (
-        /**@todo! Loading skeleton causing x-scrolling*/
         /**@todo! Add error handling - If the session says the user has made predictions but performanceRowArr ends up empty then that error should be handled */
         <div className={skeleStyles.con}>
           {Array.from(Array(noOfSkeleRows).keys())
