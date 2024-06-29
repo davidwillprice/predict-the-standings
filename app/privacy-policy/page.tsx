@@ -128,6 +128,25 @@ export default function Page() {
                   </td>
                 </tr>
                 <tr>
+                  <th>Twitch</th>
+                  <td>
+                    <ul>
+                      <li>User Id</li>
+                      <li>Username</li>
+                      <li>Profile image</li>
+                      <li>Profile update date</li>
+                      <li>Email address</li>
+                      <li>Email verification status</li>
+                    </ul>
+                  </td>
+                  <td>
+                    <ul>
+                      <li>Email address</li>
+                      <li>Username</li>
+                    </ul>
+                  </td>
+                </tr>
+                <tr>
                   <th>Twitter</th>
                   <td>
                     <ul>

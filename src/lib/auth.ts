@@ -4,6 +4,7 @@ import Github, { GitHubProfile } from "next-auth/providers/github";
 import Google, { GoogleProfile } from "next-auth/providers/google";
 import Reddit from "next-auth/providers/reddit";
 import Twitter, { TwitterProfile } from "next-auth/providers/twitter";
+import Twitch, { TwitchProfile } from "next-auth/providers/twitch";
 import { MongoDBAdapter } from "@auth/mongodb-adapter";
 import clientPromise from "@lib/mongodb";
 import type { Adapter } from "next-auth/adapters";
@@ -103,6 +104,19 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       },
     }),
     // Spotify(),
+    Twitch({
+      allowDangerousEmailAccountLinking: true,
+      /**Manually state the values I want to avoid obtaining unnecessary personal data */
+      profile: (profile: TwitchProfile): User => {
+        return {
+          id: profile.id,
+          email: profile.email,
+          displayName: profile.preferred_username,
+          lastDisplayNameSubmission: undefined,
+          predictionsMadeFor: {},
+        };
+      },
+    }),
     Twitter({
       allowDangerousEmailAccountLinking: true,
       /**Manually state the values I want to avoid obtaining people's name and image */

@@ -79,6 +79,13 @@ export const LoginForm = () => {
               Sign in via Spotify
             </Button> */}
             <Button
+              id="twitch"
+              className={styles.twitch}
+              onClick={signInHandler}>
+              <Icon strokeWidth={2} type="twitch" />
+              Sign in via Twitch
+            </Button>
+            <Button
               id="twitter"
               className={styles.twitter}
               onClick={signInHandler}>
