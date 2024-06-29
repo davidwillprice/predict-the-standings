@@ -35,7 +35,7 @@ export const ReactAriaDropdown = ({
 }: Props) => {
   let [selected, setSelected] = useState<string>(defaultKey);
 
-  /**@todo! Dittering sideways on desktop*/
+  /**@todo Dittering sideways on desktop has been fixed, but maybe there is a cleaner solution within the React Aria options besides having to use `scrollbar-gutter: stable;`? */
   /**If the defaultKey prop changes, ensure that becomes the selected key */
   useEffect(() => {
     if (defaultKey !== selected) {

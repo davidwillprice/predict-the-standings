@@ -48,6 +48,7 @@
   margin: 0;
   //-moz-transition: 0.2s all;
 }
+
 svg,
 path,
 circle {
@@ -62,6 +63,7 @@ body {
   background-color: var(--tertiary-color);
   color: var(--secondary-color);
   font-family: var(--font-roboto);
+  scrollbar-gutter: stable;
 }
 
 body {
@@ -99,8 +101,8 @@ a {
 
 p a,
 ul a,
-td > a,
-th > a {
+td>a,
+th>a {
   text-decoration: underline;
 }
 
@@ -121,7 +123,8 @@ ul,
 ol {
   margin-left: 20px;
 }
-li > ul {
+
+li>ul {
   margin-top: 10px;
 }
 
