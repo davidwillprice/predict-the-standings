@@ -20,6 +20,12 @@
   margin-top: -($header-height-mobile + 10px);
 }
 
+@media (min-width: $mobile-menu-breakpoint) {
+  html .mobile_show {
+    display: none;
+  }
+}
+
 @media (max-width: $mobile-menu-breakpoint) {
   html .mobile_hide {
     display: none;

@@ -28,9 +28,10 @@ const Page: NextPage<PageProps> = async ({ params }) => {
 
   return (
     <>
-      <PanelHeading>
-        <h1>Eurovision {season} Grand Final - Player Stats</h1>
-      </PanelHeading>
+      <PanelHeading
+        mainHeading="Player Stats"
+        secondaryHeading={`Eurovision ${season} Grand Final`}
+      />
       <PlayerStats
         currUser={currUser}
         preseasonText={`Once Eurovision ${season} is over, various player stats will show on this page.`}

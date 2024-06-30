@@ -26,9 +26,10 @@ const Page: NextPage<PageProps> = async ({ params }) => {
 
   return (
     <>
-      <PanelHeading>
-        <h1>Formula 1 {season} - Driver & Team Stats</h1>
-      </PanelHeading>
+      <PanelHeading
+        mainHeading="Driver & Team Stats"
+        secondaryHeading={`${seasonData.competitionStrs.display} ${season}`}
+      />
       <EntrantStats
         currUser={currUser}
         preseasonText={

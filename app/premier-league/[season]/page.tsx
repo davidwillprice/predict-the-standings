@@ -27,7 +27,7 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
   return (
     <LeaderboardContainer
       currUser={currUser}
-      headingText={`Premier League ${season} - Leaderboard`}
+      headingText={`Premier League ${season}`}
       preseasonText={`Once the first gameweek of the season completes, the leaderboard will show here and you'll be able to compare how well everyone predicted the results.`}
       searchParams={searchParams}
       seasonData={seasonData}

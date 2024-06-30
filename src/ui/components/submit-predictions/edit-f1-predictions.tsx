@@ -50,9 +50,11 @@ export const EditF1Predictions = ({
     <>
       <div className={styles.edit_predictions_con}>
         <div className={styles.infoCon}>
-          <PanelHeading align="center">
-            <h1>Predict the F1 {season} Standings</h1>
-          </PanelHeading>
+          <PanelHeading
+            align="center"
+            mainHeading="Predict The Standings"
+            secondaryHeading={`${competitionStrs.display} ${season}`}
+          />
           {children}
           <SubmitPredictions
             allEntrantArrs={{ drivers: driverArr, teams: teamArr }}

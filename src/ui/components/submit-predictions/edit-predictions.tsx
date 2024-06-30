@@ -45,15 +45,11 @@ export const EditPredictions = ({
     <>
       <div className={styles.edit_predictions_con}>
         <div className={styles.infoCon}>
-          <PanelHeading align="center">
-            <h1>
-              Predict the{" "}
-              {competitionStrs.shortHand === "eurovision"
-                ? `Eurovision ${season} Results`
-                : `${competitionStrs.display} ${season} Standings`}
-            </h1>
-          </PanelHeading>
-
+          <PanelHeading
+            align="center"
+            mainHeading="Predict The Standings"
+            secondaryHeading={`${competitionStrs.display} ${season}`}
+          />
           {children}
           <SubmitPredictions
             allEntrantArrs={{ [entrantType]: entrantArr }}

@@ -27,7 +27,7 @@ const Page: NextPage<PageProps> = async ({ params, searchParams }) => {
   return (
     <LeaderboardContainer
       currUser={currUser}
-      headingText={`Eurovision ${season} - Leaderboard`}
+      headingText={`Eurovision ${season} Grand Final`}
       preseasonText={`Once Eurovision ${season} is over, the leaderboard will show here and you'll be able to compare how well everyone predicted the results.`}
       searchParams={searchParams}
       seasonData={seasonData}

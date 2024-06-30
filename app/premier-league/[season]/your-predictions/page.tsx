@@ -32,11 +32,11 @@ const Page: NextPage<PageProps> = async ({ params }) => {
 
   return (
     <>
-      <PanelHeading align="center">
-        <h1>
-          {seasonData.competitionStrs.display} {season} - Your Predictions
-        </h1>
-      </PanelHeading>
+      <PanelHeading
+        align="center"
+        mainHeading="Your Predictions"
+        secondaryHeading={`${seasonData.competitionStrs.display} ${season}`}
+      />
       <YourPredictions currUser={session.user} seasonData={seasonData} />
     </>
   );

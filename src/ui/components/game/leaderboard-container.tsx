@@ -4,9 +4,12 @@ import { PanelHeading } from "@components/panels/panel-heading";
 import { GameContainer } from "@components/game/game-container";
 import { Panel } from "@components/panels/panel";
 import { PromptPredictions } from "@components/submit-predictions/prompt-predictions";
+import { HeadingSplitter } from "@components/heading-splitter";
 
 import { LocalSeasonData } from "@custom-types/game-types";
 import { UserDataFromSession } from "@custom-types/misc";
+
+import panelHeadingStyles from "@components/panels/panel-heading.module.scss";
 
 type Props = {
   currUser: UserDataFromSession | undefined;
@@ -50,7 +53,13 @@ export const LeaderboardContainer = async ({
           rounds={JSON.parse(JSON.stringify(rounds))}
           season={seasonStr}>
           <div>
-            <h1>{headingText}</h1>
+            <h1>
+              Leaderboard
+              <HeadingSplitter />
+              <span className={panelHeadingStyles.secondaryHeading}>
+                {headingText}
+              </span>
+            </h1>
             <p>
               Select players to view their predictions and compare them to the
               actual results.
@@ -59,9 +68,10 @@ export const LeaderboardContainer = async ({
         </GameContainer>
       ) : (
         <>
-          <PanelHeading>
-            <h1>{headingText}</h1>
-          </PanelHeading>
+          <PanelHeading
+            mainHeading="Leaderboard"
+            secondaryHeading={headingText}
+          />
           <Panel>
             <p>{preseasonText}</p>
             <PromptPredictions

@@ -32,9 +32,11 @@ const Page: NextPage<PageProps> = async ({ params }) => {
 
   return (
     <>
-      <PanelHeading align="center">
-        <h1>Eurovision {season} Grand Final - Your Predictions</h1>
-      </PanelHeading>
+      <PanelHeading
+        align="center"
+        mainHeading="Your Predictions"
+        secondaryHeading={`${seasonData.competitionStrs.display} ${season} Grand Final`}
+      />
       <YourPredictions currUser={session.user} seasonData={seasonData} />
     </>
   );

@@ -87,12 +87,10 @@ const Page: NextPage<PageProps> = async ({ params }) => {
     <>
       {!predictionsOpen ? (
         <>
-          <PanelHeading>
-            <h1>
-              Predict The {competitionStrs.display} {season}
-              Standings
-            </h1>
-          </PanelHeading>
+          <PanelHeading
+            mainHeading="Predict The Standings"
+            secondaryHeading={`${competitionStrs.display} ${season}`}
+          />
           <Panel>
             <p>
               Please return once the teams competing in the{" "}
