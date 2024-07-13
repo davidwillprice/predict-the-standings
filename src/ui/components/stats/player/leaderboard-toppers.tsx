@@ -103,7 +103,9 @@ export const LeaderboardToppers = ({
                           ? "Gameweeks"
                           : "Rounds"}
                       </th>
-                      <th>Longest Streak</th>
+                      <th className={styles.leaderboard_toppers__streak_cell}>
+                        Longest Streak
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
@@ -128,8 +130,10 @@ export const LeaderboardToppers = ({
                           {index + 1}
                         </td>
                         <td>{rowData.user.displayName}</td>
-                        <td>{rowData.roundsTop.length}</td>
-                        <td>
+                        <td className={styles.leaderboard_toppers__rounds_top}>
+                          {rowData.roundsTop.length}
+                        </td>
+                        <td className={styles.leaderboard_toppers__streak_cell}>
                           {getLengthOfLongestConsecutiveNumbers(
                             rowData.roundsTop
                           )}

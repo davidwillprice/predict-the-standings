@@ -28,3 +28,13 @@
     }
   }
 }
+
+@media (max-width: 345px) {
+  .leaderboard_toppers__streak_cell {
+    display: none;
+  }
+  .leaderboard_toppers__rounds_top {
+    border-radius: 0 5px 5px 0;
+    padding-right: 10px;
+  }
+}
