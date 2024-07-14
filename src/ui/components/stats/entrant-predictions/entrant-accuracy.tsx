@@ -45,7 +45,15 @@ export const EntrantAccuracy = ({
         return (
           <li key={entrant.name}>
             {`${entrant.name} ${isSeasonOver ? "was" : "is"} the ${accType} 
-            accurately predicted ${entrantType} (${
+            accurately predicted ${
+              entrantType === "drivers"
+                ? "driver"
+                : entrantType === "teams"
+                ? "team"
+                : entrantType === "countries"
+                ? "country"
+                : "entrant"
+            } (${
               avgMisposition === 0
                 ? `everyone correctly predicted they would ${
                     isSeasonOver ? "finish" : "be"
