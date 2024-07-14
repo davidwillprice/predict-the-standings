@@ -6,7 +6,7 @@ import styles from "@components/button/button-containers.module.scss";
 export const CompetitionButtons = () => (
   <>
     <hr />
-    <div className={styles.tripleCol}>
+    <div className={styles.doubleCol}>
       <Link href="/eurovision/">
         <Button>
           <Icon strokeWidth={2} type="microphone" />

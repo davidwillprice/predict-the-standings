@@ -1,0 +1,71 @@
+@import "@styles/sass-variables.scss";
+
+.home {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+.hero {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  min-height: 100vh;
+  h1 {
+    text-align: left;
+  }
+  &__image {
+    width: 100%;
+    height: auto;
+    max-width: 1000px;
+    align-self: center;
+  }
+  &__text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+}
+div.feature {
+  display: flex;
+  justify-content: center;
+  max-width: 1000px;
+  align-items: center;
+  gap: 20px;
+  margin: 0 auto;
+  &__panel {
+    width: 50%;
+    margin-bottom: 15px;
+    &__full_width {
+      width: 100%;
+    }
+  }
+}
+
+@media (max-width: 1300px) {
+  .hero {
+    flex-direction: column;
+    gap: 0;
+    &__image {
+      display: none;
+    }
+  }
+}
+@media (min-width: 1300px) {
+  div.leaderboard_image {
+    display: none;
+  }
+  .feature__reverse_desktop {
+    > :nth-child(2) {
+      order: -1;
+    }
+  }
+}
+@media (max-width: 1000px) {
+  div.feature {
+    flex-direction: column;
+    gap: 0;
+    &__panel {
+      width: 100%;
+    }
+  }
+}

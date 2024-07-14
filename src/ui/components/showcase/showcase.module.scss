@@ -1,0 +1,36 @@
+@import "@styles/sass-variables.scss";
+
+.showcase {
+  border: 2px var(--quaternary-color) solid;
+  border-radius: 5px;
+  overflow: hidden;
+  box-shadow: var(--box-shadow);
+  display: flex;
+  flex-direction: column;
+  max-width: 600px;
+  margin: 0 auto;
+  img {
+    max-width: 100%;
+    align-self: auto;
+    height: auto;
+  }
+}
+.ui {
+  width: 100%;
+  background-color: var(--quaternary-color);
+  display: flex;
+  gap: 5px;
+  padding: 5px;
+  &__btn {
+    width: 7px;
+    height: 7px;
+    background-color: white;
+    border-radius: 100%;
+    &:nth-child(2) {
+      opacity: 0.75;
+    }
+    &:nth-child(3) {
+      opacity: 0.5;
+    }
+  }
+}
