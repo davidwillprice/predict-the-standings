@@ -20,12 +20,22 @@ export default function Page() {
               target="_blank"
               href="https://www.freepik.com/free-vector/line-wave-background-gradient-style-template_57150990.htm">
               Line wave background
-            </a>
-            , designed by{" "}
+            </a>{" "}
+            designed by{" "}
             <a
               target="_blank"
               href="https://www.freepik.com/author/andreacharlesta">
               AndreaCharlesta
+            </a>
+            .
+          </li>
+          <li>
+            <a target="_blank" href="https://codepen.io/TommiTikall/pen/xZwpGR">
+              Arrow animation
+            </a>{" "}
+            by{" "}
+            <a target="_blank" href="https://codepen.io/TommiTikall/pens/">
+              Tómas Thorvardarson
             </a>
             .
           </li>

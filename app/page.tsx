@@ -18,6 +18,7 @@ import loginDesktopImg from "../src/images/login_desktop_light.png";
 
 import styles from "@styles/home.module.scss";
 import commonStyles from "@styles/common.module.scss";
+import { ScrollPrompt } from "@components/scroll-prompt/scroll-prompt";
 
 export default function Home() {
   return (
@@ -38,8 +39,8 @@ export default function Home() {
             className={`${styles.feature__panel} ${styles.feature__panel__full_width}`}>
             <h3>Global Leaderboard</h3>
             <p>
-              A worldwide leaderboard updates after every round so you can see
-              how your predictions perform throughout the season.
+              The leaderboard updates after every round so you can see how your
+              predictions are performing throughout the season.
             </p>
           </Panel>
         </div>
@@ -62,6 +63,7 @@ export default function Home() {
             quality={90}
           />
         </Showcase>
+        <ScrollPrompt />
       </div>
       <div className={`${styles.feature} ${styles.feature__reverse_desktop}`}>
         <Panel className={styles.feature__panel}>
