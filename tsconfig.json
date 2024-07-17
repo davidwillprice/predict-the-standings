@@ -31,6 +31,7 @@
       "@lib/*": ["./src/lib/*"],
       "@custom-types/*": ["./src/custom-types/*"],
       "@ui/*": ["./src/ui/*"],
+      "@src/*": ["./src/*"],
       "@styles/*": ["./src/ui/styles/*"],
       "@svgs/*": ["./src/ui/svgs/*"]
     }

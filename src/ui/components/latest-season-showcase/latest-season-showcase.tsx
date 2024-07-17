@@ -15,6 +15,7 @@ interface Props {
   children: ReactNode;
   localSeasonData: LocalSeasonData;
   linkArr: CompetitionLink[];
+  showHelp?: boolean;
 }
 
 /**If the predictions aren't open, say when they will be. If they are open, prompt people to edit and submit their predictions. If the predictions are frozen, hide this component entirely */
@@ -22,6 +23,7 @@ export const LatestSeasonShowcase = ({
   children,
   linkArr,
   localSeasonData,
+  showHelp = true,
 }: Props) => {
   const {
     arePredictionsFrozen,
@@ -54,14 +56,14 @@ export const LatestSeasonShowcase = ({
                 Predict The Standings
               </Link>
             </div>
-            <hr />
+            {localSeasonData.rounds.length > 0 || showHelp ? <hr /> : ""}
           </>
         )
       )}
       <CompetitionNavLinks
         linkArr={linkArr}
         localSeasonData={localSeasonData}
-        showHelp={true}
+        showHelp={showHelp}
       />
     </>
   );
