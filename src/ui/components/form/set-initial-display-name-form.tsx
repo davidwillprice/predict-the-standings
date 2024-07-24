@@ -25,7 +25,6 @@ export const SetInitialDisplayNameForm = ({ initialDisplayName }: Props) => {
   const router = useRouter();
   const { data: session, update } = useSession({ required: true });
 
-  /**@todo! Don't pick something disruptive or offensive*/
   /**@todo If possible, don't let them submit their display name if they already have it*/
 
   const [displayNameErrorArr, setDisplayNameErrorArr] = useState(
@@ -82,7 +81,7 @@ export const SetInitialDisplayNameForm = ({ initialDisplayName }: Props) => {
         /**@todo The redirect delay doesn't work properly currently because the session's display name being set essentially refreshes the page, so for now this redirects immediately and no feedback is shown which isn't ideal*/
         //redirect();
         router.push("/competitions");
-        /**Need to refresh sucks, but without it NextAuth doesn't recognise that a display name has been added to the session and if you return to /profile then it acts as if you haven't set a display name
+        /**Needing to refresh sucks, but without it NextAuth doesn't recognise that a display name has been added to the session and if you return to /profile then it acts as if you haven't set a display name
          * Storing the displayName in a ref or state didn't help as they would get wiped
          * Adding it to local storage would work but would be an annoying faff
          * The `predictionsMadeFor` session data seems to update okay somehow

@@ -8,6 +8,7 @@ import type {
 import { UserGameData } from "@custom-types/game-types";
 import { UserDataFromSession } from "@custom-types/misc";
 import { WithId } from "mongodb";
+import { bannedTermsArr } from "@data/banned-string-filter";
 
 export const sortEntrantsAlphabetically = (entrantArr: Entrant[]) => {
   return entrantArr.sort((a, b) =>
@@ -229,41 +230,39 @@ export const getSpecificGameDataIdFromSessionUser = (
   }
 };
 
-//3 as e
-//1 as i
-//0 as o
-//7 as 1
-//5 as s
-//9 as g
-//Catch capital letters as non-capital letters and vice versa
-/**@todo Finish variationCatcher */
-const variationCatcher = (stringArr: string[], no: number, letter: string) => {
-  const filteredStringArr = stringArr.filter((word) => word.includes(letter));
-  filteredStringArr.forEach((word) => {
-    const letterCount = word.replace(`/[^${letter}]/g`, "").length;
+export const containsOffensiveTerm = (displayName: string) => {
+  const letterToNumberMap: { [key: string]: string } = {
+    o: "0",
+    i: "1",
+    a: "4",
+    e: "3",
+    s: "5",
+    g: "9",
+    t: "7",
+  };
 
-    let newVariations = [];
+  const checkTerm = (name: string, term: string): boolean => {
+    const regexPattern = term
+      .split("")
+      .map((char) => {
+        if (char in letterToNumberMap) {
+          return `[${char}${letterToNumberMap[char]}]`;
+        }
+        return char;
+      })
+      .join("");
 
-    // for (let i = 0; i < word.length; i++) {
-    //   if (word[i] === letter) {
-    //     newVariations.push(word.slice(0, i) + no + word.slice(i + 1));
-    //   }
-    // }
+    const regex = new RegExp(regexPattern, "i");
+    return regex.test(name);
+  };
 
-    // for (let i = 0; i < letterCount; i++) {
-    //   newVariations.forEach((variation) => {
-    //     for (let i = 0; i < variation.length; i++) {
-    //       if (variation[i] === letter) {
-    //         //newVariations.push(variation.slice(0, i) + no + variation.slice(i + 1));
-    //       }
-    //     }
-    //   });
-    // }
+  const normalizedName = displayName.toLowerCase();
 
-    //Needs to go through and return an array of variations where each letter is replaced with a number in turn
-    //And then go through through those new variations again and agian
-    //Then add all these new variations to the main stringArr
+  for (const term of bannedTermsArr) {
+    if (checkTerm(normalizedName, term)) {
+      return true;
+    }
+  }
 
-    //But does this cover all variations of variations?
-  });
+  return false;
 };

@@ -1,3 +1,5 @@
+import { containsOffensiveTerm } from "./misc";
+
 type validationErrorArr = string[];
 export const validateDisplayName = (
   displayName: string
@@ -23,6 +25,9 @@ export const validateDisplayName = (
     validationErrors.push(
       "The first character must be an alphabetic character"
     );
+
+  if (containsOffensiveTerm(displayName))
+    validationErrors.push("Please don't pick an offensive display name");
 
   if (!/^[a-zA-Z0-9_]+$/.test(displayName))
     validationErrors.push(
