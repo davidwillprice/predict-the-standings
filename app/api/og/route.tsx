@@ -11,10 +11,10 @@ export async function GET(request: Request) {
     const competition = searchParams.get("competition");
 
     const tommyFont = await fetch(
-      new URL("../../../src/fonts/MADE_TOMMY_Bold.otf", import.meta.url)
+      new URL("../../../src/fonts/MADE_TOMMY_Bold.ttf", import.meta.url)
     ).then((res) => res.arrayBuffer());
     const tommyOutlineFont = await fetch(
-      new URL("../../../src/fonts/MADE_TOMMY_Bold_Outline.otf", import.meta.url)
+      new URL("../../../src/fonts/MADE_TOMMY_Bold_Outline.ttf", import.meta.url)
     ).then((res) => res.arrayBuffer());
 
     let imageResponse;
