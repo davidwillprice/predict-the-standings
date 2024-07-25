@@ -27,6 +27,16 @@ import { CompetitionLink } from "@custom-types/misc";
 
 export const metadata: Metadata = {
   title: "Predict The Premier League Standings",
+  description: "Compete to predict the final table",
+  openGraph: {
+    images: [
+      {
+        url: `${process.env.AUTH_URL}api/og?title=Premier League`,
+        width: 1200,
+        height: 630,
+      },
+    ],
+  },
 };
 
 export default function Page() {

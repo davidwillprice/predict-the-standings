@@ -27,7 +27,6 @@ export default function Page() {
               href="https://www.freepik.com/author/andreacharlesta">
               AndreaCharlesta
             </a>
-            .
           </li>
           <li>
             <a target="_blank" href="https://codepen.io/TommiTikall/pen/xZwpGR">
@@ -37,7 +36,19 @@ export default function Page() {
             <a target="_blank" href="https://codepen.io/TommiTikall/pens/">
               Tómas Thorvardarson
             </a>
-            .
+          </li>
+          <li>
+            <a
+              target="_blank"
+              href="https://unblast.com/made-tommy-sans-serif-font/">
+              Tommy
+            </a>{" "}
+            font by{" "}
+            <a
+              target="_blank"
+              href="https://creativemarket.com/MadeType?u=unblast">
+              Made Type
+            </a>
           </li>
           <li>
             SVG icons designed by{" "}

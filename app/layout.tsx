@@ -19,9 +19,15 @@ const roboto = Roboto({
 export const metadata: Metadata = {
   title: "Predict The Standings",
   description: "Compete to predict the final tables for various sports",
-  /**
-   * @todo! Add proper open graph social media card images
-   */
+  openGraph: {
+    images: [
+      {
+        url: `${process.env.AUTH_URL}api/og`,
+        width: 1200,
+        height: 630,
+      },
+    ],
+  },
 };
 /**@todo Randomly getting 500 error on first load some session issue? */
 export default function RootLayout({
