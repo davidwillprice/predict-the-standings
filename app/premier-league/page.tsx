@@ -31,7 +31,7 @@ export const metadata: Metadata = {
   openGraph: {
     images: [
       {
-        url: `${process.env.AUTH_URL}api/og?title=Premier League`,
+        url: `${process.env.AUTH_URL}/api/og?title=Premier League&competition=premier-league`,
         width: 1200,
         height: 630,
       },

@@ -8,6 +8,7 @@ export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const title = searchParams.get("title");
+    const competition = searchParams.get("competition");
 
     const tommyFont = await fetch(
       new URL("../../../src/fonts/MADE_TOMMY_Bold.otf", import.meta.url)
@@ -16,9 +17,25 @@ export async function GET(request: Request) {
       new URL("../../../src/fonts/MADE_TOMMY_Bold_Outline.otf", import.meta.url)
     ).then((res) => res.arrayBuffer());
 
-    const plImage = await fetch(
-      new URL("../../../src/images/og/pl2023.jpg", import.meta.url)
-    ).then((res) => res.arrayBuffer());
+    let imageResponse;
+
+    if (competition === "formula-1") {
+      imageResponse = await fetch(
+        new URL("../../../src/images/og/f1.jpg", import.meta.url)
+      );
+    } else if (competition === "eurovision") {
+      imageResponse = await fetch(
+        new URL("../../../src/images/og/eurovision.jpg", import.meta.url)
+      );
+    } else {
+      imageResponse = await fetch(
+        new URL("../../../src/images/og/pl.jpg", import.meta.url)
+      );
+    }
+
+    const arrayBuffer = await imageResponse.arrayBuffer();
+    const base64Image = Buffer.from(arrayBuffer).toString("base64");
+    const dataUrl = `data:image/jpeg;base64,${base64Image}`;
 
     return new ImageResponse(
       (
@@ -74,7 +91,7 @@ export async function GET(request: Request) {
             <img
               width={800}
               height={655}
-              src={image}
+              src={dataUrl}
               alt="Website image"
               style={{
                 zIndex: "2",
