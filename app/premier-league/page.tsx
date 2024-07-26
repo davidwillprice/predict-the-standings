@@ -1,6 +1,8 @@
 import Image from "next/image";
 import { Metadata } from "next";
 
+import { generateOgImgUrl } from "@lib/misc";
+
 import { Panel } from "@components/panels/panel";
 import { PanelHeading } from "@components/panels/panel-heading";
 import { LatestSeasonShowcase } from "@components/latest-season-showcase/latest-season-showcase";
@@ -31,7 +33,7 @@ export const metadata: Metadata = {
   openGraph: {
     images: [
       {
-        url: `${process.env.AUTH_URL}/api/og?title=Premier League&competition=premier-league`,
+        url: generateOgImgUrl("premier-league", "Premier League"),
         width: 1200,
         height: 630,
       },
