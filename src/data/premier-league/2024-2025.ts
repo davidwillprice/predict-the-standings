@@ -27,7 +27,7 @@ const teams: Entrants = {
   whu: new Entrant("West Ham", "whu", "#7a263a", "#1bb1e7", "white"),
   wol: new Entrant("Wolverhampton", "wol", "#fdb913", "black", "#010136"),
 };
-
+/**@todo Figure out how I will obtain gameweek data  */
 let rounds: Round[] = [
   // new Round("Gameweek 1", {
   //   teams: [

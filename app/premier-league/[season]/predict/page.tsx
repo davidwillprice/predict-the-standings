@@ -23,21 +23,23 @@ import commonStyles from "@styles/common.module.scss";
 import { PageProps, CompetitionLink } from "@custom-types/misc";
 import { Entrant } from "@custom-types/game-types";
 
-export const generateMetadata = async ({ params }: PageProps) => ({
-  title: `Predict the PL ${params.season} season | Predict The Standings`,
-  description: `Submit your predictions for the ${params.season} Premier League season`,
-  openGraph: {
-    images: [
-      {
-        url: generateOgImgUrl(
-          `Predict the PL ${params.season} season`,
-          "premier-league"
-        ),
-        alt: "Page screenshot",
-      },
-    ],
-  },
-});
+export const generateMetadata = async ({ params }: PageProps) => {
+  return {
+    title: `Predict the PL ${params.season} season | Predict The Standings`,
+    description: `Submit your predictions for the ${params.season} Premier League season`,
+    openGraph: {
+      images: [
+        {
+          url: generateOgImgUrl(
+            `Predict the PL ${params.season} season`,
+            "premier-league"
+          ),
+          alt: "Page screenshot",
+        },
+      ],
+    },
+  };
+};
 
 const Page: NextPage<PageProps> = async ({ params }) => {
   const { season } = params;

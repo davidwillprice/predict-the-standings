@@ -10,21 +10,23 @@ import { YourPredictions } from "@components/your-predictions/your-predictions";
 
 import { PageProps } from "@custom-types/misc";
 
-export const generateMetadata = async ({ params }: PageProps) => ({
-  title: `Your PL ${params.season} Predictions | Predict The Standings`,
-  description: `View your predictions for the ${params.season} Premier League season`,
-  openGraph: {
-    images: [
-      {
-        url: generateOgImgUrl(
-          `Your PL ${params.season} Predictions`,
-          "premier-league"
-        ),
-        alt: "Page screenshot",
-      },
-    ],
-  },
-});
+export const generateMetadata = async ({ params }: PageProps) => {
+  return {
+    title: `Your PL ${params.season} Predictions | Predict The Standings`,
+    description: `View your predictions for the ${params.season} Premier League season`,
+    openGraph: {
+      images: [
+        {
+          url: generateOgImgUrl(
+            `Your PL ${params.season} Predictions`,
+            "premier-league"
+          ),
+          alt: "Page screenshot",
+        },
+      ],
+    },
+  };
+};
 
 const Page: NextPage<PageProps> = async ({ params }) => {
   const { season } = params;

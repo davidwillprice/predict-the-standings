@@ -8,21 +8,23 @@ import { allPlSeasonData } from "@data/premier-league/season-data";
 import { PageProps } from "@custom-types/misc";
 import { LeaderboardContainer } from "@components/game/leaderboard-container";
 
-export const generateMetadata = async ({ params }: PageProps) => ({
-  title: `Premier League ${params.season} - Leaderboard | Predict The Standings`,
-  description: `Leaderboard for the ${params.season} Premier League season`,
-  openGraph: {
-    images: [
-      {
-        url: generateOgImgUrl(
-          `Premier League ${params.season} | Leaderboard`,
-          "premier-league"
-        ),
-        alt: "Page screenshot",
-      },
-    ],
-  },
-});
+export const generateMetadata = async ({ params }: PageProps) => {
+  return {
+    title: `Premier League ${params.season} - Leaderboard | Predict The Standings`,
+    description: `Leaderboard for the ${params.season} Premier League season`,
+    openGraph: {
+      images: [
+        {
+          url: generateOgImgUrl(
+            `Premier League ${params.season} | Leaderboard`,
+            "premier-league"
+          ),
+          alt: "Page screenshot",
+        },
+      ],
+    },
+  };
+};
 
 export async function generateStaticParams() {
   return Object.keys(allPlSeasonData).map((season) => ({

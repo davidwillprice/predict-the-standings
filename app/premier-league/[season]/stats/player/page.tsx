@@ -16,21 +16,23 @@ export async function generateStaticParams() {
   }));
 }
 
-export const generateMetadata = async ({ params }: PageProps) => ({
-  title: `PL ${params.season} Player Stats | Predict The Standings`,
-  description: `View player stats and trivia for the ${params.season} Premier League season`,
-  openGraph: {
-    images: [
-      {
-        url: generateOgImgUrl(
-          `PL ${params.season} | Player Stats`,
-          "premier-league"
-        ),
-        alt: "Page screenshot",
-      },
-    ],
-  },
-});
+export const generateMetadata = async ({ params }: PageProps) => {
+  return {
+    title: `PL ${params.season} Player Stats | Predict The Standings`,
+    description: `View player stats and trivia for the ${params.season} Premier League season`,
+    openGraph: {
+      images: [
+        {
+          url: generateOgImgUrl(
+            `PL ${params.season} | Player Stats`,
+            "premier-league"
+          ),
+          alt: "Page screenshot",
+        },
+      ],
+    },
+  };
+};
 
 const Page: NextPage<PageProps> = async ({ params }) => {
   const { season } = params;
