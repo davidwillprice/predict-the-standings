@@ -1,4 +1,5 @@
 import { Metadata, NextPage } from "next";
+import { generateOgImgUrl } from "@lib/misc";
 
 import { Panel } from "@components/panels/panel";
 import { PanelHeading } from "@components/panels/panel-heading";
@@ -10,6 +11,15 @@ import { CompetitionLink } from "@custom-types/misc";
 
 export const metadata: Metadata = {
   title: "Predict The Eurovision Standings",
+  description: "Compete to predict the grand final standings",
+  openGraph: {
+    images: [
+      {
+        url: generateOgImgUrl("Eurovision", "eurovision"),
+        alt: "Page screenshot",
+      },
+    ],
+  },
 };
 
 const Page: NextPage = async () => {

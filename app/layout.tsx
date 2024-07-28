@@ -19,6 +19,9 @@ const roboto = Roboto({
 export const metadata: Metadata = {
   title: "Predict The Standings",
   description: "Compete to predict the final tables for various sports",
+  metadataBase: process.env.AUTH_URL
+    ? new URL(process.env.AUTH_URL)
+    : undefined,
   openGraph: {
     images: [
       {

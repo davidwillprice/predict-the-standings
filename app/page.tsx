@@ -1,4 +1,7 @@
 import Image from "next/image";
+import { Metadata } from "next";
+
+import { generateOgImgUrl } from "@lib/misc";
 
 import { PanelHeading } from "@components/panels/panel-heading";
 import { Panel } from "@components/panels/panel";
@@ -19,6 +22,20 @@ import loginDesktopImg from "../src/images/login_desktop_light.png";
 import styles from "@styles/home.module.scss";
 import commonStyles from "@styles/common.module.scss";
 import { ScrollPrompt } from "@components/scroll-prompt/scroll-prompt";
+
+export const metadata: Metadata = {
+  title: "Predict The Standings",
+  description:
+    "Compete to predict the final tables for various sports and competitions",
+  openGraph: {
+    images: [
+      {
+        url: generateOgImgUrl(),
+        alt: "Page screenshot",
+      },
+    ],
+  },
+};
 
 export default function Home() {
   return (

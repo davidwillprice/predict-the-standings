@@ -1,7 +1,6 @@
-import { Metadata } from "next";
-import { redirect } from "next/navigation";
 import { NextPage } from "next";
-import { notFound } from "next/navigation";
+import { redirect, notFound } from "next/navigation";
+import { generateOgImgUrl } from "@lib/misc";
 
 import { auth } from "@lib/auth";
 import { allPlSeasonData } from "@data/premier-league/season-data";
@@ -11,9 +10,21 @@ import { YourPredictions } from "@components/your-predictions/your-predictions";
 
 import { PageProps } from "@custom-types/misc";
 
-export const metadata: Metadata = {
-  title: "View Your Premier League Predictions | Predict The Standings",
-};
+export const generateMetadata = async ({ params }: PageProps) => ({
+  title: `Your PL ${params.season} Predictions | Predict The Standings`,
+  description: `View your predictions for the ${params.season} Premier League season`,
+  openGraph: {
+    images: [
+      {
+        url: generateOgImgUrl(
+          `Your PL ${params.season} Predictions`,
+          "premier-league"
+        ),
+        alt: "Page screenshot",
+      },
+    ],
+  },
+});
 
 const Page: NextPage<PageProps> = async ({ params }) => {
   const { season } = params;

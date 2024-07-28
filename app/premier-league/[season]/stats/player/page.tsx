@@ -1,7 +1,8 @@
 import { NextPage } from "next";
 import { notFound } from "next/navigation";
-
+import { generateOgImgUrl } from "@lib/misc";
 import { auth } from "@lib/auth";
+
 import { allPlSeasonData } from "@data/premier-league/season-data";
 
 import { PanelHeading } from "@components/panels/panel-heading";
@@ -14,6 +15,22 @@ export async function generateStaticParams() {
     season: season,
   }));
 }
+
+export const generateMetadata = async ({ params }: PageProps) => ({
+  title: `PL ${params.season} Player Stats | Predict The Standings`,
+  description: `View player stats and trivia for the ${params.season} Premier League season`,
+  openGraph: {
+    images: [
+      {
+        url: generateOgImgUrl(
+          `PL ${params.season} | Player Stats`,
+          "premier-league"
+        ),
+        alt: "Page screenshot",
+      },
+    ],
+  },
+});
 
 const Page: NextPage<PageProps> = async ({ params }) => {
   const { season } = params;

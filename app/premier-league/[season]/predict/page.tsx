@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 
 import { getUserGameDataQuery } from "@lib/db-functions";
 import {
+  generateOgImgUrl,
   getSpecificGameDataIdFromSessionUser,
   sortEntrantsAlphabetically,
 } from "@lib/misc";
@@ -25,6 +26,22 @@ import { Entrant } from "@custom-types/game-types";
 export const metadata: Metadata = {
   title: "Submit Your Premier League Predictions | Predict The Standings",
 };
+
+export const generateMetadata = async ({ params }: PageProps) => ({
+  title: `Predict the PL ${params.season} season | Predict The Standings`,
+  description: `Submit your predictions for the ${params.season} Premier League season`,
+  openGraph: {
+    images: [
+      {
+        url: generateOgImgUrl(
+          `Predict the PL ${params.season} season`,
+          "premier-league"
+        ),
+        alt: "Page screenshot",
+      },
+    ],
+  },
+});
 
 const Page: NextPage<PageProps> = async ({ params }) => {
   const { season } = params;

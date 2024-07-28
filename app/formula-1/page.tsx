@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { generateOgImgUrl } from "@lib/misc";
 
 import { Panel } from "@components/panels/panel";
 import { PanelHeading } from "@components/panels/panel-heading";
@@ -10,6 +11,15 @@ import { CompetitionLink } from "@custom-types/misc";
 
 export const metadata: Metadata = {
   title: "Predict The Formula 1 Standings",
+  description: "Compete to predict the driver and constructor tables",
+  openGraph: {
+    images: [
+      {
+        url: generateOgImgUrl("Formula 1", "formula-1"),
+        alt: "Page screenshot",
+      },
+    ],
+  },
 };
 
 const Page = () => {

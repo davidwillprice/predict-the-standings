@@ -268,8 +268,8 @@ export const containsOffensiveTerm = (displayName: string) => {
 };
 
 export const generateOgImgUrl = (
-  hyphenatedCompStr: string,
-  pageTitle: string
+  pageTitle?: string,
+  hyphenatedCompStr?: string
 ): string => {
   const imageName =
     hyphenatedCompStr === "formula-1"
@@ -278,7 +278,7 @@ export const generateOgImgUrl = (
       ? "eurovision"
       : "pl";
   const imgUrl = `${process.env.AUTH_URL}/og/${imageName}.jpg`;
-  return `${
-    process.env.AUTH_URL
-  }/api/og?title=${pageTitle}&img=${encodeURIComponent(imgUrl)}`;
+  return `${process.env.AUTH_URL}/api/og?title=${
+    typeof pageTitle === "string" ? pageTitle : ""
+  }&img=${encodeURIComponent(imgUrl)}`;
 };
