@@ -23,10 +23,6 @@ import commonStyles from "@styles/common.module.scss";
 import { PageProps, CompetitionLink } from "@custom-types/misc";
 import { Entrant } from "@custom-types/game-types";
 
-export const metadata: Metadata = {
-  title: "Submit Your Premier League Predictions | Predict The Standings",
-};
-
 export const generateMetadata = async ({ params }: PageProps) => ({
   title: `Predict the PL ${params.season} season | Predict The Standings`,
   description: `Submit your predictions for the ${params.season} Premier League season`,

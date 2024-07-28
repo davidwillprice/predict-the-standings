@@ -56,6 +56,7 @@ export async function GET(request: Request) {
               fontSize: title ? "72px" : "100px",
               lineHeight: "20px",
               marginTop: "50px",
+              marginBottom: title ? "25px" : "40px",
             }}>
             Predict The Standings
           </h1>
@@ -72,15 +73,17 @@ export async function GET(request: Request) {
             style={{
               display: "flex",
               position: "relative",
-              marginTop: "90px",
+              marginTop: "80px",
             }}>
             <img
-              width={800}
-              height={655}
+              width={950}
+              height={600}
               src={dataUrl}
               alt="Website image"
               style={{
                 zIndex: "2",
+                width: "800px",
+                height: "505px",
               }}
             />
             <svg
@@ -89,7 +92,7 @@ export async function GET(request: Request) {
                 maxWidth: "100%",
                 maxHeight: "100%",
                 left: "50%",
-                top: "-7.65%",
+                top: "-10%",
                 transform: "translateX(-50%)",
               }}
               width="830"
