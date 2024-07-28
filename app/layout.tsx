@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { SessionProvider } from "@lib/next-auth-provider";
 import { Providers } from "./providers";
+import { generateOgImgUrl } from "@lib/misc";
+
 import { Roboto } from "next/font/google";
 
 import Header from "@components/header/header";
@@ -25,9 +27,8 @@ export const metadata: Metadata = {
   openGraph: {
     images: [
       {
-        url: `${process.env.AUTH_URL}/api/og`,
-        width: 1200,
-        height: 630,
+        url: generateOgImgUrl(),
+        alt: "Page screenshot",
       },
     ],
   },

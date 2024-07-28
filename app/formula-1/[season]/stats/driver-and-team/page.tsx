@@ -1,12 +1,31 @@
 import { NextPage } from "next";
 import { notFound } from "next/navigation";
 import { auth } from "@lib/auth";
+import { generateOgImgUrl } from "@lib/misc";
 
 import { allF1SeasonData } from "@data/formula-1/season-data";
 import { PanelHeading } from "@components/panels/panel-heading";
 
 import { PageProps } from "@custom-types/misc";
 import { EntrantStats } from "@components/stats/entrant-predictions/entrant-stats-container";
+
+export const generateMetadata = async ({ params }: PageProps) => {
+  return {
+    title: `Formula 1 ${params.season} Driver & Team Stats | Predict The Standings`,
+    description: `View driver and team stats for the ${params.season} Formula 1 season`,
+    openGraph: {
+      images: [
+        {
+          url: generateOgImgUrl(
+            `Formula 1 ${params.season} | Driver & Team Stats`,
+            "f1"
+          ),
+          alt: "Page screenshot",
+        },
+      ],
+    },
+  };
+};
 
 export async function generateStaticParams() {
   return Object.keys(allF1SeasonData).map((season) => ({

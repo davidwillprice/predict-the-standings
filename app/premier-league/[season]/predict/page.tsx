@@ -1,4 +1,3 @@
-import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { NextPage } from "next";
 import { notFound } from "next/navigation";
@@ -30,10 +29,7 @@ export const generateMetadata = async ({ params }: PageProps) => {
     openGraph: {
       images: [
         {
-          url: generateOgImgUrl(
-            `Predict the PL ${params.season} season`,
-            "premier-league"
-          ),
+          url: generateOgImgUrl(`Predict the PL ${params.season} season`, "pl"),
           alt: "Page screenshot",
         },
       ],

@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { auth } from "@lib/auth";
 
 import {
+  generateOgImgUrl,
   getSpecificGameDataIdFromSessionUser,
   sortEntrantsAlphabetically,
 } from "@lib/misc";
@@ -21,8 +22,24 @@ import commonStyles from "@styles/common.module.scss";
 import { PageProps, CompetitionLink } from "@custom-types/misc";
 import { Entrant } from "@custom-types/game-types";
 
-export const metadata: Metadata = {
-  title: "Make Your Predictions | Predict The Standings",
+export const generateMetadata = async ({
+  params,
+}: PageProps): Promise<Metadata> => {
+  return {
+    title: `Predict the Formula 1 ${params.season} season | Predict The Standings`,
+    description: `Submit your predictions for the ${params.season} Formula 1 season`,
+    openGraph: {
+      images: [
+        {
+          url: generateOgImgUrl(
+            `Predict the Formula 1 ${params.season} season`,
+            "f1"
+          ),
+          alt: "Page screenshot",
+        },
+      ],
+    },
+  };
 };
 
 const Page: NextPage<PageProps> = async ({ params }) => {

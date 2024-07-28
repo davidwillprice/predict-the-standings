@@ -18,15 +18,12 @@ export async function generateStaticParams() {
 
 export const generateMetadata = async ({ params }: PageProps) => {
   return {
-    title: `PL ${params.season} Player Stats | Predict The Standings`,
+    title: `Premier League ${params.season} Player Stats | Predict The Standings`,
     description: `View player stats and trivia for the ${params.season} Premier League season`,
     openGraph: {
       images: [
         {
-          url: generateOgImgUrl(
-            `PL ${params.season} | Player Stats`,
-            "premier-league"
-          ),
+          url: generateOgImgUrl(`PL ${params.season} | Player Stats`, "pl"),
           alt: "Page screenshot",
         },
       ],

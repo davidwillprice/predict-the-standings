@@ -23,8 +23,8 @@ export const generateMetadata = async ({ params }: PageProps) => {
       images: [
         {
           url: generateOgImgUrl(
-            `PL ${params.season} | Team Stats`,
-            "premier-league"
+            `Premier League ${params.season} | Team Stats`,
+            "pl"
           ),
           alt: "Page screenshot",
         },

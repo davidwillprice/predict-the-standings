@@ -10,6 +10,16 @@ export async function GET(request: Request) {
     const title = searchParams.get("title");
     const imgUrl = searchParams.get("img");
 
+    let isTitleLengthLong;
+    if (title.length > 40) {
+      isTitleLengthLong = true;
+    }
+
+    let isTitleLengthTooLong;
+    if (title.length > 50) {
+      throw new Error(`Title length to long for URL: ${request.url}`);
+    }
+
     const tommyFont = await fetch(
       new URL("../../../src/fonts/MADE_TOMMY_Bold.ttf", import.meta.url)
     ).then((res) => res.arrayBuffer());
@@ -64,7 +74,7 @@ export async function GET(request: Request) {
             style={{
               fontFamily: "tommy",
               maxWidth: "100%",
-              fontSize: "55px",
+              fontSize: isTitleLengthLong ? "45px" : "55px",
               marginBottom: "0px",
             }}>
             {title}

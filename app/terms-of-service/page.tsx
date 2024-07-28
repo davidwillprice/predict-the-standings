@@ -1,11 +1,22 @@
 import { Metadata } from "next";
 import Link from "next/link";
+import { generateOgImgUrl } from "@lib/misc";
 
 import { Panel } from "@components/panels/panel";
 import { PanelHeading } from "@components/panels/panel-heading";
 
 export const metadata: Metadata = {
   title: "Terms of Service | Predict The Standings",
+  description:
+    "By registering with the website, users agree to abide by the terms outlined in this terms of service",
+  openGraph: {
+    images: [
+      {
+        url: generateOgImgUrl("Terms of Service", "pl"),
+        alt: "Page screenshot",
+      },
+    ],
+  },
 };
 
 export default function Page() {

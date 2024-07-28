@@ -1,10 +1,21 @@
 import { Metadata } from "next";
+import { generateOgImgUrl } from "@lib/misc";
 
 import { Panel } from "@components/panels/panel";
 import { PanelHeading } from "@components/panels/panel-heading";
 
 export const metadata: Metadata = {
   title: "Attribution | Predict The Standings",
+  description:
+    "This page outlines the different elements used to create Predict The Standings",
+  openGraph: {
+    images: [
+      {
+        url: generateOgImgUrl("Attribution", "pl"),
+        alt: "Page screenshot",
+      },
+    ],
+  },
 };
 
 export default function Page() {

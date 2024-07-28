@@ -1,5 +1,7 @@
+import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import { generateOgImgUrl } from "@lib/misc";
 
 import { auth } from "@lib/auth";
 
@@ -7,6 +9,20 @@ import { Panel } from "@components/panels/panel";
 import { LoginForm } from "@components/login/login-form";
 import { PanelHeading } from "@components/panels/panel-heading";
 import { FeedbackContainer } from "@components/feedback-container/feedback-container";
+
+export const metadata: Metadata = {
+  title: "Login | Predict The Standings",
+  description:
+    "Log into your PTS account to submit new predictions or view your performances",
+  openGraph: {
+    images: [
+      {
+        url: generateOgImgUrl("Login", "login"),
+        alt: "Page screenshot",
+      },
+    ],
+  },
+};
 
 interface Props {
   searchParams: { [key: string]: string };

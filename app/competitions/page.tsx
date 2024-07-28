@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
+import { generateOgImgUrl } from "@lib/misc";
 
 import { allF1SeasonData } from "@data/formula-1/season-data";
 import { allEurovisionSeasonData } from "@data/eurovision/season-data";
@@ -13,6 +14,16 @@ import btnStyles from "@components/button/button.module.scss";
 
 export const metadata: Metadata = {
   title: "Competitions | Predict The Standings",
+  description:
+    "View the various competitions and sports you can submit predictions for",
+  openGraph: {
+    images: [
+      {
+        url: generateOgImgUrl("Competitions", "competitions"),
+        alt: "Page screenshot",
+      },
+    ],
+  },
 };
 
 const Page = () => {

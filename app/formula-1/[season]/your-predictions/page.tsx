@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { NextPage } from "next";
 import { notFound } from "next/navigation";
+import { generateOgImgUrl } from "@lib/misc";
 
 import { auth } from "@lib/auth";
 import { allF1SeasonData } from "@data/formula-1/season-data";
@@ -11,8 +12,24 @@ import { YourPredictions } from "@components/your-predictions/your-predictions";
 
 import { PageProps } from "@custom-types/misc";
 
-export const metadata: Metadata = {
-  title: "View Your Formula 1 Predictions | Predict The Standings",
+export const generateMetadata = async ({
+  params,
+}: PageProps): Promise<Metadata> => {
+  return {
+    title: `Your Formula 1 ${params.season} Predictions | Predict The Standings`,
+    description: `View your predictions for the ${params.season} Formula 1 season`,
+    openGraph: {
+      images: [
+        {
+          url: generateOgImgUrl(
+            `Your Formula 1 ${params.season} Predictions`,
+            "f1"
+          ),
+          alt: "Page screenshot",
+        },
+      ],
+    },
+  };
 };
 
 const Page: NextPage<PageProps> = async ({ params }) => {

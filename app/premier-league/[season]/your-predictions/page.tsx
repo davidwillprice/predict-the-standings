@@ -17,10 +17,7 @@ export const generateMetadata = async ({ params }: PageProps) => {
     openGraph: {
       images: [
         {
-          url: generateOgImgUrl(
-            `Your PL ${params.season} Predictions`,
-            "premier-league"
-          ),
+          url: generateOgImgUrl(`Your PL ${params.season} Predictions`, "pl"),
           alt: "Page screenshot",
         },
       ],

@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   openGraph: {
     images: [
       {
-        url: generateOgImgUrl("Premier League", "premier-league"),
+        url: generateOgImgUrl("Premier League", "pl"),
         alt: "Page screenshot",
       },
     ],

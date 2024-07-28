@@ -2,6 +2,10 @@ import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { NextPage } from "next";
 import { notFound } from "next/navigation";
+import {
+  generateOgImgUrl,
+  getSpecificGameDataIdFromSessionUser,
+} from "@lib/misc";
 
 import { getUserGameDataQuery } from "@lib/db-functions";
 import { auth } from "@lib/auth";
@@ -16,10 +20,25 @@ import commonStyles from "@styles/common.module.scss";
 
 import { PageProps, CompetitionLink } from "@custom-types/misc";
 import { Entrant } from "@custom-types/game-types";
-import { getSpecificGameDataIdFromSessionUser } from "@lib/misc";
 
-export const metadata: Metadata = {
-  title: "Make Your Eurovision Predictions | Predict The Standings",
+export const generateMetadata = async ({
+  params,
+}: PageProps): Promise<Metadata> => {
+  return {
+    title: `Predict the Eurovision ${params.season} table | Predict The Standings`,
+    description: `Submit your predictions for the Eurovision ${params.season} Grand Final`,
+    openGraph: {
+      images: [
+        {
+          url: generateOgImgUrl(
+            `Predict the Eurovision ${params.season} table`,
+            "eurovision"
+          ),
+          alt: "Page screenshot",
+        },
+      ],
+    },
+  };
 };
 
 const Page: NextPage<PageProps> = async ({ params }) => {

@@ -8,9 +8,19 @@ import { EntrantRow } from "@components/entrant-table/entrant-row";
 
 import styles from "@styles/help.module.scss";
 import entrantTableStyles from "@components/entrant-table/entrant-table.module.scss";
+import { generateOgImgUrl } from "@lib/misc";
 
 export const metadata: Metadata = {
   title: "Help | Predict The Standings",
+  description: "Learn how the game works and how to play",
+  openGraph: {
+    images: [
+      {
+        url: generateOgImgUrl("Help", "help"),
+        alt: "Page screenshot",
+      },
+    ],
+  },
 };
 
 const BlankTableRow = () => (

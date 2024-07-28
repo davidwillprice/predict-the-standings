@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { generateOgImgUrl } from "@lib/misc";
 
 import { Panel } from "@components/panels/panel";
 import { PanelHeading } from "@components/panels/panel-heading";
@@ -7,6 +8,16 @@ import styles from "@styles/cookies-table.module.scss";
 
 export const metadata: Metadata = {
   title: "Privacy Policy | Predict The Standings",
+  description:
+    "This Privacy Policy outlines how we collect, use, disclose, and protect your personal information when you access or use our website",
+  openGraph: {
+    images: [
+      {
+        url: generateOgImgUrl("Privacy Policy", "pl"),
+        alt: "Page screenshot",
+      },
+    ],
+  },
 };
 
 export default function Page() {
