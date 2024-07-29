@@ -9,7 +9,10 @@ import { LeaderboardContainer } from "@components/game/leaderboard-container";
 
 import { PageProps } from "@custom-types/misc";
 
-export const generateMetadata = async ({ params }: PageProps) => {
+export const generateMetadata = async ({ params, searchParams }: PageProps) => {
+  const isConstructorsLeaderboard =
+    searchParams["leaderboard"] === "constructors";
+  const imageFile = isConstructorsLeaderboard ? "f1-teams" : "f1";
   return {
     title: `Formula 1 ${params.season} - Leaderboard | Predict The Standings`,
     description: `Leaderboard for the ${params.season} Formula 1 season`,
@@ -17,8 +20,10 @@ export const generateMetadata = async ({ params }: PageProps) => {
       images: [
         {
           url: generateOgImgUrl(
-            `Formula 1 ${params.season} | Leaderboard`,
-            "f1"
+            `Formula 1 ${params.season} | ${
+              isConstructorsLeaderboard ? "Constructors " : ""
+            } Leaderboard`,
+            imageFile
           ),
           alt: "Page screenshot",
         },

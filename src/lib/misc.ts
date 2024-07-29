@@ -273,6 +273,7 @@ export const generateOgImgUrl = (
     | "competitions"
     | "eurovision"
     | "f1"
+    | "f1-teams"
     | "help"
     | "login"
     | "pl"
