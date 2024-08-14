@@ -2,10 +2,7 @@ import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { NextPage } from "next";
 import { notFound } from "next/navigation";
-import {
-  generateOgImgUrl,
-  getSpecificGameDataIdFromSessionUser,
-} from "@lib/misc";
+import { generateOgImgUrl } from "@lib/misc";
 
 import { getUserGameDataQuery } from "@lib/db-functions";
 import { auth } from "@lib/auth";
@@ -76,17 +73,10 @@ const Page: NextPage<PageProps> = async ({ params }) => {
 
   let countryArr: Entrant[];
   try {
-    const gameDataId: string | undefined = getSpecificGameDataIdFromSessionUser(
-      season,
-      competitionStrs.shortHand,
-      session.user
-    );
-    if (!gameDataId) throw new Error();
-
     const userPredictionData = await getUserGameDataQuery(
       season,
       competitionStrs.shortHand,
-      gameDataId
+      session.user.id
     );
     /**If their existing predictions have been successfully obtained, convert the array of ids to Entants */
     countryArr = userPredictionData.predictions.countries.map(

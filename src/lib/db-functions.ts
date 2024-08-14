@@ -347,7 +347,7 @@ export const submitPredictionsQuery = async (
       const prevTimesPredictionsUpdated =
         olduserPredictionDoc?.timesPredictionsUpdated;
 
-      const filter = { _id: new ObjectId(gameDataId) };
+      const filter = { _id: new ObjectId(userId) };
       const update = {
         $set: {
           displayName: displayName,

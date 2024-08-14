@@ -3,11 +3,7 @@ import { NextPage } from "next";
 import { notFound } from "next/navigation";
 
 import { getUserGameDataQuery } from "@lib/db-functions";
-import {
-  generateOgImgUrl,
-  getSpecificGameDataIdFromSessionUser,
-  sortEntrantsAlphabetically,
-} from "@lib/misc";
+import { generateOgImgUrl, sortEntrantsAlphabetically } from "@lib/misc";
 import { auth } from "@lib/auth";
 import { allPlSeasonData } from "@data/premier-league/season-data";
 
@@ -72,17 +68,10 @@ const Page: NextPage<PageProps> = async ({ params }) => {
   let entrantArr: Entrant[];
 
   try {
-    const gameDataId: string | undefined = getSpecificGameDataIdFromSessionUser(
-      season,
-      competitionStrs.shortHand,
-      session.user
-    );
-    if (!gameDataId) throw new Error();
-
     const userPredictionData = await getUserGameDataQuery(
       season,
       competitionStrs.shortHand,
-      gameDataId
+      session.user.id
     );
 
     /**If their existing predictions have been successfully obtained, convert the array of ids to Entants */

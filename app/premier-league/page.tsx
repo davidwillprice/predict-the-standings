@@ -29,7 +29,7 @@ import { CompetitionLink } from "@custom-types/misc";
 
 export const metadata: Metadata = {
   title: "Predict The Premier League Standings",
-  description: "Compete to predict the final table",
+  description: "Compete to predict the final Premier League table",
   openGraph: {
     images: [
       {

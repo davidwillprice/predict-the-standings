@@ -4,11 +4,7 @@ import { NextPage } from "next";
 import { notFound } from "next/navigation";
 import { auth } from "@lib/auth";
 
-import {
-  generateOgImgUrl,
-  getSpecificGameDataIdFromSessionUser,
-  sortEntrantsAlphabetically,
-} from "@lib/misc";
+import { generateOgImgUrl, sortEntrantsAlphabetically } from "@lib/misc";
 import { getUserGameDataQuery } from "@lib/db-functions";
 import { allF1SeasonData } from "@data/formula-1/season-data";
 
@@ -81,17 +77,10 @@ const Page: NextPage<PageProps> = async ({ params }) => {
   let driverArr: Entrant[];
   let teamArr: Entrant[];
   try {
-    const gameDataId: string | undefined = getSpecificGameDataIdFromSessionUser(
-      season,
-      competitionStrs.shortHand,
-      session.user
-    );
-    if (!gameDataId) throw new Error();
-
     const userPredictionData = await getUserGameDataQuery(
       season,
       competitionStrs.shortHand,
-      gameDataId
+      session.user.id
     );
 
     /**If their existing predictions have been successfully obtained, convert the array of ids to Entants */
