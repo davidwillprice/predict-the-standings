@@ -295,8 +295,5 @@ export interface NoOfPredictions {
   [entrantType: string]: number;
 }
 
-/**Holds the name of a collection and the _id of the userGameData that will be accessed */
-export type CollectionObj = {
-  collectionName: string;
-  _id: string;
-};
+/**Holds the name of a collection DB */
+export type DBCollectionStr = string;

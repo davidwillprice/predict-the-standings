@@ -15,14 +15,14 @@ import Link from "next/link";
 import { PanelHeading } from "@components/panels/panel-heading";
 import Icon from "@ui/svgs/icons/sq-icon";
 import {
-  getCollectionObjFromPredictionsMadeFor,
+  getCollectionStrFromPredictionsMadeFor,
   numberToOrdinalNumber,
   toTitleCase,
 } from "@lib/misc";
 import { Panel } from "@components/panels/panel";
 
 import { UserDataFromSession } from "@custom-types/misc";
-import { CollectionObj, CompetitionStrings } from "@custom-types/game-types";
+import { DBCollectionStr, CompetitionStrings } from "@custom-types/game-types";
 
 import styles from "@styles/competitions.module.scss";
 import btnConstyles from "@components/button/button-containers.module.scss";
@@ -50,16 +50,13 @@ export const PerformanceOverview = ({ user }: Props) => {
   useEffect(() => {
     /**Get the userPredictionData for every comp/season the user has predicted for */
     const getAllGameDataForUser = (
-      gameDataCollectionObjArr: CollectionObj[]
+      dBCollectionStrArr: DBCollectionStr[],
+      userId: string
     ) => {
       return new Promise((_, reject) => {
         Promise.all(
-          gameDataCollectionObjArr.map((collectionObj) =>
-            getUserGameDataQuery(
-              collectionObj.collectionName,
-              "",
-              collectionObj._id
-            )
+          dBCollectionStrArr.map((dBCollectionStr) =>
+            getUserGameDataQuery(dBCollectionStr, "", userId)
           )
         )
           .then((res) => {
@@ -69,7 +66,7 @@ export const PerformanceOverview = ({ user }: Props) => {
               const localSeasonData = allLocalSeasonData.find(
                 (seasonData) =>
                   seasonData.competitionStrs.shortHand + seasonData.id ===
-                  gameDataCollectionObjArr[index].collectionName
+                  dBCollectionStrArr[index]
               );
               if (localSeasonData === undefined) {
                 throw new Error("Couldn't find local data");
@@ -127,12 +124,12 @@ export const PerformanceOverview = ({ user }: Props) => {
     );
 
     /**Get all strings from `predictionsMadeFor` via the user session */
-    let gameDataCollectionObjArr = getCollectionObjFromPredictionsMadeFor(user);
+    let gameDataCollectionObjArr = getCollectionStrFromPredictionsMadeFor(user);
 
     if (gameDataCollectionObjArr === null) {
       setPerformanceRowArr([]);
     } else {
-      getAllGameDataForUser(gameDataCollectionObjArr);
+      getAllGameDataForUser(gameDataCollectionObjArr, user.id);
     }
   }, [user]);
 

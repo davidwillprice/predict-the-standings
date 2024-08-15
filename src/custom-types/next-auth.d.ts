@@ -1,5 +1,5 @@
 import NextAuth from "next-auth";
-import { UserDataFromSession } from "./misc";
+import { DBCollectionStr, UserDataFromSession } from "./misc";
 
 declare module "next-auth" {
   interface Session {
@@ -8,7 +8,7 @@ declare module "next-auth" {
       displayName: string;
       lastDisplayNameSubmissionDate: number;
       predictionsMadeFor: {
-        [competition: string]: { season: string; _id: string }[];
+        [competition: string]: DBCollectionStr[];
       };
     } & DefaultSession["user"];
   }

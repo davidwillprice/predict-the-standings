@@ -1,6 +1,6 @@
 import type {
-  CollectionObj,
   Entrant,
+  DBCollectionStr,
   GameDataMap,
   ShortHandCompStr,
   UserGameDataMap,
@@ -134,27 +134,20 @@ export const getLengthOfLongestConsecutiveNumbers = (arr: number[]): number => {
   return longestStreak;
 };
 
-/**Convert strings from `predictionsMadeFor` via the user session into collection game data names*/
-export const getCollectionObjFromPredictionsMadeFor = (
+/**Combine comp/season strs from the user session `predictionsMadeFor` into DB collection names*/
+export const getCollectionStrFromPredictionsMadeFor = (
   user: UserDataFromSession
-): CollectionObj[] | null => {
-  if (
-    !user.predictionsMadeFor ||
-    Object.values(user.predictionsMadeFor).length === 0
-  ) {
+): DBCollectionStr[] | null => {
+  const predictionsMadeFor = user.predictionsMadeFor;
+  if (!predictionsMadeFor || Object.values(predictionsMadeFor).length === 0) {
     return null;
   }
 
-  let gameDataCollectionObjArr: CollectionObj[] = [];
+  let gameDataCollectionObjArr: DBCollectionStr[] = [];
 
-  for (const [competition, seasonArr] of Object.entries(
-    user.predictionsMadeFor
-  )) {
-    seasonArr.forEach((seasonObj) => {
-      gameDataCollectionObjArr.push({
-        collectionName: competition + seasonObj.season,
-        _id: seasonObj._id,
-      });
+  for (const [competition, seasonArr] of Object.entries(predictionsMadeFor)) {
+    seasonArr.forEach((seasonStr) => {
+      gameDataCollectionObjArr.push(competition + seasonStr);
     });
   }
   return gameDataCollectionObjArr;
