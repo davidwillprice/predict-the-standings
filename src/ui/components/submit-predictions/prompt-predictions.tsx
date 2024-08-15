@@ -6,7 +6,7 @@ import btnConStyles from "@components/button/button-containers.module.scss";
 import btnStyles from "@components/button/button.module.scss";
 
 import { CompetitionStrings } from "@custom-types/game-types";
-import { getSpecificGameDataIdFromSessionUser } from "@lib/misc";
+import { checkIfSessionUserPredicted } from "@lib/misc";
 
 import { UserDataFromSession } from "@custom-types/misc";
 
@@ -25,7 +25,7 @@ export const PromptPredictions = ({
   predictionsOpen,
   seasonStr,
 }: Props) => {
-  const hasMadePredictions = !!getSpecificGameDataIdFromSessionUser(
+  const hasMadePredictions = checkIfSessionUserPredicted(
     seasonStr,
     competitionStrs.shortHand,
     currUser

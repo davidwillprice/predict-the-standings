@@ -3,7 +3,6 @@ import { useState, useRef } from "react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { submitPredictionsQuery } from "@lib/db-functions";
-import { getSpecificGameDataIdFromSessionUser } from "@lib/misc";
 
 import { Button } from "@components/button/button";
 import { LoadingSpinner } from "@components/loading-spinner/loading-spinner";
@@ -39,12 +38,6 @@ export const SubmitPredictions = ({
   const [savedEntrantArrs, setSavedEntrantArrs] = useState(allEntrantArrs);
   const [error, isError] = useState<string | null>(null);
 
-  const gameDataId = getSpecificGameDataIdFromSessionUser(
-    season,
-    competitionStrs.shortHand,
-    currUser
-  );
-
   const submissionHandler = async () => {
     isError(null);
     isSubmitting(true);
@@ -66,7 +59,6 @@ export const SubmitPredictions = ({
         competitionStrs.shortHand,
         displayName,
         predictionObj,
-        gameDataId,
         season,
         currUser.id
       );
@@ -93,13 +85,10 @@ export const SubmitPredictions = ({
           /**Don't add another season string if one already exists */
           if (
             !predictionsMadeFor[competitionStrs.shortHand].find(
-              (seasonObj) => seasonObj.season === season
+              (seasonStr) => seasonStr === season
             )
           ) {
-            predictionsMadeFor[competitionStrs.shortHand].push({
-              season: season,
-              _id: result,
-            });
+            predictionsMadeFor[competitionStrs.shortHand].push(season);
           }
           await update({
             ...session,

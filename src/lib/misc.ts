@@ -212,21 +212,21 @@ export const convertDocumentToUserGameData = (
   return userGameData;
 };
 
-export const getSpecificGameDataIdFromSessionUser = (
+export const checkIfSessionUserPredicted = (
   seasonStr: string,
   shortHandCompStr: ShortHandCompStr,
   user: UserDataFromSession | undefined | null
-): string | undefined => {
+): boolean => {
   if (
     !user ||
     !user.predictionsMadeFor ||
     !user.predictionsMadeFor[shortHandCompStr]
   ) {
-    return undefined;
+    return false;
   } else {
-    return user.predictionsMadeFor[shortHandCompStr].find(
-      (seasonObj) => seasonObj.season === seasonStr
-    )?._id;
+    return user.predictionsMadeFor[shortHandCompStr].some(
+      (season) => season === seasonStr
+    );
   }
 };
 

@@ -21,6 +21,6 @@ export interface UserDataFromSession {
   displayName: string;
   lastDisplayNameSubmission: number | Date | undefined;
   predictionsMadeFor: {
-    [competition: string]: { season: string; _id: string }[];
+    [competition: string]: string[];
   };
 }
