@@ -317,7 +317,6 @@ export const submitPredictionsQuery = async (
   competition: ShortHandCompStr,
   displayName: string,
   entrantArrs: { [entrantType: string]: string[] },
-  gameDataId: string | undefined,
   season: string,
   userId: string
 ): Promise<string> => {
@@ -342,7 +341,7 @@ export const submitPredictionsQuery = async (
     } else {
       /**Obtain previous gameData (if it exists) to get how many times it has been updated */
       const olduserPredictionDoc = await collection.findOne({
-        _id: new ObjectId(gameDataId),
+        _id: new ObjectId(userId),
       });
       const prevTimesPredictionsUpdated =
         olduserPredictionDoc?.timesPredictionsUpdated;
@@ -357,7 +356,6 @@ export const submitPredictionsQuery = async (
             ? prevTimesPredictionsUpdated + 1
             : 1,
           type: "userData",
-          userId: userId,
           userType: "standard",
         },
       };
