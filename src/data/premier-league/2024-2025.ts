@@ -59,7 +59,7 @@ const allEntrants = { teams: teams };
 const id = "2024-2025";
 const isGameDataLocked = false;
 const isSeasonOver = false;
-const predictionFreezeDate = new Date("2024-08-16T19:00:00");
+const predictionFreezeDate = new Date("2024-08-16T19:00:00Z"); // UTC time
 const predictionsOpen = true;
 
 export const seasonData20242025 = new LocalSeasonData(
