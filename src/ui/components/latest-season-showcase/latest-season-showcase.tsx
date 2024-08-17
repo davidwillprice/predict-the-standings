@@ -15,14 +15,16 @@ interface Props {
   children: ReactNode;
   localSeasonData: LocalSeasonData;
   linkArr: CompetitionLink[];
+  postFreezePreRoundText?: string;
   showHelp?: boolean;
 }
 
-/**If the predictions aren't open, say when they will be. If they are open, prompt people to edit and submit their predictions. If the predictions are frozen, hide this component entirely */
+/**If the predictions aren't open, say when they will be. If they are open, prompt people to edit and submit their predictions. If predictions are frozen but round data hasn't been posted yet, let people know when the leaderboard will be available. If there is round data, show the links to stats and the leaderboard */
 export const LatestSeasonShowcase = ({
   children,
   linkArr,
   localSeasonData,
+  postFreezePreRoundText,
   showHelp = true,
 }: Props) => {
   const {
@@ -31,35 +33,42 @@ export const LatestSeasonShowcase = ({
     id: seasonStr,
     predictionFreezeDate,
     predictionsOpen,
+    rounds,
   } = localSeasonData;
   /**@todo Add additional data like how many rounds have been completed, or how many people have submitted predictions */
+
+  let content;
+
+  if (!predictionsOpen) {
+    content = <p>Predictions will open once the entrants are confirmed.</p>;
+  } else if (!arePredictionsFrozen) {
+    content = (
+      <>
+        {children}
+        {
+          /**Hide the countdown for Eurovision as it doesn't have a set time when the voting will start being annouced */
+          competitionStrs.shortHand !== "eurovision" && (
+            <Countdown deadline={predictionFreezeDate} />
+          )
+        }
+        <div className={styles.single}>
+          <Link
+            href={`/${competitionStrs.hyphenated}/${seasonStr}/predict`}
+            className={btnStyles.button}>
+            <Icon strokeWidth={2} type="listBullet" />
+            Predict The Standings
+          </Link>
+        </div>
+        {localSeasonData.rounds.length > 0 || showHelp ? <hr /> : ""}
+      </>
+    );
+  } else if (rounds.length === 0 && postFreezePreRoundText) {
+    content = <p>{postFreezePreRoundText}</p>;
+  }
+
   return (
     <>
-      {!predictionsOpen ? (
-        <p>Predictions will open once the entrants are confirmed.</p>
-      ) : (
-        !arePredictionsFrozen && (
-          <>
-            {children}
-            {
-              /**Hide the countdown for Eurovision as it doesn't have a set time when the voting will start being annouced */
-              competitionStrs.shortHand !== "eurovision" && (
-                <Countdown deadline={predictionFreezeDate} />
-              )
-            }
-
-            <div className={styles.single}>
-              <Link
-                href={`/${competitionStrs.hyphenated}/${seasonStr}/predict`}
-                className={btnStyles.button}>
-                <Icon strokeWidth={2} type="listBullet" />
-                Predict The Standings
-              </Link>
-            </div>
-            {localSeasonData.rounds.length > 0 || showHelp ? <hr /> : ""}
-          </>
-        )
-      )}
+      {content}
       <CompetitionNavLinks
         linkArr={linkArr}
         localSeasonData={localSeasonData}

@@ -237,9 +237,9 @@ export const calcPredictionsAccuracy = (
     maxDiff += noOfEntrants * 2;
     noOfEntrants -= 2;
   }
-  if (!penaltyPoints)
+  if (typeof penaltyPoints !== "number")
     throw new Error(
-      "Couldn't calculate predictions accuracy as the penalty points are undefined"
+      "Couldn't calculate predictions accuracy as a user's penalty points are undefined"
     );
   return Math.round(((maxDiff - penaltyPoints) / maxDiff) * 100);
 };
