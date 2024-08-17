@@ -157,7 +157,10 @@ export const GameContainer = ({
     );
     /**Generate the round performance data for current user */
     currUserData = calcUserGameDataMapPerformance(rounds, currUserData);
-    currUserData = calcRemainingRoundPerformanceData(currUserData);
+    currUserData = calcRemainingRoundPerformanceData(
+      currUserData,
+      localSeasonData
+    );
 
     /**Set the logged in user's userGameData to a ref */
     currUserGameData.current = currUserData;
@@ -190,7 +193,10 @@ export const GameContainer = ({
           /**Generate the round performance data for each user on the leaderboard  */
           for (const [userId, user] of Object.entries(userData)) {
             userData[userId] = calcUserGameDataMapPerformance(rounds, user);
-            userData[userId] = calcRemainingRoundPerformanceData(user);
+            userData[userId] = calcRemainingRoundPerformanceData(
+              user,
+              localSeasonData
+            );
           }
           /**Set leaderboard data */
           setUsersData(userData);
@@ -348,6 +354,7 @@ export const GameContainer = ({
                 currentUserId={currUser?.id}
                 entrants={allEntrants[entrantType]}
                 entrantType={entrantType}
+                localSeasonData={localSeasonData}
                 roundIndex={roundIndex}
                 selectedUser={selectedUser}
                 shortHandCompStr={competitionStrs.shortHand}
