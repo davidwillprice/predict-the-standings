@@ -6,7 +6,10 @@ import type {
   UserGameDataMap,
 } from "@custom-types/game-types";
 import { UserGameData } from "@custom-types/game-types";
-import { UserDataFromSession } from "@custom-types/misc";
+import {
+  isNewPredictionMadeForArr,
+  UserDataFromSession,
+} from "@custom-types/misc";
 import { WithId } from "mongodb";
 import { bannedTermsArr } from "@data/banned-string-filter";
 
@@ -146,8 +149,14 @@ export const getCollectionStrFromPredictionsMadeFor = (
   let gameDataCollectionObjArr: DBCollectionStr[] = [];
 
   for (const [competition, seasonArr] of Object.entries(predictionsMadeFor)) {
-    seasonArr.forEach((seasonStr) => {
-      gameDataCollectionObjArr.push(competition + seasonStr);
+    seasonArr.forEach((seasonData) => {
+      //Latest predictionsMadeFor structure
+      if (typeof seasonData === "string") {
+        gameDataCollectionObjArr.push(competition + seasonData);
+      } else {
+        //Old predictionsMadeFor structure
+        gameDataCollectionObjArr.push(competition + seasonData.season);
+      }
     });
   }
   return gameDataCollectionObjArr;
@@ -217,9 +226,14 @@ export const checkIfSessionUserPredicted = (
   ) {
     return false;
   } else {
-    return user.predictionsMadeFor[shortHandCompStr].some(
-      (season) => season === seasonStr
-    );
+    const seasonData = user.predictionsMadeFor[shortHandCompStr];
+    if (isNewPredictionMadeForArr(seasonData)) {
+      //Latest predictionsMadeFor structure
+      return seasonData.some((season) => season === seasonStr);
+    } else {
+      //Old predictionsMadeFor structure
+      return seasonData.some((seasonObj) => seasonObj.season === seasonStr);
+    }
   }
 };
 
