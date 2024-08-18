@@ -4,6 +4,7 @@ import {
   EntrantStats,
   GameData,
   LeaderboardToppingGameDataIdMap,
+  LocalSeasonData,
   MostUpdatedGameDataIdArr,
   Round,
   ShortHandCompStr,
@@ -16,9 +17,10 @@ import { averageGameDataObjId } from "@data/object-ids";
 export const createGameData = async (
   allEntrants: AllEntrants,
   competition: ShortHandCompStr,
-  rounds: Round[],
+  seasonData: LocalSeasonData,
   users: UserGameDataMap
 ): Promise<GameData | string> => {
+  let rounds = seasonData.rounds;
   //**Creates an 'average' user */
   users.average = new UserGameData(
     averageGameDataObjId,
@@ -42,7 +44,7 @@ export const createGameData = async (
 
   users = generateControversyData(users);
 
-  rounds = calcLeaderboards(allEntrants, rounds, users);
+  rounds = calcLeaderboards(allEntrants, seasonData, users);
 
   rounds = orderLeaderboards(rounds, users);
 
@@ -205,9 +207,10 @@ export const calcUserRoundPerformance = (
 /**Populate the leaderboard for each user in each round*/
 const calcLeaderboards = (
   allEntrants: AllEntrants,
-  rounds: Round[],
+  localSeasonData: LocalSeasonData,
   users: UserGameDataMap
 ): Round[] => {
+  const rounds = localSeasonData.rounds;
   for (const entrantType in allEntrants) {
     rounds.forEach((round, roundIndex) => {
       /**Create blank leaderboard to avoid clashes with previous data */
@@ -218,7 +221,9 @@ const calcLeaderboards = (
           userId: user.userId,
           percentCorrect: calcPredictionsAccuracy(
             user.predictions[entrantType].length,
-            user.season[entrantType][roundIndex].diffTotal
+            user.season[entrantType][roundIndex].diffTotal,
+            localSeasonData,
+            user.displayName
           ),
         });
       }
@@ -229,7 +234,9 @@ const calcLeaderboards = (
 
 export const calcPredictionsAccuracy = (
   noOfEntrants: number,
-  penaltyPoints: number | undefined
+  penaltyPoints: number | undefined,
+  localSeasonData: LocalSeasonData,
+  displayName: string
 ): number => {
   let maxDiff = 0;
   noOfEntrants--;
@@ -237,9 +244,9 @@ export const calcPredictionsAccuracy = (
     maxDiff += noOfEntrants * 2;
     noOfEntrants -= 2;
   }
-  if (!penaltyPoints)
+  if (typeof penaltyPoints !== "number")
     throw new Error(
-      "Couldn't calculate predictions accuracy as the penalty points are undefined"
+      `Couldn't calculate predictions accuracy as a ${displayName}'s penalty points are undefined for ${localSeasonData.competitionStrs.shortHand}${localSeasonData.id}`
     );
   return Math.round(((maxDiff - penaltyPoints) / maxDiff) * 100);
 };
@@ -744,7 +751,8 @@ const streamlineUserGameDataForDb = (
  * Only used JIT for the leaderboard & performance overview
  */
 export const calcRemainingRoundPerformanceData = (
-  userGameData: UserGameData
+  userGameData: UserGameData,
+  localSeasonData: LocalSeasonData
 ): UserGameData => {
   for (const [entrantType, roundPerformanceArr] of Object.entries(
     userGameData.season
@@ -758,7 +766,9 @@ export const calcRemainingRoundPerformanceData = (
             userGameData.season[entrantType][roundIndex].leaderboardPos;
       userRoundData.percentCorrect = calcPredictionsAccuracy(
         userGameData.predictions[entrantType].length,
-        userRoundData.diffTotal
+        userRoundData.diffTotal,
+        localSeasonData,
+        userGameData.displayName
       );
     });
   }

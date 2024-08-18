@@ -15,7 +15,7 @@ export class LocalSeasonData {
   isSeasonOver: boolean;
   /**Automatically calculated via the freeze date */
   arePredictionsFrozen: boolean;
-  /**Date/time that prediction submissions get rejected by the DB */
+  /**UTC date/time that prediction submissions get rejected by the DB */
   predictionFreezeDate: Date;
   /**True when predictions start being allowed and then starts true after that */
   predictionsOpen: boolean;

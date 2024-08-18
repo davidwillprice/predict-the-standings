@@ -72,7 +72,7 @@ async function submitCompetitionGameData(
     const gameData = await createGameData(
       allEntrants,
       competitionStrs.shortHand,
-      rounds,
+      seasonData,
       users
     );
     if (typeof gameData === "string") throw new Error(gameData);

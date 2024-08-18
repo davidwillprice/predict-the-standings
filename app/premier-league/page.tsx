@@ -55,6 +55,7 @@ export default function Page() {
                 new CompetitionLink("stats/player", "group", "Player Stats"),
               ]}
               localSeasonData={allPlSeasonData[0]}
+              postFreezePreRoundText="The season has started and predictions are now frozen! The leaderboard and stats will be linked here once the first gameweek has been completed."
               showHelp={false}>
               <p>
                 Compete against people around the world to predict the PL{" "}

@@ -1,6 +1,6 @@
 import type {
   Entrants,
-  Round,
+  LocalSeasonData,
   ShortHandCompStr,
   UserGameData,
 } from "@custom-types/game-types";
@@ -13,6 +13,7 @@ interface Props {
   currentUserDisplayName: string | undefined;
   entrantType: string;
   entrants: Entrants;
+  localSeasonData: LocalSeasonData;
   roundIndex: number;
   selectedUser: UserGameData;
   shortHandCompStr: ShortHandCompStr;
@@ -23,6 +24,7 @@ export const PredictionTable = ({
   currentUserDisplayName,
   entrants,
   entrantType,
+  localSeasonData,
   roundIndex,
   selectedUser,
   shortHandCompStr,
@@ -34,7 +36,9 @@ export const PredictionTable = ({
     );
   const accuracy = calcPredictionsAccuracy(
     selectedUser.predictions[entrantType].length,
-    selectedUser.season[entrantType][roundIndex].diffTotal
+    selectedUser.season[entrantType][roundIndex].diffTotal,
+    localSeasonData,
+    selectedUser.displayName
   );
   return (
     <EntrantTable

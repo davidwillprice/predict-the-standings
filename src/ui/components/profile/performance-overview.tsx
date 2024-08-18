@@ -76,7 +76,10 @@ export const PerformanceOverview = ({ user }: Props) => {
                 localSeasonData.rounds,
                 userGameData
               );
-              userGameData = calcRemainingRoundPerformanceData(userGameData);
+              userGameData = calcRemainingRoundPerformanceData(
+                userGameData,
+                localSeasonData
+              );
               for (const entrantType of Object.keys(userGameData.predictions)) {
                 const roundPerformance = userGameData.season[entrantType];
                 tempPerformanceRowArr.push({
