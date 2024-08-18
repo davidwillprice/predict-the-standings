@@ -213,7 +213,8 @@ export const GameContainer = ({
             } else if (
               /**Else if it is the current user's Id in the params, use their data for the selected user */
               currUserGameData.current !== null &&
-              currUserGameData.current.userId === currentSearchParams.user
+              currUserGameData.current._id.toString() ===
+                currentSearchParams.user
             ) {
               setSelectedUser(currUserGameData.current);
             } else {
@@ -272,7 +273,7 @@ export const GameContainer = ({
       pathname +
         "?" +
         createQueryString([
-          { name: "user", value: userGameData.userId },
+          { name: "user", value: userGameData._id.toString() },
           {
             name: "page",
             value: Math.ceil(

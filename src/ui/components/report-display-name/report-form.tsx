@@ -32,7 +32,7 @@ const ReportForm = ({
     /**I would have liked to have used <form action={}> and the formData directly, but resend was unresponsive */
     const formData = new FormData(event.currentTarget);
     formData.set("reportedDisplayName", reportedUser.displayName);
-    formData.set("reportedUserId", reportedUser.userId);
+    formData.set("reportedUserId", reportedUser._id.toString());
     formData.set("reporterDisplayName", currentUserDisplayName || "");
     formData.set("reporterUserId", currentUserId || "");
 

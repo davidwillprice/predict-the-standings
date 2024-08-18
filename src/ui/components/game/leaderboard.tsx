@@ -69,9 +69,9 @@ export const Leaderboard = ({
     }
     return (
       <tr
-        key={userGameData.userId}
+        key={userGameData._id.toString()}
         className={`${entrantTableStyles.table_row} ${styles.table_row} ${
-          userGameData.userId === currUserGameData?.userId &&
+          userGameData._id === currUserGameData?._id &&
           styles.table_row__currentUser
         }`}
         onClick={() => changeSelectedUserHandler(userGameData)}>
@@ -99,7 +99,7 @@ export const Leaderboard = ({
           </td>
         )}
         <td className={styles.name_cell}>
-          {userGameData.userId === currUserGameData?.userId
+          {userGameData._id === currUserGameData?._id
             ? currUserGameData?.displayName
             : userGameData.displayName}{" "}
           {userGameData.userType === "special" && (

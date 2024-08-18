@@ -423,7 +423,6 @@ export const updateAllUserDocGameData = async (
       controversyPercentile: { [entrantType: string]: number };
       predictionsFromAvg: { [entrantType: string]: number };
       season: { [entrantType: string]: RoundPerformance[] };
-      userId?: string;
       information?: string;
       type?: "userData";
       displayName?: string;
@@ -439,7 +438,6 @@ export const updateAllUserDocGameData = async (
             season: user.season,
           }
         : {
-            userId: user.userId,
             controversyPercentile: user.controversyPercentile,
             displayName: user.displayName,
             information: user.information,

@@ -73,7 +73,7 @@ export const bringCurrUserToFrontOfArr = (
   /**If there is no current user, return the arr as is */
   if (currUser === null) return userArr;
   const indexOfCurrUser = userArr.findIndex(
-    (user) => user.userId === currUser.userId
+    (user) => user._id === currUser._id
   );
   /**If the current user is in the arr, bring them to the front of the arr */
   if (indexOfCurrUser !== -1) {
@@ -167,7 +167,7 @@ export const convertDocArrToUserGameDataMap = (
 ): UserGameDataMap => {
   const users: UserGameDataMap = {};
   for (const doc of docArr) {
-    users[doc.userId] = convertDocumentToUserGameData(doc);
+    users[doc._id.toString()] = convertDocumentToUserGameData(doc);
   }
   return users;
 };
@@ -194,7 +194,6 @@ export const convertDocumentToUserGameData = (
     displayName: doc.displayName,
     lastSubmissionTime: doc.lastSubmissionTime,
     predictions: doc.predictions,
-    userId: doc.userId,
     userType: doc.userType,
     season: {},
     controversyPercentile: {},

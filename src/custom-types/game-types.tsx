@@ -119,8 +119,6 @@ class BaseUserGameData {
   lastSubmissionTime: Date;
   /**Arr of the prediction orders organised by entrantType - EntrantIds are converted to entrants using local data */
   predictions: { [entrantType: string]: EntrantId[] };
-  /**_id of the user in the users collection who submitted the UGD document */
-  userId: string;
   /**Submitted by a 'special' user whose prediction was manually inserted, or a standard user */
   userType: "standard" | "special";
   /**Number of predictions difference the user was from the average - Needs to be calculated */
@@ -138,11 +136,9 @@ class BaseUserGameData {
     displayName: string,
     lastSubmissionTime: Date,
     predictions: { [entrantType: string]: EntrantId[] },
-    userId: string,
     userType: "standard" | "special"
   ) {
     this._id = _id;
-    this.userId = userId;
     this.displayName = displayName;
     this.lastSubmissionTime = lastSubmissionTime;
     this.predictions = predictions;
@@ -159,10 +155,9 @@ export class UserGameData extends BaseUserGameData {
     displayName: string,
     lastSubmissionTime: Date,
     predictions: { [entrantType: string]: EntrantId[] },
-    userId: string,
     userType: "standard" | "special"
   ) {
-    super(_id, displayName, lastSubmissionTime, predictions, userId, userType);
+    super(_id, displayName, lastSubmissionTime, predictions, userType);
     this.season = {};
   }
 }
@@ -189,7 +184,7 @@ export type UserId = string;
 // }
 
 export interface UserGameDataMap {
-  [userId: string]: UserGameData;
+  [_id: string]: UserGameData;
 }
 
 export interface GameDataMap {

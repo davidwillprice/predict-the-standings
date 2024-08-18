@@ -81,7 +81,7 @@ export const UserData = ({
         selectedUser.roundsTop &&
         selectedUser.roundsTop[entrantType] && (
           <p>
-            {selectedUser.userId !== currentUserId
+            {selectedUser._id.toString() !== currentUserId
               ? `${selectedUser.displayName} ${
                   isSeasonOver ? "was" : "has been"
                 }`

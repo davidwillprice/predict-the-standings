@@ -22,16 +22,14 @@ export const createGameData = async (
 ): Promise<GameData | string> => {
   let rounds = seasonData.rounds;
   //**Creates an 'average' user */
-  users.average = new UserGameData(
+  users[averageGameDataObjId] = new UserGameData(
     averageGameDataObjId,
     "Average",
     new Date("3000-04-18T20:38:36.780Z"), //Stupidly high value so other players will always be positioned ahead if they have the same predictions
     {},
-    "average",
     "special"
   );
-  users.average.userId = "average";
-  users.average.information =
+  users[averageGameDataObjId].information =
     "This prediction table is an automated average of all other player predictions.";
 
   users = generateAveragePredictions(allEntrants, users);
@@ -99,20 +97,20 @@ const generateAveragePredictions = (
   users: UserGameDataMap
 ) => {
   for (const entrantType of Object.keys(allEntrants)) {
-    users.average.predictions[entrantType] = [];
+    users[averageGameDataObjId].predictions[entrantType] = [];
     for (const entrant of Object.values(allEntrants[entrantType])) {
       let predictionPosTotal = 0;
       let noOfUserGameDataMap = 0;
       for (const user of Object.values(users)) {
         /**If the user is the generated average, ignore their predictions */
-        if (user.userId === "average") continue;
+        if (user._id === averageGameDataObjId) continue;
         predictionPosTotal +=
           user.predictions[entrantType].indexOf(entrant.sName) + 1;
         noOfUserGameDataMap++;
       }
       entrant.avgPrePos =
         Math.round((predictionPosTotal / noOfUserGameDataMap) * 10) / 10;
-      users.average.predictions[entrantType].push(entrant.sName);
+      users[averageGameDataObjId].predictions[entrantType].push(entrant.sName);
     }
   }
   return users;
@@ -124,11 +122,12 @@ const orderAveragePredictions = (
   users: UserGameDataMap
 ): UserGameDataMap => {
   for (const entrantType in allEntrants) {
-    users.average.predictions[entrantType].sort((entrantIdA, entrantIdB) =>
-      allEntrants[entrantType][entrantIdA].avgPrePos! >
-      allEntrants[entrantType][entrantIdB].avgPrePos!
-        ? 1
-        : -1
+    users[averageGameDataObjId].predictions[entrantType].sort(
+      (entrantIdA, entrantIdB) =>
+        allEntrants[entrantType][entrantIdA].avgPrePos! >
+        allEntrants[entrantType][entrantIdB].avgPrePos!
+          ? 1
+          : -1
     );
   }
   return users;
@@ -218,7 +217,7 @@ const calcLeaderboards = (
 
       for (let user of Object.values(users)) {
         round.leaderboards[entrantType].push({
-          userId: user.userId,
+          userId: user._id.toString(),
           percentCorrect: calcPredictionsAccuracy(
             user.predictions[entrantType].length,
             user.season[entrantType][roundIndex].diffTotal,
@@ -263,6 +262,9 @@ const orderLeaderboards = (rounds: Round[], users: UserGameDataMap) => {
 
         const userA = users[leaderboardA.userId];
         const userB = users[leaderboardB.userId];
+
+        // console.log(userA);
+        // console.log(userB);
 
         /**Check if the two users have made the same predictions for this entrant type and if so, order them by who made the prediction first */
         if (
@@ -459,7 +461,7 @@ const getEntrantPredictedPositions = (
       /**Loop over users, obtain the position index they predicted the entrant in, then plus one to that index in the entrant position array  */
       for (const user of Object.values(users)) {
         /**If the user is the generated average, ignore their predictions */
-        if (user.userId === "average") continue;
+        if (user._id === averageGameDataObjId) continue;
 
         const userPredictedPos = user.predictions[entrantType].indexOf(
           entrant.sName
@@ -497,7 +499,7 @@ const generateTeammateHeadToHead = (
 
     for (const user of Object.values(users)) {
       /**If the user is the generated average, ignore their predictions */
-      if (user.userId === "average") continue;
+      if (user._id === averageGameDataObjId) continue;
 
       const higherPredictedDriverId = user.predictions["drivers"].filter(
         (driverId) =>
@@ -529,7 +531,7 @@ export function generateControversyData(
 ): UserGameDataMap {
   for (const user of Object.values(users)) {
     /**If the user is the generated average, ignore their predictions */
-    if (user.userId === "average") continue;
+    if (user._id === averageGameDataObjId) continue;
 
     for (const entrantType of Object.keys(user.predictions)) {
       user.predictionsFromAvg[entrantType] = 0;
@@ -538,7 +540,7 @@ export function generateControversyData(
         user.predictions[entrantType]
       )) {
         const avgPredictedPos =
-          users.average.predictions[entrantType].indexOf(entrant);
+          users[averageGameDataObjId].predictions[entrantType].indexOf(entrant);
 
         const posDiffs = Math.abs(+predictedPos - avgPredictedPos);
         user.predictionsFromAvg[entrantType] += posDiffs;
@@ -547,15 +549,17 @@ export function generateControversyData(
   }
 
   /**Now main contro data is created, calculate controversy percentiles*/
-  for (const entrantType of Object.keys(users.average.predictions)) {
+  for (const entrantType of Object.keys(
+    users[averageGameDataObjId].predictions
+  )) {
     /**Create an array of every predictionsFromAvg for every user (besides the average) */
     const predictionsFromAvgArr = Object.values(users)
-      .filter((user) => user.userId !== "average")
+      .filter((user) => user._id !== averageGameDataObjId)
       .map((user) => user.predictionsFromAvg[entrantType]);
 
     /**Use arr to calculate the controversy percentile for a user */
     for (const user of Object.values(users)) {
-      if (user.userId === "average") continue;
+      if (user._id === averageGameDataObjId) continue;
       user.controversyPercentile[entrantType] =
         Math.trunc(
           calcPercentile(
@@ -712,7 +716,9 @@ const getLeaderboardToppingGameData = (
 ): LeaderboardToppingGameDataIdMap => {
   /**Add create arrays for each entrantType which hold objects with a userId and the rounds they were top */
   let gameDataIdMap: LeaderboardToppingGameDataIdMap = {};
-  for (const entrantType of Object.keys(users.average.predictions)) {
+  for (const entrantType of Object.keys(
+    users[averageGameDataObjId].predictions
+  )) {
     gameDataIdMap[entrantType] = [];
     for (const user of Object.values(users)) {
       if (user.roundsTop && user.roundsTop[entrantType]) {

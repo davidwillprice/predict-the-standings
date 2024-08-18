@@ -88,7 +88,9 @@ export const SubmitPredictions = ({
               (seasonStr) => seasonStr === season
             )
           ) {
-            predictionsMadeFor[competitionStrs.shortHand].push(season);
+            (predictionsMadeFor[competitionStrs.shortHand] as string[]).push(
+              season
+            );
           }
           await update({
             ...session,
