@@ -11,6 +11,7 @@ import { Background } from "@components/background/background";
 
 import "@styles/globals.scss";
 import styles from "@styles/layout.module.scss";
+import { Maintenance } from "@components/maintenance/maintenance";
 
 const roboto = Roboto({
   subsets: ["latin"],
@@ -34,22 +35,36 @@ export const metadata: Metadata = {
   },
 };
 /**@todo Randomly getting 500 error on first load some session issue? */
+
+const activateMaintenance = true;
+
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={roboto.variable} suppressHydrationWarning>
+    <html
+      lang="en"
+      className={`${roboto.variable}${
+        activateMaintenance ? " maintenance-active" : ""
+      }`}
+      suppressHydrationWarning>
       <body>
         <Providers>
           <SessionProvider>
             <Background />
-            <Header />
-            <div className={styles.content_container}>
-              <main className={styles.main}>{children}</main>
-            </div>
-            <SecondaryMenu type="footer" />
+            {activateMaintenance ? (
+              <Maintenance />
+            ) : (
+              <>
+                <Header />
+                <div className={styles.content_container}>
+                  <main className={styles.main}>{children}</main>
+                </div>
+                <SecondaryMenu type="footer" />
+              </>
+            )}
           </SessionProvider>
         </Providers>
       </body>

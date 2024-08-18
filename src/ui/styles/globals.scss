@@ -64,6 +64,11 @@ body {
   font-family: var(--font-roboto);
 }
 
+html.maintenance-active,
+.maintenance-active body {
+  height: 100%;
+}
+
 body {
   width: 100%;
   z-index: -1;
