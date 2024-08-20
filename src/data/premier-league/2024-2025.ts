@@ -29,30 +29,30 @@ const teams: Entrants = {
 };
 /**@todo Figure out how I will obtain gameweek data  */
 let rounds: Round[] = [
-  // new Round("Gameweek 1", {
-  //   teams: [
-  //     "nec",
-  //     "bri",
-  //     "mci",
-  //     "ars",
-  //     "cry",
-  //     "ful",
-  //     "mun",
-  //     "bre",
-  //     "tot",
-  //     "bou",
-  //     "che",
-  //     "liv",
-  //     "whu",
-  //     "not",
-  //     "eve",
-  //     "she",
-  //     "wol",
-  //     "lut",
-  //     "lei",
-  //     "ast",
-  //   ],
-  // }),
+  new Round("Gameweek 1", {
+    teams: [
+      "bri",
+      "ars",
+      "liv",
+      "mci",
+      "ast",
+      "bre",
+      "mun",
+      "nec",
+      "bou",
+      "lei",
+      "not",
+      "tot",
+      "cry",
+      "whu",
+      "ful",
+      "sou",
+      "che",
+      "ips",
+      "wol",
+      "eve",
+    ],
+  }),
 ];
 
 const allEntrants = { teams: teams };
