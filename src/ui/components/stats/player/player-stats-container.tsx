@@ -5,7 +5,7 @@ import {
   getStatsDataQuery,
   getMultipleUserGameData,
 } from "@lib/db-functions";
-import { getSpecificGameDataIdFromSessionUser } from "@lib/misc";
+import { checkIfSessionUserPredicted } from "@lib/misc";
 
 import { Panel } from "@components/panels/panel";
 import { PromptPredictions } from "@components/submit-predictions/prompt-predictions";
@@ -41,16 +41,16 @@ export const PlayerStats = async ({
   let currUserGameData: UserGameData | null = null;
 
   /**If the user has game data for this comp/season, get that data from the DB*/
-  const gameDataId: string | undefined = getSpecificGameDataIdFromSessionUser(
+  const hasMadePredictions = checkIfSessionUserPredicted(
     seasonStr,
     competitionStrs.shortHand,
     currUser
   );
-  if (gameDataId && rounds.length > 0) {
+  if (hasMadePredictions && currUser && rounds.length > 0) {
     const res = await getUserGameDataQuery(
       seasonStr,
       competitionStrs.shortHand,
-      gameDataId
+      currUser.id
     );
     if (res) currUserGameData = res;
   }

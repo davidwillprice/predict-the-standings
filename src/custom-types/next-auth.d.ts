@@ -7,8 +7,9 @@ declare module "next-auth" {
       id: string;
       displayName: string;
       lastDisplayNameSubmissionDate: number;
+      /**Former is new type from 8/2024 where the userId is used for all gamedata _id so I just need the seasonStr, the latter is the old type which some people might still have if they haven't logged out/in since then */
       predictionsMadeFor: {
-        [competition: string]: { season: string; _id: string }[];
+        [competition: string]: string[] | { season: string; _id: string }[];
       };
     } & DefaultSession["user"];
   }

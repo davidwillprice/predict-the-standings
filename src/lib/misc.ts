@@ -1,12 +1,15 @@
 import type {
-  CollectionObj,
   Entrant,
+  DBCollectionStr,
   GameDataMap,
   ShortHandCompStr,
   UserGameDataMap,
 } from "@custom-types/game-types";
 import { UserGameData } from "@custom-types/game-types";
-import { UserDataFromSession } from "@custom-types/misc";
+import {
+  isNewPredictionMadeForArr,
+  UserDataFromSession,
+} from "@custom-types/misc";
 import { WithId } from "mongodb";
 import { bannedTermsArr } from "@data/banned-string-filter";
 
@@ -70,7 +73,7 @@ export const bringCurrUserToFrontOfArr = (
   /**If there is no current user, return the arr as is */
   if (currUser === null) return userArr;
   const indexOfCurrUser = userArr.findIndex(
-    (user) => user.userId === currUser.userId
+    (user) => user._id === currUser._id
   );
   /**If the current user is in the arr, bring them to the front of the arr */
   if (indexOfCurrUser !== -1) {
@@ -134,27 +137,26 @@ export const getLengthOfLongestConsecutiveNumbers = (arr: number[]): number => {
   return longestStreak;
 };
 
-/**Convert strings from `predictionsMadeFor` via the user session into collection game data names*/
-export const getCollectionObjFromPredictionsMadeFor = (
+/**Combine comp/season strs from the user session `predictionsMadeFor` into DB collection names*/
+export const getCollectionStrFromPredictionsMadeFor = (
   user: UserDataFromSession
-): CollectionObj[] | null => {
-  if (
-    !user.predictionsMadeFor ||
-    Object.values(user.predictionsMadeFor).length === 0
-  ) {
+): DBCollectionStr[] | null => {
+  const predictionsMadeFor = user.predictionsMadeFor;
+  if (!predictionsMadeFor || Object.values(predictionsMadeFor).length === 0) {
     return null;
   }
 
-  let gameDataCollectionObjArr: CollectionObj[] = [];
+  let gameDataCollectionObjArr: DBCollectionStr[] = [];
 
-  for (const [competition, seasonArr] of Object.entries(
-    user.predictionsMadeFor
-  )) {
-    seasonArr.forEach((seasonObj) => {
-      gameDataCollectionObjArr.push({
-        collectionName: competition + seasonObj.season,
-        _id: seasonObj._id,
-      });
+  for (const [competition, seasonArr] of Object.entries(predictionsMadeFor)) {
+    seasonArr.forEach((seasonData) => {
+      //Latest predictionsMadeFor structure
+      if (typeof seasonData === "string") {
+        gameDataCollectionObjArr.push(competition + seasonData);
+      } else {
+        //Old predictionsMadeFor structure
+        gameDataCollectionObjArr.push(competition + seasonData.season);
+      }
     });
   }
   return gameDataCollectionObjArr;
@@ -165,7 +167,7 @@ export const convertDocArrToUserGameDataMap = (
 ): UserGameDataMap => {
   const users: UserGameDataMap = {};
   for (const doc of docArr) {
-    users[doc.userId] = convertDocumentToUserGameData(doc);
+    users[doc._id.toString()] = convertDocumentToUserGameData(doc);
   }
   return users;
 };
@@ -192,7 +194,6 @@ export const convertDocumentToUserGameData = (
     displayName: doc.displayName,
     lastSubmissionTime: doc.lastSubmissionTime,
     predictions: doc.predictions,
-    userId: doc.userId,
     userType: doc.userType,
     season: {},
     controversyPercentile: {},
@@ -212,21 +213,26 @@ export const convertDocumentToUserGameData = (
   return userGameData;
 };
 
-export const getSpecificGameDataIdFromSessionUser = (
+export const checkIfSessionUserPredicted = (
   seasonStr: string,
   shortHandCompStr: ShortHandCompStr,
   user: UserDataFromSession | undefined | null
-): string | undefined => {
+): boolean => {
   if (
     !user ||
     !user.predictionsMadeFor ||
     !user.predictionsMadeFor[shortHandCompStr]
   ) {
-    return undefined;
+    return false;
   } else {
-    return user.predictionsMadeFor[shortHandCompStr].find(
-      (seasonObj) => seasonObj.season === seasonStr
-    )?._id;
+    const seasonData = user.predictionsMadeFor[shortHandCompStr];
+    if (isNewPredictionMadeForArr(seasonData)) {
+      //Latest predictionsMadeFor structure
+      return seasonData.some((season) => season === seasonStr);
+    } else {
+      //Old predictionsMadeFor structure
+      return seasonData.some((seasonObj) => seasonObj.season === seasonStr);
+    }
   }
 };
 

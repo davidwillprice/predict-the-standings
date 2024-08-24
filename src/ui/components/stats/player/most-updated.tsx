@@ -60,7 +60,7 @@ export const MostUpdated = ({
           bringCurrUserToFrontOfArr(currUser, mostUpdatedPredictionUsers).map(
             (user) => {
               if (!user.displayName) throw new Error();
-              if (user.userId === currUser?.userId) {
+              if (user._id.toString() === currUser?._id.toString()) {
                 return "You";
               }
               return user.displayName;

@@ -7,7 +7,7 @@ import {
   convertDocArrToGameDataMap,
   convertDocArrToUserGameDataMap,
   convertDocumentToUserGameData,
-  getCollectionObjFromPredictionsMadeFor,
+  getCollectionStrFromPredictionsMadeFor,
 } from "./misc";
 import {
   lastUpdatedDateObjId,
@@ -287,18 +287,18 @@ export const submitDisplayNameQuery = async (
 
     if (!updatedUser) throw new Error("Failed to update user");
 
-    /**Create an array of all the _id's of the user's predictions and their collection names so the display name can be updated there */
-    const gameDataCollectionObjArr =
-      getCollectionObjFromPredictionsMadeFor(updatedUser);
+    /**Create an array of all the the collection names the user has predicted for so the display name can be updated there */
+    const dBCollectionStrArr =
+      getCollectionStrFromPredictionsMadeFor(updatedUser);
 
-    //If they haven't made any predictions, skip this
-    if (gameDataCollectionObjArr) {
+    //If they haven't made any predictions, skip updating any game data collections
+    if (dBCollectionStrArr) {
       //Update the user's display name in all collections
-      gameDataCollectionObjArr.forEach((collectionObj) => {
-        const collection = db.collection(collectionObj.collectionName);
+      dBCollectionStrArr.forEach((dBCollectionStr) => {
+        const collection = db.collection(dBCollectionStr);
         collection.updateOne(
           {
-            _id: new ObjectId(collectionObj._id),
+            _id: userIdObj,
           },
           {
             $set: {
@@ -317,7 +317,6 @@ export const submitPredictionsQuery = async (
   competition: ShortHandCompStr,
   displayName: string,
   entrantArrs: { [entrantType: string]: string[] },
-  gameDataId: string | undefined,
   season: string,
   userId: string
 ): Promise<string> => {
@@ -342,7 +341,7 @@ export const submitPredictionsQuery = async (
     } else {
       /**Obtain previous gameData (if it exists) to get how many times it has been updated */
       const olduserPredictionDoc = await collection.findOne({
-        _id: new ObjectId(gameDataId),
+        _id: new ObjectId(userId),
       });
       const prevTimesPredictionsUpdated =
         olduserPredictionDoc?.timesPredictionsUpdated;
@@ -357,7 +356,6 @@ export const submitPredictionsQuery = async (
             ? prevTimesPredictionsUpdated + 1
             : 1,
           type: "userData",
-          userId: userId,
           userType: "standard",
         },
       };
@@ -402,10 +400,7 @@ export const addPredictionToUserDataQuery = async (
       { _id: new ObjectId(userId) },
       {
         $addToSet: {
-          [`predictionsMadeFor.${competition}`]: {
-            season: seasonStr,
-            _id: userGameDataId,
-          }, // Add seasonStr & predictionId to competition set
+          [`predictionsMadeFor.${competition}`]: seasonStr, // Add seasonStr to competition set
         },
       }
     );
@@ -428,7 +423,6 @@ export const updateAllUserDocGameData = async (
       controversyPercentile: { [entrantType: string]: number };
       predictionsFromAvg: { [entrantType: string]: number };
       season: { [entrantType: string]: RoundPerformance[] };
-      userId?: string;
       information?: string;
       type?: "userData";
       displayName?: string;
@@ -444,7 +438,6 @@ export const updateAllUserDocGameData = async (
             season: user.season,
           }
         : {
-            userId: user.userId,
             controversyPercentile: user.controversyPercentile,
             displayName: user.displayName,
             information: user.information,
@@ -599,14 +592,14 @@ export const updateStatsDataQuery = async (
 
 export const anonymiseUserGameDataQuery = async (
   collectionStr: string,
-  _id: string
+  user: UserDataFromSession
 ) => {
   const client = await clientPromise;
   try {
     const db = client.db("pts");
     const collection = db.collection(collectionStr);
     const result = await collection.updateOne(
-      { _id: new ObjectId(_id) },
+      { _id: new ObjectId(user.id) },
       { $set: { displayName: "[DELETED]" } }
     );
 

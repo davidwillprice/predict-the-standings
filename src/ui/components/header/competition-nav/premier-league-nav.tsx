@@ -4,7 +4,7 @@ import HeaderLink from "@components/header/header-link";
 import { SeasonSelector } from "../season-selector";
 
 import { allPlSeasonData } from "@data/premier-league/season-data";
-import { getSpecificGameDataIdFromSessionUser } from "@lib/misc";
+import { checkIfSessionUserPredicted } from "@lib/misc";
 
 type Props = {
   params: { season: string };
@@ -22,7 +22,7 @@ export const PremierLeagueNav = ({ params, session }: Props) => {
   } = allPlSeasonData.find((seasonData) => seasonData.id === params.season) ||
   allPlSeasonData[0];
 
-  const hasMadePredictions = !!getSpecificGameDataIdFromSessionUser(
+  const hasMadePredictions = checkIfSessionUserPredicted(
     seasonStr,
     competitionStrs.shortHand,
     session?.user

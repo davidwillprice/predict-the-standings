@@ -18,7 +18,8 @@ export const LastestSubmission = ({
   const latestSubmissionUser = gameDataMap[gameDataId];
 
   const currUserIsLatestSubmission =
-    currUser && latestSubmissionUser?.userId === currUser.userId;
+    currUser &&
+    latestSubmissionUser?._id.toString() === currUser._id.toString();
 
   if (latestSubmissionUser === undefined) throw new Error("User not found");
 

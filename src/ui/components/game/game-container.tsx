@@ -8,7 +8,7 @@ import {
   getNoOfPredictionsQuery,
   getUserGameDataQuery,
 } from "@lib/db-functions";
-import { debounce, getSpecificGameDataIdFromSessionUser } from "@lib/misc";
+import { debounce, checkIfSessionUserPredicted } from "@lib/misc";
 
 import { Leaderboard } from "./leaderboard";
 import { PredictionTable } from "@components/prediction-table/prediction-table";
@@ -141,19 +141,24 @@ export const GameContainer = ({
   };
 
   const getCurrUserGameData = async () => {
-    const gameDataId: string | undefined = getSpecificGameDataIdFromSessionUser(
+    const hasMadePredictions = checkIfSessionUserPredicted(
       season,
       competitionStrs.shortHand,
       currUser
     );
     /**If there is no logged in user, they've not made a prediction, or the logged in user's data has already been obtained, don't bother continuing this fn */
-    if (!gameDataId || currUserGameData.current !== null) return;
+    if (
+      !currUser?.id ||
+      currUserGameData.current !== null ||
+      !hasMadePredictions
+    )
+      return;
 
     /**Get the logged in user's game data from the DB */
     let currUserData = await getUserGameDataQuery(
       season,
       competitionStrs.shortHand,
-      gameDataId
+      currUser?.id
     );
     /**Generate the round performance data for current user */
     currUserData = calcUserGameDataMapPerformance(rounds, currUserData);
@@ -208,7 +213,8 @@ export const GameContainer = ({
             } else if (
               /**Else if it is the current user's Id in the params, use their data for the selected user */
               currUserGameData.current !== null &&
-              currUserGameData.current.userId === currentSearchParams.user
+              currUserGameData.current._id.toString() ===
+                currentSearchParams.user
             ) {
               setSelectedUser(currUserGameData.current);
             } else {
@@ -267,7 +273,7 @@ export const GameContainer = ({
       pathname +
         "?" +
         createQueryString([
-          { name: "user", value: userGameData.userId },
+          { name: "user", value: userGameData._id.toString() },
           {
             name: "page",
             value: Math.ceil(

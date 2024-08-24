@@ -115,7 +115,7 @@ export const LeaderboardToppers = ({
                         className={`${entrantTableStyles.table_row} ${
                           entrantTableStyles.table_row__tertiary_bg
                         } ${leaderboardStyles.table_row} ${
-                          rowData.user.userId === currUserId
+                          rowData.user._id.toString() === currUserId
                             ? leaderboardStyles.table_row__currentUser
                             : ""
                         }`}
@@ -123,7 +123,7 @@ export const LeaderboardToppers = ({
                         onClick={() =>
                           handleRowClick(
                             entrantTypes[tableIndex],
-                            rowData.user.userId
+                            rowData.user._id.toString()
                           )
                         }>
                         <td className={leaderboardStyles.position}>

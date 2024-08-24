@@ -1,5 +1,4 @@
 import { getUserGameDataQuery } from "@lib/db-functions";
-import { getSpecificGameDataIdFromSessionUser } from "@lib/misc";
 
 import styles from "@components/entrant-table/entrant-table.module.scss";
 
@@ -20,17 +19,10 @@ export const YourPredictions = async ({ seasonData, currUser }: Props) => {
   let userPredictions: { [entrantType: string]: Entrant[] } = {};
 
   try {
-    const gameDataId: string | undefined = getSpecificGameDataIdFromSessionUser(
-      seasonStr,
-      competitionStrs.shortHand,
-      currUser
-    );
-    if (!gameDataId) throw new Error();
-
     const userGameData = await getUserGameDataQuery(
       seasonStr,
       competitionStrs.shortHand,
-      gameDataId
+      currUser.id
     );
 
     /**If their gameData has been successfully obtained,turn its prediction arrays of entrantIds into Entrant arrays using the local season data */
