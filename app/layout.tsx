@@ -36,7 +36,7 @@ export const metadata: Metadata = {
 };
 /**@todo Randomly getting 500 error on first load some session issue? */
 
-const activateMaintenance = true;
+const activateMaintenance = false;
 
 export default function RootLayout({
   children,
