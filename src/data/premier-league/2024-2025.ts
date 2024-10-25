@@ -197,6 +197,30 @@ let rounds: Round[] = [
       "wol",
     ],
   }),
+  new Round("Gameweek 8", {
+    teams: [
+      "liv",
+      "mci",
+      "ars",
+      "ast",
+      "bri",
+      "che",
+      "tot",
+      "not",
+      "nec",
+      "ful",
+      "bou",
+      "mun",
+      "bre",
+      "lei",
+      "whu",
+      "eve",
+      "ips",
+      "cry",
+      "sou",
+      "wol",
+    ],
+  }),
 ];
 
 const allEntrants = { teams: teams };
