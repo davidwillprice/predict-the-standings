@@ -870,12 +870,48 @@ let rounds: Round[] = [
       "sau",
     ],
   }),
+  new Round("Abu Dhabi GP", {
+    drivers: [
+      "ver",
+      "nor",
+      "lec",
+      "pia",
+      "sai",
+      "rus",
+      "ham",
+      "per",
+      "alo",
+      "gas",
+      "hul",
+      "tsu",
+      "str",
+      "oco",
+      "mag",
+      "alb",
+      "ric",
+      "zho",
+      "bot",
+      "sar",
+    ],
+    teams: [
+      "mcl",
+      "fer",
+      "red",
+      "mer",
+      "ast",
+      "alp",
+      "has",
+      "rb",
+      "wil",
+      "sau",
+    ],
+  }),
 ];
 
 const allEntrants = { drivers: drivers, teams: teams };
 const id = "2024";
-const isGameDataLocked = false;
-const isSeasonOver = false;
+const isGameDataLocked = true;
+const isSeasonOver = true;
 const predictionFreezeDate = new Date("2024-02-29T11:30:00");
 const predictionsOpen = true;
 
