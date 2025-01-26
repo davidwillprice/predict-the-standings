@@ -389,6 +389,30 @@ let rounds: Round[] = [
       "sou",
     ],
   }),
+  new Round("Current table", {
+    teams: [
+      "liv",
+      "ars",
+      "not",
+      "mci",
+      "nec",
+      "che",
+      "bou",
+      "ast",
+      "bri",
+      "ful",
+      "bre",
+      "cry",
+      "mun",
+      "whu",
+      "tot",
+      "eve",
+      "wol",
+      "ips",
+      "lei",
+      "sou",
+    ],
+  }),
 ];
 
 const allEntrants = { teams: teams };
