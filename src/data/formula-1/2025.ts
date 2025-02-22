@@ -1,0 +1,61 @@
+import {
+  Entrant,
+  Entrants,
+  LocalSeasonData,
+  Round,
+} from "@custom-types/game-types";
+
+const drivers: Entrants = {
+  rus: new Entrant("Russell", "rus", "#00d2be", "#010136", "#010136"),
+  ant: new Entrant("Antonelli", "ant", "#00d2be", "#010136", "#010136"),
+  ham: new Entrant("Hamilton", "ham", "#dc0000", "black", "#ffffff"),
+  lec: new Entrant("Leclerc", "lec", "#dc0000", "black", "#ffffff"),
+  alb: new Entrant("Albon", "alb", "#37BEDD", "#010136", "#010136"),
+  sai: new Entrant("Sainz", "sai", "#37BEDD", "#010136", "#010136"),
+  ver: new Entrant("Verstappen", "ver", "#00327d", "#f33c55", "#ffffff"),
+  per: new Entrant("Perez", "per", "#00327d", "#f33c55", "#ffffff"),
+  str: new Entrant("Stroll", "str", "#1B8E2D", "#cedc00", "#ffffff"),
+  alo: new Entrant("Alonso", "alo", "#1B8E2D", "#cedc00", "#ffffff"),
+  nor: new Entrant("Norris", "nor", "#ff8700", "#010136", "#010136"),
+  pia: new Entrant("Piastri", "pia", "#ff8700", "#010136", "#010136"),
+  gas: new Entrant("Gasly", "gas", "#fa85b9", "#0187da", "#010136"),
+  doo: new Entrant("Doohan", "doo", "#fa85b9", "#0187da", "#010136"),
+  tsu: new Entrant("Tsunoda", "tsu", "#6654FF", "#ffffff", "#010136"),
+  had: new Entrant("Hadjar", "had", "#6654FF", "#ffffff", "#010136"),
+  mag: new Entrant("Magnussen", "mag", "#909599", "#010136", "#010136"),
+  bea: new Entrant("Bearman", "bea", "#909599", "#010136", "#010136"),
+  bor: new Entrant("Bortoleto", "bor", "#21D800", "#010136", "#010136"),
+  hul: new Entrant("Hülkenberg", "hul", "#21D800", "#010136", "#010136"),
+};
+
+const teams: Entrants = {
+  mer: new Entrant("Mercedes", "mer", "#00d2be", "#010136", "#010136"),
+  fer: new Entrant("Ferrari", "fer", "#dc0000", "black", "#ffffff"),
+  red: new Entrant("Red Bull", "red", "#00327d", "#f33c55", "#ffffff"),
+  mcl: new Entrant("McLaren", "mcl", "#ff8700", "#010136", "#010136"),
+  alp: new Entrant("Alpine", "alp", "#fa85b9", "#0187da", "#010136"),
+  rb: new Entrant("Racing Bulls", "rb", "#6654FF", "#ffffff", "#010136"),
+  ast: new Entrant("Aston Martin", "ast", "#1B8E2D", "#cedc00", "#ffffff"),
+  has: new Entrant("Haas", "has", "#909599", "#010136", "#010136"),
+  sau: new Entrant("Sauber", "sau", "#21D800", "#010136", "#010136"),
+  wil: new Entrant("Williams", "wil", "#37BEDD", "#010136", "#010136"),
+};
+
+let rounds: Round[] = [];
+
+const allEntrants = { drivers: drivers, teams: teams };
+const id = "2025";
+const isGameDataLocked = false;
+const isSeasonOver = false;
+const predictionFreezeDate = new Date("2025-03-14T01:30:00");
+const predictionsOpen = true;
+
+export const seasonData2025 = new LocalSeasonData(
+  allEntrants,
+  id,
+  isGameDataLocked,
+  isSeasonOver,
+  predictionFreezeDate,
+  predictionsOpen,
+  rounds
+);
