@@ -22,7 +22,7 @@ const drivers: Entrants = {
   doo: new Entrant("Doohan", "doo", "#fa85b9", "#0187da", "#010136"),
   tsu: new Entrant("Tsunoda", "tsu", "#1534cc", "#ffffff", "#010136"),
   had: new Entrant("Hadjar", "had", "#1534cc", "#ffffff", "#010136"),
-  mag: new Entrant("Magnussen", "mag", "black", "#010136", "#010136"),
+  oco: new Entrant("Ocon", "oco", "black", "#010136", "#010136"),
   bea: new Entrant("Bearman", "bea", "black", "#010136", "#010136"),
   bor: new Entrant("Bortoleto", "bor", "#21D800", "#010136", "#010136"),
   hul: new Entrant("Hülkenberg", "hul", "#21D800", "#010136", "#010136"),
