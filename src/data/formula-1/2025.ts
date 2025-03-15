@@ -22,8 +22,8 @@ const drivers: Entrants = {
   doo: new Entrant("Doohan", "doo", "#fa85b9", "#0187da", "#010136"),
   tsu: new Entrant("Tsunoda", "tsu", "#1534cc", "#ffffff", "#010136"),
   had: new Entrant("Hadjar", "had", "#1534cc", "#ffffff", "#010136"),
-  oco: new Entrant("Ocon", "oco", "black", "#010136", "#010136"),
-  bea: new Entrant("Bearman", "bea", "black", "#010136", "#010136"),
+  oco: new Entrant("Ocon", "oco", "black", "#010136", "white"),
+  bea: new Entrant("Bearman", "bea", "black", "#010136", "white"),
   bor: new Entrant("Bortoleto", "bor", "#21D800", "#010136", "#010136"),
   hul: new Entrant("Hülkenberg", "hul", "#21D800", "#010136", "#010136"),
 };
@@ -36,7 +36,7 @@ const teams: Entrants = {
   alp: new Entrant("Alpine", "alp", "#fa85b9", "#0187da", "#010136"),
   rb: new Entrant("Racing Bulls", "rb", "#1534cc", "#ffffff", "#010136"),
   ast: new Entrant("Aston Martin", "ast", "#1B8E2D", "#cedc00", "#ffffff"),
-  has: new Entrant("Haas", "has", "black", "#010136", "#010136"),
+  has: new Entrant("Haas", "has", "black", "#010136", "white"),
   sau: new Entrant("Sauber", "sau", "#21D800", "#010136", "#010136"),
   wil: new Entrant("Williams", "wil", "#37BEDD", "#010136", "#010136"),
 };

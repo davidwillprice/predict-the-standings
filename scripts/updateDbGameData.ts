@@ -80,6 +80,7 @@ async function submitCompetitionGameData(
     /**Update/Add user game data to the DB */
     await updateAllUserDocGameData(collection, users);
 
+    //Number of user predictions for each entrant type, but including 'average' in the count
     const noOfPredictions: { [entrantType: string]: number } = {};
     for (const entrantType in allEntrants) {
       noOfPredictions[entrantType] = Object.keys(users).length;

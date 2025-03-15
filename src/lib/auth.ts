@@ -42,6 +42,9 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       return session;
     },
   },
+  pages: {
+    error: "/error", // Error codes are passed in query string as ?error=
+  },
   providers: [
     /**@todo! Add email provider in case I hit limits on the others */
     Discord({
