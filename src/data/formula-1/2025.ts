@@ -41,7 +41,44 @@ const teams: Entrants = {
   wil: new Entrant("Williams", "wil", "#37BEDD", "#010136", "#010136"),
 };
 
-let rounds: Round[] = [];
+let rounds: Round[] = [
+  new Round("Australian GP", {
+    drivers: [
+      "nor",
+      "ver",
+      "rus",
+      "ant",
+      "alb",
+      "str",
+      "hul",
+      "lec",
+      "pia",
+      "ham",
+      "gas",
+      "tsu",
+      "oco",
+      "bea",
+      "alo",
+      "bor",
+      "law",
+      "sai",
+      "doo",
+      "had",
+    ],
+    teams: [
+      "mcl",
+      "mer",
+      "red",
+      "wil",
+      "ast",
+      "sau",
+      "fer",
+      "alp",
+      "rb",
+      "has",
+    ],
+  }),
+];
 
 const allEntrants = { drivers: drivers, teams: teams };
 const id = "2025";
