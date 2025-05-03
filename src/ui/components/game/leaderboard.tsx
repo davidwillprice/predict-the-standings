@@ -45,6 +45,7 @@ export const Leaderboard = ({
       a.season[entrantType][roundIndex].leaderboardPos -
       b.season[entrantType][roundIndex].leaderboardPos
   );
+  /**@todo If the server is ahead of the DB, only show info related to the server data - This would save me trying to update the DB and server at the same time with new standings data, I could update the server first and then the DB without any errors */
 
   if (typeof lastUpdated === "string") lastUpdated = new Date(lastUpdated);
 
