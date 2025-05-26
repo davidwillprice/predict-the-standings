@@ -917,12 +917,36 @@ let rounds: Round[] = [
       "sou",
     ],
   }),
+  new Round("Gameweek 38", {
+    teams: [
+      "liv",
+      "ars",
+      "mci",
+      "che",
+      "nec",
+      "ast",
+      "not",
+      "bri",
+      "bou",
+      "bre",
+      "ful",
+      "cry",
+      "eve",
+      "whu",
+      "mun",
+      "wol",
+      "tot",
+      "lei",
+      "ips",
+      "sou",
+    ],
+  }),
 ];
 
 const allEntrants = { teams: teams };
 const id = "2024-2025";
-const isGameDataLocked = false;
-const isSeasonOver = false;
+const isGameDataLocked = true;
+const isSeasonOver = true;
 const predictionFreezeDate = new Date("2024-08-16T19:00:00Z"); // UTC time
 const predictionsOpen = true;
 
