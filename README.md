@@ -1,3 +1,4 @@
+![predict-the-standings-screenshot](https://github.com/user-attachments/assets/a35f7539-6ead-4e26-8647-9141969bead3)
 Repo for the [Predict The Standings](https://predictthestandings.com/) website.
 
 This is a [Next.js](https://nextjs.org/) project that was bootstrapped with [create-next-app](https://github.com/vercel/next.js/tree/canary/packages/create-next-app). The game data and accounts are hosted within a MongoDB database.
