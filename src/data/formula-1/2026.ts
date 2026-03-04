@@ -33,7 +33,7 @@ const drivers: Entrants = {
 const teams: Entrants = {
   alp: new Entrant("Alpine", "alp", "#fa85b9", "#0187da", "#010136"),
   ast: new Entrant("Aston Martin", "ast", "#1B8E2D", "#cedc00", "#ffffff"),
-  ald: new Entrant("Aldi", "ald", "#909599", "#afb1a7", "#010136"),
+  ald: new Entrant("Audi", "ald", "#909599", "#afb1a7", "#010136"),
   cad: new Entrant("Cadillac", "cad", "black", "#010136", "#010136"),
   fer: new Entrant("Ferrari", "fer", "#dc0000", "black", "#ffffff"),
   has: new Entrant("Haas", "has", "#eee", "#010136", "#010136"),
