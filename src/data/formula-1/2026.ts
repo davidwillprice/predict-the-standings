@@ -12,7 +12,7 @@ const drivers: Entrants = {
   alo: new Entrant("Alonso", "alo", "#1B8E2D", "#cedc00", "#ffffff"),
   bor: new Entrant("Bortoleto", "bor", "#909599", "#afb1a7", "#010136"),
   hul: new Entrant("Hülkenberg", "hul", "#909599", "#afb1a7", "#010136"),
-  per: new Entrant("Perez", "per", "black", "#010136", "#010136"),
+  per: new Entrant("Pérez", "per", "black", "#010136", "#010136"),
   bot: new Entrant("Bottas", "bot", "black", "#010136", "#010136"),
   ham: new Entrant("Hamilton", "ham", "#dc0000", "black", "#ffffff"),
   lec: new Entrant("Leclerc", "lec", "#dc0000", "black", "#ffffff"),
