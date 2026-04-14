@@ -10,7 +10,7 @@ import clientPromise from "@lib/mongodb";
 import type { Adapter } from "next-auth/adapters";
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
-  debug: true,
+  debug: process.env.NODE_ENV === "development",
   adapter: MongoDBAdapter(clientPromise) as Adapter,
   session: { strategy: "jwt" },
   callbacks: {

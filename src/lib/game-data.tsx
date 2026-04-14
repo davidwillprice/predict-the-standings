@@ -263,9 +263,6 @@ const orderLeaderboards = (rounds: Round[], users: UserGameDataMap) => {
         const userA = users[leaderboardA.userId];
         const userB = users[leaderboardB.userId];
 
-        // console.log(userA);
-        // console.log(userB);
-
         /**Check if the two users have made the same predictions for this entrant type and if so, order them by who made the prediction first */
         if (
           userA.predictions[entrantType].toString() ===
