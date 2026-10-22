@@ -123,22 +123,6 @@ export default function Page() {
                   </td>
                 </tr>
                 <tr>
-                  <th>Reddit</th>
-                  <td>
-                    <ul>
-                      <li>Email address</li>
-                      <li>Signup date</li>
-                      <li>Username</li>
-                    </ul>
-                  </td>
-                  <td>
-                    <ul>
-                      <li>Email address</li>
-                      <li>Username</li>
-                    </ul>
-                  </td>
-                </tr>
-                <tr>
                   <th>Twitch</th>
                   <td>
                     <ul>

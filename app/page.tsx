@@ -173,7 +173,7 @@ export default function Home() {
           <h3>Streamlined Login</h3>
           <p>
             One click login via a variety of OAuth services including Google,
-            Reddit, Twitter, and Discord.
+            Twitter, and Discord.
           </p>
         </Panel>
         <Showcase>

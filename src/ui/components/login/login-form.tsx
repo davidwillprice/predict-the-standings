@@ -65,13 +65,6 @@ export const LoginForm = () => {
               }}>
               Sign in via Patreon
             </Button>*/}
-            <Button
-              id="reddit"
-              className={styles.reddit}
-              onClick={signInHandler}>
-              <Icon strokeWidth={2} type="reddit" />
-              Sign in via Reddit
-            </Button>
             {/* <Button
               onClick={async () => {
                 await signIn("spotify", { redirect: false });
